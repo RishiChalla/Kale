@@ -28,7 +28,7 @@ Events* Islands::events = nullptr;
  * @param window A reference to the render window
  */
 Events::Events(sf::RenderWindow& window) : window(window) {
-	
+	// Empty body - all the list constructors are called automatically
 }
 
 /**
