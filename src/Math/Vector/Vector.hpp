@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cmath>
+#include <SFML/Graphics.hpp>
 
 namespace Islands {
 
@@ -31,6 +32,7 @@ namespace Islands {
 		Vector2() : x(0), y(0) {}
 		Vector2(T x, T y) : x(x), y(y) {}
 		Vector2(T v[2]) : x(v[0]), y(v[1]) {}
+		Vector2(sf::Vector2<T> vec) : x(vec.x), y(vec.y) {}
 
 		void operator=(T n) {
 			x = n;
@@ -84,6 +86,7 @@ namespace Islands {
 		Vector3() : x(0), y(0), z(0) {}
 		Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
 		Vector3(T v[3]) : x(v[0]), y(v[1]), z(v[2]) {}
+		Vector3(sf::Vector3<T> vec) : x(vec.x), y(vec.y), z(vec.z) {}
 
 		Vector3(Vector2<T> v, T z) : x(v.x), y(v.y), z(z) {}
 		Vector3(T x, Vector2<T> v) : x(x), y(v.x), z(v.y) {}

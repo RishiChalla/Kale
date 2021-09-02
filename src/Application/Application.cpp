@@ -15,6 +15,7 @@
 */
 
 #include "Application.hpp"
+#include <Events/Events.hpp>
 
 using namespace Islands;
 
@@ -26,20 +27,32 @@ Application* Islands::mainApp = nullptr;
 /**
  * Creates a new application instance
  */
-Islands::Application::Application() {
-	
+Application::Application() {
+	events = new Events(window);
 }
 
 /**
  * Frees resources and deletes the application
  */
-Islands::Application::~Application() {
-
+Application::~Application() {
+	delete events;
 }
 
 /**
  * Runs the application
  */
-void Islands::Application::run() {
-	
+void Application::run() {
+	// Creates the window
+	window.create(sf::VideoMode(800, 600), "Islands");
+
+	// update loop
+	while (window.isOpen()) {
+		
+		// Handle events
+		events->handleEvents();
+
+		// TODO - delete this and replace it with scene rendering
+		window.clear(sf::Color::Blue);
+		window.display();
+	}
 }

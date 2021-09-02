@@ -48,6 +48,12 @@ namespace Islands {
 		 */
 		~Application();
 
+		// App class doesn't support copying/moving
+		Application(const Application& other) = delete;
+		Application(Application&& other) = delete;
+		void operator=(const Application& other) = delete;
+		void operator=(Application&& other) = delete;
+
 		/**
 		 * Runs the application
 		 */

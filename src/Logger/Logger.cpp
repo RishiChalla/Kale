@@ -23,7 +23,7 @@ using namespace Islands;
 /**
  * Creates a new logger instance
  */
-Islands::Logger::Logger() {
+Logger::Logger() {
 
 	// Create the folder for this application if it doesn't already exist
 	if (!std::filesystem::exists("Islands"))
@@ -37,6 +37,6 @@ Islands::Logger::Logger() {
  * Gets the time prefix for logging
  * @returns the time prefix
  */
-std::string Islands::Logger::getTimePrefix() {
+std::string Logger::getTimePrefix() {
 	return "[" + date::format("%I:%M %p", std::chrono::system_clock::now()) + "] ";
 }
