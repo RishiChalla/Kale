@@ -19,6 +19,7 @@
 #include <SFML/Graphics.hpp>
 #include <Math/Vector/Vector.hpp>
 #include <list>
+#include <memory>
 #include <functional>
 
 namespace Islands {

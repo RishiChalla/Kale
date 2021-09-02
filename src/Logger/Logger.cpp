@@ -26,11 +26,13 @@ using namespace Islands;
 Logger::Logger() {
 
 	// Create the folder for this application if it doesn't already exist
-	if (!std::filesystem::exists("Islands"))
-		std::filesystem::create_directory("Islands");
+	if (!std::filesystem::exists(".Islands"))
+		std::filesystem::create_directory(".Islands");
+	if (!std::filesystem::exists(".Islands/logs"))
+		std::filesystem::create_directory(".Islands/logs");
 
 	// Create/open the log file in the correct folder
-	logFile.open("Islands/" + date::format("%F--%H-%M-%S", std::chrono::system_clock::now()) + ".log");
+	logFile.open(".Islands/logs/" + date::format("%F--%H-%M-%S", std::chrono::system_clock::now()) + ".log");
 }
 
 /**
