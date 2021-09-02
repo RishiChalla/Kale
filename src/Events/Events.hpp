@@ -42,6 +42,9 @@ namespace Islands {
 		TouchBeginEvent, TouchMoveEvent, TouchEndEvent
 	};
 
+	/**
+	 * Represents a single directional pad
+	 */
 	struct DirectionalPad {
 		bool up;
 		bool down;
@@ -49,6 +52,9 @@ namespace Islands {
 		bool right;
 	};
 
+	/**
+	 * Represents a single controller
+	 */
 	struct Controller {
 		Vector2f leftJoystick;
 		Vector2f rightJoystick;
@@ -58,14 +64,23 @@ namespace Islands {
 		bool rMenu;
 	};
 
+	/**
+	 * Represents the keyboard
+	 */
 	struct Keyboard {
 
 	};
 
+	/**
+	 * Represents a mouse
+	 */
 	struct Mouse {
 
 	};
 
+	/**
+	 * Represents a touch
+	 */
 	struct Touch {
 
 	};
