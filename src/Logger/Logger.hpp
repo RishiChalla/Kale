@@ -17,7 +17,10 @@
 #pragma once
 
 #include <fstream>
+
+#ifndef NDEBUG:
 #include <iostream>
+#endif
 
 namespace Islands {
 
@@ -55,7 +58,11 @@ namespace Islands {
 		 */
 		template <typename T> void log(T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << msg << "\n";
+			#endif
+
 			logFile << time << msg << "\n";
 		}
 
@@ -65,7 +72,11 @@ namespace Islands {
 		 */
 		template <typename T> void info(T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << "[INFO] " << msg << "\n";
+			#endif
+
 			logFile << time << "[INFO] " << msg << "\n";
 		}
 
@@ -75,7 +86,11 @@ namespace Islands {
 		 */
 		template <typename T> void warn(T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << "[WARNING] " << msg << "\n";
+			#endif
+
 			logFile << time << "[WARNING] " << msg << "\n";
 		}
 
@@ -85,7 +100,11 @@ namespace Islands {
 		 */
 		template <typename T> void error(T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << "[ERROR] " << msg << "\n";
+			#endif
+
 			logFile << time << "[ERROR] " << msg << "\n";
 		}
 
@@ -97,7 +116,11 @@ namespace Islands {
 		 */
 		template <typename T> void log(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << "[" << file << ":" << line << "] " << msg << "\n";
+			#endif
+
 			logFile << time << "[" << file << ":" << line << "] " << msg << "\n";
 		}
 
@@ -109,7 +132,11 @@ namespace Islands {
 		 */
 		template <typename T> void info(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << "[" << file << ":" << line << "] " << "[INFO] " << msg << "\n";
+			#endif
+
 			logFile << time << "[" << file << ":" << line << "] " << "[INFO] " << msg << "\n";
 		}
 
@@ -121,7 +148,11 @@ namespace Islands {
 		 */
 		template <typename T> void warn(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << "[" << file << ":" << line << "] " << "[WARNING] " << msg << "\n";
+			#endif
+
 			logFile << time << "[" << file << ":" << line << "] " << "[WARNING] " << msg << "\n";
 		}
 
@@ -133,7 +164,11 @@ namespace Islands {
 		 */
 		template <typename T> void error(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
+
+			#ifndef NDEBUG:
 			std::cout << time << "[" << file << ":" << line << "] " << "[ERROR] " << msg << "\n";
+			#endif
+
 			logFile << time << "[" << file << ":" << line << "] " << "[ERROR] " << msg << "\n";
 		}
 	};
