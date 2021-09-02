@@ -16,6 +16,7 @@
 
 #include "Application.hpp"
 #include <Events/Events.hpp>
+#include <thread>
 
 using namespace Islands;
 
@@ -39,20 +40,54 @@ Application::~Application() {
 }
 
 /**
+ * Starts displaying and updating a scene
+ * @param scene The scene to display
+ */
+void Application::displayScene(std::shared_ptr<Scene> scene) {
+	currentScene = scene;
+}
+
+/**
+ * Handles updating the application in a separate thread
+ */
+void Application::update() {
+
+	// Update loop
+	while (window.isOpen()) {
+		
+		// Update the current scene
+		if (currentScene != nullptr)
+			currentScene->update();
+	}
+}
+
+/**
  * Runs the application
  */
 void Application::run() {
 	// Creates the window
 	window.create(sf::VideoMode(800, 600), "Islands");
 
-	// update loop
+	// Create the update thread
+	std::thread updateThread(&Application::update, this);
+
+	// Render loop
 	while (window.isOpen()) {
 		
 		// Handle events
 		events->handleEvents();
 
-		// TODO - delete this and replace it with scene rendering
-		window.clear(sf::Color::Blue);
-		window.display();
+		// Render the scene
+		if (currentScene != nullptr)
+			currentScene->render();
+		else {
+
+			// Just use a black window as a default
+			window.clear(sf::Color::Black);
+			window.display();
+		}
 	}
+
+	// Wait for the update thread to finish
+	updateThread.join();
 }

@@ -17,7 +17,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <memory>
+
 #include <Logger/Logger.hpp>
+#include <Scene/Scene.hpp>
 
 namespace Islands {
 
@@ -31,6 +34,16 @@ namespace Islands {
 		 * The main sfml window used for rendering for this application instance
 		 */
 		sf::RenderWindow window;
+
+		/**
+		 * the currently rendered scene
+		 */
+		std::shared_ptr<Scene> currentScene;
+
+		/**
+		 * Handles updating the application in a separate thread
+		 */
+		void update();
 
 	public:
 		/**
@@ -58,6 +71,12 @@ namespace Islands {
 		 * Runs the application
 		 */
 		void run();
+
+		/**
+		 * Starts displaying and updating a scene
+		 * @param scene The scene to display
+		 */
+		void displayScene(std::shared_ptr<Scene> scene);
 	};
 
 	/**

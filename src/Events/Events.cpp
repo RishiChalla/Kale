@@ -269,7 +269,7 @@ Vector2i Events::getMousePos() const {
  * Provides a callback on window resizes
  * @param handler The handler/callback function to call on the event
  */
-void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>>& handler) {
+void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler) {
 	windowResizeListeners.push_back(handler);
 }
 
@@ -278,7 +278,7 @@ void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Ve
  * Provides a callback when a controller connects
  * @param handler The handler/callback function to call on the event
  */
-void Events::addControllerConnectListener(std::shared_ptr<std::function<void(unsigned int controller)>>& handler) {
+void Events::addControllerConnectListener(std::shared_ptr<std::function<void(unsigned int controller)>> handler) {
 	controllerConnectListeners.push_back(handler);
 }
 
@@ -286,7 +286,7 @@ void Events::addControllerConnectListener(std::shared_ptr<std::function<void(uns
  * Provides a callback when a controller disconnects
  * @param handler The handler/callback function to call on the event
  */
-void Events::addControllerDisconnectListener(std::shared_ptr<std::function<void(unsigned int controller)>>& handler) {
+void Events::addControllerDisconnectListener(std::shared_ptr<std::function<void(unsigned int controller)>> handler) {
 	controllerDisconnectListeners.push_back(handler);
 }
 
@@ -294,7 +294,7 @@ void Events::addControllerDisconnectListener(std::shared_ptr<std::function<void(
  * Provides a callback when a button is pressed on a controller
  * @param handler The handler/callback function to call on the event
  */
-void Events::addControllerButtonPressListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>>& handler) {
+void Events::addControllerButtonPressListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>> handler) {
 	controllerButtonPressListeners.push_back(handler);
 }
 
@@ -302,7 +302,7 @@ void Events::addControllerButtonPressListener(std::shared_ptr<std::function<void
  * Provides a callback when a button is released on a controller
  * @param handler The handler/callback function to call on the event
  */
-void Events::addControllerButtonReleaseListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>>& handler) {
+void Events::addControllerButtonReleaseListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>> handler) {
 	controllerButtonReleaseListeners.push_back(handler);
 }
 
@@ -310,7 +310,7 @@ void Events::addControllerButtonReleaseListener(std::shared_ptr<std::function<vo
  * Provides a callback when a controller handle is moved
  * @param handler The handler/callback function to call on the event
  */
-void Events::addControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>>& handler) {
+void Events::addControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>> handler) {
 	controllerHandleListeners.push_back(handler);
 }
 
@@ -319,7 +319,7 @@ void Events::addControllerHandleListener(std::shared_ptr<std::function<void(unsi
  * Provides a callback when a key is pressed
  * @param handler The handler/callback function to call on the event
  */
-void Events::addKeyPressListener(std::shared_ptr<std::function<void(Key key)>>& handler) {
+void Events::addKeyPressListener(std::shared_ptr<std::function<void(Key key)>> handler) {
 	keyPressListeners.push_back(handler);
 }
 
@@ -327,7 +327,7 @@ void Events::addKeyPressListener(std::shared_ptr<std::function<void(Key key)>>& 
  * Provides a callback when a key is released
  * @param handler The handler/callback function to call on the event
  */
-void Events::addKeyReleaseListener(std::shared_ptr<std::function<void(Key key)>>& handler) {
+void Events::addKeyReleaseListener(std::shared_ptr<std::function<void(Key key)>> handler) {
 	keyReleaseListeners.push_back(handler);
 }
 
@@ -336,7 +336,7 @@ void Events::addKeyReleaseListener(std::shared_ptr<std::function<void(Key key)>>
  * Provides a callback when the mouse moves
  * @param handler The handler/callback function to call on the event
  */
-void Events::addMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>>& handler) {
+void Events::addMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>> handler) {
 	mouseMoveListeners.push_back(handler);
 }
 
@@ -344,7 +344,7 @@ void Events::addMouseMoveListener(std::shared_ptr<std::function<void(const Vecto
  * Provides a callback when the mouse scrolls
  * @param handler The handler/callback function to call on the event
  */
-void Events::addMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>>& handler) {
+void Events::addMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>> handler) {
 	mouseScrollListeners.push_back(handler);
 }
 
@@ -352,7 +352,7 @@ void Events::addMouseScrollListener(std::shared_ptr<std::function<void(int scrol
  * Provides a callback when the left button is pressed on the mouse
  * @param handler The handler/callback function to call on the event
  */
-void Events::addLeftClickListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::addLeftClickListener(std::shared_ptr<std::function<void()>> handler) {
 	leftClickListeners.push_back(handler);
 }
 
@@ -360,7 +360,7 @@ void Events::addLeftClickListener(std::shared_ptr<std::function<void()>>& handle
  * Provides a callback when the middle button is pressed on the mouse
  * @param handler The handler/callback function to call on the event
  */
-void Events::addMiddleClickListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::addMiddleClickListener(std::shared_ptr<std::function<void()>> handler) {
 	middleClickListeners.push_back(handler);
 }
 
@@ -368,7 +368,7 @@ void Events::addMiddleClickListener(std::shared_ptr<std::function<void()>>& hand
  * Provides a callback when the right button is pressed on the mouse
  * @param handler The handler/callback function to call on the event
  */
-void Events::addRightClickListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::addRightClickListener(std::shared_ptr<std::function<void()>> handler) {
 	rightClickListeners.push_back(handler);
 }
 
@@ -376,7 +376,7 @@ void Events::addRightClickListener(std::shared_ptr<std::function<void()>>& handl
  * Provides a callback when the left button is released on the mouse
  * @param handler The handler/callback function to call on the event
  */
-void Events::addLeftClickReleaseListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::addLeftClickReleaseListener(std::shared_ptr<std::function<void()>> handler) {
 	leftClickReleaseListeners.push_back(handler);
 }
 
@@ -384,7 +384,7 @@ void Events::addLeftClickReleaseListener(std::shared_ptr<std::function<void()>>&
  * Provides a callback when the middle button is released on the mouse
  * @param handler The handler/callback function to call on the event
  */
-void Events::addMiddleClickReleaseListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::addMiddleClickReleaseListener(std::shared_ptr<std::function<void()>> handler) {
 	middleClickReleaseListeners.push_back(handler);
 }
 
@@ -392,7 +392,7 @@ void Events::addMiddleClickReleaseListener(std::shared_ptr<std::function<void()>
  * Provides a callback when the right button is released on the mouse
  * @param handler The handler/callback function to call on the event
  */
-void Events::addRightClickReleaseListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::addRightClickReleaseListener(std::shared_ptr<std::function<void()>> handler) {
 	rightClickReleaseListeners.push_back(handler);
 }
 
@@ -401,7 +401,7 @@ void Events::addRightClickReleaseListener(std::shared_ptr<std::function<void()>>
  * Provides a callback when a touch begins
  * @param handler The handler/callback function to call on the event
  */
-void Events::addTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
+void Events::addTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>> handler) {
 	touchBeginListeners.push_back(handler);
 }
 
@@ -409,7 +409,7 @@ void Events::addTouchBeginListener(std::shared_ptr<std::function<void(unsigned i
  * Provides a callback when a touch is moved
  * @param handler The handler/callback function to call on the event
  */
-void Events::addTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
+void Events::addTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>> handler) {
 	touchMoveListeners.push_back(handler);
 }
 
@@ -417,7 +417,7 @@ void Events::addTouchMoveListener(std::shared_ptr<std::function<void(unsigned in
  * Provides a callback when a touch is released
  * @param handler The handler/callback function to call on the event
  */
-void Events::addTouchEndListener(std::shared_ptr<std::function<void(unsigned int touch)>>& handler) {
+void Events::addTouchEndListener(std::shared_ptr<std::function<void(unsigned int touch)>> handler) {
 	touchEndListeners.push_back(handler);
 }
 
@@ -427,7 +427,7 @@ void Events::addTouchEndListener(std::shared_ptr<std::function<void(unsigned int
  * Removes a callback on window resizes
  * @param handler The handler/callback function to remove
  */
-void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>>& handler) {
+void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler) {
 	windowResizeListeners.remove(handler);
 }
 
@@ -436,7 +436,7 @@ void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const
  * Removes a callback when a controller connects
  * @param handler The handler/callback function to remove
  */
-void Events::removeControllerConnectListener(std::shared_ptr<std::function<void(unsigned int controller)>>& handler) {
+void Events::removeControllerConnectListener(std::shared_ptr<std::function<void(unsigned int controller)>> handler) {
 	controllerConnectListeners.remove(handler);
 }
 
@@ -444,7 +444,7 @@ void Events::removeControllerConnectListener(std::shared_ptr<std::function<void(
  * Removes a callback when a controller disconnects
  * @param handler The handler/callback function to remove
  */
-void Events::removeControllerDisconnectListener(std::shared_ptr<std::function<void(unsigned int controller)>>& handler) {
+void Events::removeControllerDisconnectListener(std::shared_ptr<std::function<void(unsigned int controller)>> handler) {
 	controllerDisconnectListeners.remove(handler);
 }
 
@@ -452,7 +452,7 @@ void Events::removeControllerDisconnectListener(std::shared_ptr<std::function<vo
  * Removes a callback when a button is pressed on a controller
  * @param handler The handler/callback function to remove
  */
-void Events::removeControllerButtonPressListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>>& handler) {
+void Events::removeControllerButtonPressListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>> handler) {
 	controllerButtonPressListeners.remove(handler);
 }
 
@@ -460,7 +460,7 @@ void Events::removeControllerButtonPressListener(std::shared_ptr<std::function<v
  * Removes a callback when a button is released on a controller
  * @param handler The handler/callback function to remove
  */
-void Events::removeControllerButtonReleaseListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>>& handler) {
+void Events::removeControllerButtonReleaseListener(std::shared_ptr<std::function<void(unsigned int controller, unsigned int button)>> handler) {
 	controllerButtonReleaseListeners.remove(handler);
 }
 
@@ -468,7 +468,7 @@ void Events::removeControllerButtonReleaseListener(std::shared_ptr<std::function
  * Removes a callback when a controller handle is moved
  * @param handler The handler/callback function to remove
  */
-void Events::removeControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>>& handler) {
+void Events::removeControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>> handler) {
 	controllerHandleListeners.remove(handler);
 }
 
@@ -477,7 +477,7 @@ void Events::removeControllerHandleListener(std::shared_ptr<std::function<void(u
  * Removes a callback when a key is pressed
  * @param handler The handler/callback function to remove
  */
-void Events::removeKeyPressListener(std::shared_ptr<std::function<void(Key key)>>& handler) {
+void Events::removeKeyPressListener(std::shared_ptr<std::function<void(Key key)>> handler) {
 	keyPressListeners.remove(handler);
 }
 
@@ -485,7 +485,7 @@ void Events::removeKeyPressListener(std::shared_ptr<std::function<void(Key key)>
  * Removes a callback when a key is released
  * @param handler The handler/callback function to remove
  */
-void Events::removeKeyReleaseListener(std::shared_ptr<std::function<void(Key key)>>& handler) {
+void Events::removeKeyReleaseListener(std::shared_ptr<std::function<void(Key key)>> handler) {
 	keyReleaseListeners.remove(handler);
 }
 
@@ -494,7 +494,7 @@ void Events::removeKeyReleaseListener(std::shared_ptr<std::function<void(Key key
  * Removes a callback when the mouse moves
  * @param handler The handler/callback function to remove
  */
-void Events::removeMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>>& handler) {
+void Events::removeMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>> handler) {
 	mouseMoveListeners.remove(handler);
 }
 
@@ -502,7 +502,7 @@ void Events::removeMouseMoveListener(std::shared_ptr<std::function<void(const Ve
  * Removes a callback when the mouse scrolls
  * @param handler The handler/callback function to remove
  */
-void Events::removeMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>>& handler) {
+void Events::removeMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>> handler) {
 	mouseScrollListeners.remove(handler);
 }
 
@@ -510,7 +510,7 @@ void Events::removeMouseScrollListener(std::shared_ptr<std::function<void(int sc
  * Removes a callback when the left button is pressed on the mouse
  * @param handler The handler/callback function to remove
  */
-void Events::removeLeftClickListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::removeLeftClickListener(std::shared_ptr<std::function<void()>> handler) {
 	leftClickListeners.remove(handler);
 }
 
@@ -518,7 +518,7 @@ void Events::removeLeftClickListener(std::shared_ptr<std::function<void()>>& han
  * Removes a callback when the middle button is pressed on the mouse
  * @param handler The handler/callback function to remove
  */
-void Events::removeMiddleClickListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::removeMiddleClickListener(std::shared_ptr<std::function<void()>> handler) {
 	middleClickListeners.remove(handler);
 }
 
@@ -526,7 +526,7 @@ void Events::removeMiddleClickListener(std::shared_ptr<std::function<void()>>& h
  * Removes a callback when the right button is pressed on the mouse
  * @param handler The handler/callback function to remove
  */
-void Events::removeRightClickListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::removeRightClickListener(std::shared_ptr<std::function<void()>> handler) {
 	rightClickListeners.remove(handler);
 }
 
@@ -534,7 +534,7 @@ void Events::removeRightClickListener(std::shared_ptr<std::function<void()>>& ha
  * Removes a callback when the left button is released on the mouse
  * @param handler The handler/callback function to remove
  */
-void Events::removeLeftClickReleaseListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::removeLeftClickReleaseListener(std::shared_ptr<std::function<void()>> handler) {
 	leftClickReleaseListeners.remove(handler);
 }
 
@@ -542,7 +542,7 @@ void Events::removeLeftClickReleaseListener(std::shared_ptr<std::function<void()
  * Removes a callback when the middle button is released on the mouse
  * @param handler The handler/callback function to remove
  */
-void Events::removeMiddleClickReleaseListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::removeMiddleClickReleaseListener(std::shared_ptr<std::function<void()>> handler) {
 	middleClickReleaseListeners.remove(handler);
 }
 
@@ -550,7 +550,7 @@ void Events::removeMiddleClickReleaseListener(std::shared_ptr<std::function<void
  * Removes a callback when the right button is released on the mouse
  * @param handler The handler/callback function to remove
  */
-void Events::removeRightClickReleaseListener(std::shared_ptr<std::function<void()>>& handler) {
+void Events::removeRightClickReleaseListener(std::shared_ptr<std::function<void()>> handler) {
 	rightClickReleaseListeners.remove(handler);
 }
 
@@ -559,7 +559,7 @@ void Events::removeRightClickReleaseListener(std::shared_ptr<std::function<void(
  * Removes a callback when a touch begins
  * @param handler The handler/callback function to remove
  */
-void Events::removeTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
+void Events::removeTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>> handler) {
 	touchBeginListeners.remove(handler);
 }
 
@@ -567,7 +567,7 @@ void Events::removeTouchBeginListener(std::shared_ptr<std::function<void(unsigne
  * Removes a callback when a touch is moved
  * @param handler The handler/callback function to remove
  */
-void Events::removeTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
+void Events::removeTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>> handler) {
 	touchMoveListeners.remove(handler);
 }
 
@@ -575,6 +575,6 @@ void Events::removeTouchMoveListener(std::shared_ptr<std::function<void(unsigned
  * Removes a callback when a touch is released
  * @param handler The handler/callback function to remove
  */
-void Events::removeTouchEndListener(std::shared_ptr<std::function<void(unsigned int touch)>>& handler) {
+void Events::removeTouchEndListener(std::shared_ptr<std::function<void(unsigned int touch)>> handler) {
 	touchEndListeners.remove(handler);
 }
