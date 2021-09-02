@@ -38,8 +38,152 @@ void Events::handleEvents() {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		switch (event.type) {
-			case sf::Event::EventType::Closed:
+			case sf::Event::EventType::Closed: {
 				window.close();
+				return;
+			}
+
+			case sf::Event::EventType::Resized: {
+				Vector2ui size(event.size.width, event.size.height);
+				for (auto listener : windowResizeListeners)
+					listener->operator()(size);
+				return;
+			}
+
+			case sf::Event::EventType::LostFocus: {
+				for (auto listener : windowLostFocusListener)
+					listener->operator()();
+				return;
+			}
+
+			case sf::Event::EventType::GainedFocus: {
+				for (auto listener : windowGainedFocusListener)
+					listener->operator()();
+				return;
+			}
+
+			case sf::Event::EventType::KeyPressed: {
+				for (auto listener : keyPressListeners)
+					listener->operator()(event.key.code);
+				return;
+			}
+
+			case sf::Event::EventType::KeyReleased: {
+				for (auto listener : keyReleaseListeners)
+					listener->operator()(event.key.code);
+				return;
+			}
+
+			case sf::Event::EventType::MouseWheelScrolled: {
+				for (auto listener : mouseScrollListeners)
+					listener->operator()(event.mouseWheel.delta);
+				return;
+			}
+
+			case sf::Event::EventType::MouseButtonPressed: {
+				switch (event.mouseButton.button) {
+					case sf::Mouse::Button::Left: {
+						for (auto listener : leftClickListeners)
+							listener->operator()();
+						return;
+					}
+					case sf::Mouse::Button::Middle: {
+						for (auto listener : middleClickListeners)
+							listener->operator()();
+						return;
+					}
+					case sf::Mouse::Button::Right: {
+						for (auto listener : rightClickListeners)
+							listener->operator()();
+						return;
+					}
+					default:
+						return;
+				}
+			}
+
+			case sf::Event::EventType::MouseButtonReleased: {
+				switch (event.mouseButton.button) {
+					case sf::Mouse::Button::Left: {
+						for (auto listener : leftClickReleaseListeners)
+							listener->operator()();
+						return;
+					}
+					case sf::Mouse::Button::Middle: {
+						for (auto listener : middleClickReleaseListeners)
+							listener->operator()();
+						return;
+					}
+					case sf::Mouse::Button::Right: {
+						for (auto listener : rightClickReleaseListeners)
+							listener->operator()();
+						return;
+					}
+					default:
+						return;
+				}
+			}
+
+			case sf::Event::EventType::MouseMoved: {
+				Vector2ui pos = Vector2i(event.mouseMove.x, event.mouseMove.y).cast<unsigned int>();
+				for (auto listener : mouseMoveListeners)
+					listener->operator()(pos);
+				return;
+			}
+
+			case sf::Event::EventType::JoystickButtonPressed: {
+				for (auto listener : controllerButtonPressListeners)
+					listener->operator()(event.joystickButton.joystickId, event.joystickButton.button);
+				return;
+			}
+
+			case sf::Event::EventType::JoystickButtonReleased: {
+				for (auto listener : controllerButtonReleaseListeners)
+					listener->operator()(event.joystickButton.joystickId, event.joystickButton.button);
+				return;
+			}
+
+			case sf::Event::EventType::JoystickMoved: {
+				for (auto listener : controllerHandleListeners)
+					listener->operator()(event.joystickMove.joystickId, event.joystickMove.axis,
+						event.joystickMove.position);
+				return;
+			}
+
+			case sf::Event::EventType::JoystickConnected: {
+				for (auto listener : controllerConnectListeners)
+					listener->operator()(event.joystickConnect.joystickId);
+				return;
+			}
+
+			case sf::Event::EventType::JoystickDisconnected: {
+				for (auto listener : controllerDisconnectListeners)
+					listener->operator()(event.joystickConnect.joystickId);
+				return;
+			}
+
+			case sf::Event::EventType::TouchBegan: {
+				Vector2ui pos(event.touch.x, event.touch.y);
+				for (auto listener : touchBeginListeners)
+					listener->operator()(event.touch.finger, pos);
+				return;
+			}
+
+			case sf::Event::EventType::TouchMoved: {
+				Vector2ui pos(event.touch.x, event.touch.y);
+				for (auto listener : touchMoveListeners)
+					listener->operator()(event.touch.finger, pos);
+				return;
+			}
+
+			case sf::Event::EventType::TouchEnded: {
+				Vector2ui pos(event.touch.x, event.touch.y);
+				for (auto listener : touchEndListeners)
+					listener->operator()(event.touch.finger);
+				return;
+			}
+
+			default:
 				return;
 		}
 	}
@@ -125,7 +269,7 @@ Vector2i Events::getMousePos() const {
  * Provides a callback on window resizes
  * @param handler The handler/callback function to call on the event
  */
-void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2f&)>>& handler) {
+void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>>& handler) {
 	windowResizeListeners.push_back(handler);
 }
 
@@ -166,7 +310,7 @@ void Events::addControllerButtonReleaseListener(std::shared_ptr<std::function<vo
  * Provides a callback when a controller handle is moved
  * @param handler The handler/callback function to call on the event
  */
-void Events::addControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle)>>& handler) {
+void Events::addControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>>& handler) {
 	controllerHandleListeners.push_back(handler);
 }
 
@@ -192,32 +336,16 @@ void Events::addKeyReleaseListener(std::shared_ptr<std::function<void(Key key)>>
  * Provides a callback when the mouse moves
  * @param handler The handler/callback function to call on the event
  */
-void Events::addMouseMoveListener(std::shared_ptr<std::function<void(Vector2ui pos)>>& handler) {
+void Events::addMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>>& handler) {
 	mouseMoveListeners.push_back(handler);
-}
-
-/**
- * Provides a callback when the mouse moves, and provides the offset since the last movement
- * @param handler The handler/callback function to call on the event
- */
-void Events::addMouseMoveOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler) {
-	mouseMoveOffsetListeners.push_back(handler);
 }
 
 /**
  * Provides a callback when the mouse scrolls
  * @param handler The handler/callback function to call on the event
  */
-void Events::addMouseScrollListener(std::shared_ptr<std::function<void(Vector2ui scroll)>>& handler) {
+void Events::addMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>>& handler) {
 	mouseScrollListeners.push_back(handler);
-}
-
-/**
- * Provides a callback when the mouse scrolls, and provides the offset since the last scroll
- * @param handler The handler/callback function to call on the event
- */
-void Events::addMouseScrollOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler) {
-	mouseScrollOffsetListeners.push_back(handler);
 }
 
 /**
@@ -273,7 +401,7 @@ void Events::addRightClickReleaseListener(std::shared_ptr<std::function<void()>>
  * Provides a callback when a touch begins
  * @param handler The handler/callback function to call on the event
  */
-void Events::addTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler) {
+void Events::addTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
 	touchBeginListeners.push_back(handler);
 }
 
@@ -281,16 +409,8 @@ void Events::addTouchBeginListener(std::shared_ptr<std::function<void(unsigned i
  * Provides a callback when a touch is moved
  * @param handler The handler/callback function to call on the event
  */
-void Events::addTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler) {
+void Events::addTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
 	touchMoveListeners.push_back(handler);
-}
-
-/**
- * Provides a callback when a touch is moved, and provides the offset since the last movement
- * @param handler The handler/callback function to call on the event
- */
-void Events::addTouchMoveOffsetListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui offset)>>& handler) {
-	touchMoveOffsetListeners.push_back(handler);
 }
 
 /**
@@ -307,7 +427,7 @@ void Events::addTouchEndListener(std::shared_ptr<std::function<void(unsigned int
  * Removes a callback on window resizes
  * @param handler The handler/callback function to remove
  */
-void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2f&)>>& handler) {
+void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>>& handler) {
 	windowResizeListeners.remove(handler);
 }
 
@@ -348,7 +468,7 @@ void Events::removeControllerButtonReleaseListener(std::shared_ptr<std::function
  * Removes a callback when a controller handle is moved
  * @param handler The handler/callback function to remove
  */
-void Events::removeControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle)>>& handler) {
+void Events::removeControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>>& handler) {
 	controllerHandleListeners.remove(handler);
 }
 
@@ -374,32 +494,16 @@ void Events::removeKeyReleaseListener(std::shared_ptr<std::function<void(Key key
  * Removes a callback when the mouse moves
  * @param handler The handler/callback function to remove
  */
-void Events::removeMouseMoveListener(std::shared_ptr<std::function<void(Vector2ui pos)>>& handler) {
+void Events::removeMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>>& handler) {
 	mouseMoveListeners.remove(handler);
-}
-
-/**
- * Removes a callback when the mouse moves, and provides the offset since the last movement
- * @param handler The handler/callback function to remove
- */
-void Events::removeMouseMoveOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler) {
-	mouseMoveOffsetListeners.remove(handler);
 }
 
 /**
  * Removes a callback when the mouse scrolls
  * @param handler The handler/callback function to remove
  */
-void Events::removeMouseScrollListener(std::shared_ptr<std::function<void(Vector2ui scroll)>>& handler) {
+void Events::removeMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>>& handler) {
 	mouseScrollListeners.remove(handler);
-}
-
-/**
- * Removes a callback when the mouse scrolls, and provides the offset since the last scroll
- * @param handler The handler/callback function to remove
- */
-void Events::removeMouseScrollOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler) {
-	mouseScrollOffsetListeners.remove(handler);
 }
 
 /**
@@ -455,7 +559,7 @@ void Events::removeRightClickReleaseListener(std::shared_ptr<std::function<void(
  * Removes a callback when a touch begins
  * @param handler The handler/callback function to remove
  */
-void Events::removeTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler) {
+void Events::removeTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
 	touchBeginListeners.remove(handler);
 }
 
@@ -463,16 +567,8 @@ void Events::removeTouchBeginListener(std::shared_ptr<std::function<void(unsigne
  * Removes a callback when a touch is moved
  * @param handler The handler/callback function to remove
  */
-void Events::removeTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler) {
+void Events::removeTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler) {
 	touchMoveListeners.remove(handler);
-}
-
-/**
- * Removes a callback when a touch is moved, and provides the offset since the last movement
- * @param handler The handler/callback function to remove
- */
-void Events::removeTouchMoveOffsetListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui offset)>>& handler) {
-	touchMoveOffsetListeners.remove(handler);
 }
 
 /**

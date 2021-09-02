@@ -54,7 +54,17 @@ namespace Islands {
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void(const Vector2f&)>>> windowResizeListeners;
+		std::list<std::shared_ptr<std::function<void(const Vector2ui&)>>> windowResizeListeners;
+
+		/**
+		 * Stores all the event listeners in a linked list
+		 */
+		std::list<std::shared_ptr<std::function<void()>>> windowLostFocusListener;
+
+		/**
+		 * Stores all the event listeners in a linked list
+		 */
+		std::list<std::shared_ptr<std::function<void()>>> windowGainedFocusListener;
 		
 		/**
 		 * Stores all the event listeners in a linked list
@@ -79,7 +89,7 @@ namespace Islands {
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void(unsigned int controller, Axis handle)>>> controllerHandleListeners;
+		std::list<std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>>> controllerHandleListeners;
 		
 		/**
 		 * Stores all the event listeners in a linked list
@@ -94,22 +104,12 @@ namespace Islands {
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void(Vector2ui pos)>>> mouseMoveListeners;
+		std::list<std::shared_ptr<std::function<void(const Vector2ui& pos)>>> mouseMoveListeners;
 		
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void(Vector2ui offset)>>> mouseMoveOffsetListeners;
-		
-		/**
-		 * Stores all the event listeners in a linked list
-		 */
-		std::list<std::shared_ptr<std::function<void(Vector2ui scroll)>>> mouseScrollListeners;
-		
-		/**
-		 * Stores all the event listeners in a linked list
-		 */
-		std::list<std::shared_ptr<std::function<void(Vector2ui offset)>>> mouseScrollOffsetListeners;
+		std::list<std::shared_ptr<std::function<void(int scroll)>>> mouseScrollListeners;
 		
 		/**
 		 * Stores all the event listeners in a linked list
@@ -144,17 +144,12 @@ namespace Islands {
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>> touchBeginListeners;
+		std::list<std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>> touchBeginListeners;
 		
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>> touchMoveListeners;
-		
-		/**
-		 * Stores all the event listeners in a linked list
-		 */
-		std::list<std::shared_ptr<std::function<void(unsigned int touch, Vector2ui offset)>>> touchMoveOffsetListeners;
+		std::list<std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>> touchMoveListeners;
 		
 		/**
 		 * Stores all the event listeners in a linked list
@@ -248,7 +243,19 @@ namespace Islands {
 		 * Provides a callback on window resizes
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2f&)>>& handler);
+		void addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>>& handler);
+
+		/**
+		 * Provides a callback on window lost focus
+		 * @param handler The handler/callback function to call on the event
+		 */
+		void addWindowLostFocusListener(std::shared_ptr<std::function<void()>>& handler);
+
+		/**
+		 * Provides a callback on window focus
+		 * @param handler The handler/callback function to call on the event
+		 */
+		void addWindowGainFocusListener(std::shared_ptr<std::function<void()>>& handler);
 
 		
 		/**
@@ -279,7 +286,7 @@ namespace Islands {
 		 * Provides a callback when a controller handle is moved
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle)>>& handler);
+		void addControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>>& handler);
 
 		
 		/**
@@ -299,25 +306,13 @@ namespace Islands {
 		 * Provides a callback when the mouse moves
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addMouseMoveListener(std::shared_ptr<std::function<void(Vector2ui pos)>>& handler);
-		
-		/**
-		 * Provides a callback when the mouse moves, and provides the offset since the last movement
-		 * @param handler The handler/callback function to call on the event
-		 */
-		void addMouseMoveOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler);
+		void addMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>>& handler);
 		
 		/**
 		 * Provides a callback when the mouse scrolls
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addMouseScrollListener(std::shared_ptr<std::function<void(Vector2ui scroll)>>& handler);
-		
-		/**
-		 * Provides a callback when the mouse scrolls, and provides the offset since the last scroll
-		 * @param handler The handler/callback function to call on the event
-		 */
-		void addMouseScrollOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler);
+		void addMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>>& handler);
 		
 		/**
 		 * Provides a callback when the left button is pressed on the mouse
@@ -360,19 +355,13 @@ namespace Islands {
 		 * Provides a callback when a touch begins
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler);
+		void addTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler);
 		
 		/**
 		 * Provides a callback when a touch is moved
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler);
-		
-		/**
-		 * Provides a callback when a touch is moved, and provides the offset since the last movement
-		 * @param handler The handler/callback function to call on the event
-		 */
-		void addTouchMoveOffsetListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui offset)>>& handler);
+		void addTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler);
 		
 		/**
 		 * Provides a callback when a touch is released
@@ -386,7 +375,19 @@ namespace Islands {
 		 * Removes a callback on window resizes
 		 * @param handler The handler/callback function to remove
 		 */
-		void removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2f&)>>& handler);
+		void removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>>& handler);
+
+		/**
+		 * Removes a callback on window lost focus
+		 * @param handler The handler/callback function to call on the event
+		 */
+		void removeWindowLostFocusListener(std::shared_ptr<std::function<void()>>& handler);
+
+		/**
+		 * Removes a callback on window focus
+		 * @param handler The handler/callback function to call on the event
+		 */
+		void removeWindowGainFocusListener(std::shared_ptr<std::function<void()>>& handler);
 
 		
 		/**
@@ -417,7 +418,7 @@ namespace Islands {
 		 * Removes a callback when a controller handle is moved
 		 * @param handler The handler/callback function to remove
 		 */
-		void removeControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle)>>& handler);
+		void removeControllerHandleListener(std::shared_ptr<std::function<void(unsigned int controller, Axis handle, float position)>>& handler);
 
 		
 		/**
@@ -437,25 +438,13 @@ namespace Islands {
 		 * Removes a callback when the mouse moves
 		 * @param handler The handler/callback function to remove
 		 */
-		void removeMouseMoveListener(std::shared_ptr<std::function<void(Vector2ui pos)>>& handler);
-		
-		/**
-		 * Removes a callback when the mouse moves, and provides the offset since the last movement
-		 * @param handler The handler/callback function to remove
-		 */
-		void removeMouseMoveOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler);
+		void removeMouseMoveListener(std::shared_ptr<std::function<void(const Vector2ui& pos)>>& handler);
 		
 		/**
 		 * Removes a callback when the mouse scrolls
 		 * @param handler The handler/callback function to remove
 		 */
-		void removeMouseScrollListener(std::shared_ptr<std::function<void(Vector2ui scroll)>>& handler);
-		
-		/**
-		 * Removes a callback when the mouse scrolls, and provides the offset since the last scroll
-		 * @param handler The handler/callback function to remove
-		 */
-		void removeMouseScrollOffsetListener(std::shared_ptr<std::function<void(Vector2ui offset)>>& handler);
+		void removeMouseScrollListener(std::shared_ptr<std::function<void(int scroll)>>& handler);
 		
 		/**
 		 * Removes a callback when the left button is pressed on the mouse
@@ -498,20 +487,14 @@ namespace Islands {
 		 * Removes a callback when a touch begins
 		 * @param handler The handler/callback function to remove
 		 */
-		void removeTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler);
+		void removeTouchBeginListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler);
 		
 		/**
 		 * Removes a callback when a touch is moved
 		 * @param handler The handler/callback function to remove
 		 */
-		void removeTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui pos)>>& handler);
-		
-		/**
-		 * Removes a callback when a touch is moved, and provides the offset since the last movement
-		 * @param handler The handler/callback function to remove
-		 */
-		void removeTouchMoveOffsetListener(std::shared_ptr<std::function<void(unsigned int touch, Vector2ui offset)>>& handler);
-		
+		void removeTouchMoveListener(std::shared_ptr<std::function<void(unsigned int touch, const Vector2ui& pos)>>& handler);
+				
 		/**
 		 * Removes a callback when a touch is released
 		 * @param handler The handler/callback function to remove
