@@ -47,7 +47,7 @@ namespace Islands {
 		bool down;
 		bool left;
 		bool right;
-	}
+	};
 
 	struct Controller {
 		Vector2f leftJoystick;
