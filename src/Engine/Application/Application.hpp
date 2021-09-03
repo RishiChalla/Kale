@@ -19,8 +19,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-#include <Logger/Logger.hpp>
-#include <Scene/Scene.hpp>
+#include <Engine/Logger/Logger.hpp>
+#include <Engine/Scene/Scene.hpp>
 
 namespace Islands {
 
