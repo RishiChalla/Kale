@@ -103,12 +103,18 @@ namespace Islands {
 		 */
 		virtual void onEnd() {}
 
-	public:
-
 		/**
 		 * Creates a new scene instance
 		 * @param window A reference to the window used for rendering
 		 */
 		Scene(sf::RenderWindow& window);
+
+	public:
+
+		// Scenes do not support moving/copying
+		Scene(const Scene& other) = delete;
+		Scene(Scene&& other) = delete;
+		void operator=(const Scene& other) = delete;
+		void operator=(Scene&& other) = delete;
 	};
 }

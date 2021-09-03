@@ -33,6 +33,14 @@ Application::Application() {
 }
 
 /**
+ * Creates a new application instance
+ * @param startingScene the scene to show when the application loads
+ */
+Application::Application(std::shared_ptr<Scene> startingScene) : currentScene(startingScene) {
+	events = new Events(window);
+}
+
+/**
  * Frees resources and deletes the application
  */
 Application::~Application() {
@@ -44,6 +52,22 @@ Application::~Application() {
  * @param scene The scene to display
  */
 void Application::displayScene(std::shared_ptr<Scene> scene) {
+
+	// The scene isn't defined, and won't be displayed
+	if (scene == nullptr) {
+		error("Unable to display scene of nullptr - Aborting");
+		return;
+	}
+
+	// Call scene begin/end methods
+	if (currentScene != nullptr)
+		currentScene->end();
+	scene->begin();
+
+	// Call the scene change listener
+	onSceneChange(currentScene, scene);
+
+	// Change the scene
 	currentScene = scene;
 }
 
@@ -54,6 +78,8 @@ void Application::update() {
 
 	// Update loop
 	while (window.isOpen()) {
+
+		onUpdate();
 		
 		// Update the current scene
 		if (currentScene != nullptr)
@@ -67,6 +93,8 @@ void Application::update() {
 void Application::run() {
 	// Creates the window
 	window.create(sf::VideoMode(800, 600), "Islands");
+
+	onBegin();
 
 	// Create the update thread
 	std::thread updateThread(&Application::update, this);
@@ -90,4 +118,6 @@ void Application::run() {
 
 	// Wait for the update thread to finish
 	updateThread.join();
+
+	onEnd();
 }

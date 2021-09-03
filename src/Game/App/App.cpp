@@ -14,29 +14,23 @@
    limitations under the License.
 */
 
-#include <Engine/Application/Application.hpp>
+#include "App.hpp"
+#include <Game/Scenes/TitleScene.hpp>
 
 using namespace Islands;
 
 /**
- * Create your inherited application here and heap allocate it.
- * Do not worry about its destruction, the engine will take care of it.
+ * Heap allocates the application
  */
-extern Application* createApplication();
+Islands::Application* createApplication() {
+	return new App();
+}
 
 /**
- * The main function/entry point of the program
+ * Called when the app begins
  */
-int main() {
-	// Heap allocate the main app instance
-	mainApp = createApplication();
+void App::onBegin() {
 
-	// Run the app
-	mainApp->run();
-
-	// Delete the app/free the resources
-	delete mainApp;
-
-	// End the program
-	return 0;
+	// Create/present the new/first scene
+	// displayScene(std::shared_ptr<TitleScene>(new TitleScene(window)));
 }

@@ -14,29 +14,18 @@
    limitations under the License.
 */
 
-#include <Engine/Application/Application.hpp>
+#pragma once
 
-using namespace Islands;
+#include <Engine/Scene/Scene.hpp>
 
-/**
- * Create your inherited application here and heap allocate it.
- * Do not worry about its destruction, the engine will take care of it.
- */
-extern Application* createApplication();
+namespace Islands {
 
-/**
- * The main function/entry point of the program
- */
-int main() {
-	// Heap allocate the main app instance
-	mainApp = createApplication();
+	/**
+	 * The title scene/entry scene for the game
+	 */
+	class TitleScene : public Scene {
+	public:
+		TitleScene(sf::RenderWindow& window);
+	};
 
-	// Run the app
-	mainApp->run();
-
-	// Delete the app/free the resources
-	delete mainApp;
-
-	// End the program
-	return 0;
 }

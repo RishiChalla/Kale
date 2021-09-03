@@ -22,6 +22,11 @@
 #include <Engine/Logger/Logger.hpp>
 #include <Engine/Scene/Scene.hpp>
 
+/**
+ * The entry point function/main function of the program
+ */
+int main();
+
 namespace Islands {
 
 	/**
@@ -29,11 +34,6 @@ namespace Islands {
 	 */
 	class Application {
 	private:
-
-		/**
-		 * The main sfml window used for rendering for this application instance
-		 */
-		sf::RenderWindow window;
 
 		/**
 		 * the currently rendered scene
@@ -44,12 +44,36 @@ namespace Islands {
 		 * Handles updating the application in a separate thread
 		 */
 		void update();
+	
+	protected:
 
-	public:
 		/**
-		 * The main logger for this application instance
+		 * The main sfml window used for rendering for this application instance
 		 */
-		Logger log;
+		sf::RenderWindow window;
+
+		/**
+		 * Called when the scene is changed from one to another
+		 * @param fromScene The scene changed from
+		 * @param toScene The scene changed to
+		 */
+		virtual void onSceneChange(std::shared_ptr<Scene> fromScene, std::shared_ptr<Scene> toScene) {}
+
+		/**
+		 * Called on every update frame, must be thread safe.
+		 * Do not do anything heavy here, it will cause lag
+		 */
+		virtual void onUpdate() {}
+
+		/**
+		 * Called when the application begins, just before the window is run.
+		 */
+		virtual void onBegin() {}
+
+		/**
+		 * Called just before the application is ended
+		 */
+		virtual void onEnd() {}
 
 		/**
 		 * Creates a new application instance
@@ -57,9 +81,23 @@ namespace Islands {
 		Application();
 
 		/**
+		 * Creates a new application instance
+		 * @param startingScene the scene to show when the application loads
+		 */
+		Application(std::shared_ptr<Scene> startingScene);
+
+		/**
 		 * Frees resources and deletes the application
 		 */
 		~Application();
+
+		friend int ::main();
+
+	public:
+		/**
+		 * The main logger for this application instance
+		 */
+		Logger log;
 
 		// App class doesn't support copying/moving
 		Application(const Application& other) = delete;
