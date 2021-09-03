@@ -48,6 +48,9 @@ define_file_basename_for_sources(Islands)
 add_subdirectory(dependencies/date)
 target_link_libraries(Islands date)
 
+# FastNoise
+target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/include/)
+
 # SFML
 add_compile_definitions(_HAS_AUTO_PTR_ETC=1)
 add_subdirectory(dependencies/SFML-2.5.1)
