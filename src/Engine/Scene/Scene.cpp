@@ -23,7 +23,7 @@ using namespace Islands;
  * Creates a new scene instance
  * @param window A reference to the window used for rendering
  */
-Scene::Scene(sf::RenderWindow& mainWindow) : window(window) {
+Scene::Scene(sf::RenderWindow& mainWindow) : window(mainWindow) {
 	// Empty body
 }
 

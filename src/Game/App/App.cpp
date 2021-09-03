@@ -31,6 +31,6 @@ Islands::Application* createApplication() {
  */
 void App::onBegin() {
 
-	// Create/present the new/first scene
-	// displayScene(std::shared_ptr<TitleScene>(new TitleScene(window)));
+	// Create/present the new/windowfirst scene
+	displayScene(std::make_shared<TitleScene>(window));
 }
