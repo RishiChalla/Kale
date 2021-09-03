@@ -66,6 +66,11 @@ namespace Islands {
 	protected:
 
 		/**
+		 * Represents the main camera used for rendering the scene
+		 */
+		sf::View camera;
+
+		/**
 		 * Represents the background color used for clearing the screen before drawing
 		 */
 		sf::Color bgColor = sf::Color::Black;

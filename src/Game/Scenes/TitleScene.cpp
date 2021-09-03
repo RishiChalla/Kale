@@ -18,6 +18,17 @@
 
 using namespace Islands;
 
+/**
+ * Creates a new title scene instance
+ * @param window The window to link to/draw on
+ */
 TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window) {
+	
+}
+
+/**
+ * Frees resources/destructs the scene
+ */
+TitleScene::~TitleScene() {
 	
 }

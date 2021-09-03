@@ -68,6 +68,7 @@ void Scene::removeNode(std::shared_ptr<sf::Drawable> node) {
  * Begins the rendering of the scene
  */
 void Scene::begin() {
+	window.setView(camera);
 	onBegin();
 }
 
@@ -83,5 +84,6 @@ void Scene::update() {
  * Ends the rendering of the scene
  */
 void Scene::end() {
+	window.setView(window.getDefaultView());
 	onEnd();
 }

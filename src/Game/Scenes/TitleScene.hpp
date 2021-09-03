@@ -25,7 +25,17 @@ namespace Islands {
 	 */
 	class TitleScene : public Scene {
 	public:
+
+		/**
+		 * Creates a new title scene instance
+		 * @param window The window to link to/draw on
+		 */
 		TitleScene(sf::RenderWindow& window);
+
+		/**
+		 * Frees resources/destructs the scene
+		 */
+		~TitleScene();
 	};
 
 }
