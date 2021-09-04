@@ -59,12 +59,12 @@ namespace Islands {
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void()>>> windowLostFocusListener;
+		std::list<std::shared_ptr<std::function<void()>>> windowLostFocusListeners;
 
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void()>>> windowGainedFocusListener;
+		std::list<std::shared_ptr<std::function<void()>>> windowGainedFocusListeners;
 		
 		/**
 		 * Stores all the event listeners in a linked list
@@ -246,16 +246,16 @@ namespace Islands {
 		void addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler);
 
 		/**
-		 * Provides a callback on window lost focus
+		 * Provides a callback on window resizes
 		 * @param handler The handler/callback function to call on the event
 		 */
 		void addWindowLostFocusListener(std::shared_ptr<std::function<void()>> handler);
 
 		/**
-		 * Provides a callback on window focus
+		 * Provides a callback on window resizes
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addWindowGainFocusListener(std::shared_ptr<std::function<void()>> handler);
+		void addWindowGainedFocusListener(std::shared_ptr<std::function<void()>> handler);
 
 		
 		/**
@@ -387,7 +387,7 @@ namespace Islands {
 		 * Removes a callback on window focus
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void removeWindowGainFocusListener(std::shared_ptr<std::function<void()>> handler);
+		void removeWindowGainedFocusListener(std::shared_ptr<std::function<void()>> handler);
 
 		
 		/**

@@ -20,6 +20,7 @@
 #include <memory>
 #include <tuple>
 #include <SFML/Graphics.hpp>
+#include <Engine/Events/Events.hpp>
 
 namespace Islands {
 
@@ -109,10 +110,117 @@ namespace Islands {
 		virtual void onEnd() {}
 
 		/**
+		 * Called when the event is fired
+		 */
+		virtual void onWindowResize(const Vector2ui& newSize);
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onWindowLostFocus() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onWindowGainedFocus() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onControllerConnect(unsigned int controller) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onControllerDisconnect(unsigned int controller) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onControllerButtonPress(unsigned int controller, unsigned int button) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onControllerButtonRelease(unsigned int controller, unsigned int button) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onControllerHandle(unsigned int controller, Axis handle, float position) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onKeyPress(Key key) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onKeyRelease(Key key) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onMouseMove(const Vector2ui& pos) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onMouseScroll(int scroll) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onLeftClick() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onMiddleClick() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onRightClick() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onLeftClickRelease() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onMiddleClickRelease() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onRightClickRelease() {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onTouchBegin(unsigned int touch, const Vector2ui& pos) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onTouchMove(unsigned int touch, const Vector2ui& pos) {}
+
+		/**
+		 * Called when the event is fired
+		 */
+		virtual void onTouchEnd(unsigned int touch) {}
+
+		/**
 		 * Creates a new scene instance
 		 * @param window A reference to the window used for rendering
 		 */
 		Scene(sf::RenderWindow& window);
+
+		friend class Application;
 
 	public:
 

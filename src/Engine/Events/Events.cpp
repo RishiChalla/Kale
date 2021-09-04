@@ -15,6 +15,7 @@
 */
 
 #include "Events.hpp"
+#include <Engine/Application/Application.hpp>
 
 using namespace Islands;
 
@@ -45,36 +46,42 @@ void Events::handleEvents() {
 
 			case sf::Event::EventType::Resized: {
 				Vector2ui size(event.size.width, event.size.height);
+				mainApp->onWindowResize(size);
 				for (auto listener : windowResizeListeners)
 					listener->operator()(size);
 				return;
 			}
 
 			case sf::Event::EventType::LostFocus: {
-				for (auto listener : windowLostFocusListener)
+				mainApp->onWindowLostFocus();
+				for (auto listener : windowLostFocusListeners)
 					listener->operator()();
 				return;
 			}
 
 			case sf::Event::EventType::GainedFocus: {
-				for (auto listener : windowGainedFocusListener)
+				mainApp->onWindowGainedFocus();
+				for (auto listener : windowGainedFocusListeners)
 					listener->operator()();
 				return;
 			}
 
 			case sf::Event::EventType::KeyPressed: {
+				mainApp->onKeyPress(event.key.code);
 				for (auto listener : keyPressListeners)
 					listener->operator()(event.key.code);
 				return;
 			}
 
 			case sf::Event::EventType::KeyReleased: {
+				mainApp->onKeyRelease(event.key.code);
 				for (auto listener : keyReleaseListeners)
 					listener->operator()(event.key.code);
 				return;
 			}
 
 			case sf::Event::EventType::MouseWheelScrolled: {
+				mainApp->onMouseScroll(event.mouseWheel.delta);
 				for (auto listener : mouseScrollListeners)
 					listener->operator()(event.mouseWheel.delta);
 				return;
@@ -83,16 +90,19 @@ void Events::handleEvents() {
 			case sf::Event::EventType::MouseButtonPressed: {
 				switch (event.mouseButton.button) {
 					case sf::Mouse::Button::Left: {
+						mainApp->onLeftClick();
 						for (auto listener : leftClickListeners)
 							listener->operator()();
 						return;
 					}
 					case sf::Mouse::Button::Middle: {
+						mainApp->onMiddleClick();
 						for (auto listener : middleClickListeners)
 							listener->operator()();
 						return;
 					}
 					case sf::Mouse::Button::Right: {
+						mainApp->onRightClick();
 						for (auto listener : rightClickListeners)
 							listener->operator()();
 						return;
@@ -105,16 +115,19 @@ void Events::handleEvents() {
 			case sf::Event::EventType::MouseButtonReleased: {
 				switch (event.mouseButton.button) {
 					case sf::Mouse::Button::Left: {
+						mainApp->onLeftClickRelease();
 						for (auto listener : leftClickReleaseListeners)
 							listener->operator()();
 						return;
 					}
 					case sf::Mouse::Button::Middle: {
+						mainApp->onMiddleClickRelease();
 						for (auto listener : middleClickReleaseListeners)
 							listener->operator()();
 						return;
 					}
 					case sf::Mouse::Button::Right: {
+						mainApp->onRightClickRelease();
 						for (auto listener : rightClickReleaseListeners)
 							listener->operator()();
 						return;
@@ -126,24 +139,29 @@ void Events::handleEvents() {
 
 			case sf::Event::EventType::MouseMoved: {
 				Vector2ui pos = Vector2i(event.mouseMove.x, event.mouseMove.y).cast<unsigned int>();
+				mainApp->onMouseMove(pos);
 				for (auto listener : mouseMoveListeners)
 					listener->operator()(pos);
 				return;
 			}
 
 			case sf::Event::EventType::JoystickButtonPressed: {
+				mainApp->onControllerButtonPress(event.joystickButton.joystickId, event.joystickButton.button);
 				for (auto listener : controllerButtonPressListeners)
 					listener->operator()(event.joystickButton.joystickId, event.joystickButton.button);
 				return;
 			}
 
 			case sf::Event::EventType::JoystickButtonReleased: {
+				mainApp->onControllerButtonRelease(event.joystickButton.joystickId, event.joystickButton.button);
 				for (auto listener : controllerButtonReleaseListeners)
 					listener->operator()(event.joystickButton.joystickId, event.joystickButton.button);
 				return;
 			}
 
 			case sf::Event::EventType::JoystickMoved: {
+				mainApp->onControllerHandle(event.joystickMove.joystickId, event.joystickMove.axis,
+					event.joystickMove.position);
 				for (auto listener : controllerHandleListeners)
 					listener->operator()(event.joystickMove.joystickId, event.joystickMove.axis,
 						event.joystickMove.position);
@@ -151,12 +169,14 @@ void Events::handleEvents() {
 			}
 
 			case sf::Event::EventType::JoystickConnected: {
+				mainApp->onControllerConnect(event.joystickConnect.joystickId);
 				for (auto listener : controllerConnectListeners)
 					listener->operator()(event.joystickConnect.joystickId);
 				return;
 			}
 
 			case sf::Event::EventType::JoystickDisconnected: {
+				mainApp->onControllerDisconnect(event.joystickConnect.joystickId);
 				for (auto listener : controllerDisconnectListeners)
 					listener->operator()(event.joystickConnect.joystickId);
 				return;
@@ -164,6 +184,7 @@ void Events::handleEvents() {
 
 			case sf::Event::EventType::TouchBegan: {
 				Vector2ui pos(event.touch.x, event.touch.y);
+				mainApp->onTouchBegin(event.touch.finger, pos);
 				for (auto listener : touchBeginListeners)
 					listener->operator()(event.touch.finger, pos);
 				return;
@@ -171,13 +192,14 @@ void Events::handleEvents() {
 
 			case sf::Event::EventType::TouchMoved: {
 				Vector2ui pos(event.touch.x, event.touch.y);
+				mainApp->onTouchMove(event.touch.finger, pos);
 				for (auto listener : touchMoveListeners)
 					listener->operator()(event.touch.finger, pos);
 				return;
 			}
 
 			case sf::Event::EventType::TouchEnded: {
-				Vector2ui pos(event.touch.x, event.touch.y);
+				mainApp->onTouchEnd(event.touch.finger);
 				for (auto listener : touchEndListeners)
 					listener->operator()(event.touch.finger);
 				return;
@@ -271,6 +293,22 @@ Vector2i Events::getMousePos() const {
  */
 void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler) {
 	windowResizeListeners.push_back(handler);
+}
+
+/**
+ * Provides a callback on window resizes
+ * @param handler The handler/callback function to call on the event
+ */
+void Events::addWindowLostFocusListener(std::shared_ptr<std::function<void()>> handler) {
+	windowLostFocusListeners.push_back(handler);
+}
+
+/**
+ * Provides a callback on window resizes
+ * @param handler The handler/callback function to call on the event
+ */
+void Events::addWindowGainedFocusListener(std::shared_ptr<std::function<void()>> handler) {
+	windowGainedFocusListeners.push_back(handler);
 }
 
 
@@ -429,6 +467,22 @@ void Events::addTouchEndListener(std::shared_ptr<std::function<void(unsigned int
  */
 void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler) {
 	windowResizeListeners.remove(handler);
+}
+
+/**
+ * Provides a callback on window resizes
+ * @param handler The handler/callback function to call on the event
+ */
+void Events::removeWindowLostFocusListener(std::shared_ptr<std::function<void()>> handler) {
+	windowLostFocusListeners.remove(handler);
+}
+
+/**
+ * Provides a callback on window resizes
+ * @param handler The handler/callback function to call on the event
+ */
+void Events::removeWindowGainedFocusListener(std::shared_ptr<std::function<void()>> handler) {
+	windowGainedFocusListeners.remove(handler);
 }
 
 

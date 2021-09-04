@@ -24,7 +24,8 @@ using namespace Islands;
  * @param window A reference to the window used for rendering
  */
 Scene::Scene(sf::RenderWindow& mainWindow) : window(mainWindow) {
-	// Empty body
+	camera.setCenter(0, 0);
+	camera.setSize(events->getWindowSize().cast<float>());
 }
 
 /**
@@ -70,6 +71,7 @@ void Scene::removeNode(std::shared_ptr<sf::Drawable> node) {
  */
 void Scene::begin() {
 	window.setView(camera);
+	camera.setSize(events->getWindowSize().cast<float>());
 	onBegin();
 }
 
@@ -87,4 +89,11 @@ void Scene::update() {
 void Scene::end() {
 	window.setView(window.getDefaultView());
 	onEnd();
+}
+
+/**
+ * Called when the event is fired
+ */
+void Scene::onWindowResize(const Vector2ui& newSize) {
+	camera.setSize(newSize.cast<float>());
 }
