@@ -69,8 +69,12 @@ namespace Islands {
 		double magnitude() { return sqrt(static_cast<double>(x * x + y * y)); }
 
 		template <typename A>
-		Vector2<A> cast() {
+		Vector2<A> cast() const {
 			return Vector2<A>(static_cast<A>(x), static_cast<A>(y));
+		}
+
+		operator sf::Vector2<T>() const {
+			return sf::Vector2<T>(x, y);
 		}
 	};
 
@@ -132,8 +136,12 @@ namespace Islands {
 		double magnitude() { return sqrt(static_cast<double>(x * x + y * y + z * z)); }
 
 		template <typename A>
-		Vector3<A> cast() {
+		Vector3<A> cast() const {
 			return Vector3<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z));
+		}
+
+		operator sf::Vector3<T>() const {
+			return sf::Vector3<T>(x, y, z);
 		}
 	};
 
@@ -203,7 +211,7 @@ namespace Islands {
 		T dot(Vector4<T> o) { return o.x * x + o.y * y + o.z * z + o.w * w; }
 		double magnitude() { return sqrt(static_cast<double>(x * x + y * y + z * z + w * w)); }
 
-		template <typename A> Vector4<A> cast() {
+		template <typename A> Vector4<A> cast() const {
 			return Vector4<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z), static_cast<A>(w));
 		}
 	};

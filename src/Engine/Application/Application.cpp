@@ -15,7 +15,6 @@
 */
 
 #include "Application.hpp"
-#include <Engine/Events/Events.hpp>
 #include <thread>
 
 using namespace Islands;
@@ -24,21 +23,6 @@ using namespace Islands;
  * The main application instance
  */
 Application* Islands::mainApp = nullptr;
-
-/**
- * Creates a new application instance
- */
-Application::Application() {
-	events = new Events(window);
-}
-
-/**
- * Creates a new application instance
- * @param startingScene the scene to show when the application loads
- */
-Application::Application(std::shared_ptr<Scene> startingScene) : currentScene(startingScene) {
-	events = new Events(window);
-}
 
 /**
  * Frees resources and deletes the application

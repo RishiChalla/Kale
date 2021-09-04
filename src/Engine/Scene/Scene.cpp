@@ -47,11 +47,12 @@ void Scene::render() const {
  * @param node The node to add
  */
 void Scene::addNode(unsigned int zIndex, std::shared_ptr<sf::Drawable> node) {
-	for (auto it = nodes.end(); it != nodes.begin(); it--) {
+	auto it = nodes.end();
+	for (; it != nodes.begin(); it--) {
 		if (zIndex > std::get<0>(*it)) continue;
-		nodes.insert(it, std::make_tuple(zIndex, node));
 		break;
 	}
+	nodes.insert(it, std::make_tuple(zIndex, node));
 }
 
 /**

@@ -21,13 +21,43 @@
 namespace Islands {
 
 	/**
+	 * All required fonts for the game 
+	 */
+	enum class Font {
+		Future
+	};
+	
+	/**
+	 * All required textures for the game 
+	 */
+	enum class Texture {
+		
+	};
+	
+	/**
+	 * All required shaders for the game 
+	 */
+	enum class Shader {
+
+	};
+
+	/**
 	 * Represents the main application class
 	 */
 	class App : public Application {
+
+	protected:
 		
 		/**
-		 * Called when the app begins
+		 * Called when the application begins
 		 */
 		void onBegin() override;
+	
+	public:
+
+		/**
+		 * Creates a new app instance
+		 */
+		App();
 	};
 }

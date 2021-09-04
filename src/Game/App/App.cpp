@@ -27,10 +27,26 @@ Islands::Application* createApplication() {
 }
 
 /**
- * Called when the app begins
+ * Creates a new app instance
+ */
+App::App() : Application(
+	std::array<std::tuple<Font, const char*>, 1>({
+		// Fonts for the game
+		std::make_tuple(Font::Future, ".Islands/assets/fonts/future.ttf")
+	}), std::array<std::tuple<Texture, const char*>, 0>({
+		// Required Textures for the game
+	}), std::array<std::tuple<Shader, sf::Shader::Type, const char*>, 0>({
+		// Required Shaders for the game
+	})
+) {
+	// Empty constructor - nothing to do here.
+}
+
+/**
+ * Called when the application begins
  */
 void App::onBegin() {
 
-	// Create/present the new/windowfirst scene
+	// Display the title scene when the app begins
 	displayScene(std::make_shared<TitleScene>(window));
 }

@@ -21,6 +21,8 @@
 
 #include <Engine/Logger/Logger.hpp>
 #include <Engine/Scene/Scene.hpp>
+#include <Engine/Assets/Assets.hpp>
+#include <Engine/Events/Events.hpp>
 
 /**
  * The entry point function/main function of the program
@@ -77,14 +79,19 @@ namespace Islands {
 
 		/**
 		 * Creates a new application instance
+		 * @param fontsList The fonts to load
+		 * @param texturesList The textures to load
+		 * @param shadersList The shaders to load
 		 */
-		Application();
+		template <int numFonts, int numTextures, int numShaders>
+		Application(std::array<std::tuple<Font, const char*>, numFonts> fontsList,
+			std::array<std::tuple<Texture, const char*>, numTextures> texturesList,
+			std::array<std::tuple<Shader, sf::Shader::Type, const char*>, numShaders> shadersList) {
 
-		/**
-		 * Creates a new application instance
-		 * @param startingScene the scene to show when the application loads
-		 */
-		Application(std::shared_ptr<Scene> startingScene);
+			// Init app
+			events = new Events(window);
+			assets.create(fontsList, texturesList, shadersList);
+		}
 
 		/**
 		 * Frees resources and deletes the application

@@ -27,6 +27,11 @@ namespace Islands {
 	public:
 
 		/**
+		 * The main title text
+		 */
+		sf::Text title;
+
+		/**
 		 * Creates a new title scene instance
 		 * @param window The window to link to/draw on
 		 */

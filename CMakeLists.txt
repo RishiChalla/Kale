@@ -55,3 +55,8 @@ target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/include/)
 add_compile_definitions(_HAS_AUTO_PTR_ETC=1)
 add_subdirectory(dependencies/SFML-2.5.1)
 target_link_libraries(Islands sfml-system sfml-audio sfml-window sfml-graphics)
+
+# Copy all resources (assets, shaders, etc)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/.Islands/assets)
