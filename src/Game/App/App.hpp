@@ -24,7 +24,14 @@ namespace Islands {
 	 * All required fonts for the game 
 	 */
 	enum class Font {
-		Future
+		RalewayBlack, RalewayBlackItalic,
+		RalewayBold, RalewayBoldItalic,
+		RalewayExtraBold, RalewayExtraBoldItalic,
+		RalewayExtraLight, RalewayExtraLightItalic,
+		RalewayItalic, RalewayLight, RalewayLightItalic,
+		RalewayMedium, RalewayMediumItalic,
+		RalewayRegular, RalewaySemiBold, RalewaySemiBoldItalic,
+		RalewayThin, RalewayThinItalic
 	};
 	
 	/**

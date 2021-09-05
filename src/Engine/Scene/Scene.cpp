@@ -47,7 +47,7 @@ void Scene::render() const {
  * @param zIndex The rendering order of the element
  * @param node The node to add
  */
-void Scene::addNode(unsigned int zIndex, std::shared_ptr<sf::Drawable> node) {
+void Scene::addNode(unsigned int zIndex, sf::Drawable* node) {
 	auto it = nodes.end();
 	for (; it != nodes.begin(); it--) {
 		if (zIndex > std::get<0>(*it)) continue;
@@ -60,7 +60,7 @@ void Scene::addNode(unsigned int zIndex, std::shared_ptr<sf::Drawable> node) {
  * Removes a node from the scene
  * @param node The node to remove
  */
-void Scene::removeNode(std::shared_ptr<sf::Drawable> node) {
+void Scene::removeNode(sf::Drawable* node) {
 	nodes.remove_if([&](auto n) {
 		return std::get<1>(n) == node;
 	});
@@ -73,6 +73,7 @@ void Scene::begin() {
 	window.setView(camera);
 	camera.setSize(events->getWindowSize().cast<float>());
 	onBegin();
+	onPosition(events->getWindowSize().cast<float>());
 }
 
 /**
@@ -97,4 +98,5 @@ void Scene::end() {
 void Scene::onWindowResize(const Vector2ui& newSize) {
 	camera.setSize(newSize.cast<float>());
 	window.setView(camera);
+	onPosition(newSize.cast<float>());
 }

@@ -17,7 +17,6 @@
 #pragma once
 
 #include <list>
-#include <memory>
 #include <tuple>
 #include <SFML/Graphics.hpp>
 #include <Engine/Events/Events.hpp>
@@ -39,7 +38,7 @@ namespace Islands {
 		/**
 		 * A linked list of all the nodes to be drawn
 		 */
-		std::list<std::tuple<unsigned int, std::shared_ptr<sf::Drawable>>> nodes;
+		std::list<std::tuple<unsigned int, sf::Drawable*>> nodes;
 		
 		/**
 		 * Draws/renders the scene in its entirety
@@ -81,15 +80,22 @@ namespace Islands {
 		 * @param zIndex The rendering order of the element
 		 * @param node The node to add
 		 */
-		void addNode(unsigned int zIndex, std::shared_ptr<sf::Drawable> node);
+		void addNode(unsigned int zIndex, sf::Drawable* node);
 
 		/**
 		 * Removes a node from the scene
 		 * @param node The node to remove
 		 */
-		void removeNode(std::shared_ptr<sf::Drawable> node);
+		void removeNode(sf::Drawable* node);
 
 		// Virtual Methods
+
+		/**
+		 * Called anytime code for positioning elements is reuqired to be run
+		 * (window resize, screen tilting, scene beginning etc)
+		 * Place code for positioning and sizing elements here
+		 */
+		virtual void onPosition(const Vector2f& size) {}
 
 		/**
 		 * Called every frame, don't do anything too heavy here

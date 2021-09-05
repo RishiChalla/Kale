@@ -28,23 +28,25 @@ TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window) {
 	
 	// Create the titles text label
 	title.setString("Islands");
-	title.setFont(assets[Font::Future]);
+	title.setFont(assets[Font::RalewayBlack]);
 	title.setFillColor(sf::Color::White);
-	title.setCharacterSize(50);
-	title.setStyle(sf::Style::Resize);
+	title.setStyle(sf::Text::Regular);
+
+	// Add the title to the scene
+	addNode(UINT_MAX, dynamic_cast<sf::Drawable*>(&title));
+}
+
+/**
+ * Called to position elements
+ * @param size The window size
+ */
+void TitleScene::onPosition(const Vector2f& size) {
+
+	// Title label
+	title.setCharacterSize(static_cast<unsigned int>(0.2 * size.y));
 	title.setOrigin(
 		title.getLocalBounds().left + title.getLocalBounds().width / 2.0f,
 		title.getLocalBounds().top + title.getLocalBounds().height / 2.0f
 	);
-	title.setPosition(0, camera.getViewport().top - 150.0f);
-
-	// Add the title to the scene
-	addNode(UINT_MAX, std::make_shared<sf::Text>(title));
-}
-
-/**
- * Frees resources/destructs the scene
- */
-TitleScene::~TitleScene() {
-	
+	title.setPosition(camera.getCenter().x, camera.getViewport().top - 0.3f * size.y);
 }

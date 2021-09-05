@@ -24,6 +24,13 @@ namespace Islands {
 	 * The title scene/entry scene for the game
 	 */
 	class TitleScene : public Scene {
+	protected:
+
+		/**
+		 * Called to position elements
+		 * @param size The window size
+		 */
+		void onPosition(const Vector2f& size) override;
 	public:
 
 		/**
@@ -36,11 +43,6 @@ namespace Islands {
 		 * @param window The window to link to/draw on
 		 */
 		TitleScene(sf::RenderWindow& window);
-
-		/**
-		 * Frees resources/destructs the scene
-		 */
-		~TitleScene();
 	};
 
 }
