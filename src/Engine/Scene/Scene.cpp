@@ -96,4 +96,5 @@ void Scene::end() {
  */
 void Scene::onWindowResize(const Vector2ui& newSize) {
 	camera.setSize(newSize.cast<float>());
+	window.setView(camera);
 }
