@@ -33,7 +33,7 @@ TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window) {
 	title.setStyle(sf::Text::Regular);
 
 	// Add the title to the scene
-	addNode(UINT_MAX, dynamic_cast<sf::Drawable*>(&title));
+	addNode(std::numeric_limits<unsigned int>::max(), dynamic_cast<sf::Drawable*>(&title));
 }
 
 /**

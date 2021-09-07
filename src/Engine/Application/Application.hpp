@@ -27,7 +27,7 @@ namespace Islands {
 	 * @param texturesList The textures to load
 	 * @param shadersList The shaders to load
 	 */
-	template <int numFonts, int numTextures, int numShaders>
+	template <size_t numFonts, size_t numTextures, size_t numShaders>
 	Application::Application(std::array<std::tuple<Font, const char*>, numFonts> fontsList,
 		std::array<std::tuple<Texture, const char*>, numTextures> texturesList,
 		std::array<std::tuple<Shader, const char*, const char*>, numShaders> shadersList) {
