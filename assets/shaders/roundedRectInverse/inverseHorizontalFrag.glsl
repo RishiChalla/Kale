@@ -14,38 +14,11 @@
    limitations under the License.
 */
 
-#pragma once
-
-#include <Engine/Scene/Scene.hpp>
-
-namespace Islands {
-
-	/**
-	 * The title scene/entry scene for the game
-	 */
-	class TitleScene : public Scene {
-	private:
-
-		/**
-		 * The main title text
-		 */
-		sf::Text title;
-		
-	protected:
-
-		/**
-		 * Called to position elements
-		 * @param size The window size
-		 */
-		void onPosition(const Vector2f& size) override;
-
-	public:
-
-		/**
-		 * Creates a new title scene instance
-		 * @param window The window to link to/draw on
-		 */
-		TitleScene(sf::RenderWindow& window);
-	};
-
+void main() {
+	if (gl_FragCoord.x < 400) {
+		gl_FragColor = gl_Color;
+	}
+	else {
+		gl_FragColor = vec4(1, 1, 1, 1);
+	}
 }

@@ -29,6 +29,7 @@ Application* Islands::mainApp = nullptr;
  */
 Application::~Application() {
 	delete events;
+	delete assets;
 }
 
 /**

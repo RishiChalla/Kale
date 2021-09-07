@@ -45,7 +45,24 @@ namespace Islands {
 	 * All required shaders for the game 
 	 */
 	enum class Shader {
+		// The default SFML shader
+		Default,
 
+		// Rounded Rect
+		RoundedHorizontal, RoundedVertical,
+		RoundedBottom, RoundedTop,
+		RoundedLeft, RoundedRight,
+
+		// Inverse Rounded Rect
+		InverseHorizontal, InverseVertical,
+		InverseBottom, InverseTop,
+		InverseLeft, InverseRight,
+		
+		// Combined Rounded Rect (The cap is the rounded side)
+		CombinedBottomCap,
+		CombinedTopCap,
+		CombinedLeftCap,
+		CombinedRightCap
 	};
 
 	/**

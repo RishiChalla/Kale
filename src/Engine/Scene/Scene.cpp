@@ -49,7 +49,8 @@ void Scene::render() const {
  */
 void Scene::addNode(unsigned int zIndex, sf::Drawable* node) {
 	auto it = nodes.end();
-	for (; it != nodes.begin(); it--) {
+	while (it != nodes.begin()) {
+		it--;
 		if (zIndex > std::get<0>(*it)) continue;
 		break;
 	}

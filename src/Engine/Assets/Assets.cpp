@@ -21,14 +21,14 @@ using namespace Islands;
 /**
  * The main instance of the asset manager
  */
-Assets Islands::assets;
+Assets* Islands::assets = nullptr;
 
 /**
  * Gets an asset
  * @param font The asset to get
  * @returns The asset
  */
-const sf::Font& Assets::operator[](Font font) const {
+sf::Font& Assets::get(Font font) {
 	return fontMap.at(font);
 }
 
@@ -37,7 +37,7 @@ const sf::Font& Assets::operator[](Font font) const {
  * @param texture The asset to get
  * @returns The asset
  */
-const sf::Texture& Assets::operator[](Texture texture) const {
+sf::Texture& Assets::get(Texture texture) {
 	return textureMap.at(texture);
 }
 
@@ -46,6 +46,6 @@ const sf::Texture& Assets::operator[](Texture texture) const {
  * @param shader The asset to get
  * @returns The asset
  */
-const sf::Shader& Assets::operator[](Shader shader) const {
+sf::Shader& Assets::get(Shader shader) {
 	return shaderMap.at(shader);
 }

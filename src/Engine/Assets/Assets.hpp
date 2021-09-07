@@ -20,6 +20,7 @@
 #include <tuple>
 #include <array>
 #include <SFML/Graphics.hpp>
+#include <Engine/Application/Application_fwd.hpp>
 
 namespace Islands {
 
@@ -68,9 +69,9 @@ namespace Islands {
 		 * @param shadersList The shaders to load
 		 */
 		template <int numFonts, int numTextures, int numShaders>
-		void create(std::array<std::tuple<Font, const char*>, numFonts> fontsList,
+		Assets(std::array<std::tuple<Font, const char*>, numFonts> fontsList,
 			std::array<std::tuple<Texture, const char*>, numTextures> texturesList,
-			std::array<std::tuple<Shader, sf::Shader::Type, const char*>, numShaders> shadersList) {
+			std::array<std::tuple<Shader, const char*, const char*>, numShaders> shadersList) {
 			
 			// Loading of assets
 			for (auto fontTuple : fontsList) {
@@ -83,9 +84,15 @@ namespace Islands {
 				texture.loadFromFile(std::get<1>(textureTuple));
 			}
 
+			if (!sf::Shader::isAvailable()) {
+				error("Shaders are unavailable on your GPU driver.");
+				exit(0);
+				return;
+			}
+
 			for (auto shaderTuple : shadersList) {
 				sf::Shader& shader = shaderMap[std::get<0>(shaderTuple)];
-				shader.loadFromFile(std::get<2>(shaderTuple), std::get<1>(shaderTuple));
+				shader.loadFromFile(std::get<1>(shaderTuple), std::get<2>(shaderTuple));
 			}
 		}
 
@@ -98,25 +105,25 @@ namespace Islands {
 		 * @param font The asset to get
 		 * @returns The asset
 		 */
-		const sf::Font& operator[](Font font) const;
+		sf::Font& get(Font font);
 		
 		/**
 		 * Gets an asset
 		 * @param texture The asset to get
 		 * @returns The asset
 		 */
-		const sf::Texture& operator[](Texture texture) const;
+		sf::Texture& get(Texture texture);
 		
 		/**
 		 * Gets an asset
 		 * @param shader The asset to get
 		 * @returns The asset
 		 */
-		const sf::Shader& operator[](Shader shader) const;
+		sf::Shader& get(Shader shader);
 	};
 
 	/**
 	 * The main instance of the asset manager
 	 */
-	extern Assets assets;
+	extern Assets* assets;
 }

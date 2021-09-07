@@ -14,38 +14,10 @@
    limitations under the License.
 */
 
-#pragma once
+void main() {
+	// transform the vertex position
+	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 
-#include <Engine/Scene/Scene.hpp>
-
-namespace Islands {
-
-	/**
-	 * The title scene/entry scene for the game
-	 */
-	class TitleScene : public Scene {
-	private:
-
-		/**
-		 * The main title text
-		 */
-		sf::Text title;
-		
-	protected:
-
-		/**
-		 * Called to position elements
-		 * @param size The window size
-		 */
-		void onPosition(const Vector2f& size) override;
-
-	public:
-
-		/**
-		 * Creates a new title scene instance
-		 * @param window The window to link to/draw on
-		 */
-		TitleScene(sf::RenderWindow& window);
-	};
-
+	// forward the vertex color
+	gl_FrontColor = gl_Color;
 }

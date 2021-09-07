@@ -28,7 +28,7 @@ TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window) {
 	
 	// Create the titles text label
 	title.setString("Islands");
-	title.setFont(assets[Font::RalewayBlack]);
+	title.setFont(assets->get(Font::RalewayBlack));
 	title.setFillColor(sf::Color::White);
 	title.setStyle(sf::Text::Regular);
 
@@ -43,7 +43,7 @@ TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window) {
 void TitleScene::onPosition(const Vector2f& size) {
 
 	// Title label
-	title.setCharacterSize(static_cast<unsigned int>(0.2 * size.y));
+	title.setCharacterSize(static_cast<unsigned int>(0.15 * size.y));
 	title.setOrigin(
 		title.getLocalBounds().left + title.getLocalBounds().width / 2.0f,
 		title.getLocalBounds().top + title.getLocalBounds().height / 2.0f
