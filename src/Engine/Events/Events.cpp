@@ -28,7 +28,7 @@ Events* Islands::events = nullptr;
  * Creates a new events instance
  * @param window A reference to the render window
  */
-Events::Events(sf::RenderWindow& window) : window(window) {
+Events::Events(sf::RenderWindow& window) : window(window), windowSize(800, 600) {
 	// Empty body - all the list constructors are called automatically
 }
 
@@ -45,10 +45,11 @@ void Events::handleEvents() {
 			}
 
 			case sf::Event::EventType::Resized: {
-				Vector2ui size(event.size.width, event.size.height);
-				mainApp->onWindowResize(size);
+				Vector2ui newSize(event.size.width, event.size.height);
+				mainApp->onWindowResize(windowSize, newSize);
 				for (auto listener : windowResizeListeners)
-					listener->operator()(size);
+					listener->operator()(windowSize, newSize);
+				windowSize = newSize;
 				return;
 			}
 
@@ -291,7 +292,7 @@ Vector2i Events::getMousePos() const {
  * Provides a callback on window resizes
  * @param handler The handler/callback function to call on the event
  */
-void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler) {
+void Events::addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&, const Vector2ui&)>> handler) {
 	windowResizeListeners.push_back(handler);
 }
 
@@ -465,7 +466,7 @@ void Events::addTouchEndListener(std::shared_ptr<std::function<void(unsigned int
  * Removes a callback on window resizes
  * @param handler The handler/callback function to remove
  */
-void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler) {
+void Events::removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&, const Vector2ui&)>> handler) {
 	windowResizeListeners.remove(handler);
 }
 

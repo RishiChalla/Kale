@@ -95,7 +95,7 @@ namespace Islands {
 		/**
 		 * Called when the event is fired
 		 */
-		virtual void onWindowResize(const Vector2ui& newSize);
+		virtual void onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize);
 
 		/**
 		 * Called when the event is fired

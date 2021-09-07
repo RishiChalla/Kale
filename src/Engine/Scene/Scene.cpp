@@ -74,7 +74,6 @@ void Scene::begin() {
 	window.setView(camera);
 	camera.setSize(events->getWindowSize().cast<float>());
 	onBegin();
-	onPosition(events->getWindowSize().cast<float>());
 }
 
 /**
@@ -96,8 +95,7 @@ void Scene::end() {
 /**
  * Called when the event is fired
  */
-void Scene::onWindowResize(const Vector2ui& newSize) {
+void Scene::onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) {
 	camera.setSize(newSize.cast<float>());
 	window.setView(camera);
-	onPosition(newSize.cast<float>());
 }

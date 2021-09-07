@@ -24,29 +24,19 @@ using namespace Islands;
  * Creates a new title scene instance
  * @param window The window to link to/draw on
  */
-TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window) {
-	
-	// Create the titles text label
-	title.setString("Islands");
-	title.setFont(assets->get(Font::RalewayBlack));
-	title.setFillColor(sf::Color::White);
-	title.setStyle(sf::Text::Regular);
-
-	// Add the title to the scene
-	addNode(std::numeric_limits<unsigned int>::max(), dynamic_cast<sf::Drawable*>(&title));
+TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window),
+	testRect(RoundedRectType::HorizontalCenters, &assets->get(Shader::RoundedHorizontal),
+		{0.0f, 0.0f}, {0.4f, 0.1f}, sf::Color::Cyan) {
+	addNode(1, dynamic_cast<sf::Drawable*>(&testRect));
 }
 
 /**
  * Called to position elements
- * @param size The window size
  */
-void TitleScene::onPosition(const Vector2f& size) {
+void TitleScene::onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) {
+	// Call the super event handler
+	Scene::onWindowResize(oldSize, newSize);
 
-	// Title label
-	title.setCharacterSize(static_cast<unsigned int>(0.15 * size.y));
-	title.setOrigin(
-		title.getLocalBounds().left + title.getLocalBounds().width / 2.0f,
-		title.getLocalBounds().top + title.getLocalBounds().height / 2.0f
-	);
-	title.setPosition(camera.getCenter().x, camera.getViewport().top - 0.3f * size.y);
+	// Resize the test rect
+	testRect.rePosition(oldSize, newSize);
 }

@@ -91,13 +91,6 @@ namespace Islands {
 		// Virtual Methods
 
 		/**
-		 * Called anytime code for positioning elements is reuqired to be run
-		 * (window resize, screen tilting, scene beginning etc)
-		 * Place code for positioning and sizing elements here
-		 */
-		virtual void onPosition(const Vector2f& size) {}
-
-		/**
 		 * Called every frame, don't do anything too heavy here
 		 * Should be used for calculating player/enemy movement/etc
 		 */
@@ -118,7 +111,7 @@ namespace Islands {
 		/**
 		 * Called when the event is fired
 		 */
-		virtual void onWindowResize(const Vector2ui& newSize);
+		virtual void onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize);
 
 		/**
 		 * Called when the event is fired

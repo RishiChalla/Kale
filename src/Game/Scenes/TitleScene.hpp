@@ -17,6 +17,7 @@
 #pragma once
 
 #include <Engine/Scene/Scene.hpp>
+#include <Game/Nodes/RoundedRect/RoundedRect.hpp>
 
 namespace Islands {
 
@@ -25,19 +26,15 @@ namespace Islands {
 	 */
 	class TitleScene : public Scene {
 	private:
-
-		/**
-		 * The main title text
-		 */
-		sf::Text title;
 		
+		RoundedRect testRect;
+
 	protected:
 
 		/**
 		 * Called to position elements
-		 * @param size The window size
 		 */
-		void onPosition(const Vector2f& size) override;
+		void onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) override;
 
 	public:
 

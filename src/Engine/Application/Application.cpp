@@ -112,9 +112,9 @@ void Application::run() {
 /**
  * Called when the event is fired
  */
-void Application::onWindowResize(const Vector2ui& newSize) {
+void Application::onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) {
 	if (currentScene != nullptr)
-		currentScene->onWindowResize(newSize);
+		currentScene->onWindowResize(oldSize, newSize);
 }
 
 /**

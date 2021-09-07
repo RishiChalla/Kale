@@ -50,11 +50,16 @@ namespace Islands {
 		 * The main window reference
 		 */
 		sf::RenderWindow& window;
+
+		/**
+		 * The size of the window
+		 */
+		Vector2ui windowSize;
 		
 		/**
 		 * Stores all the event listeners in a linked list
 		 */
-		std::list<std::shared_ptr<std::function<void(const Vector2ui&)>>> windowResizeListeners;
+		std::list<std::shared_ptr<std::function<void(const Vector2ui&, const Vector2ui&)>>> windowResizeListeners;
 
 		/**
 		 * Stores all the event listeners in a linked list
@@ -243,7 +248,7 @@ namespace Islands {
 		 * Provides a callback on window resizes
 		 * @param handler The handler/callback function to call on the event
 		 */
-		void addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler);
+		void addWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&, const Vector2ui&)>> handler);
 
 		/**
 		 * Provides a callback on window resizes
@@ -375,7 +380,7 @@ namespace Islands {
 		 * Removes a callback on window resizes
 		 * @param handler The handler/callback function to remove
 		 */
-		void removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&)>> handler);
+		void removeWindowResizeListener(std::shared_ptr<std::function<void(const Vector2ui&, const Vector2ui&)>> handler);
 
 		/**
 		 * Removes a callback on window lost focus
