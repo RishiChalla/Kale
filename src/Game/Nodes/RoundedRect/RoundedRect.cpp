@@ -43,7 +43,14 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 
 	for (size_t i = 0; i < 4; i++)
 		vertices[i].color = color;
+	
+	calculateCenters(scaledPos, scaledSize);
+}
 
+/**
+ * heap allocates and calculates the centers
+ */
+void RoundedRect::calculateCenters(const Vector2f& scaledPos, const Vector2f& scaledSize) {
 	// Create the centers for passing to shaders
 	switch (type) {
 		case RoundedRectType::LeftCenter: {
@@ -53,6 +60,7 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 					scaledPos.y + scaledSize.y / 2.0f
 				)
 			};
+			threshold = scaledSize.y / 2;
 			break;
 		}
 		case RoundedRectType::RightCenter: {
@@ -62,6 +70,7 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 					scaledPos.y + scaledSize.y / 2.0f
 				)
 			};
+			threshold = scaledSize.y / 2;
 			break;
 		}
 		case RoundedRectType::TopCenter: {
@@ -71,6 +80,7 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 					scaledPos.y + scaledSize.x / 2.0f
 				)
 			};
+			threshold = scaledSize.x / 2;
 			break;
 		}
 		case RoundedRectType::BottomCenter: {
@@ -80,6 +90,7 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 					scaledPos.y + scaledSize.y - scaledSize.x / 2.0f
 				)
 			};
+			threshold = scaledSize.x / 2;
 			break;
 		}
 		case RoundedRectType::HorizontalCenters: {
@@ -93,6 +104,7 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 					scaledPos.y + scaledSize.y / 2.0f
 				)
 			};
+			threshold = scaledSize.y / 2;
 			break;
 		}
 		case RoundedRectType::VerticalCenters: {
@@ -106,6 +118,7 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 					scaledPos.y + scaledSize.y - scaledSize.x / 2.0f
 				)
 			};
+			threshold = scaledSize.x / 2;
 			break;
 		}
 	}
@@ -116,7 +129,7 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
  * @param other The rounded rectangle to copy from
  */
 RoundedRect::RoundedRect(const RoundedRect& other) : vertices(other.vertices),
-	shader(other.shader), type(other.type) {
+	shader(other.shader), type(other.type), threshold(other.threshold) {
 	
 	size_t nc = numCenters();
 	centers =  new sf::Vector2f[nc];
@@ -132,6 +145,7 @@ void RoundedRect::operator=(const RoundedRect& other) {
 	vertices = other.vertices;
 	shader = other.shader;
 	type = other.type;
+	threshold = other.threshold;
 
 	size_t nc = numCenters();
 	centers =  new sf::Vector2f[nc];
@@ -160,11 +174,15 @@ void RoundedRect::rePosition(const Vector2ui& oldSize, const Vector2ui& newSize)
 		vertices[i].position.y *= ratio.y;
 	}
 
-	// Multiply all centers by the resize ratio
-	for (size_t i = 0; i < numCenters(); i++) {
-		centers[i].x *= ratio.x;
-		centers[i].y *= ratio.y;
-	}
+	if (type == RoundedRectType::HorizontalCenters || type == RoundedRectType::LeftCenter ||
+		type == RoundedRectType::RightCenter)
+		threshold *= ratio.x;
+	else
+		threshold *= ratio.y;
+	
+	delete centers;
+	Vector2f scaledPos(vertices[0].position);
+	calculateCenters(scaledPos, Vector2f(vertices[2].position) - scaledPos);
 }
 
 /**
@@ -173,10 +191,22 @@ void RoundedRect::rePosition(const Vector2ui& oldSize, const Vector2ui& newSize)
  * @param states The context/states data regarding drawing
  */
 void RoundedRect::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+
+	// Multiply by the transform
 	states.transform *= getTransform();
+
+	// Get the shader and set uniforms
 	states.shader = shader;
-	shader->setUniform("center1", centers[0]);
+	shader->setUniform("threshold", threshold);
+
+	// Get the offset
+	sf::Vector2f offset(sf::Vector2f(events->getWindowSize().cast<float>()) / 2.0f - target.getView().getCenter());
+
+	// Pass the centers
+	shader->setUniform("center1", offset + centers[0]);
 	if (numCenters() > 1)
-		shader->setUniform("center2", centers[1]);
+		shader->setUniform("center2", offset + centers[1]);
+	
+	// Draw the node
 	target.draw(vertices, states);
 }

@@ -14,19 +14,18 @@
    limitations under the License.
 */
 
-// #version 420 core
-
 uniform vec2 center1;
 uniform vec2 center2;
+uniform float threshold;
 
 void main() {
-	// if (gl_FragCoord.x < center1.x && distance(center1, gl_FragCoord.xy) > 50.0) {
-	// 	gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
-	// }
-	// else if (gl_FragCoord.x > center2.x && distance(center2, gl_FragCoord.xy) > 50.0) {
-	// 	gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
-	// }
-	// else {
+	if (gl_FragCoord.x < center1.x && distance(center1, gl_FragCoord.xy) > threshold) {
+		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+	}
+	else if (gl_FragCoord.x > center2.x && distance(center2, gl_FragCoord.xy) > threshold) {
+		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+	}
+	else {
 		gl_FragColor = gl_Color;
-	// }
+	}
 }

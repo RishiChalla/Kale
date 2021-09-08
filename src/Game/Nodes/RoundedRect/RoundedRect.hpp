@@ -49,12 +49,17 @@ namespace Islands {
 		/**
 		 * Used for storing the left/right centers for passing to shaders
 		 */
-		sf::Vector2f* centers;
+		sf::Vector2f* centers = nullptr;
 
 		/**
 		 * The type of rounded rect used for passing uniforms to shaders
 		 */
 		RoundedRectType type;
+
+		/**
+		 * The radius of the semi circles on the caps
+		 */
+		float threshold;
 
 		/**
 		 * Checks how many centers this rounded rectangle has
@@ -67,6 +72,11 @@ namespace Islands {
 			else
 				return 1;
 		}
+
+		/**
+		 * heap allocates and calculates the centers
+		 */
+		void calculateCenters(const Vector2f& scaledPos, const Vector2f& scaledSize);
 
 	protected:
 
