@@ -33,7 +33,7 @@ namespace Islands {
 	 * This class contains a node that can be used for creating 
 	 * a rounded rectangle of any kind (including inverse and mixed)
 	 */
-	class RoundedRect : public sf::Drawable, sf::Transformable {
+	class RoundedRect : public sf::Drawable, public sf::Transformable {
 	private:
 
 		/**

@@ -16,7 +16,6 @@
 
 #include "TitleScene.hpp"
 #include <Game/App/App.hpp>
-#include <limits>
 
 using namespace Islands;
 
@@ -25,9 +24,11 @@ using namespace Islands;
  * @param window The window to link to/draw on
  */
 TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window),
-	testRect(RoundedRectType::HorizontalCenters, &assets->get(Shader::RoundedHorizontal),
-		{0.0f, 0.0f}, {0.4f, 0.1f}, sf::Color::Cyan) {
-	addNode(1, dynamic_cast<sf::Drawable*>(&testRect));
+	testRect(RoundedRectType::VerticalCenters, &assets->get(Shader::RoundedHorizontal),
+		{0.0f, 0.0f}, {0.1f, 0.4f}, sf::Color::Cyan) {
+	addNode(1, dynamic_cast<sf::Drawable*>(&testRect)); 
+	testRect.move(100.0f, 100.0f);
+	testRect.rotate(-45.0f);
 }
 
 /**

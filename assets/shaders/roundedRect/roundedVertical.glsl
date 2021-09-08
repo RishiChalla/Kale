@@ -19,20 +19,12 @@ uniform vec2 center2;
 uniform float threshold;
 
 void main() {
-	if (gl_FragCoord.x <= center1.x) {
-		float dist = distance(center1, gl_FragCoord.xy);
-		if (dist >= threshold - 1.0) {
-			gl_FragColor = vec4(gl_Color.xyz, clamp(threshold - dist, 0.0, 1.0));
-			return;
-		}
-	}
+	float dist1 = distance(center1, gl_FragCoord.xy);
+	float dist2 = distance(center2, gl_FragCoord.xy);
 
-	if (gl_FragCoord.x >= center2.x) {
-		float dist = distance(center2, gl_FragCoord.xy);
-		if (dist >= threshold - 1.0) {
-			gl_FragColor = vec4(gl_Color.xyz, clamp(threshold - dist, 0.0, 1.0));
-			return;
-		}
+	if (dist1 > threshold && dist2 > threshold) {
+		gl_FragColor = vec4(gl_Color.xyz, 0.0);
+		return;
 	}
 
 	gl_FragColor = gl_Color;

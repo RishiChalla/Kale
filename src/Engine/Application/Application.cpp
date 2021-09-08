@@ -77,7 +77,11 @@ void Application::update() {
  */
 void Application::run() {
 	// Creates the window
-	window.create(sf::VideoMode(800, 600), "Islands");
+	{
+		sf::ContextSettings settings;
+		settings.antialiasingLevel = 4;
+		window.create(sf::VideoMode(800, 600), "Islands", sf::Style::Default, settings);
+	}
 
 	onBegin();
 

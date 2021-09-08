@@ -52,46 +52,46 @@ App::App() : Application(
 		std::make_tuple(Font::RalewayThinItalic, ".Islands/assets/fonts/Raleway-ThinItalic.ttf")
 	}), std::array<std::tuple<Texture, const char*>, 0>({
 		// Required Textures for the game
-	}), std::array<std::tuple<Shader, const char*, const char*>, 1>({
+	}), std::array<std::tuple<Shader, const char*, const char*>, 16>({
 		// Required Shaders for the game
 
 		// Rounded Rect Shaders
-		// std::make_tuple(Shader::RoundedBottom, ".Islands/assets/shaders/roundedRect/roundedBottomVert.glsl",
-		// 	".Islands/assets/shaders/roundedRect/roundedBottomFrag.glsl"),
-		std::make_tuple(Shader::RoundedHorizontal, ".Islands/assets/shaders/roundedRect/roundedHorizontalVert.glsl",
-			".Islands/assets/shaders/roundedRect/roundedHorizontalFrag.glsl")
-		// std::make_tuple(Shader::RoundedLeft, ".Islands/assets/shaders/roundedRect/roundedLeftVert.glsl",
-		// 	".Islands/assets/shaders/roundedRect/roundedLeftFrag.glsl"),
-		// std::make_tuple(Shader::RoundedRight, ".Islands/assets/shaders/roundedRect/roundedRightVert.glsl",
-		// 	".Islands/assets/shaders/roundedRect/roundedRightFrag.glsl"),
-		// std::make_tuple(Shader::RoundedTop, ".Islands/assets/shaders/roundedRect/roundedTopVert.glsl",
-		// 	".Islands/assets/shaders/roundedRect/roundedTopFrag.glsl"),
-		// std::make_tuple(Shader::RoundedVertical, ".Islands/assets/shaders/roundedRect/roundedVerticalVert.glsl",
-		// 	".Islands/assets/shaders/roundedRect/roundedVerticalFrag.glsl"),
+		std::make_tuple(Shader::RoundedBottom, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRect/roundedBottom.glsl"),
+		std::make_tuple(Shader::RoundedHorizontal, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRect/roundedHorizontal.glsl"),
+		std::make_tuple(Shader::RoundedLeft, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRect/roundedLeft.glsl"),
+		std::make_tuple(Shader::RoundedRight, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRect/roundedRight.glsl"),
+		std::make_tuple(Shader::RoundedTop, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRect/roundedTop.glsl"),
+		std::make_tuple(Shader::RoundedVertical, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRect/roundedVertical.glsl"),
 
 		// Rounded Rect Inverse Shaders
-		// std::make_tuple(Shader::InverseHorizontal, ".Islands/assets/shaders/roundedRectInverse/inverseHorizontalVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectInverse/inverseHorizontalFrag.glsl"),
-		// std::make_tuple(Shader::InverseVertical, ".Islands/assets/shaders/roundedRectInverse/inverseVerticalVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectInverse/inverseVerticalFrag.glsl"),
-		// std::make_tuple(Shader::InverseBottom, ".Islands/assets/shaders/roundedRectInverse/inverseBottomVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectInverse/inverseBottomFrag.glsl"),
-		// std::make_tuple(Shader::InverseTop, ".Islands/assets/shaders/roundedRectInverse/inverseTopVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectInverse/inverseTopFrag.glsl"),
-		// std::make_tuple(Shader::InverseLeft, ".Islands/assets/shaders/roundedRectInverse/inverseLeftVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectInverse/inverseLeftFrag.glsl"),
-		// std::make_tuple(Shader::InverseRight, ".Islands/assets/shaders/roundedRectInverse/inverseRightVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectInverse/inverseRightFrag.glsl"),
+		std::make_tuple(Shader::InverseHorizontal, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectInverse/inverseHorizontal.glsl"),
+		std::make_tuple(Shader::InverseVertical, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectInverse/inverseVertical.glsl"),
+		std::make_tuple(Shader::InverseBottom, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectInverse/inverseBottom.glsl"),
+		std::make_tuple(Shader::InverseTop, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectInverse/inverseTop.glsl"),
+		std::make_tuple(Shader::InverseLeft, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectInverse/inverseLeft.glsl"),
+		std::make_tuple(Shader::InverseRight, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectInverse/inverseRight.glsl"),
 		
 		// Rounded Rect Combined Shaders
-		// std::make_tuple(Shader::CombinedBottomCap, ".Islands/assets/shaders/roundedRectCombined/combinedBottomCapVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectCombined/combinedBottomCapFrag.glsl"),
-		// std::make_tuple(Shader::CombinedTopCap, ".Islands/assets/shaders/roundedRectCombined/combinedTopCapVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectCombined/combinedTopCapFrag.glsl"),
-		// std::make_tuple(Shader::CombinedLeftCap, ".Islands/assets/shaders/roundedRectCombined/combinedLeftCapVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectCombined/combinedLeftCapFrag.glsl"),
-		// std::make_tuple(Shader::CombinedRightCap, ".Islands/assets/shaders/roundedRectCombined/combinedRightCapVert.glsl",
-		// 	".Islands/assets/shaders/roundedRectCombined/combinedRightCapFrag.glsl")
+		std::make_tuple(Shader::CombinedBottomCap, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectCombined/combinedBottomCap.glsl"),
+		std::make_tuple(Shader::CombinedTopCap, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectCombined/combinedTopCap.glsl"),
+		std::make_tuple(Shader::CombinedLeftCap, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectCombined/combinedLeftCap.glsl"),
+		std::make_tuple(Shader::CombinedRightCap, ".Islands/assets/shaders/roundedRectVert.glsl",
+			".Islands/assets/shaders/roundedRectCombined/combinedRightCap.glsl")
 	})
 ) {
 	// Empty constructor - nothing to do here.

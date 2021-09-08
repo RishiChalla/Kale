@@ -199,13 +199,12 @@ void RoundedRect::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 	states.shader = shader;
 	shader->setUniform("threshold", threshold);
 
-	// Get the offset
-	sf::Vector2f offset(sf::Vector2f(events->getWindowSize().cast<float>()) / 2.0f - target.getView().getCenter());
+	sf::Vector2f center1(states.transform.transformPoint(centers[0]));
+	sf::Vector2f center2(states.transform.transformPoint(centers[1]));
 
 	// Pass the centers
-	shader->setUniform("center1", offset + centers[0]);
-	if (numCenters() > 1)
-		shader->setUniform("center2", offset + centers[1]);
+	shader->setUniform("center1", center1);
+	if (numCenters() > 1) shader->setUniform("center2", center2);
 	
 	// Draw the node
 	target.draw(vertices, states);
