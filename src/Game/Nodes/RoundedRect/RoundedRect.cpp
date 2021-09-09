@@ -16,6 +16,7 @@
 
 #include "RoundedRect.hpp"
 #include <Engine/Events/Events.hpp>
+#include <Engine/Application/Application.hpp>
 
 using namespace Islands;
 
@@ -31,94 +32,90 @@ RoundedRect::RoundedRect(RoundedRectType type, sf::Shader* shader, const Vector2
 	const Vector2f& size, const sf::Color& color) : vertices(sf::Quads, 4), shader(shader),
 	type(type) {
 	
-	Vector2f winSize(events->getWindowSize().cast<float>());
-	Vector2f scaledPos = winSize * pos;
-	Vector2f scaledSize = winSize * size;
-	
 	// Create the vertex array
-	vertices[0].position = sf::Vector2f(scaledPos.x, scaledPos.y);
-	vertices[1].position = sf::Vector2f(scaledPos.x + scaledSize.x, scaledPos.y);
-	vertices[2].position = sf::Vector2f(scaledPos.x + scaledSize.x, scaledPos.y + scaledSize.y);
-	vertices[3].position = sf::Vector2f(scaledPos.x, scaledPos.y + scaledSize.y);
+	vertices[0].position = sf::Vector2f(pos.x, pos.y);
+	vertices[1].position = sf::Vector2f(pos.x + size.x, pos.y);
+	vertices[2].position = sf::Vector2f(pos.x + size.x, pos.y + size.y);
+	vertices[3].position = sf::Vector2f(pos.x, pos.y + size.y);
 
 	for (size_t i = 0; i < 4; i++)
 		vertices[i].color = color;
 	
-	calculateCenters(scaledPos, scaledSize);
+	calculateCenters(pos, size);
 }
 
 /**
  * heap allocates and calculates the centers
  */
-void RoundedRect::calculateCenters(const Vector2f& scaledPos, const Vector2f& scaledSize) {
+void RoundedRect::calculateCenters(const Vector2f& pos, const Vector2f& size) {
 	// Create the centers for passing to shaders
 	switch (type) {
 		case RoundedRectType::LeftCenter: {
 			centers = new sf::Vector2f[1] {
 				sf::Vector2f(
-					scaledPos.x + scaledSize.y / 2.0f,
-					scaledPos.y + scaledSize.y / 2.0f
+					pos.x + size.y / 2.0f,
+					pos.y + size.y / 2.0f
 				)
 			};
-			threshold = scaledSize.y / 2;
+			threshold = size.y / 2;
 			break;
 		}
 		case RoundedRectType::RightCenter: {
 			centers = new sf::Vector2f[1] {
 				sf::Vector2f(
-					scaledPos.x + scaledSize.x - scaledSize.y / 2.0f,
-					scaledPos.y + scaledSize.y / 2.0f
+					pos.x + size.x - size.y / 2.0f,
+					pos.y + size.y / 2.0f
 				)
 			};
-			threshold = scaledSize.y / 2;
+			threshold = size.y / 2;
 			break;
 		}
 		case RoundedRectType::TopCenter: {
 			centers = new sf::Vector2f[1] {
 				sf::Vector2f(
-					scaledPos.x + scaledSize.x / 2.0f,
-					scaledPos.y + scaledSize.x / 2.0f
+					pos.x + size.x / 2.0f,
+					pos.y + size.x / 2.0f
 				)
 			};
-			threshold = scaledSize.x / 2;
+			threshold = size.x / 2;
 			break;
 		}
 		case RoundedRectType::BottomCenter: {
 			centers = new sf::Vector2f[1] {
 				sf::Vector2f(
-					scaledPos.x + scaledSize.x / 2.0f,
-					scaledPos.y + scaledSize.y - scaledSize.x / 2.0f
+					pos.x + size.x / 2.0f,
+					pos.y + size.y - size.x / 2.0f
 				)
 			};
-			threshold = scaledSize.x / 2;
+			threshold = size.x / 2;
 			break;
 		}
 		case RoundedRectType::HorizontalCenters: {
 			centers = new sf::Vector2f[2] {
 				sf::Vector2f(
-					scaledPos.x + scaledSize.y / 2.0f,
-					scaledPos.y + scaledSize.y / 2.0f
+					pos.x + size.y / 2.0f,
+					pos.y + size.y / 2.0f
 				),
 				sf::Vector2f(
-					scaledPos.x + scaledSize.x - scaledSize.y / 2.0f,
-					scaledPos.y + scaledSize.y / 2.0f
+					pos.x + size.x - size.y / 2.0f,
+					pos.y + size.y / 2.0f
 				)
 			};
-			threshold = scaledSize.y / 2;
+			threshold = size.y / 2;
 			break;
 		}
 		case RoundedRectType::VerticalCenters: {
 			centers = new sf::Vector2f[2] {
 				sf::Vector2f(
-					scaledPos.x + scaledSize.x / 2.0f,
-					scaledPos.y + scaledSize.x / 2.0f
+					pos.x + size.x / 2.0f,
+					pos.y + size.x / 2.0f
 				),
 				sf::Vector2f(
-					scaledPos.x + scaledSize.x / 2.0f,
-					scaledPos.y + scaledSize.y - scaledSize.x / 2.0f
+					pos.x + size.x / 2.0f,
+					pos.y + size.y - size.x / 2.0f
 				)
 			};
-			threshold = scaledSize.x / 2;
+			threshold = size.x / 2;
 			break;
 		}
 	}
@@ -161,31 +158,6 @@ RoundedRect::~RoundedRect() {
 }
 
 /**
- * Repositions the node based on the window size, should be called on resize
- */
-void RoundedRect::rePosition(const Vector2ui& oldSize, const Vector2ui& newSize) {
-
-	// Get the ratio to multiply by
-	Vector2f ratio(newSize.cast<float>() / oldSize.cast<float>());
-
-	// Multiply all vertices by the resize ratio
-	for (size_t i = 0; i < 4; i++) {
-		vertices[i].position.x *= ratio.x;
-		vertices[i].position.y *= ratio.y;
-	}
-
-	if (type == RoundedRectType::HorizontalCenters || type == RoundedRectType::LeftCenter ||
-		type == RoundedRectType::RightCenter)
-		threshold *= ratio.x;
-	else
-		threshold *= ratio.y;
-	
-	delete centers;
-	Vector2f scaledPos(vertices[0].position);
-	calculateCenters(scaledPos, Vector2f(vertices[2].position) - scaledPos);
-}
-
-/**
  * Draws the node to the window
  * @param target The target to draw to
  * @param states The context/states data regarding drawing
@@ -199,12 +171,9 @@ void RoundedRect::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 	states.shader = shader;
 	shader->setUniform("threshold", threshold);
 
-	sf::Vector2f center1(states.transform.transformPoint(centers[0]));
-	sf::Vector2f center2(states.transform.transformPoint(centers[1]));
-
 	// Pass the centers
-	shader->setUniform("center1", center1);
-	if (numCenters() > 1) shader->setUniform("center2", center2);
+	shader->setUniform("center1", states.transform.transformPoint(centers[0]));
+	if (numCenters() > 1) shader->setUniform("center2", states.transform.transformPoint(centers[1]));
 	
 	// Draw the node
 	target.draw(vertices, states);

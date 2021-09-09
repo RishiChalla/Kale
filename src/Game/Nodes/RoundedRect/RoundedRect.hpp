@@ -76,7 +76,7 @@ namespace Islands {
 		/**
 		 * heap allocates and calculates the centers
 		 */
-		void calculateCenters(const Vector2f& scaledPos, const Vector2f& scaledSize);
+		void calculateCenters(const Vector2f& pos, const Vector2f& size);
 
 	protected:
 
@@ -120,10 +120,5 @@ namespace Islands {
 		 * Frees resources
 		 */
 		~RoundedRect();
-
-		/**
-		 * Repositions the node based on the window size, should be called on resize
-		 */
-		void rePosition(const Vector2ui& oldSize, const Vector2ui& newSize);
 	};
 }

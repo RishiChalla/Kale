@@ -32,6 +32,11 @@ namespace Islands {
 	protected:
 
 		/**
+		 * Called on every update frame
+		 */
+		void onUpdate() override;
+
+		/**
 		 * Called to position elements
 		 */
 		void onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) override;

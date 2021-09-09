@@ -24,11 +24,18 @@ using namespace Islands;
  * @param window The window to link to/draw on
  */
 TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window),
-	testRect(RoundedRectType::VerticalCenters, &assets->get(Shader::RoundedHorizontal),
-		{0.0f, 0.0f}, {0.1f, 0.4f}, sf::Color::Cyan) {
+	testRect(RoundedRectType::HorizontalCenters, &assets->get(Shader::RoundedHorizontal),
+		{100.0f, 100.0f}, {500.0f, 100.0f}, sf::Color::Cyan) {
 	addNode(1, dynamic_cast<sf::Drawable*>(&testRect)); 
-	testRect.move(100.0f, 100.0f);
-	testRect.rotate(-45.0f);
+	// testRect.move(100.0f, 100.0f);
+	// testRect.rotate(40.0f);
+}
+
+/**
+ * Called on every update frame
+ */
+void TitleScene::onUpdate() {
+	testRect.rotate(0.000005f);
 }
 
 /**
@@ -37,7 +44,4 @@ TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window),
 void TitleScene::onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) {
 	// Call the super event handler
 	Scene::onWindowResize(oldSize, newSize);
-
-	// Resize the test rect
-	testRect.rePosition(oldSize, newSize);
 }

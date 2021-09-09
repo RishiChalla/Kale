@@ -24,7 +24,7 @@ void main() {
 	float angle = atan(center1.y - center2.y, center1.x - center2.x);
 	float angle1 = atan(gl_FragCoord.y - center1.y, gl_FragCoord.x - center1.x);
 
-	if (angle + angle1 > 0.0 || angle + angle1 < -PI) {
+	if (angle1 + angle > 0.0 || angle1 + angle < -PI) {
 		float dist = distance(center1, gl_FragCoord.xy);
 		if (dist >= threshold - 1.0) {
 			gl_FragColor = vec4(gl_Color.xyz, clamp(threshold - dist, 0.0, 1.0));
