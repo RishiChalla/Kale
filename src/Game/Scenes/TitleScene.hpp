@@ -31,10 +31,7 @@ namespace Islands {
 
 	protected:
 
-		/**
-		 * Called on every update frame
-		 */
-		void onUpdate() override;
+		void onKeyPress(Key key) override;
 
 		/**
 		 * Called to position elements

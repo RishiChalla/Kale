@@ -21,26 +21,17 @@ uniform vec2 center2;
 uniform float threshold;
 
 void main() {
-	float angle = atan(center1.y - center2.y, center1.x - center2.x);
-	float angle1 = atan(gl_FragCoord.y - center1.y, gl_FragCoord.x - center1.x);
+	float angle = atan(center1.y - center2.y, center1.x - center2.x) + PI;
+	float angle1 = atan(gl_FragCoord.y - center1.y, gl_FragCoord.x - center1.x) + PI;
 
-	if (angle1 + angle > 0.0 || angle1 + angle < -PI) {
-		float dist = distance(center1, gl_FragCoord.xy);
-		if (dist >= threshold - 1.0) {
-			gl_FragColor = vec4(gl_Color.xyz, clamp(threshold - dist, 0.0, 1.0));
-			return;
-		}
-	}
-
-	float angle2 = atan(gl_FragCoord.y - center2.y, gl_FragCoord.x - center2.x);
-
-	if (angle + angle2 < 0.0 && angle + angle2 > -PI) {
-		float dist = distance(center2, gl_FragCoord.xy);
-		if (dist >= threshold - 1.0) {
-			gl_FragColor = vec4(gl_Color.xyz, clamp(threshold - dist, 0.0, 1.0));
-			return;
-		}
-	}
-
+	// if (angle1 - angle < 0 || angle1 - angle > 2.0 * PI) {
+	// 	float dist = distance(center1, gl_FragCoord.xy);
+	// 	if (dist >= threshold - 1.0) {
+	// 		gl_FragColor = vec4(gl_Color.xyz, clamp(threshold - dist, 0.0, 1.0));
+	// 		return;
+	// 	}
+	// }
+	
+	gl_FragColor = vec4(1.0, 0.0, 0.0, (angle1 - angle + 2.0 * PI) / (4.0 * PI));
 	gl_FragColor = gl_Color;
 }

@@ -25,17 +25,21 @@ using namespace Islands;
  */
 TitleScene::TitleScene(sf::RenderWindow& window) : Scene(window),
 	testRect(RoundedRectType::HorizontalCenters, &assets->get(Shader::RoundedHorizontal),
-		{100.0f, 100.0f}, {500.0f, 100.0f}, sf::Color::Cyan) {
-	addNode(1, dynamic_cast<sf::Drawable*>(&testRect)); 
+		{300.0f, 300.0f}, {500.0f, 100.0f}, sf::Color::Red) {
+	addNode(1, dynamic_cast<sf::Drawable*>(&testRect));
 	// testRect.move(100.0f, 100.0f);
+	testRect.setOrigin(400.0f, 400.0f);
+	testRect.move(300.0f, 300.0f);
 	// testRect.rotate(40.0f);
 }
 
-/**
- * Called on every update frame
- */
-void TitleScene::onUpdate() {
-	testRect.rotate(0.000005f);
+void TitleScene::onKeyPress(Key key) {
+	if (key == Key::Left) {
+		testRect.rotate(5.0f);
+	}
+	if (key == Key::Right) {
+		testRect.rotate(-5.0f);
+	}
 }
 
 /**

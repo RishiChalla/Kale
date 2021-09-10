@@ -81,12 +81,15 @@ void Application::run() {
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 4;
 		window.create(sf::VideoMode(800, 600), "Islands", sf::Style::Default, settings);
+		window.setFramerateLimit(60); // Load this from settings later
 	}
 
 	onBegin();
 
 	// Create the update thread
-	std::thread updateThread(&Application::update, this);
+	// Commented out for now - prevent CPU overheating
+	// TODO - Fix this by adding UPS and max UPS to avoid 100% CPU thread usage
+	// std::thread updateThread(&Application::update, this);
 
 	// Render loop
 	while (window.isOpen()) {
@@ -106,7 +109,8 @@ void Application::run() {
 	}
 
 	// Wait for the update thread to finish
-	updateThread.join();
+	// Commented out for now - prevent CPU overheating
+	// updateThread.join();
 
 	onEnd();
 }
