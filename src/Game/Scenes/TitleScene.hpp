@@ -1,50 +1,50 @@
-/*
-   Copyright 2021 Rishi Challa
+// /*
+//    Copyright 2021 Rishi Challa
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
 
-	   http://www.apache.org/licenses/LICENSE-2.0
+// 	   http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
 
-#pragma once
+// #pragma once
 
-#include <Engine/Scene/Scene.hpp>
-#include <Game/Nodes/RoundedRect/RoundedRect.hpp>
+// #include <Engine/Scene/Scene.hpp>
+// #include <Game/Nodes/RoundedRect/RoundedRect.hpp>
 
-namespace Islands {
+// namespace Islands {
 
-	/**
-	 * The title scene/entry scene for the game
-	 */
-	class TitleScene : public Scene {
-	private:
+// 	/**
+// 	 * The title scene/entry scene for the game
+// 	 */
+// 	class TitleScene : public Scene {
+// 	private:
 		
-		RoundedRect testRect;
+// 		RoundedRect testRect;
 
-	protected:
+// 	protected:
 
-		void onKeyPress(Key key) override;
+// 		void onKeyPress(Key key) override;
 
-		/**
-		 * Called to position elements
-		 */
-		void onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) override;
+// 		/**
+// 		 * Called to position elements
+// 		 */
+// 		void onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) override;
 
-	public:
+// 	public:
 
-		/**
-		 * Creates a new title scene instance
-		 * @param window The window to link to/draw on
-		 */
-		TitleScene(sf::RenderWindow& window);
-	};
+// 		/**
+// 		 * Creates a new title scene instance
+// 		 * @param window The window to link to/draw on
+// 		 */
+// 		TitleScene(sf::RenderWindow& window);
+// 	};
 
-}
+// }

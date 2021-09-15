@@ -19,52 +19,7 @@
 #include <Engine/Application/Application.hpp>
 
 namespace Islands {
-
-	/**
-	 * All required fonts for the game 
-	 */
-	enum class Font {
-		RalewayBlack, RalewayBlackItalic,
-		RalewayBold, RalewayBoldItalic,
-		RalewayExtraBold, RalewayExtraBoldItalic,
-		RalewayExtraLight, RalewayExtraLightItalic,
-		RalewayItalic, RalewayLight, RalewayLightItalic,
-		RalewayMedium, RalewayMediumItalic,
-		RalewayRegular, RalewaySemiBold, RalewaySemiBoldItalic,
-		RalewayThin, RalewayThinItalic
-	};
 	
-	/**
-	 * All required textures for the game 
-	 */
-	enum class Texture {
-		
-	};
-	
-	/**
-	 * All required shaders for the game 
-	 */
-	enum class Shader {
-		// The default SFML shader
-		Default,
-
-		// Rounded Rect
-		RoundedHorizontal, RoundedVertical,
-		RoundedBottom, RoundedTop,
-		RoundedLeft, RoundedRight,
-
-		// Inverse Rounded Rect
-		InverseHorizontal, InverseVertical,
-		InverseBottom, InverseTop,
-		InverseLeft, InverseRight,
-		
-		// Combined Rounded Rect (The cap is the rounded side)
-		CombinedBottomCap,
-		CombinedTopCap,
-		CombinedLeftCap,
-		CombinedRightCap
-	};
-
 	/**
 	 * Represents the main application class
 	 */

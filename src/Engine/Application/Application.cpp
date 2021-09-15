@@ -25,35 +25,17 @@ using namespace Islands;
 Application* Islands::mainApp = nullptr;
 
 /**
- * Frees resources and deletes the application
+ * Creates a new application instance
  */
-Application::~Application() {
-	delete events;
-	delete assets;
+Application::Application() {
+	
 }
 
 /**
- * Starts displaying and updating a scene
- * @param scene The scene to display
+ * Frees resources and deletes the application
  */
-void Application::displayScene(std::shared_ptr<Scene> scene) {
-
-	// The scene isn't defined, and won't be displayed
-	if (scene == nullptr) {
-		error("Unable to display scene of nullptr - Aborting");
-		return;
-	}
-
-	// Call scene begin/end methods
-	if (currentScene != nullptr)
-		currentScene->end();
-	scene->begin();
-
-	// Call the scene change listener
-	onSceneChange(currentScene, scene);
-
-	// Change the scene
-	currentScene = scene;
+Application::~Application() {
+	
 }
 
 /**
@@ -62,27 +44,16 @@ void Application::displayScene(std::shared_ptr<Scene> scene) {
 void Application::update() {
 
 	// Update loop
-	while (window.isOpen()) {
-
-		onUpdate();
-		
-		// Update the current scene
-		if (currentScene != nullptr)
-			currentScene->update();
-	}
+	// while (window.isOpen()) {
+	// 	onUpdate();
+	// }
 }
 
 /**
  * Runs the application
  */
 void Application::run() {
-	// Creates the window
-	{
-		sf::ContextSettings settings;
-		settings.antialiasingLevel = 4;
-		window.create(sf::VideoMode(800, 600), "Islands", sf::Style::Default, settings);
-		window.setFramerateLimit(60); // Load this from settings later
-	}
+	// TODO - Creates the window
 
 	onBegin();
 
@@ -92,195 +63,16 @@ void Application::run() {
 	// std::thread updateThread(&Application::update, this);
 
 	// Render loop
-	while (window.isOpen()) {
+	// while (window.isOpen()) {
 		
-		// Handle events
-		events->handleEvents();
+		// TODO - Handle events
 
-		// Render the scene
-		if (currentScene != nullptr)
-			currentScene->render();
-		else {
-
-			// Just use a black window as a default
-			window.clear(sf::Color::Black);
-			window.display();
-		}
-	}
+		// TODO - Designate rendering to scene
+	// }
 
 	// Wait for the update thread to finish
 	// Commented out for now - prevent CPU overheating
 	// updateThread.join();
 
 	onEnd();
-}
-
-// --------------------------------- Events ---------------------------------
-
-/**
- * Called when the event is fired
- */
-void Application::onWindowResize(const Vector2ui& oldSize, const Vector2ui& newSize) {
-	if (currentScene != nullptr)
-		currentScene->onWindowResize(oldSize, newSize);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onWindowLostFocus() {
-	if (currentScene != nullptr)
-		currentScene->onWindowLostFocus();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onWindowGainedFocus() {
-	if (currentScene != nullptr)
-		currentScene->onWindowGainedFocus();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onControllerConnect(unsigned int controller) {
-	if (currentScene != nullptr)
-		currentScene->onControllerConnect(controller);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onControllerDisconnect(unsigned int controller) {
-	if (currentScene != nullptr)
-		currentScene->onControllerDisconnect(controller);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onControllerButtonPress(unsigned int controller, unsigned int button) {
-	if (currentScene != nullptr)
-		currentScene->onControllerButtonPress(controller, button);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onControllerButtonRelease(unsigned int controller, unsigned int button) {
-	if (currentScene != nullptr)
-		currentScene->onControllerButtonRelease(controller, button);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onControllerHandle(unsigned int controller, Axis handle, float position) {
-	if (currentScene != nullptr)
-		currentScene->onControllerHandle(controller, handle, position);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onKeyPress(Key key) {
-	if (currentScene != nullptr)
-		currentScene->onKeyPress(key);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onKeyRelease(Key key) {
-	if (currentScene != nullptr)
-		currentScene->onKeyRelease(key);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onMouseMove(const Vector2ui& pos) {
-	if (currentScene != nullptr)
-		currentScene->onMouseMove(pos);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onMouseScroll(int scroll) {
-	if (currentScene != nullptr)
-		currentScene->onMouseScroll(scroll);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onLeftClick() {
-	if (currentScene != nullptr)
-		currentScene->onLeftClick();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onMiddleClick() {
-	if (currentScene != nullptr)
-		currentScene->onMiddleClick();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onRightClick() {
-	if (currentScene != nullptr)
-		currentScene->onRightClick();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onLeftClickRelease() {
-	if (currentScene != nullptr)
-		currentScene->onLeftClickRelease();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onMiddleClickRelease() {
-	if (currentScene != nullptr)
-		currentScene->onMiddleClickRelease();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onRightClickRelease() {
-	if (currentScene != nullptr)
-		currentScene->onRightClickRelease();
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onTouchBegin(unsigned int touch, const Vector2ui& pos) {
-	if (currentScene != nullptr)
-		currentScene->onTouchBegin(touch, pos);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onTouchMove(unsigned int touch, const Vector2ui& pos) {
-	if (currentScene != nullptr)
-		currentScene->onTouchMove(touch, pos);
-}
-
-/**
- * Called when the event is fired
- */
-void Application::onTouchEnd(unsigned int touch) {
-	if (currentScene != nullptr)
-		currentScene->onTouchEnd(touch);
 }

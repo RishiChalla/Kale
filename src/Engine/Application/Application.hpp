@@ -16,24 +16,104 @@
 
 #pragma once
 
-#include "Application_fwd.hpp"
-#include <Engine/Assets/Assets.hpp>
+#include <memory>
+
+#include <Engine/Logger/Logger.hpp>
+
+/**
+ * The entry point function/main function of the program
+ */
+int main();
 
 namespace Islands {
 
 	/**
-	 * Creates a new application instance
-	 * @param fontsList The fonts to load
-	 * @param texturesList The textures to load
-	 * @param shadersList The shaders to load
+	 * The main Application class
 	 */
-	template <size_t numFonts, size_t numTextures, size_t numShaders>
-	Application::Application(std::array<std::tuple<Font, const char*>, numFonts> fontsList,
-		std::array<std::tuple<Texture, const char*>, numTextures> texturesList,
-		std::array<std::tuple<Shader, const char*, const char*>, numShaders> shadersList) {
+	class Application {
 
-		// Init app
-		events = new Events(window);
-		assets = new Assets(fontsList, texturesList, shadersList);
-	}
+	private:
+
+		/**
+		 * Handles updating the application in a separate thread
+		 */
+		void update();
+	
+	protected:
+
+		/**
+		 * The main sfml window used for rendering for this application instance
+		 */
+		// Window window;
+
+		/**
+		 * Called on every update frame, must be thread safe.
+		 * Do not do anything heavy here, it will cause lag
+		 */
+		virtual void onUpdate() {}
+
+		/**
+		 * Called when the application begins, just before the window is run.
+		 */
+		virtual void onBegin() {}
+
+		/**
+		 * Called just before the application is ended
+		 */
+		virtual void onEnd() {}
+
+		/**
+		 * Creates a new application instance
+		 */
+		Application();
+
+		/**
+		 * Frees resources and deletes the application
+		 */
+		~Application();
+
+		friend int ::main();
+
+	public:
+		/**
+		 * The main logger for this application instance
+		 */
+		Logger log;
+
+		// App class doesn't support copying/moving
+		Application(const Application& other) = delete;
+		Application(Application&& other) = delete;
+		void operator=(const Application& other) = delete;
+		void operator=(Application&& other) = delete;
+
+		/**
+		 * Runs the application
+		 */
+		void run();
+	};
+
+	/**
+	 * The main application instance
+	 */
+	extern Application* mainApp;
 }
+
+/**
+ * Prints output to the console/log file
+ */
+#define print(x) Islands::mainApp->log.log(__LINE__, FILE_BASENAME, x);
+
+/**
+ * Prints info to the console/log file
+ */
+#define info(x) Islands::mainApp->log.info(__LINE__, FILE_BASENAME, x);
+
+/**
+ * Prints a warning to the console/log file
+ */
+#define warn(x) Islands::mainApp->log.warn(__LINE__, FILE_BASENAME, x);
+
+/**
+ * Prints an error to the console/log file
+ */
+#define error(x) Islands::mainApp->log.error(__LINE__, FILE_BASENAME, x);

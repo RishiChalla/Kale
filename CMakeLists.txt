@@ -14,6 +14,27 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
+# OS Macros
+if (WIN32)
+	target_compile_definitions(Islands PUBLIC ISLANDS_WINDOWS)
+endif()
+
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+	target_compile_definitions(Islands PUBLIC ISLANDS_OSX)
+endif()
+
+if (UNIX AND NOT APPLE)
+	target_compile_definitions(Islands PUBLIC ISLANDS_UNIX)
+endif()
+
+if (ANDROID)
+	target_compile_definitions(Islands PUBLIC ISLANDS_ANDROID)
+endif()
+
+if (IOS)
+	target_compile_definitions(Islands PUBLIC ISLANDS_IOS)
+endif()
+
 # Filename macro
 
 # Helper function to add preprocesor definition of FILE_BASENAME
@@ -51,10 +72,15 @@ target_link_libraries(Islands date)
 # FastNoise
 target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/include/)
 
-# SFML
-add_compile_definitions(_HAS_AUTO_PTR_ETC=1)
-add_subdirectory(dependencies/SFML-2.5.1)
-target_link_libraries(Islands sfml-system sfml-audio sfml-window sfml-graphics)
+# SDL
+if (WIN32 OR ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" OR (UNIX AND NOT APPLE) OR ANDROID OR IOS)
+	add_subdirectory(dependencies/SDL2-2.0.16)
+	set(SDL_MAIN_HANDLED TRUE)
+	set(SDL_STATIC ON CACHE BOOL "" FORCE)
+	set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+	target_link_libraries(Islands SDL2main SDL2-static)
+	target_compile_definitions(Islands PUBLIC ISLANDS_SDL)
+endif()
 
 # Copy all resources (assets, shaders, etc)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

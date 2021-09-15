@@ -17,35 +17,3 @@
 #include "Assets.hpp"
 
 using namespace Islands;
-
-/**
- * The main instance of the asset manager
- */
-Assets* Islands::assets = nullptr;
-
-/**
- * Gets an asset
- * @param font The asset to get
- * @returns The asset
- */
-sf::Font& Assets::get(Font font) {
-	return fontMap.at(font);
-}
-
-/**
- * Gets an asset
- * @param texture The asset to get
- * @returns The asset
- */
-sf::Texture& Assets::get(Texture texture) {
-	return textureMap.at(texture);
-}
-
-/**
- * Gets an asset
- * @param shader The asset to get
- * @returns The asset
- */
-sf::Shader& Assets::get(Shader shader) {
-	return shaderMap.at(shader);
-}
