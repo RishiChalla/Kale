@@ -6,8 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.cpp src/*.hpp)
 
-add_executable(Islands "")
-include(SourceList.cmake)
+file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.cpp src/*.hpp)
+add_executable(Islands ${sources})
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${sources})
 
 target_include_directories(Islands PUBLIC src/)
 
