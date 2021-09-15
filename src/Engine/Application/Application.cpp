@@ -43,18 +43,19 @@ Application::~Application() {
  */
 void Application::update() {
 
-	// Update loop
-	// while (window.isOpen()) {
-	// 	onUpdate();
-	// }
+    // Update loop
+    while (window.isOpen()) {
+        onUpdate();
+    }
 }
 
 /**
  * Runs the application
  */
 void Application::run() {
-	// TODO - Creates the window
-
+	// Creates the window
+    window.create("Islands");
+    
 	onBegin();
 
 	// Create the update thread
@@ -63,12 +64,12 @@ void Application::run() {
 	// std::thread updateThread(&Application::update, this);
 
 	// Render loop
-	// while (window.isOpen()) {
+    while (window.isOpen()) {
 		
 		// TODO - Handle events
 
 		// TODO - Designate rendering to scene
-	// }
+    }
 
 	// Wait for the update thread to finish
 	// Commented out for now - prevent CPU overheating

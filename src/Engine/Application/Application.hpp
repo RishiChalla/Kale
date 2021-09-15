@@ -18,6 +18,7 @@
 
 #include <memory>
 
+#include <Engine/Window/Window.hpp>
 #include <Engine/Logger/Logger.hpp>
 
 /**
@@ -44,7 +45,7 @@ namespace Islands {
 		/**
 		 * The main sfml window used for rendering for this application instance
 		 */
-		// Window window;
+		 Window window;
 
 		/**
 		 * Called on every update frame, must be thread safe.
