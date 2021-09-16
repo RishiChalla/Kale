@@ -17,7 +17,10 @@
 #ifdef ISLANDS_SDL
 
 #include <SDL.h>
+#include <SDL_vulkan.h>
+#include <vector>
 
+#include <Engine/Application/Application.hpp>
 #include "Window.hpp"
 
 using namespace Islands;
@@ -26,7 +29,11 @@ using namespace Islands;
  * Initializes SDL
  */
 Window::Window() {
-	SDL_Init(SDL_INIT_EVERYTHING);
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0){
+		error("Unable to init SDL:");
+		error(SDL_GetError());
+		exit(0);
+	}
 }
 
 /**
@@ -44,6 +51,7 @@ Window::~Window() {
  */
 void Window::create(const char* title) {
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_VULKAN | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		
 	open = true;
 }
 
@@ -59,7 +67,15 @@ bool Window::isOpen() const {
  * Clears the screen for rendering the next frame
  */
 void Window::clear() {
+	SDL_Event event;
 	
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_QUIT:
+			open = false;
+			break;
+		}
+	}
 }
 
 /**

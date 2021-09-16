@@ -16,6 +16,9 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
+option(ISLANDS_USE_SDL = OFF)
+option(ISLANDS_USE_GLFW = ON)
+
 # OS Macros
 if (WIN32)
 	target_compile_definitions(Islands PUBLIC ISLANDS_WINDOWS)
@@ -31,10 +34,16 @@ endif()
 
 if (ANDROID)
 	target_compile_definitions(Islands PUBLIC ISLANDS_ANDROID)
+	if (ISLANDS_USE_GLFW)
+		message(FATAL_ERROR "GLFW does not support this operating system")
+	endif()
 endif()
 
 if (IOS)
 	target_compile_definitions(Islands PUBLIC ISLANDS_IOS)
+	if (ISLANDS_USE_GLFW)
+		message(FATAL_ERROR "GLFW does not support this operating system")
+	endif()
 endif()
 
 # Filename macro
@@ -75,13 +84,21 @@ target_link_libraries(Islands date)
 target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/include/)
 
 # SDL
-if (WIN32 OR ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" OR (UNIX AND NOT APPLE) OR ANDROID OR IOS)
-	add_subdirectory(dependencies/SDL2-2.0.16)
+if (ISLANDS_USE_SDL)
 	set(SDL_MAIN_HANDLED TRUE)
 	set(SDL_STATIC ON CACHE BOOL "" FORCE)
 	set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+	add_subdirectory(dependencies/SDL2-2.0.16)
 	target_link_libraries(Islands SDL2main SDL2-static)
 	target_compile_definitions(Islands PUBLIC ISLANDS_SDL)
+endif()
+
+# GLFW
+if (ISLANDS_USE_GLFW)
+	set(GLFW_INCLUDE_VULKAN TRUE)
+	add_subdirectory(dependencies/glfw-3.3.4)
+	target_link_libraries(Islands GLFW)
+	target_compile_definitions(Islands PUBLIC ISLANDS_GLFW)
 endif()
 
 # Copy all resources (assets, shaders, etc)

@@ -18,4 +18,6 @@
 
 #ifdef ISLANDS_SDL
     #include "SDL/Window.hpp"
+#elif defined(ISLANDS_GLFW)
+	#include "GLFW/Window.hpp"
 #endif
