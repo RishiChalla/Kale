@@ -45,7 +45,7 @@ namespace Islands {
 		/**
 		 * The main sfml window used for rendering for this application instance
 		 */
-		 Window window;
+		Window window;
 
 		/**
 		 * Called on every update frame, must be thread safe.
@@ -91,6 +91,11 @@ namespace Islands {
 		 * Runs the application
 		 */
 		void run();
+		
+		/**
+		 * Gets the window
+		 */
+		Window& getWindow();
 	};
 
 	/**

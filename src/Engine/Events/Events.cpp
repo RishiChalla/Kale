@@ -15,6 +15,5 @@
 */
 
 #include "Events.hpp"
-#include <Engine/Application/Application.hpp>
 
 using namespace Islands;

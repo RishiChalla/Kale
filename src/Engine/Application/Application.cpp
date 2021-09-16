@@ -39,13 +39,24 @@ Application::~Application() {
 }
 
 /**
+ * Gets the window
+ */
+Window& Application::getWindow() {
+	return window;
+}
+
+/**
  * Handles updating the application in a separate thread
  */
 void Application::update() {
 
     // Update loop
     while (window.isOpen()) {
+		
+		// Call the virtual update method
         onUpdate();
+		
+		// TODO - Update Scene
     }
 }
 
@@ -66,8 +77,9 @@ void Application::run() {
 	// Render loop
     while (window.isOpen()) {
 		
-		// TODO - Handle events
-
+		// Update the window for event polling, etc
+		window.update();
+		
 		// TODO - Designate rendering to scene
     }
 

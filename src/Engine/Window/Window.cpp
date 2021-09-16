@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,15 +14,20 @@
    limitations under the License.
 */
 
-#pragma once
+#include "Window.hpp"
 
-#ifdef ISLANDS_GLFW
+using namespace Islands;
 
 /**
- * Forward declaration of GLFW Winow
+ * Starts listening to events, override the functions provided in EventHandler to handle the events
  */
-struct GLFWwindow;
+void Window::registerEvents(EventHandler* handler) {
+	eventHandlers.push_back(handler);
+}
 
-#define LOWER_WINDOW_PTR GLFWwindow*
-
-#endif
+/**
+ * Stops listening to events
+ */
+void Window::removeEvents(EventHandler* handler) {
+	eventHandlers.remove(handler);
+}
