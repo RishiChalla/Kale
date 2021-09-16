@@ -19,7 +19,7 @@
 #ifdef ISLANDS_GLFW
 
 /**
- Forward declaration of the SDL Window
+ Forward declaration of the GLFW Window
  */
 struct GLFWWindow;
 
@@ -29,7 +29,7 @@ namespace Islands {
     private:
         
         /**
-         * A pointer to the main sdl window
+         * A pointer to the main GLFW window
          */
         GLFWWindow* window;
         

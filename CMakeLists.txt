@@ -83,6 +83,11 @@ target_link_libraries(Islands date)
 # FastNoise
 target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/include/)
 
+# Vulkan
+find_package(Vulkan REQUIRED FATAL_ERROR)
+target_link_libraries(Islands ${Vulkan_LIBRARIES})
+target_include_directories(Islands PUBLIC ${Vulkan_INCLUDE_DIR})
+
 # SDL
 if (ISLANDS_USE_SDL)
 	set(SDL_MAIN_HANDLED TRUE)
@@ -95,9 +100,11 @@ endif()
 
 # GLFW
 if (ISLANDS_USE_GLFW)
-	set(GLFW_INCLUDE_VULKAN TRUE)
+	set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+	set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+	set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 	add_subdirectory(dependencies/glfw-3.3.4)
-	target_link_libraries(Islands GLFW)
+	target_link_libraries(Islands glfw)
 	target_compile_definitions(Islands PUBLIC ISLANDS_GLFW)
 endif()
 
