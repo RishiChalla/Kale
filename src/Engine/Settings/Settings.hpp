@@ -16,7 +16,89 @@
 
 #pragma once
 
-#define MAX_FPS 60.0
-#define MAX_UPS (MAX_FPS * 2.0)
-#define MIN_MSPF (1000.0 / MAX_FPS)
-#define MIN_MSPU (1000.0 / MAX_UPS)
+#include <map>
+
+#include <Engine/Events/Events.hpp>
+
+namespace Islands {
+	
+	/**
+	 * A list of the mappable/configurable actions for the game
+	 */
+	enum class Action {
+		
+		// All inputs which cause the player to jump are mapped to this control/action
+		Jump,
+		
+		// All inputs which the player may use to shoot are mapped to this control/action
+		Shoot,
+		
+		// All inputs which the player may use to use the bounce ability are mapped to this control/action
+		Bounce,
+		
+		// All remote abilities (restore, spin, etc) are mapped to this control/action
+		Remote,
+		
+		// Movement inputs
+		MovementRight, MovementLeft, MovementDown, MovementUp
+	};
+	
+	class Settings {
+	private:
+		float maxFps = 60.0;
+		float maxUps = maxFps * 2.0;
+		float minMSpF = 1000.0 / maxFps;
+		float minMSpU = 1000.0 / maxUps;
+		
+		std::map<Key, Action> keyMap = {
+			
+			// Jumping
+			{Key::B, Action::Jump},
+			
+			// Shooting
+			{Key::Space, Action::Shoot},
+			
+			// Bounce
+			{Key::C, Action::Bounce},
+			
+			// Remote
+			{Key::V, Action::Remote},
+			
+			// Movement (Allowing both WASD and Arrows by default)
+			{Key::W, Action::MovementUp}, {Key::Up, Action::MovementUp},
+			{Key::S, Action::MovementDown}, {Key::Down, Action::MovementDown},
+			{Key::A, Action::MovementLeft}, {Key::Left, Action::MovementLeft},
+			{Key::D, Action::MovementRight}, {Key::Right, Action::MovementRight}
+		};
+		
+		std::map<ControllerButton, Action> controllerMap = {
+			
+			// Jumping
+			{ControllerButton::A, Action::Jump},
+			
+			// Shooting
+			{}
+		};
+		
+	protected:
+		
+		void load();
+		
+		friend class Application;
+		
+	public:
+		
+		float getMaxFps() const;
+		float getMaxUps() const;
+		float getMinMSpF() const;
+		float getMinMSpU() const;
+		
+		void setMaxFps(float fps);
+		void setMaxUps(float ups);
+		
+		Key getKeyControl(Action action);
+		ControllerButton getButtonControl(Action action);
+	};
+	
+	extern Settings settings;
+}

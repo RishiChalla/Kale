@@ -57,7 +57,7 @@ void Application::update() {
     while (window.isOpen()) {
 		
 		// Perform updating
-		float fps = clock.sleep(MIN_MSPU);
+		float fps = clock.sleep(settings.getMinMSpU());
         onUpdate(fps);
 		// TODO - Update Scene
     }

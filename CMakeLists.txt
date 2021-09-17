@@ -86,6 +86,11 @@ target_link_libraries(Islands date-tz)
 # FastNoise
 target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/include/)
 
+# Json
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+add_subdirectory(dependencies/json)
+target_link_libraries(Islands nlohmann_json)
+
 # Vulkan
 find_package(Vulkan REQUIRED FATAL_ERROR)
 target_link_libraries(Islands ${Vulkan_LIBRARIES})
