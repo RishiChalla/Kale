@@ -48,6 +48,13 @@ namespace Islands {
 	protected:
 		
 		/**
+		 * Creates a new window. Some Operating systems (IOS/Android/TvOS) only support the creation
+		 * of a single window
+		 * @param title The title of the window
+		 */
+		void create(const char* title);
+		
+		/**
 		 * Clears the screen for rendering the next frame
 		 */
 		void clear();
@@ -76,13 +83,6 @@ namespace Islands {
 		 * Frees resources of the window
 		 */
 		~Window();
-		
-		/**
-		 * Creates a new window. Some Operating systems (IOS/Android/TvOS) only support the creation
-		 * of a single window
-		 * @param title The title of the window
-		 */
-		void create(const char* title);
 		
 		/**
 		 * Thread safe method to check whether or not the window is currently open

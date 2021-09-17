@@ -50,8 +50,9 @@ namespace Islands {
 		/**
 		 * Called on every update frame, must be thread safe.
 		 * Do not do anything heavy here, it will cause lag
+		 * @param ups The number of updates per second
 		 */
-		virtual void onUpdate() {}
+		virtual void onUpdate(float ups) {}
 
 		/**
 		 * Called when the application begins, just before the window is run.

@@ -77,8 +77,11 @@ endfunction()
 define_file_basename_for_sources(Islands)
 
 # Date
+set(USE_SYSTEM_TZ_DB ON)
+set(BUILD_TZ_LIB ON)
 add_subdirectory(dependencies/date)
 target_link_libraries(Islands date)
+target_link_libraries(Islands date-tz)
 
 # FastNoise
 target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/include/)

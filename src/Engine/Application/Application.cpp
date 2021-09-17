@@ -16,6 +16,8 @@
 
 #include "Application.hpp"
 #include <thread>
+#include <Engine/Clock/Clock.hpp>
+#include <Engine/Settings/Settings.hpp>
 
 using namespace Islands;
 
@@ -51,11 +53,12 @@ Window& Application::getWindow() {
 void Application::update() {
 
     // Update loop
+	Clock clock;
     while (window.isOpen()) {
 		
-		// Call the virtual update method
-        onUpdate();
-		
+		// Perform updating
+		float fps = clock.sleep(MIN_MSPU);
+        onUpdate(fps);
 		// TODO - Update Scene
     }
 }
@@ -70,9 +73,7 @@ void Application::run() {
 	onBegin();
 
 	// Create the update thread
-	// Commented out for now - prevent CPU overheating
-	// TODO - Fix this by adding UPS and max UPS to avoid 100% CPU thread usage
-	// std::thread updateThread(&Application::update, this);
+	std::thread updateThread(&Application::update, this);
 
 	// Render loop
     while (window.isOpen()) {
@@ -84,8 +85,7 @@ void Application::run() {
     }
 
 	// Wait for the update thread to finish
-	// Commented out for now - prevent CPU overheating
-	// updateThread.join();
+	updateThread.join();
 
 	onEnd();
 }
