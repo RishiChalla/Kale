@@ -55,10 +55,13 @@ void Application::update() {
     // Update loop
 	Clock clock;
     while (window.isOpen()) {
+
+		// Limit UPS and retrieve it
+		float ups = clock.sleep(settings.getMinMSpU());
 		
 		// Perform updating
-		float fps = clock.sleep(settings.getMinMSpU());
-        onUpdate(fps);
+        onUpdate(ups);
+		
 		// TODO - Update Scene
     }
 }
@@ -76,7 +79,11 @@ void Application::run() {
 	std::thread updateThread(&Application::update, this);
 
 	// Render loop
+	Clock clock;
     while (window.isOpen()) {
+
+		// Limit FPS and retrieve it
+		float fps = clock.sleep(settings.getMinMSpF());
 		
 		// Update the window for event polling, etc
 		window.update();

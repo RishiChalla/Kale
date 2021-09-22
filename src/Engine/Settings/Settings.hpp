@@ -77,27 +77,83 @@ namespace Islands {
 			{ControllerButton::A, Action::Jump},
 			
 			// Shooting
-			{}
+			{ControllerButton::B, Action::Shoot},
+
+			// Bouncing
+			{ControllerButton::Y, Action::Bounce},
+
+			// Remote
+			{ControllerButton::X, Action::Remote},
+
+			// Movement (Both joysticks are auto mapped with no config)
+			// Movement (Allowing both WASD and Arrows by default)
+			{ControllerButton::DPadUp, Action::MovementUp},
+			{ControllerButton::DPadDown, Action::MovementDown},
+			{ControllerButton::DPadLeft, Action::MovementLeft},
+			{ControllerButton::DPadRight, Action::MovementRight}
 		};
 		
 	protected:
 		
+		/**
+		 * Loads the settings from the config json file
+		 * Should only be called once after the app is run
+		 */
 		void load();
 		
 		friend class Application;
 		
 	public:
 		
+		/**
+		 * Gets the max Frames per second
+		 * @returns The max Fps
+		 */
 		float getMaxFps() const;
+		
+		/**
+		 * Gets the max Updates per second
+		 * @returns The max Ups
+		 */
 		float getMaxUps() const;
+		
+		/**
+		 * Gets the min Milli-Seconds per Frame
+		 * @returns The min MSpF
+		 */
 		float getMinMSpF() const;
+		
+		/**
+		 * Gets the min Milli-Seconds per Update
+		 * @returns The min MSpU
+		 */
 		float getMinMSpU() const;
 		
+		/**
+		 * Sets the max FPS
+		 * @param fps The max FPS to set to
+		 */
 		void setMaxFps(float fps);
+
+		/**
+		 * Sets the max UPS
+		 * @param fps The max UPS to set to
+		 */
 		void setMaxUps(float ups);
 		
-		Key getKeyControl(Action action);
-		ControllerButton getButtonControl(Action action);
+		/**
+		 * Gets the action for a key press
+		 * @param key The key to get
+		 * @returns the action for this key
+		 */
+		Action getKeyAction(Key key);
+
+		/**
+		 * Gets the action for a button
+		 * @param button The button to get
+		 * @returns the action for this button
+		 */
+		Action getControllerButtonAction(ControllerButton button);
 	};
 	
 	extern Settings settings;

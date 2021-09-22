@@ -33,7 +33,7 @@ Logger::Logger() {
 		std::filesystem::create_directory(".Islands/logs");
 
 	// Create/open the log file in the correct folder
-	logFile.open(".Islands/logs/" + date::format("%F--%H-%M-%S", std::chrono::system_clock::now()) + ".log");
+	logFile.open(".Islands/logs/" + date::format("%F--%H-%M", std::chrono::system_clock::now()) + ".log");
 }
 
 /**
