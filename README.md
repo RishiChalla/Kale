@@ -1,6 +1,19 @@
 # Islands
 This is a doc full of random notes for the game.
 
+## Engine TODO List
+ - Scene Implementation and designation
+ - Resources Implementations
+	- Assets class
+	- Font Class
+	- Shader Class
+	- Texture Class
+ - SDL Window Implementation
+ - Node Implementation
+	- Entity Component System (ECS)
+	- Physics Component
+ - Particle System Implementation
+
 ## Movement
  - Jump
  	- Typical jumping ability, you start the game with this
