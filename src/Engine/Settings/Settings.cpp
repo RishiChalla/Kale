@@ -15,8 +15,13 @@
 */
 
 #include "Settings.hpp"
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <filesystem>
 
 using namespace Islands;
+
+static constexpr const char* settingsFilePath = ".Islands/settings.json";
 
 Settings Islands::settings;
 
@@ -25,7 +30,42 @@ Settings Islands::settings;
  * Should only be called once after the app is run
  */
 void Settings::load() {
-	// TODO - Implement
+	using namespace nlohmann;
+
+	// Load the json from the settings file
+	if (!std::filesystem::exists(".Islands"))
+		std::filesystem::create_directory(".Islands");
+	
+	std::ifstream settingsFile(settingsFilePath);
+	json settingsJson;
+
+	// If the settings is empty, make a default version and save it
+	if (settingsFile.peek() == std::ifstream::traits_type::eof()) {
+		settingsFile.close();
+		settingsJson = {
+			{"maxFps", maxFps},
+			{"maxUps", maxUps},
+			{"keyMap", keyMap},
+			{"controllerMap", controllerMap}
+		};
+		std::ifstream settingsFile(settingsFilePath);
+		std::ofstream settingsFileOutput(settingsFilePath);
+		settingsFileOutput << settingsJson.dump(4);
+		settingsFileOutput.close();
+	}
+	else {
+		settingsJson = json::parse(settingsFile);
+		settingsFile.close();
+	}
+
+	// Load the values
+	maxFps = settingsJson["maxFps"].get<float>();
+	minMSpF = 1000.0f / maxFps;
+	maxUps = settingsJson["maxUps"].get<float>();
+	minMSpU = 1000.0f / maxUps;
+
+	keyMap = settingsJson["keyMap"].get<std::map<Key, Action>>();
+	controllerMap = settingsJson["controllerMap"].get<std::map<ControllerButton, Action>>();
 }
 
 /**
@@ -69,7 +109,20 @@ float Settings::getMinMSpU() const {
  * @param fps The max FPS to set to
  */
 void Settings::setMaxFps(float fps) {
-	// TODO - Implement
+	// Read the Json in
+	using namespace nlohmann;
+	json settingsJson = json::parse(std::ifstream(settingsFilePath));
+	// Set the New Json Property
+	settingsJson["maxFps"] = fps;
+
+	// Save the Json
+	std::ofstream settingsFile(settingsFilePath);
+	settingsFile << settingsJson.dump(4);
+	settingsFile.close();
+
+	// Update the properties locally for immediate rendering change
+	maxFps = fps;
+	minMSpF = fps / 1000.0f;
 }
 
 /**
@@ -77,7 +130,62 @@ void Settings::setMaxFps(float fps) {
  * @param fps The max UPS to set to
  */
 void Settings::setMaxUps(float ups) {
-	// TODO - Implement
+	// Read the Json in
+	using namespace nlohmann;
+	json settingsJson = json::parse(std::ifstream(settingsFilePath));
+	// Set the New Json Property
+	settingsJson["maxUps"] = ups;
+
+	// Save the Json
+	std::ofstream settingsFile(settingsFilePath);
+	settingsFile << settingsJson.dump(4);
+	settingsFile.close();
+
+	// Update the properties locally for immediate rendering change
+	maxUps = ups;
+	minMSpU = ups / 1000.0f;
+}
+
+/**
+ * Binds the given key to a certain action
+ * @param key The key to bind
+ * @param action The action to bind to
+ */
+void Settings::updateKeyAction(Key key, Action action) {
+	// Update the properties locally for immediate change
+	keyMap[key] = action;
+	
+	// Read the Json in
+	using namespace nlohmann;
+	json settingsJson = json::parse(std::ifstream(settingsFilePath));
+	// Set the New Json Property
+	settingsJson["keyMap"] = keyMap;
+
+	// Save the Json
+	std::ofstream settingsFile(settingsFilePath);
+	settingsFile << settingsJson.dump(4);
+	settingsFile.close();
+}
+
+/**
+ * Binds the given controller button to a certain action
+ * @param button The controller button to bind
+ * @param action The action to bind to
+ */
+void Settings::updateControllerAction(ControllerButton button, Action action) {
+	// Update the properties locally for immediate change
+	controllerMap[button] = action;
+	
+	// Read the Json in
+	using namespace nlohmann;
+	json settingsJson = json::parse(std::ifstream(settingsFilePath));
+	// Set the New Json Property
+	settingsJson["controllerMap"] = controllerMap;
+
+	// Save the Json
+	std::ofstream settingsFile(settingsFilePath);
+	settingsFile << settingsJson.dump(4);
+	settingsFile.close();
 }
 
 /**
@@ -94,6 +202,6 @@ Action Settings::getKeyAction(Key key) {
  * @param button The button to get
  * @returns the action for this button
  */
-Action Settings::getControllerButtonAction(ControllerButton button) {
+Action Settings::getControllerAction(ControllerButton button) {
 	return controllerMap[button];
 }

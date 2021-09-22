@@ -45,10 +45,10 @@ namespace Islands {
 	
 	class Settings {
 	private:
-		float maxFps = 60.0;
-		float maxUps = maxFps * 2.0;
-		float minMSpF = 1000.0 / maxFps;
-		float minMSpU = 1000.0 / maxUps;
+		float maxFps = 60.0f;
+		float maxUps = maxFps * 2.0f;
+		float minMSpF = 1000.0f / maxFps;
+		float minMSpU = 1000.0f / maxUps;
 		
 		std::map<Key, Action> keyMap = {
 			
@@ -140,6 +140,20 @@ namespace Islands {
 		 * @param fps The max UPS to set to
 		 */
 		void setMaxUps(float ups);
+
+		/**
+		 * Binds the given key to a certain action
+		 * @param key The key to bind
+		 * @param action The action to bind to
+		 */
+		void updateKeyAction(Key key, Action action);
+
+		/**
+		 * Binds the given controller button to a certain action
+		 * @param button The controller button to bind
+		 * @param action The action to bind to
+		 */
+		void updateControllerAction(ControllerButton button, Action action);
 		
 		/**
 		 * Gets the action for a key press
@@ -153,7 +167,7 @@ namespace Islands {
 		 * @param button The button to get
 		 * @returns the action for this button
 		 */
-		Action getControllerButtonAction(ControllerButton button);
+		Action getControllerAction(ControllerButton button);
 	};
 	
 	extern Settings settings;

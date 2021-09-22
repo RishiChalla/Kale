@@ -30,7 +30,7 @@ Application* Islands::mainApp = nullptr;
  * Creates a new application instance
  */
 Application::Application() {
-	
+	settings.load();
 }
 
 /**
@@ -61,7 +61,7 @@ void Application::update() {
 		
 		// Perform updating
         onUpdate(ups);
-		
+
 		// TODO - Update Scene
     }
 }
