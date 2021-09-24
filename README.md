@@ -10,9 +10,24 @@ This is a doc full of random notes for the game.
 	- Texture Class
  - SDL Window Implementation
  - Node Implementation
+	- Ability to import nodes from the javascript node builder tool with animations
 	- Entity Component System (ECS)
-	- Physics Component
+		- Physics Component
+			- Physics suitable for a fast paced platformer, no "glitchiness"
+			- Physics system should "feel" more like an aid to the player than a force against
+			- This should be simple enough to where a player understands all the forces being affected on them at a numerical level
+		- Animation Components
+			- Must be able to fully import JsNBT files at runtime and dynamically render them
  - Particle System Implementation
+
+## Javascript Node Builder Tool (JsNBT)
+ - A web based tool for creating assets and animations with the vector art style. SVG Files nor image files are used but instead a custom json based file type of ".jsnbt"
+ - Drawing ONLY supports rectangles with rounded corners (these can be masked)
+
+### JsNBT format
+```json
+// TODO - Add this here
+```
 
 ## Movement
  - Jump
