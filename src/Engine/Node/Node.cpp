@@ -14,40 +14,6 @@
    limitations under the License.
 */
 
-#include "Scene.hpp"
+#include "Node.hpp"
 
 using namespace Islands;
-
-/**
- * Adds a node to the scene to render/update
- * @param node The node to add
- */
-void Scene::addNode(Node& node) {
-	nodes.push_back(&node);
-}
-
-/**
- * Removes a node from the scene
- * @param node The node to remove
- */
-void Scene::removeNode(Node* node) {
-	nodes.remove(node);
-}
-
-/**
- * Renders the current scene
- */
-void Scene::render() {
-	// TODO - Vulkan commands to clear screen with background color
-
-	for (Node* node : nodes)
-		node->render();
-}
-
-/**
- * Updates the current scene
- */
-void Scene::update() {
-	for (Node* node : nodes)
-		node->update();
-}

@@ -48,6 +48,22 @@ Window& Application::getWindow() {
 }
 
 /**
+ * Gets the currently presented scene
+ * @returns The currently presented scene pointer
+ */
+std::shared_ptr<Scene> Application::getPresentedScene() {
+	return presentedScene;
+}
+
+/**
+ * Presents a given scene
+ * @param scene The scene to present
+ */
+void Application::presentScene(std::shared_ptr<Scene> scene) {
+	presentedScene = scene;
+}
+
+/**
  * Handles updating the application in a separate thread
  */
 void Application::update() {
@@ -61,8 +77,8 @@ void Application::update() {
 		
 		// Perform updating
         onUpdate(ups);
-
-		// TODO - Update Scene
+		if (presentedScene != nullptr)
+			presentedScene->update();
     }
 }
 
@@ -87,8 +103,8 @@ void Application::run() {
 		
 		// Update the window for event polling, etc
 		window.update();
-		
-		// TODO - Designate rendering to scene
+		if (presentedScene != nullptr)
+			presentedScene->render();
     }
 
 	// Wait for the update thread to finish

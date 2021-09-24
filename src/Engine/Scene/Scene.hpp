@@ -16,6 +16,64 @@
 
 #pragma once
 
+#include <list>
+
+#include <Engine/Node/Node.hpp>
+#include <Engine/Events/Events.hpp>
+
 namespace Islands {
 	
+	/**
+	 * The main scene class for the game
+	 * This class handles rendering and nodes management
+	 */
+	class Scene : public EventHandler {
+	private:
+
+		/**
+		 * A list of all the nodes to be presented in the current scene
+		 */
+		std::list<Node*> nodes;
+
+	protected:
+
+		/**
+		 * The background color of the scene to use for clearing the screen
+		 */
+		Vector4f bgColor = {1.0f, 1.0f, 1.0f, 1.0f};
+
+		/**
+		 * Adds a node to the scene to render/update
+		 * @param node The node to add
+		 */
+		void addNode(Node& node);
+
+		/**
+		 * Removes a node from the scene
+		 * @param node The node to remove
+		 */
+		void removeNode(Node* node);
+
+		/**
+		 * Renders the current scene
+		 */
+		virtual void render();
+
+		/**
+		 * Updates the current scene
+		 */
+		virtual void update();
+
+		/**
+		 * Called when the current scene is presented
+		 */
+		virtual void onPresent() = 0;
+
+		/**
+		 * Called when the scene is about to be changed
+		 */
+		virtual void onSceneChange() = 0;
+
+		friend class Application;
+	};
 }

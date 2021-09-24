@@ -20,6 +20,7 @@
 
 #include <Engine/Window/Window.hpp>
 #include <Engine/Logger/Logger.hpp>
+#include <Engine/Scene/Scene.hpp>
 
 /**
  * The entry point function/main function of the program
@@ -39,6 +40,11 @@ namespace Islands {
 		 * Handles updating the application in a separate thread
 		 */
 		void update();
+
+		/**
+		 * A pointer to the current scene to render
+		 */
+		std::shared_ptr<Scene> presentedScene;
 	
 	protected:
 
@@ -95,8 +101,21 @@ namespace Islands {
 		
 		/**
 		 * Gets the window
+		 * @returns a pointer to the window
 		 */
 		Window& getWindow();
+
+		/**
+		 * Gets the currently presented scene
+		 * @returns The currently presented scene pointer
+		 */
+		std::shared_ptr<Scene> getPresentedScene();
+
+		/**
+		 * Presents a given scene
+		 * @param scene The scene to present
+		 */
+		void presentScene(std::shared_ptr<Scene> scene);
 	};
 
 	/**

@@ -70,7 +70,7 @@ namespace Islands {
 		void update();
 		
 		friend class Application;
-		// friend class Scene;
+		friend class Scene;
 		
 	public:
 		
