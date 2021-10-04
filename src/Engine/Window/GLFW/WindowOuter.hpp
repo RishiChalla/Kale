@@ -23,6 +23,4 @@
  */
 struct GLFWwindow;
 
-#define LOWER_WINDOW_PTR GLFWwindow*
-
 #endif

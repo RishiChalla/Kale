@@ -205,12 +205,6 @@ void Window::create(const char* title) {
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
 	
-	uint32_t extensionCount = 0;
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-	
-	info("Vulkan Extensions Supported:");
-	info(extensionCount);
-	
 	handlers = &eventHandlers;
 	glfwSetKeyCallback(window, keyCallback);
 	glfwSetCursorPosCallback(window, cursorCallback);

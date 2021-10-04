@@ -17,12 +17,13 @@
 #pragma once
 
 #ifdef ISLANDS_SDL
-    #include "SDL/Window.hpp"
+    #include "SDL/WindowOuter.hpp"
 #elif defined(ISLANDS_GLFW)
-	#include "GLFW/Window.hpp"
+	#include "GLFW/WindowOuter.hpp"
 #endif
 
 #include <list>
+#include <vulkan/vulkan.hpp>
 #include <Engine/Math/Vector/Vector.hpp>
 
 namespace Islands {
@@ -33,17 +34,34 @@ namespace Islands {
 	class EventHandler;
 	
 	class Window {
+		
+#ifdef ISLANDS_SDL
+		#include "SDL/WindowInner.hpp"
+#elif defined(ISLANDS_GLFW)
+		#include "GLFW/WindowInner.hpp"
+#endif
+		
 	private:
-		
-		/**
-		 * A pointer to the lower level window. Avoid using this unless absolutely necessary as it is not abstracted
-		 */
-		LOWER_WINDOW_PTR window;
-		
+	
 		/**
 		 * A linked list of all event listeners for this window
 		 */
 		std::list<EventHandler*> eventHandlers;
+
+		/**
+		 * The vulkan instance used for this window
+		 */
+		vk::Instance vulkanInstance;
+
+		/**
+		 * Creates the vulkan instance for this window
+		 */
+		void createVulkanInstance();
+
+		/**
+		 * Initializes vulkan for use with both windowing APIs
+		 */
+		void initVulkan();
 		
 	protected:
 		
