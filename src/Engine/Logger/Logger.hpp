@@ -19,8 +19,11 @@
 #include <fstream>
 
 #ifndef NDEBUG
+#include <termcolor/termcolor.hpp>
 #include <iostream>
 #endif
+
+
 
 namespace Islands {
 
@@ -29,6 +32,56 @@ namespace Islands {
 	 */
 	class Logger {
 	private:
+
+		// Colors for console in Debug Mode
+		#ifndef NDEBUG
+
+		/**
+		 * Reset Color
+		 */
+		constexpr static auto rc = termcolor::reset;
+		
+		/**
+		 * Time Color
+		 */
+		constexpr static auto tc = termcolor::color<87>;
+		
+		/**
+		 * Log Color
+		 */
+		constexpr static auto lc = termcolor::color<249>;
+		
+		/**
+		 * Info Color
+		 */
+		constexpr static auto ic = termcolor::color<109>;
+		
+		/**
+		 * Warn Color
+		 */
+		constexpr static auto wc = termcolor::color<220>;
+		
+		/**
+		 * Error Color
+		 */
+		constexpr static auto ec = termcolor::color<198>;
+		
+		/**
+		 * File Color
+		 */
+		constexpr static auto fc = termcolor::color<85>;
+		
+		/**
+		 * Line Color
+		 */
+		constexpr static auto lic = termcolor::color<86>;
+		
+		/**
+		 * Default Color
+		 */
+		constexpr static auto dc = termcolor::color<241>;
+
+		#endif
 
 		/**
 		 * The main log file for logging output to
@@ -60,10 +113,11 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "]" << // [HH:MM AM]
+				lc << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << time << msg << "\n";
+			logFile << "[" << time << "] " << msg << "\n";
 		}
 
 		/**
@@ -74,10 +128,11 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << "[INFO] " << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
+				ic << "INFO" << dc << "] " << ic << msg << "\n" << rc; // [Info] Msg
 			#endif
 
-			logFile << time << "[INFO] " << msg << "\n";
+			logFile << "[" << time << "] " << "[INFO] " << msg << "\n";
 		}
 
 		/**
@@ -88,10 +143,11 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << "[WARNING] " << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
+				wc << "WARNING" << dc << "] " << wc << msg << "\n" << rc; // [Warning] Msg
 			#endif
 
-			logFile << time << "[WARNING] " << msg << "\n";
+			logFile << "[" << time << "] " << "[WARNING] " << msg << "\n";
 		}
 
 		/**
@@ -102,10 +158,11 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << "[ERROR] " << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
+				ec << "ERROR" << dc << "] " << ec << msg << "\n" << rc; // [Error] Msg
 			#endif
 
-			logFile << time << "[ERROR] " << msg << "\n";
+			logFile << "[" << time << "] " << "[ERROR] " << msg << "\n";
 		}
 
 		/**
@@ -118,10 +175,12 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << "[" << file << ":" << line << "] " << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
+				fc << file << dc << ":" << lic << line << dc << "] " << // [File:Line]
+				lc << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << time << "[" << file << ":" << line << "] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << msg << "\n";
 		}
 
 		/**
@@ -134,10 +193,13 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << "[" << file << ":" << line << "] " << "[INFO] " << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
+				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
+				ic << "INFO" << dc << "] " << // [Info]
+				ic << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << time << "[" << file << ":" << line << "] " << "[INFO] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[INFO] " << msg << "\n";
 		}
 
 		/**
@@ -150,10 +212,13 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << "[" << file << ":" << line << "] " << "[WARNING] " << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
+				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
+				wc << "WARNING" << dc << "] " << // [Warning]
+				wc << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << time << "[" << file << ":" << line << "] " << "[WARNING] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[WARNING] " << msg << "\n";
 		}
 
 		/**
@@ -166,10 +231,13 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifndef NDEBUG
-			std::cout << time << "[" << file << ":" << line << "] " << "[ERROR] " << msg << "\n";
+			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
+				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
+				ec << "ERROR" << dc << "] " << // [Error]
+				ec << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << time << "[" << file << ":" << line << "] " << "[ERROR] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[ERROR] " << msg << "\n";
 		}
 	};
 }

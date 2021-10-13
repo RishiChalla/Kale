@@ -16,9 +16,6 @@
 
 #ifdef ISLANDS_GLFW
 
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-
 #include <Engine/Application/Application.hpp>
 #include <Engine/Window/Window.hpp>
 #include <Engine/Events/Events.hpp>
@@ -57,6 +54,7 @@ Window::Window() {
  * Frees resources of the window
  */
 Window::~Window() {
+	cleanupVulkan();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	handlers = nullptr;
@@ -202,8 +200,11 @@ static void joystickCallback(int jid, int action) {
  * @param title The title of the window
  */
 void Window::create(const char* title) {
+	this->title = title;
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
+
+	initVulkan();
 	
 	handlers = &eventHandlers;
 	glfwSetKeyCallback(window, keyCallback);
@@ -407,6 +408,23 @@ void Window::update() {
 			for (auto handler : eventHandlers) handler->onControllerJoystick(gamepad.id, ControllerAxis::Right, gamepad.rJoystick);
 		}
 	}
+}
+
+void Window::getCreateInfoExtensions(vk::InstanceCreateInfo& createInfo) const {
+	uint32_t glfwExtensionCount = 0;
+	const char** glfwExtensions;
+
+	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+	createInfo.enabledExtensionCount = glfwExtensionCount;
+	createInfo.ppEnabledExtensionNames = glfwExtensions;
+}
+
+/**
+ * Gets the window title
+ */
+const char* Window::getTitle() const {
+	return title;
 }
 
 /**

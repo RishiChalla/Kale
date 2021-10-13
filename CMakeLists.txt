@@ -91,6 +91,12 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(dependencies/json)
 target_link_libraries(Islands nlohmann_json)
 
+# Termcolor - Debug only since console is not used for release
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_subdirectory(dependencies/termcolor)
+	target_link_libraries(Islands termcolor)
+endif()
+
 # Vulkan
 find_package(Vulkan REQUIRED FATAL_ERROR)
 target_link_libraries(Islands ${Vulkan_LIBRARIES})

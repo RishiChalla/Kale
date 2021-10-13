@@ -41,5 +41,5 @@ Logger::Logger() {
  * @returns the time prefix
  */
 std::string Logger::getTimePrefix() {
-	return "[" + date::format("%I:%M %p", date::make_zoned(date::current_zone(), std::chrono::system_clock::now())) + "] ";
+	return date::format("%I:%M %p", date::make_zoned(date::current_zone(), std::chrono::system_clock::now()));
 }

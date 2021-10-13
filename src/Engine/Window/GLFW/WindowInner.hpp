@@ -25,4 +25,9 @@ private:
  */
 GLFWwindow* window;
 
+/**
+ * The title of the window
+ */
+const char* title;
+
 #endif

@@ -42,7 +42,7 @@ namespace Islands {
 #endif
 		
 	private:
-	
+
 		/**
 		 * A linked list of all event listeners for this window
 		 */
@@ -62,6 +62,16 @@ namespace Islands {
 		 * Initializes vulkan for use with both windowing APIs
 		 */
 		void initVulkan();
+
+		/**
+		 * Cleans vulkan objects before the application closes
+		 */
+		void cleanupVulkan();
+
+		/**
+		 * Gets the extensions required for VKCreateInfo depending on the windowing API
+		 */
+		void getCreateInfoExtensions(vk::InstanceCreateInfo& createInfo) const;
 		
 	protected:
 		
@@ -127,6 +137,11 @@ namespace Islands {
 		 * Gets the window size
 		 */
 		Vector2f getSizeF();
+
+		/**
+		 * Gets the window title
+		 */
+		const char* getTitle() const;
 		
 		/**
 		 * Starts listening to events, override the functions provided in EventHandler to handle the events

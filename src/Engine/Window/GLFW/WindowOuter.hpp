@@ -18,9 +18,7 @@
 
 #ifdef ISLANDS_GLFW
 
-/**
- * Forward declaration of GLFW Winow
- */
-struct GLFWwindow;
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 
 #endif
