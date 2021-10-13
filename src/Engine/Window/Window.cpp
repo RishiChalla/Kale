@@ -17,8 +17,13 @@
 #include "Window.hpp"
 #include <Engine/Application/Application.hpp>
 #include <vector>
+#include <sstream>
 
 using namespace Islands;
+
+const std::vector<const char*> Window::vulkanValidationLayers = {
+	"VK_LAYER_KHRONOS_validation"
+};
 
 /**
  * Starts listening to events, override the functions provided in EventHandler to handle the events
@@ -35,6 +40,76 @@ void Window::removeEvents(EventHandler* handler) {
 }
 
 /**
+ * Checks validation layer support for all given validation layers
+ * @param validationLayers The validation layers to check support for, all of these must be present to return true
+ * @returns Whether or not all validation layers given are supported
+ */
+static bool checkValidationLayerSupport(const std::vector<const char*>& validationLayers) {
+	uint32_t layerCount;
+	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+	std::vector<VkLayerProperties> availableLayers(layerCount);
+	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+	
+	for (const std::string& layerName : validationLayers) {
+		bool layerFound = false;
+		for (const auto& layerProperties : availableLayers) {
+			if (std::string(layerName) == layerProperties.layerName) {
+				layerFound = true;
+				break;
+			}
+		}
+
+		if (!layerFound) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+#ifndef NDEBUG
+
+/**
+ * The Vulkan Debug Validation Layer callback function
+ * @param severity The severity of the message
+ * @param type The type of the message
+ * @param callbackData the callback data passed with the message (usually the message itself)
+ * @param userData A user pointer - in our app will always be nullptr
+ */
+static VKAPI_ATTR vk::Bool32 VKAPI_CALL debugCallback(vk::DebugUtilsMessageSeverityFlagBitsEXT severity,
+	vk::DebugUtilsMessageTypeFlagsEXT type, const vk::DebugUtilsMessengerCallbackDataEXT* callbackData,
+	void* userData) {
+	
+	switch (severity) {
+		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose:
+			print(callbackData->pMessage);
+			return VK_FALSE;
+		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo:
+			info(callbackData->pMessage);
+			return VK_FALSE;
+		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning:
+			warn(callbackData->pMessage);
+			return VK_FALSE;
+		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eError:
+			error(callbackData->pMessage);
+			return VK_FALSE;
+	}
+}
+
+/**
+ * Sets up the debug message callback
+ */
+void Window::setupDebugMessageCallback() {
+	// vk::DebugUtilsMessengerCreateInfoEXT createInfo;
+	// createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+	// createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+	// createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+	// createInfo.pfnUserCallback = debugCallback;
+}
+
+#endif
+
+/**
  * Creates the vulkan instance for this window
  */
 void Window::createVulkanInstance() {
@@ -49,8 +124,27 @@ void Window::createVulkanInstance() {
 	vk::InstanceCreateInfo createInfo;
 	createInfo.sType = vk::StructureType::eInstanceCreateInfo;
 	createInfo.pApplicationInfo = &appInfo;
-	getCreateInfoExtensions(createInfo);
+	std::vector<const char*> requiredExtensions = getCreateInfoExtensions();
+
+	// Validation Layers
+	#ifndef NDEBUG
+
+	if (!checkValidationLayerSupport(vulkanValidationLayers)) {
+		error("Validation Layers not Available");
+	}
+
+	createInfo.enabledLayerCount = static_cast<uint32_t>(vulkanValidationLayers.size());
+	createInfo.ppEnabledLayerNames = vulkanValidationLayers.data();
+	requiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+
+	#else
+
 	createInfo.enabledLayerCount = 0;
+
+	#endif
+
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
+	createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
 	if (vk::createInstance(&createInfo, nullptr, &vulkanInstance) != vk::Result::eSuccess) {
 		error("Unable to Init Vulkan");
@@ -67,4 +161,8 @@ void Window::cleanupVulkan() {
  */
 void Window::initVulkan() {
 	createVulkanInstance();
+
+	#ifndef NDEBUG
+	setupDebugMessageCallback();
+	#endif
 }

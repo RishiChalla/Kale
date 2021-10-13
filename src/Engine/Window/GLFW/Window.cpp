@@ -410,14 +410,12 @@ void Window::update() {
 	}
 }
 
-void Window::getCreateInfoExtensions(vk::InstanceCreateInfo& createInfo) const {
+std::vector<const char*> Window::getCreateInfoExtensions() const {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions;
-
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-	createInfo.enabledExtensionCount = glfwExtensionCount;
-	createInfo.ppEnabledExtensionNames = glfwExtensions;
+	std::vector<const char*> requiredExtensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+	return requiredExtensions;
 }
 
 /**

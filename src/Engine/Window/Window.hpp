@@ -23,6 +23,7 @@
 #endif
 
 #include <list>
+#include <vector>
 #include <vulkan/vulkan.hpp>
 #include <Engine/Math/Vector/Vector.hpp>
 
@@ -48,10 +49,33 @@ namespace Islands {
 		 */
 		std::list<EventHandler*> eventHandlers;
 
+		// ------------------------------ Vulkan ------------------------------
+
+		// > DEBUG <
+		#ifndef NDEBUG
+
+		/**
+		 * All the validatoin layers used when debugging
+		 */
+		static const std::vector<const char*> vulkanValidationLayers;
+
+		/**
+		 * The debug messenger used for vulkan output messages
+		 */
+		vk::DebugUtilsMessengerEXT vulkanDebugMessenger;
+
+		/**
+		 * Sets up the debug message callback
+		 */
+		void setupDebugMessageCallback();
+
+		#endif
+
 		/**
 		 * The vulkan instance used for this window
 		 */
 		vk::Instance vulkanInstance;
+
 
 		/**
 		 * Creates the vulkan instance for this window
@@ -70,8 +94,9 @@ namespace Islands {
 
 		/**
 		 * Gets the extensions required for VKCreateInfo depending on the windowing API
+		 * @returns The required extensions for the lower level windowing API
 		 */
-		void getCreateInfoExtensions(vk::InstanceCreateInfo& createInfo) const;
+		std::vector<const char*> getCreateInfoExtensions() const;
 		
 	protected:
 		
