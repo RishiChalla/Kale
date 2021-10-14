@@ -52,7 +52,7 @@ namespace Islands {
 		// ------------------------------ Vulkan ------------------------------
 
 		// > DEBUG <
-		#ifndef NDEBUG
+		#ifdef ISLANDS_DEBUG
 
 		/**
 		 * All the validatoin layers used when debugging

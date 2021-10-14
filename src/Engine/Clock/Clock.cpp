@@ -42,5 +42,5 @@ float Clock::sleep(double minMSPC) {
 	
 	b = std::chrono::system_clock::now();
 	std::chrono::duration<double, std::milli> sleep_time = b - a;
-	return 1000.0f / (sleep_time + work_time).count();
+	return 1000.0f / static_cast<float>((sleep_time + work_time).count());
 }

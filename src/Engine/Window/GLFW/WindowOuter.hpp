@@ -18,6 +18,10 @@
 
 #ifdef ISLANDS_GLFW
 
+#ifdef ISLANDS_WINDOWS
+#include <Windows.h>
+#endif
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 

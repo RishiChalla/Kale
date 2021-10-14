@@ -22,6 +22,7 @@ option(ISLANDS_USE_GLFW = ON)
 # OS Macros
 if (WIN32)
 	target_compile_definitions(Islands PUBLIC ISLANDS_WINDOWS)
+	target_compile_definitions(Islands PUBLIC NOMINMAX)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
@@ -44,6 +45,12 @@ if (IOS)
 	if (ISLANDS_USE_GLFW)
 		message(FATAL_ERROR "GLFW does not support this operating system")
 	endif()
+endif()
+
+# Debug Macros
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT EXISTS NDEBUG)
+	target_compile_definitions(Islands PUBLIC ISLANDS_DEBUG)
+	set(ISLANDS_DEBUG ON)
 endif()
 
 # Filename macro
@@ -92,7 +99,7 @@ add_subdirectory(dependencies/json)
 target_link_libraries(Islands nlohmann_json)
 
 # Termcolor - Debug only since console is not used for release
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(ISLANDS_DEBUG)
 	add_subdirectory(dependencies/termcolor)
 	target_link_libraries(Islands termcolor)
 endif()

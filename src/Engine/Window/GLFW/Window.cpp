@@ -160,7 +160,7 @@ static void mouseButtonCallback(GLFWwindow* window, int button, int action, int 
 
 static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 	if (handlers == nullptr) return;
-	for (auto handler : *handlers) handler->onMouseScroll(yoffset);
+	for (auto handler : *handlers) handler->onMouseScroll(static_cast<float>(yoffset));
 }
 
 static void resizeCallback(GLFWwindow* window, int width, int height) {

@@ -18,7 +18,12 @@
 
 #include <fstream>
 
-#ifndef NDEBUG
+#ifdef ISLANDS_DEBUG
+
+#ifdef ISLANDS_WINDOWS
+#define TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES
+#endif
+
 #include <termcolor/termcolor.hpp>
 #include <iostream>
 #endif
@@ -34,7 +39,7 @@ namespace Islands {
 	private:
 
 		// Colors for console in Debug Mode
-		#ifndef NDEBUG
+		#ifdef ISLANDS_DEBUG
 
 		/**
 		 * Reset Color
@@ -112,7 +117,7 @@ namespace Islands {
 		template <typename T> void log(T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "]" << // [HH:MM AM]
 				lc << msg << "\n" << rc; // Msg
 			#endif
@@ -127,7 +132,7 @@ namespace Islands {
 		template <typename T> void info(T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				ic << "INFO" << dc << "] " << ic << msg << "\n" << rc; // [Info] Msg
 			#endif
@@ -142,7 +147,7 @@ namespace Islands {
 		template <typename T> void warn(T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				wc << "WARNING" << dc << "] " << wc << msg << "\n" << rc; // [Warning] Msg
 			#endif
@@ -157,7 +162,7 @@ namespace Islands {
 		template <typename T> void error(T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				ec << "ERROR" << dc << "] " << ec << msg << "\n" << rc; // [Error] Msg
 			#endif
@@ -174,7 +179,7 @@ namespace Islands {
 		template <typename T> void log(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] " << // [File:Line]
 				lc << msg << "\n" << rc; // Msg
@@ -192,7 +197,7 @@ namespace Islands {
 		template <typename T> void info(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
 				ic << "INFO" << dc << "] " << // [Info]
@@ -211,7 +216,7 @@ namespace Islands {
 		template <typename T> void warn(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
 				wc << "WARNING" << dc << "] " << // [Warning]
@@ -230,7 +235,7 @@ namespace Islands {
 		template <typename T> void error(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
-			#ifndef NDEBUG
+			#ifdef ISLANDS_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
 				ec << "ERROR" << dc << "] " << // [Error]

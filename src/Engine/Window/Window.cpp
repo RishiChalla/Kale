@@ -21,9 +21,13 @@
 
 using namespace Islands;
 
+#ifdef ISLANDS_DEBUG
+
 const std::vector<const char*> Window::vulkanValidationLayers = {
 	"VK_LAYER_KHRONOS_validation"
 };
+
+#endif
 
 /**
  * Starts listening to events, override the functions provided in EventHandler to handle the events
@@ -67,7 +71,7 @@ static bool checkValidationLayerSupport(const std::vector<const char*>& validati
 	return true;
 }
 
-#ifndef NDEBUG
+#ifdef ISLANDS_DEBUG
 
 /**
  * The Vulkan Debug Validation Layer callback function
@@ -114,7 +118,6 @@ void Window::setupDebugMessageCallback() {
  */
 void Window::createVulkanInstance() {
 	vk::ApplicationInfo appInfo;
-	appInfo.sType = vk::StructureType::eApplicationInfo;
 	appInfo.pApplicationName = getTitle();
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 	appInfo.pEngineName = "No Engine";
@@ -122,12 +125,11 @@ void Window::createVulkanInstance() {
 	appInfo.apiVersion = VK_API_VERSION_1_2;
 
 	vk::InstanceCreateInfo createInfo;
-	createInfo.sType = vk::StructureType::eInstanceCreateInfo;
 	createInfo.pApplicationInfo = &appInfo;
 	std::vector<const char*> requiredExtensions = getCreateInfoExtensions();
 
 	// Validation Layers
-	#ifndef NDEBUG
+	#ifdef ISLANDS_DEBUG
 
 	if (!checkValidationLayerSupport(vulkanValidationLayers)) {
 		error("Validation Layers not Available");
@@ -162,7 +164,7 @@ void Window::cleanupVulkan() {
 void Window::initVulkan() {
 	createVulkanInstance();
 
-	#ifndef NDEBUG
+	#ifdef ISLANDS_DEBUG
 	setupDebugMessageCallback();
 	#endif
 }
