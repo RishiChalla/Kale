@@ -49,23 +49,18 @@ void Window::removeEvents(EventHandler* handler) {
  * @returns Whether or not all validation layers given are supported
  */
 static bool checkValidationLayerSupport(const std::vector<const char*>& validationLayers) {
-	uint32_t layerCount;
-	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-	std::vector<VkLayerProperties> availableLayers(layerCount);
-	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+	auto availableLayers = vk::enumerateInstanceLayerProperties();
 	
 	for (const std::string& layerName : validationLayers) {
 		bool layerFound = false;
 		for (const auto& layerProperties : availableLayers) {
-			if (std::string(layerName) == layerProperties.layerName) {
+			if (layerName == layerProperties.layerName) {
 				layerFound = true;
 				break;
 			}
 		}
 
-		if (!layerFound) {
-			return false;
-		}
+		if (!layerFound) return false;
 	}
 
 	return true;
