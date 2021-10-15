@@ -1,0 +1,18 @@
+[submodule "dependencies/date"]
+	path = dependencies/date
+	url = https://github.com/HowardHinnant/date
+[submodule "dependencies/FastNoiseLite"]
+	path = dependencies/FastNoiseLite
+	url = https://github.com/Auburn/FastNoiseLite
+[submodule "dependencies/glfw"]
+	path = dependencies/glfw
+	url = https://github.com/glfw/glfw
+[submodule "dependencies/json"]
+	path = dependencies/json
+	url = https://github.com/nlohmann/json
+[submodule "dependencies/SDL2"]
+	path = dependencies/SDL2
+	url = https://github.com/libsdl-org/SDL
+[submodule "dependencies/termcolor"]
+	path = dependencies/termcolor
+	url = https://github.com/ikalnytskyi/termcolor
