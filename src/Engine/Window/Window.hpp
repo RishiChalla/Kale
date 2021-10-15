@@ -155,26 +155,31 @@ namespace Islands {
 		
 		/**
 		 * Gets the window size
+		 * @returns The window size
 		 */
-		Vector2ui getSize();
+		Vector2ui getSize() const;
 		
 		/**
 		 * Gets the window size
+		 * @returns The window size as a float vector
 		 */
-		Vector2f getSizeF();
+		Vector2f getSizeF() const;
 
 		/**
 		 * Gets the window title
+		 * @returns The window title
 		 */
 		const char* getTitle() const;
 		
 		/**
 		 * Starts listening to events, override the functions provided in EventHandler to handle the events
+		 * @param handler The handler to begin receiving events with
 		 */
 		void registerEvents(EventHandler* handler);
 		
 		/**
 		 * Stops listening to events
+		 * @param handler The handler to remove from receiving events
 		 */
 		void removeEvents(EventHandler* handler);
 	};

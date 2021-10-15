@@ -241,14 +241,14 @@ void Window::unlockCursor() {
 /**
  * Gets the window size
  */
-Vector2ui Window::getSize() {
+Vector2ui Window::getSize() const {
 	return oldWinSize;
 }
 
 /**
  * Gets the window size
  */
-Vector2f Window::getSizeF() {
+Vector2f Window::getSizeF() const {
 	return oldWinSize.cast<float>();
 }
 

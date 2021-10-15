@@ -15,3 +15,5 @@ build/*
 .VSCodeCounter/*
 .DS_Store
 xcode/*
+
+doc/generated/*
