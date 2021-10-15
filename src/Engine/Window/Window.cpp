@@ -110,6 +110,32 @@ void Window::setupDebugMessageCallback() {
 	createInfo.pUserData = nullptr;
 
 	auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkCreateDebugUtilsMessengerEXT"));
+	
+	if (func == nullptr) {
+		error("Unable to load Debug Utils Extension");
+		return;
+	}
+
+	VkDebugUtilsMessengerEXT debugMessenger = vulkanDebugMessenger.operator VkDebugUtilsMessengerEXT();
+	const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo = &createInfo.operator const VkDebugUtilsMessengerCreateInfoEXT&();
+	if (func(vulkanInstance, pCreateInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+		error("Failed to setup Debug Messenger");
+		return;
+	}
+}
+
+/**
+ * Destroys the debug message callback
+ */
+void Window::destroyDebugMessageCallback() {
+	auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkDestroyDebugUtilsMessengerEXT"));
+
+	if (func == nullptr) {
+		error("Failed to load Debug Utils Deletion Extension");
+		return;
+	}
+
+	func(vulkanInstance, vulkanDebugMessenger, nullptr);
 }
 
 #endif
@@ -155,7 +181,14 @@ void Window::createVulkanInstance() {
 	}
 }
 
+/**
+ * Cleans vulkan objects before the application closes
+ */
 void Window::cleanupVulkan() {
+	#ifdef ISLANDS_DEBUG
+	destroyDebugMessageCallback();
+	#endif
+	
 	vulkanInstance.destroy();
 }
 

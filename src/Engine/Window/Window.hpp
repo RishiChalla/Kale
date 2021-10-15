@@ -69,6 +69,11 @@ namespace Islands {
 		 */
 		void setupDebugMessageCallback();
 
+		/**
+		 * Destroys the debug message callback
+		 */
+		void destroyDebugMessageCallback();
+
 		#endif
 
 		/**

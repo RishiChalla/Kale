@@ -127,19 +127,19 @@ namespace Islands {
 /**
  * Prints output to the console/log file
  */
-#define print(x) Islands::mainApp->log.log(__LINE__, FILE_BASENAME, x);
+#define print(x) Islands::mainApp->log.log(__LINE__, FILE_BASENAME, x)
 
 /**
  * Prints info to the console/log file
  */
-#define info(x) Islands::mainApp->log.info(__LINE__, FILE_BASENAME, x);
+#define info(x) Islands::mainApp->log.info(__LINE__, FILE_BASENAME, x)
 
 /**
  * Prints a warning to the console/log file
  */
-#define warn(x) Islands::mainApp->log.warn(__LINE__, FILE_BASENAME, x);
+#define warn(x) Islands::mainApp->log.warn(__LINE__, FILE_BASENAME, x)
 
 /**
  * Prints an error to the console/log file
  */
-#define error(x) Islands::mainApp->log.error(__LINE__, FILE_BASENAME, x);
+#define error(x) Islands::mainApp->log.error(__LINE__, FILE_BASENAME, x)

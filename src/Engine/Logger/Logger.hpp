@@ -59,7 +59,7 @@ namespace Islands {
 		/**
 		 * Info Color
 		 */
-		constexpr static auto ic = termcolor::color<109>;
+		constexpr static auto ic = termcolor::color<116>;
 		
 		/**
 		 * Warn Color
