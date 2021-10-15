@@ -75,11 +75,11 @@ static bool checkValidationLayerSupport(const std::vector<const char*>& validati
  * @param callbackData the callback data passed with the message (usually the message itself)
  * @param userData A user pointer - in our app will always be nullptr
  */
-static VKAPI_ATTR vk::Bool32 VKAPI_CALL debugCallback(vk::DebugUtilsMessageSeverityFlagBitsEXT severity,
-	vk::DebugUtilsMessageTypeFlagsEXT type, const vk::DebugUtilsMessengerCallbackDataEXT* callbackData,
+static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT severity,
+	VkDebugUtilsMessageTypeFlagsEXT type, const VkDebugUtilsMessengerCallbackDataEXT* callbackData,
 	void* userData) {
 	
-	switch (severity) {
+	switch (vk::DebugUtilsMessageSeverityFlagBitsEXT(severity)) {
 		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose:
 			print(callbackData->pMessage);
 			return VK_FALSE;
@@ -99,11 +99,17 @@ static VKAPI_ATTR vk::Bool32 VKAPI_CALL debugCallback(vk::DebugUtilsMessageSever
  * Sets up the debug message callback
  */
 void Window::setupDebugMessageCallback() {
-	// vk::DebugUtilsMessengerCreateInfoEXT createInfo;
-	// createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-	// createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-	// createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-	// createInfo.pfnUserCallback = debugCallback;
+	using MessageSeverity = vk::DebugUtilsMessageSeverityFlagBitsEXT;
+	using MessageType = vk::DebugUtilsMessageTypeFlagBitsEXT;
+
+	vk::DebugUtilsMessengerCreateInfoEXT createInfo;
+	createInfo.messageSeverity = MessageSeverity::eError | MessageSeverity::eWarning |
+		MessageSeverity::eInfo | MessageSeverity::eVerbose;
+	createInfo.messageType = MessageType::eGeneral | MessageType::ePerformance | MessageType::eValidation;
+	createInfo.pfnUserCallback = debugCallback;
+	createInfo.pUserData = nullptr;
+
+	auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkCreateDebugUtilsMessengerEXT"));
 }
 
 #endif
