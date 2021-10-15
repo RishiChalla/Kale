@@ -16,3 +16,6 @@
 [submodule "dependencies/termcolor"]
 	path = dependencies/termcolor
 	url = https://github.com/ikalnytskyi/termcolor
+[submodule "doc/awesome-css"]
+	path = doc/awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
