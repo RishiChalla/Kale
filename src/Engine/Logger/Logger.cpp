@@ -19,9 +19,7 @@
 #include <date/date.h>
 #include <date/tz.h>
 
-#ifndef ISLANDS_WINDOWS
-static const date::time_zone* timezone = nullptr;
-#else
+#ifdef ISLANDS_WINDOWS
 #include <Windows.h>
 #endif
 
@@ -41,9 +39,7 @@ Logger::Logger() {
 	// Create/open the log file in the correct folder
 	logFile.open(".Islands/logs/" + date::format("%F--%H-%M", std::chrono::system_clock::now()) + ".log");
 
-	#ifndef ISLANDS_WINDOWS
-	timezone = date::current_zone();
-	#else
+	#ifdef ISLANDS_WINDOWS
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (hOut == INVALID_HANDLE_VALUE) {
 		return;
@@ -67,7 +63,7 @@ Logger::Logger() {
  */
 std::string Logger::getTimePrefix() {
 	#ifndef ISLANDS_WINDOWS
-	return date::format("%I:%M %p", date::make_zoned(timezone, std::chrono::system_clock::now()));
+	return date::format("%I:%M %p", date::make_zoned(date::current_zone(), std::chrono::system_clock::now()));
 	#else 
 	// Windows doesn't support current timezone so instead we'll need to use UTC
 	return date::format("%I:%M %p", std::chrono::system_clock::now());
