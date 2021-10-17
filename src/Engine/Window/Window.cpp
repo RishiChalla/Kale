@@ -92,6 +92,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
 		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eError:
 			error(callbackData->pMessage);
 			return VK_FALSE;
+		default:
+			return VK_FALSE;
 	}
 }
 
