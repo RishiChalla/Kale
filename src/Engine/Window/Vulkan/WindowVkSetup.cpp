@@ -85,11 +85,19 @@ void Window::chooseGPU() {
 	// Remove devices which don't support swap chains/aren't compatible for our purposes
 	info("Available GPUs - ");
 	devices.erase(std::remove_if(devices.begin(), devices.end(), [](const vk::PhysicalDevice& device) {
-		vk::PhysicalDeviceProperties properties = device.getProperties();
-		
-		// TODO - Check for things like swap chaining and return true if support not found
-		// std::vector<vk::QueueFamilyProperties>{device.getQueueFamilyProperties()};
 
+		// Get the GPU properties and queue family properties
+		vk::PhysicalDeviceProperties properties = device.getProperties();
+		std::vector<vk::QueueFamilyProperties> queueFamilyProperties{device.getQueueFamilyProperties()};
+
+		// Go through all the queue family properties
+		for (const vk::QueueFamilyProperties& properties : queueFamilyProperties) {
+
+			// The GPU must support graphics
+			if (!(properties.queueFlags & vk::QueueFlagBits::eGraphics)) return true;
+		}
+
+		// Print the available GPUs for debugging and don't remove it since it passed all checks
 		info(properties.deviceName);
 		return false;
 	}), devices.end());
