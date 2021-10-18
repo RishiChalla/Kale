@@ -14,20 +14,17 @@
    limitations under the License.
 */
 
-#include "Window.hpp"
+#include "../Window.hpp"
 
 using namespace Islands;
 
 /**
- * Starts listening to events, override the functions provided in EventHandler to handle the events
+ * Cleans vulkan objects before the application closes
  */
-void Window::registerEvents(EventHandler* handler) {
-	eventHandlers.push_back(handler);
-}
-
-/**
- * Stops listening to events
- */
-void Window::removeEvents(EventHandler* handler) {
-	eventHandlers.remove(handler);
+void Window::cleanupVulkan() {
+	#ifdef ISLANDS_DEBUG
+	destroyDebugMessageCallback();
+	#endif
+	
+	vulkanInstance.destroy();
 }

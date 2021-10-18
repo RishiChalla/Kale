@@ -64,6 +64,10 @@ void Settings::load() {
 	maxUps = settingsJson["maxUps"].get<float>();
 	minMSpU = 1000.0f / maxUps;
 
+	if (settingsJson.contains("gpuID")) {
+		gpuID = settingsJson["gpuID"].get<uint32_t>();
+	}
+
 	keyMap = settingsJson["keyMap"].get<std::map<Key, Action>>();
 	controllerMap = settingsJson["controllerMap"].get<std::map<ControllerButton, Action>>();
 }
@@ -73,7 +77,6 @@ void Settings::load() {
  * @returns The max Fps
  */
 float Settings::getMaxFps() const {
-	// TODO - Implement
 	return maxFps;
 }
 
@@ -82,7 +85,6 @@ float Settings::getMaxFps() const {
  * @returns The max Ups
  */
 float Settings::getMaxUps() const {
-	// TODO - Implement
 	return maxUps;
 }
 
@@ -91,7 +93,6 @@ float Settings::getMaxUps() const {
  * @returns The min MSpF
  */
 float Settings::getMinMSpF() const {
-	// TODO - Implement
 	return minMSpF;
 }
 
@@ -100,8 +101,15 @@ float Settings::getMinMSpF() const {
  * @returns The min MSpU
  */
 float Settings::getMinMSpU() const {
-	// TODO - Implement
 	return minMSpU;
+}
+
+/**
+ * Gets the used GPU id in the settings
+ * @returns The GPU Id
+ */
+uint32_t Settings::getGPUID() const {
+	return gpuID;
 }
 
 /**
@@ -144,6 +152,26 @@ void Settings::setMaxUps(float ups) {
 	// Update the properties locally for immediate rendering change
 	maxUps = ups;
 	minMSpU = ups / 1000.0f;
+}
+
+/**
+ * Sets the used GPU id in the settings
+ * @param id The id of the GPU to set to
+ */
+void Settings::setGPUID(uint32_t id) {
+	// Read the Json in
+	using namespace nlohmann;
+	json settingsJson = json::parse(std::ifstream(settingsFilePath));
+	// Set the New Json Property
+	settingsJson["gpuID"] = id;
+
+	// Save the Json
+	std::ofstream settingsFile(settingsFilePath);
+	settingsFile << settingsJson.dump(4);
+	settingsFile.close();
+
+	// Update the properties locally
+	gpuID = id;
 }
 
 /**

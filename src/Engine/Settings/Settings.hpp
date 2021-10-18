@@ -45,11 +45,37 @@ namespace Islands {
 	
 	class Settings {
 	private:
+
+		/**
+		 * The maximum FPS allowed for the window during game play
+		 */
 		float maxFps = 60.0f;
+
+		/**
+		 * The maximum updates per second allowed during gameplay
+		 */
 		float maxUps = maxFps * 2.0f;
+
+		/**
+		 * The minimum milli seconds allowed per frame, if a frame renders faster then this then execution will be
+		 * paused
+		 */
 		float minMSpF = 1000.0f / maxFps;
+
+		/**
+		 * The minimum milli seconds allowed per update tick, if an update tick occurs faster than this then execution
+		 * will be paused
+		 */
 		float minMSpU = 1000.0f / maxUps;
+
+		/**
+		 * The GPU used for rendering the game
+		 */
+		uint32_t gpuID;
 		
+		/**
+		 * A map of all the set control keys to their action
+		 */
 		std::map<Key, Action> keyMap = {
 			
 			// Jumping
@@ -71,6 +97,9 @@ namespace Islands {
 			{Key::D, Action::MovementRight}, {Key::Right, Action::MovementRight}
 		};
 		
+		/**
+		 * A map of all the set controller keys to their action
+		 */
 		std::map<ControllerButton, Action> controllerMap = {
 			
 			// Jumping
@@ -128,6 +157,12 @@ namespace Islands {
 		 * @returns The min MSpU
 		 */
 		float getMinMSpU() const;
+
+		/**
+		 * Gets the used GPU id in the settings
+		 * @returns The GPU Id
+		 */
+		uint32_t getGPUID() const;
 		
 		/**
 		 * Sets the max FPS
@@ -140,6 +175,12 @@ namespace Islands {
 		 * @param fps The max UPS to set to
 		 */
 		void setMaxUps(float ups);
+
+		/**
+		 * Sets the used GPU id in the settings
+		 * @param id The id of the GPU to set to
+		 */
+		void setGPUID(uint32_t id);
 
 		/**
 		 * Binds the given key to a certain action
@@ -170,5 +211,8 @@ namespace Islands {
 		Action getControllerAction(ControllerButton button);
 	};
 	
+	/**
+	 * The main settings instance for this running application
+	 */
 	extern Settings settings;
 }

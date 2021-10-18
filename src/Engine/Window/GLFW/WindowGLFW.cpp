@@ -200,11 +200,11 @@ static void joystickCallback(int jid, int action) {
  * @param title The title of the window
  */
 void Window::create(const char* title) {
-	this->title = title;
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
-
 	initVulkan();
+	
+	this->title = title;
+	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
 	
 	handlers = &eventHandlers;
 	glfwSetKeyCallback(window, keyCallback);

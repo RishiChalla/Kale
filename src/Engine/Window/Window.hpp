@@ -62,12 +62,18 @@ namespace Islands {
 		/**
 		 * The debug messenger used for vulkan output messages
 		 */
-		vk::DebugUtilsMessengerEXT vulkanDebugMessenger;
+		VkDebugUtilsMessengerEXT vulkanDebugMessenger;
 
 		/**
 		 * Sets up the debug message callback
 		 */
 		void setupDebugMessageCallback();
+
+		/**
+		 * Checks validation layer support for all given validation layers
+		 * @returns Whether or not all validation layers given are supported
+		 */
+		bool checkValidationLayerSupport() const;
 
 		/**
 		 * Destroys the debug message callback
@@ -81,11 +87,20 @@ namespace Islands {
 		 */
 		vk::Instance vulkanInstance;
 
+		/**
+		 * The physical GPU used for rendering with vulkan for this application
+		 */
+		vk::PhysicalDevice vulkanPhysicalDevice;
 
 		/**
 		 * Creates the vulkan instance for this window
 		 */
 		void createVulkanInstance();
+
+		/**
+		 * Chooses the GPU from the available GPUs that support vulkan based on the user settings
+		 */
+		void chooseGPU();
 
 		/**
 		 * Initializes vulkan for use with both windowing APIs
