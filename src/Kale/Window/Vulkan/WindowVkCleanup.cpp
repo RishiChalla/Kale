@@ -14,28 +14,26 @@
    limitations under the License.
 */
 
-#include "App.hpp"
-#include <Game/Scenes/TitleScene.hpp>
+#include "../Window.hpp"
+#include <Kale/Logger/Logger.hpp>
+#include <exception>
 
-using namespace Islands;
-
-/**
- * Heap allocates the application
- */
-Kale::Application* createApplication() {
-	return new App();
-}
+using namespace Kale;
 
 /**
- * Creates a new app instance
+ * Cleans vulkan objects before the application closes
  */
-App::App() {
-	// Empty constructor - nothing to do here.
-}
-
-/**
- * Called when the application begins
- */
-void App::onBegin() {
-	cPrint("Hello world!");
+void Window::cleanupVulkan() {
+	try {
+		#ifdef ISLANDS_DEBUG
+		destroyDebugMessageCallback();
+		#endif
+		
+		vulkanLogicalDevice.destroy();
+		vulkanInstance.destroy();
+	}
+	catch (const std::exception& e) {
+		console.error(e.what());
+		exit(0);
+	}
 }

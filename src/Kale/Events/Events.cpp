@@ -14,28 +14,6 @@
    limitations under the License.
 */
 
-#include "App.hpp"
-#include <Game/Scenes/TitleScene.hpp>
+#include "Events.hpp"
 
-using namespace Islands;
-
-/**
- * Heap allocates the application
- */
-Kale::Application* createApplication() {
-	return new App();
-}
-
-/**
- * Creates a new app instance
- */
-App::App() {
-	// Empty constructor - nothing to do here.
-}
-
-/**
- * Called when the application begins
- */
-void App::onBegin() {
-	cPrint("Hello world!");
-}
+using namespace Kale;

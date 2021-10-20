@@ -14,28 +14,20 @@
    limitations under the License.
 */
 
-#include "App.hpp"
-#include <Game/Scenes/TitleScene.hpp>
+#pragma once
 
-using namespace Islands;
+namespace Kale {
+	
+	/**
+	 * The main class for nodes, all nodes must inherit from this class
+	 */
+	class Node {
+	private:
 
-/**
- * Heap allocates the application
- */
-Kale::Application* createApplication() {
-	return new App();
-}
+	protected:
+		virtual void render() = 0;
+		virtual void update() = 0;
 
-/**
- * Creates a new app instance
- */
-App::App() {
-	// Empty constructor - nothing to do here.
-}
-
-/**
- * Called when the application begins
- */
-void App::onBegin() {
-	cPrint("Hello world!");
+		friend class Scene;
+	};
 }

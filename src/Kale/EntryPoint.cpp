@@ -14,28 +14,29 @@
    limitations under the License.
 */
 
-#include "App.hpp"
-#include <Game/Scenes/TitleScene.hpp>
+#include <Kale/Application/Application.hpp>
 
-using namespace Islands;
-
-/**
- * Heap allocates the application
- */
-Kale::Application* createApplication() {
-	return new App();
-}
+using namespace Kale;
 
 /**
- * Creates a new app instance
+ * Create your inherited application here and heap allocate it.
+ * Do not worry about its destruction, the engine will take care of it.
  */
-App::App() {
-	// Empty constructor - nothing to do here.
-}
+extern Application* createApplication();
 
 /**
- * Called when the application begins
+ * The main function/entry point of the program
  */
-void App::onBegin() {
-	cPrint("Hello world!");
+int main() {
+	// Heap allocate the main app instance
+	mainApp = createApplication();
+
+	// Run the app
+	mainApp->run();
+
+	// Delete the app/free the resources
+	delete mainApp;
+
+	// End the program
+	return 0;
 }

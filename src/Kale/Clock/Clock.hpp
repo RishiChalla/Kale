@@ -16,27 +16,39 @@
 
 #pragma once
 
-#include <Kale/Application/Application.hpp>
+#include <chrono>
 
-namespace Islands {
+namespace Kale {
 	
 	/**
-	 * Represents the main application class
+	 * Calculates the time used to render a frame/stack code execution
 	 */
-	class App : public Kale::Application {
-
-	protected:
+	class Clock {
+	
+	private:
 		
 		/**
-		 * Called when the application begins
+		 * The second point of time for reference used internally
 		 */
-		void onBegin() override;
-	
-	public:
-
+		std::chrono::system_clock::time_point a;
+		
 		/**
-		 * Creates a new app instance
+		 * The second point of time for reference used internally
 		 */
-		App();
+		std::chrono::system_clock::time_point b;
+		
+	public:
+		
+		/**
+		 * Creates a new clock instance and sets the first time point to now
+		 */
+		Clock();
+		
+		/**
+		 * Causes the thread to sleep if the call time exceeds the min call time
+		 * @param minMSPC The minimum milliseconds per cycle
+		 * @returns The cps of the thread
+		 */
+		float sleep(double minMSPC);
 	};
 }

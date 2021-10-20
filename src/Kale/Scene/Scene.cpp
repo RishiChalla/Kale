@@ -14,28 +14,40 @@
    limitations under the License.
 */
 
-#include "App.hpp"
-#include <Game/Scenes/TitleScene.hpp>
+#include "Scene.hpp"
 
-using namespace Islands;
+using namespace Kale;
 
 /**
- * Heap allocates the application
+ * Adds a node to the scene to render/update
+ * @param node The node to add
  */
-Kale::Application* createApplication() {
-	return new App();
+void Scene::addNode(Node& node) {
+	nodes.push_back(&node);
 }
 
 /**
- * Creates a new app instance
+ * Removes a node from the scene
+ * @param node The node to remove
  */
-App::App() {
-	// Empty constructor - nothing to do here.
+void Scene::removeNode(Node* node) {
+	nodes.remove(node);
 }
 
 /**
- * Called when the application begins
+ * Renders the current scene
  */
-void App::onBegin() {
-	cPrint("Hello world!");
+void Scene::render() {
+	// TODO - Vulkan commands to clear screen with background color
+
+	for (Node* node : nodes)
+		node->render();
+}
+
+/**
+ * Updates the current scene
+ */
+void Scene::update() {
+	for (Node* node : nodes)
+		node->update();
 }

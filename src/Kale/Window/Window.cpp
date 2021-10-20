@@ -14,28 +14,20 @@
    limitations under the License.
 */
 
-#include "App.hpp"
-#include <Game/Scenes/TitleScene.hpp>
+#include "Window.hpp"
 
-using namespace Islands;
+using namespace Kale;
 
 /**
- * Heap allocates the application
+ * Starts listening to events, override the functions provided in EventHandler to handle the events
  */
-Kale::Application* createApplication() {
-	return new App();
+void Window::registerEvents(EventHandler* handler) {
+	eventHandlers.push_back(handler);
 }
 
 /**
- * Creates a new app instance
+ * Stops listening to events
  */
-App::App() {
-	// Empty constructor - nothing to do here.
-}
-
-/**
- * Called when the application begins
- */
-void App::onBegin() {
-	cPrint("Hello world!");
+void Window::removeEvents(EventHandler* handler) {
+	eventHandlers.remove(handler);
 }
