@@ -99,16 +99,12 @@ namespace Islands {
 		 */
 		std::string getTimePrefix();
 
-	protected:
-	
+	public:
+
 		/**
 		 * Creates a new logger instance
 		 */
 		Logger();
-
-		friend class Application;
-
-	public:
 
 		/**
 		 * Logs output to the console
@@ -118,7 +114,7 @@ namespace Islands {
 			std::string time = getTimePrefix();
 
 			#ifdef ISLANDS_DEBUG
-			std::cout << dc << "[" << tc << time << dc <<  "]" << // [HH:MM AM]
+			std::cout << dc << "[" << tc << time << dc <<  "] " << // [HH:MM AM]
 				lc << msg << "\n" << rc; // Msg
 			#endif
 
@@ -245,4 +241,29 @@ namespace Islands {
 			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[ERROR] " << msg << "\n";
 		}
 	};
+
+	/**
+	 * The main console used for printing to the output
+	 */
+	extern Logger console;
 }
+
+/**
+ * Prints output to the console/log file
+ */
+#define cPrint(x) console.log(__LINE__, FILE_BASENAME, x)
+
+/**
+ * Prints info to the console/log file
+ */
+#define cInfo(x) console.info(__LINE__, FILE_BASENAME, x)
+
+/**
+ * Prints a warning to the console/log file
+ */
+#define cWarn(x) console.warn(__LINE__, FILE_BASENAME, x)
+
+/**
+ * Prints an error to the console/log file
+ */
+#define cError(x) console.error(__LINE__, FILE_BASENAME, x)

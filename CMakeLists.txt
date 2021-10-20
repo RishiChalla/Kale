@@ -18,6 +18,7 @@ include(CPack)
 
 option(ISLANDS_USE_SDL = OFF)
 option(ISLANDS_USE_GLFW = ON)
+option(ISLANDS_VERBOSE = OFF)
 
 # OS Macros
 if (WIN32)
@@ -51,6 +52,10 @@ endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT EXISTS NDEBUG)
 	target_compile_definitions(Islands PUBLIC ISLANDS_DEBUG)
 	set(ISLANDS_DEBUG ON)
+endif()
+
+if (ISLANDS_VERBOSE)
+	target_compile_definitions(Islands PUBLIC ISLANDS_VERBOSE)
 endif()
 
 # Filename macro

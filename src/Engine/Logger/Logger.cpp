@@ -26,6 +26,11 @@
 using namespace Islands;
 
 /**
+ * The main console used for printing to the output
+ */
+Logger Islands::console;
+
+/**
  * Creates a new logger instance
  */
 Logger::Logger() {

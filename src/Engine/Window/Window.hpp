@@ -93,6 +93,16 @@ namespace Islands {
 		vk::PhysicalDevice vulkanPhysicalDevice;
 
 		/**
+		 * The Device used for using render commands to the chosen physical device
+		 */
+		vk::Device vulkanLogicalDevice;
+
+		/**
+		 * The graphics queue for passing graphics commands
+		 */
+		vk::Queue graphicsQueue;
+
+		/**
 		 * Creates the vulkan instance for this window
 		 */
 		void createVulkanInstance();
@@ -101,6 +111,11 @@ namespace Islands {
 		 * Chooses the GPU from the available GPUs that support vulkan based on the user settings
 		 */
 		void chooseGPU();
+
+		/**
+		 * Creates the vulkan logical device object
+		 */
+		void createVulkanLogicalDevice();
 
 		/**
 		 * Initializes vulkan for use with both windowing APIs

@@ -59,17 +59,19 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
 	void* userData) {
 	
 	switch (vk::DebugUtilsMessageSeverityFlagBitsEXT(severity)) {
+		#ifdef ISLANDS_VERBOSE
 		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose:
-			print(callbackData->pMessage);
+			console.log(callbackData->pMessage);
 			return VK_FALSE;
+		#endif
 		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo:
-			info(callbackData->pMessage);
+			console.info(callbackData->pMessage);
 			return VK_FALSE;
 		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning:
-			warn(callbackData->pMessage);
+			console.warn(callbackData->pMessage);
 			return VK_FALSE;
 		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eError:
-			error(callbackData->pMessage);
+			console.error(callbackData->pMessage);
 			return VK_FALSE;
 		default:
 			return VK_FALSE;
@@ -84,8 +86,13 @@ void Window::setupDebugMessageCallback() {
 	using MessageType = vk::DebugUtilsMessageTypeFlagBitsEXT;
 
 	vk::DebugUtilsMessengerCreateInfoEXT createInfo;
+	#ifdef ISLANDS_VERBOSE
 	createInfo.messageSeverity = MessageSeverity::eError | MessageSeverity::eWarning |
 		MessageSeverity::eInfo | MessageSeverity::eVerbose;
+	#else
+	createInfo.messageSeverity = MessageSeverity::eError | MessageSeverity::eWarning |
+		MessageSeverity::eInfo;
+	#endif
 	createInfo.messageType = MessageType::eGeneral | MessageType::ePerformance | MessageType::eValidation;
 	createInfo.pfnUserCallback = debugCallback;
 	createInfo.pUserData = nullptr;
@@ -93,13 +100,13 @@ void Window::setupDebugMessageCallback() {
 	auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkCreateDebugUtilsMessengerEXT"));
 	
 	if (func == nullptr) {
-		error("Unable to load Debug Utils Extension");
+		console.error("Unable to load Debug Utils Extension");
 		return;
 	}
 
 	const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo = &createInfo.operator const VkDebugUtilsMessengerCreateInfoEXT&();
 	if (func(vulkanInstance, pCreateInfo, nullptr, &vulkanDebugMessenger) != VK_SUCCESS) {
-		error("Failed to setup Debug Messenger");
+		console.error("Failed to setup Debug Messenger");
 		return;
 	}
 }
@@ -111,7 +118,7 @@ void Window::destroyDebugMessageCallback() {
 	auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkDestroyDebugUtilsMessengerEXT"));
 
 	if (func == nullptr) {
-		error("Failed to load Debug Utils Deletion Extension");
+		console.error("Failed to load Debug Utils Deletion Extension");
 		return;
 	}
 

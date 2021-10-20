@@ -15,10 +15,13 @@
 */
 
 #include "../Window.hpp"
-#include <Engine/Application/Application.hpp>
+#include <Engine/Logger/Logger.hpp>
 #include <Engine/Settings/Settings.hpp>
+#include <Engine/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
+#include <Engine/Vulkan/Extensions/Extensions.hpp>
 #include <vector>
 #include <algorithm>
+#include <exception>
 
 using namespace Islands;
 
@@ -26,13 +29,21 @@ using namespace Islands;
  * Initializes vulkan for use with both windowing APIs
  */
 void Window::initVulkan() {
-	createVulkanInstance();
 
-	#ifdef ISLANDS_DEBUG
-	setupDebugMessageCallback();
-	#endif
+	try {
+		createVulkanInstance();
 
-	chooseGPU();
+		#ifdef ISLANDS_DEBUG
+		setupDebugMessageCallback();
+		#endif
+
+		chooseGPU();
+		createVulkanLogicalDevice();
+	}
+	catch (const std::exception& e) {
+		console.error(e.what());
+		exit(0);
+	}
 }
 
 /**
@@ -49,12 +60,13 @@ void Window::createVulkanInstance() {
 	vk::InstanceCreateInfo createInfo;
 	createInfo.pApplicationInfo = &appInfo;
 	std::vector<const char*> requiredExtensions = getCreateInfoExtensions();
+	requiredExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 
 	// Validation Layers
 	#ifdef ISLANDS_DEBUG
 
 	if (!checkValidationLayerSupport()) {
-		error("Validation Layers not Available");
+		console.error("Validation Layers not Available");
 	}
 
 	createInfo.enabledLayerCount = static_cast<uint32_t>(vulkanValidationLayers.size());
@@ -71,7 +83,7 @@ void Window::createVulkanInstance() {
 	createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
 	if (vk::createInstance(&createInfo, nullptr, &vulkanInstance) != vk::Result::eSuccess) {
-		error("Unable to Init Vulkan");
+		console.error("Unable to Init Vulkan");
 		exit(0);
 	}
 }
@@ -83,27 +95,23 @@ void Window::chooseGPU() {
 	std::vector<vk::PhysicalDevice> devices{vulkanInstance.enumeratePhysicalDevices()};
 
 	// Remove devices which don't support swap chains/aren't compatible for our purposes
-	info("Available GPUs - ");
+	console.info("Available GPUs - ");
 	devices.erase(std::remove_if(devices.begin(), devices.end(), [](const vk::PhysicalDevice& device) {
 
 		// Get the GPU properties and queue family properties
 		vk::PhysicalDeviceProperties properties = device.getProperties();
-		std::vector<vk::QueueFamilyProperties> queueFamilyProperties{device.getQueueFamilyProperties()};
 
-		// Go through all the queue family properties
-		for (const vk::QueueFamilyProperties& properties : queueFamilyProperties) {
-
-			// The GPU must support graphics
-			if (!(properties.queueFlags & vk::QueueFlagBits::eGraphics)) return true;
-		}
+		// Ensure that the physical device is a GPU/has all required queue family indices
+		Vulkan::VulkanQueueFamilyIndices queueFamilyIndices(properties.deviceID, device.getQueueFamilyProperties());
+		if (!queueFamilyIndices.hasAllIndices()) return true;
 
 		// Print the available GPUs for debugging and don't remove it since it passed all checks
-		info(properties.deviceName);
+		console.info(properties.deviceName);
 		return false;
 	}), devices.end());
 
 	if (devices.empty()) {
-		error("No Vulkan Compatible GPU Found");
+		console.error("No Vulkan Compatible GPU Found");
 		exit(0);
 	}
 
@@ -115,7 +123,7 @@ void Window::chooseGPU() {
 		gpuID = properties.deviceID;
 		settings.setGPUID(gpuID);
 		vulkanPhysicalDevice = devices[0];
-		info(std::string("Chose ") + properties.deviceName.data() + " as rendering GPU");
+		console.info(std::string("Chose ") + properties.deviceName.data() + " as rendering GPU");
 	};
 
 	if (gpuID == 0) {
@@ -128,13 +136,47 @@ void Window::chooseGPU() {
 			if (properties.deviceID != gpuID) continue;
 			found = true;
 			vulkanPhysicalDevice = device;
-			info(std::string("Settings GPU Found - ") + properties.deviceName.data());
+			console.info(std::string("Settings GPU Found - ") + properties.deviceName.data());
 			break;
 		}
 
 		if (!found) {
-			warn("GPU in Settings not found - resetting default");
+			console.warn("GPU in Settings not found - resetting default");
 			setDefaultGPU();
 		}
 	}
+}
+
+/**
+ * Creates the vulkan logical device object
+ */
+void Window::createVulkanLogicalDevice() {
+
+	// Get all the required indices
+	Vulkan::VulkanQueueFamilyIndices indices(vulkanPhysicalDevice.getProperties().deviceID, vulkanPhysicalDevice.getQueueFamilyProperties());
+	
+	// Create the queue create info
+	std::vector<const float> priorities = {1.0f};
+	std::vector<vk::DeviceQueueCreateInfo> queueCreateInfo = {
+		vk::DeviceQueueCreateInfo({}, indices.graphicsFamilyIndex.value(), priorities)
+	};
+
+	// Choose all required device features we desire
+	vk::PhysicalDeviceFeatures deviceFeatures;
+	// TODO - set the required device features to true
+
+	// Set all required device extensions
+	std::vector<const char*> requiredDeviceExtensions;
+
+	// Loop through all the supported device extension properties
+	for (const vk::ExtensionProperties& property : vulkanPhysicalDevice.enumerateDeviceExtensionProperties()) {
+		// requiredDeviceExtensions.push_back(property.extensionName);
+	}
+
+	// Create the logical device create info
+	vk::DeviceCreateInfo createInfo({}, queueCreateInfo, {}, requiredDeviceExtensions, &deviceFeatures);
+
+	// Create the logical device
+	vulkanLogicalDevice = vulkanPhysicalDevice.createDevice(createInfo);
+	graphicsQueue = vulkanLogicalDevice.getQueue(indices.graphicsFamilyIndex.value(), 0);
 }

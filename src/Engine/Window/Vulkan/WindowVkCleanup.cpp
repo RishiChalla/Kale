@@ -15,6 +15,8 @@
 */
 
 #include "../Window.hpp"
+#include <Engine/Logger/Logger.hpp>
+#include <exception>
 
 using namespace Islands;
 
@@ -22,9 +24,16 @@ using namespace Islands;
  * Cleans vulkan objects before the application closes
  */
 void Window::cleanupVulkan() {
-	#ifdef ISLANDS_DEBUG
-	destroyDebugMessageCallback();
-	#endif
-	
-	vulkanInstance.destroy();
+	try {
+		#ifdef ISLANDS_DEBUG
+		destroyDebugMessageCallback();
+		#endif
+		
+		vulkanLogicalDevice.destroy();
+		vulkanInstance.destroy();
+	}
+	catch (const std::exception& e) {
+		console.error(e.what());
+		exit(0);
+	}
 }

@@ -37,5 +37,5 @@ App::App() {
  * Called when the application begins
  */
 void App::onBegin() {
-	print("Hello world!");
+	cPrint("Hello world!");
 }
