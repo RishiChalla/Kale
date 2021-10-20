@@ -25,7 +25,7 @@ This is a doc full of random notes for the game.
  - Drawing ONLY supports rectangles with rounded corners (these can be masked)
 
 ### JsNBT format
-```json
+```javascript
 // TODO - Add this here
 ```
 
