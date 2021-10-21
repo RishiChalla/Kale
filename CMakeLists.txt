@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(Islands VERSION 1.0)
+project(Kale VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -7,134 +7,100 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.cpp src/*.hpp)
 
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.cpp src/*.hpp)
-add_executable(Islands ${sources})
+add_library(Kale SHARED ${sources})
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${sources})
 
-target_include_directories(Islands PUBLIC src/)
+target_include_directories(Kale PUBLIC src/)
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
-
-option(ISLANDS_USE_SDL = OFF)
-option(ISLANDS_USE_GLFW = ON)
-option(ISLANDS_VERBOSE = OFF)
+option(KALE_USE_SDL = OFF)
+option(KALE_USE_GLFW = ON)
+option(KALE_VERBOSE = OFF)
 
 # OS Macros
 if (WIN32)
-	target_compile_definitions(Islands PUBLIC ISLANDS_WINDOWS)
-	target_compile_definitions(Islands PUBLIC NOMINMAX)
+	target_compile_definitions(Kale PUBLIC KALE_WINDOWS)
+	target_compile_definitions(Kale PUBLIC NOMINMAX)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-	target_compile_definitions(Islands PUBLIC ISLANDS_OSX)
+	target_compile_definitions(Kale PUBLIC KALE_OSX)
 endif()
 
 if (UNIX AND NOT APPLE)
-	target_compile_definitions(Islands PUBLIC ISLANDS_UNIX)
+	target_compile_definitions(Kale PUBLIC KALE_UNIX)
 endif()
 
 if (ANDROID)
-	target_compile_definitions(Islands PUBLIC ISLANDS_ANDROID)
-	if (ISLANDS_USE_GLFW)
+	target_compile_definitions(Kale PUBLIC KALE_ANDROID)
+	if (KALE_USE_GLFW)
 		message(FATAL_ERROR "GLFW does not support this operating system")
 	endif()
 endif()
 
 if (IOS)
-	target_compile_definitions(Islands PUBLIC ISLANDS_IOS)
-	if (ISLANDS_USE_GLFW)
+	target_compile_definitions(Kale PUBLIC KALE_IOS)
+	if (KALES_USE_GLFW)
 		message(FATAL_ERROR "GLFW does not support this operating system")
 	endif()
 endif()
 
 # Debug Macros
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT EXISTS NDEBUG)
-	target_compile_definitions(Islands PUBLIC ISLANDS_DEBUG)
-	set(ISLANDS_DEBUG ON)
+	target_compile_definitions(Kale PUBLIC KALE_DEBUG)
+	set(KALE_DEBUG ON)
 endif()
 
-if (ISLANDS_VERBOSE)
-	target_compile_definitions(Islands PUBLIC ISLANDS_VERBOSE)
+if (KALE_VERBOSE)
+	target_compile_definitions(Kale PUBLIC KALE_VERBOSE)
 endif()
-
-# Filename macro
-
-# Helper function to add preprocesor definition of FILE_BASENAME
-# to pass the filename without directory path for debugging use.
-#
-# Note that in header files this is not consistent with
-# __FILE__ and __LINE__ since FILE_BASENAME will be the
-# compilation unit source file name (.c/.cpp).
-#
-# Example:
-#
-#   define_file_basename_for_sources(my_target)
-#
-# Will add -DFILE_BASENAME="filename" for each source file depended on
-# by my_target, where filename is the name of the file.
-#
-function(define_file_basename_for_sources targetname)
-    get_target_property(source_files "${targetname}" SOURCES)
-    foreach(sourcefile ${source_files})
-        # Add the FILE_BASENAME=filename compile definition to the list.
-        get_filename_component(basename "${sourcefile}" NAME)
-        # Set the updated compile definitions on the source file.
-        set_property(
-            SOURCE "${sourcefile}" APPEND
-            PROPERTY COMPILE_DEFINITIONS "FILE_BASENAME=\"${basename}\"")
-    endforeach()
-endfunction()
-
-define_file_basename_for_sources(Islands)
 
 # Date
 set(USE_SYSTEM_TZ_DB ON)
 set(BUILD_TZ_LIB ON)
 add_subdirectory(dependencies/date)
-target_link_libraries(Islands date)
-target_link_libraries(Islands date-tz)
+target_link_libraries(Kale date)
+target_link_libraries(Kale date-tz)
 
 # FastNoise
-target_include_directories(Islands PUBLIC dependencies/FastNoiseLite/Cpp/)
+target_include_directories(Kale PUBLIC dependencies/FastNoiseLite/Cpp/)
 
 # Json
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(dependencies/json)
-target_link_libraries(Islands nlohmann_json)
+target_link_libraries(Kale nlohmann_json)
 
 # Termcolor - Debug only since console is not used for release
-if(ISLANDS_DEBUG)
+if(KALE_DEBUG)
 	add_subdirectory(dependencies/termcolor)
-	target_link_libraries(Islands termcolor)
+	target_link_libraries(Kale termcolor)
 endif()
 
 # Vulkan
 find_package(Vulkan REQUIRED FATAL_ERROR)
-target_link_libraries(Islands ${Vulkan_LIBRARIES})
-target_include_directories(Islands PUBLIC ${Vulkan_INCLUDE_DIR})
+target_link_libraries(Kale ${Vulkan_LIBRARIES})
+target_include_directories(Kale PUBLIC ${Vulkan_INCLUDE_DIR})
 
 # SDL
-if (ISLANDS_USE_SDL)
+if (KALE_USE_SDL)
 	set(SDL_MAIN_HANDLED TRUE)
 	set(SDL_STATIC ON CACHE BOOL "" FORCE)
 	set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 	add_subdirectory(dependencies/SDL2)
-	target_link_libraries(Islands SDL2main SDL2-static)
-	target_compile_definitions(Islands PUBLIC ISLANDS_SDL)
+	target_link_libraries(Kale SDL2main SDL2-static)
+	target_compile_definitions(Kale PUBLIC KALE_SDL)
 endif()
 
 # GLFW
-if (ISLANDS_USE_GLFW)
+if (KALE_USE_GLFW)
 	set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 	set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 	set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 	add_subdirectory(dependencies/glfw)
-	target_link_libraries(Islands glfw)
-	target_compile_definitions(Islands PUBLIC ISLANDS_GLFW)
+	target_link_libraries(Kale glfw)
+	target_compile_definitions(Kale PUBLIC KALE_GLFW)
 endif()
 
-# Copy all resources (assets, shaders, etc)
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/.Islands/assets)
+# Copy all resources (assets, shaders, etc) - Should be done in client CmakeLists
+# add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+#                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+#                        ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/.Islands/assets)
