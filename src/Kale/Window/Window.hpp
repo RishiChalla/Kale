@@ -187,6 +187,12 @@ namespace Kale {
 		 * Unlocks the cursor for menus/etc
 		 */
 		void unlockCursor();
+
+		/**
+		 * Sets the window icon to the given image
+		 * @param filePath The window icon to set to
+		 */
+		void setIcon(const char* filePath);
 		
 		/**
 		 * Gets the window size

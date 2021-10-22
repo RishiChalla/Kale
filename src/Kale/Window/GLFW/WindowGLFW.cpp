@@ -410,6 +410,10 @@ void Window::update() {
 	}
 }
 
+/**
+ * Gets the extensions required for VKCreateInfo depending on the windowing API
+ * @returns The required extensions for the lower level windowing API
+ */
 std::vector<const char*> Window::getCreateInfoExtensions() const {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions;
@@ -423,6 +427,15 @@ std::vector<const char*> Window::getCreateInfoExtensions() const {
  */
 const char* Window::getTitle() const {
 	return title;
+}
+
+/**
+ * Sets the window icon to the given image
+ * @param filePath The window icon to set to
+ */
+void setIcon(const char* filePath) {
+	// TODO - Implement this
+	throw std::runtime_error("Unimplemented Function Called");
 }
 
 /**
