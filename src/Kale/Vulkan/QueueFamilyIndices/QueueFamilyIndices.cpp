@@ -24,7 +24,7 @@ using namespace Kale::Vulkan;
  * @param deviceId the device to link to
  * @param properties All of the properties
  */
-VulkanQueueFamilyIndices::VulkanQueueFamilyIndices(uint32_t deviceId, const std::vector<vk::QueueFamilyProperties>& properties) :
+QueueFamilyIndices::QueueFamilyIndices(uint32_t deviceId, const std::vector<vk::QueueFamilyProperties>& properties) :
 	physicalDeviceId(deviceId) {
 	
 	// Loop through the family properties and set each indices
@@ -43,6 +43,6 @@ VulkanQueueFamilyIndices::VulkanQueueFamilyIndices(uint32_t deviceId, const std:
  * Returns whether or not this physical device contains all required queue family indices
  * @returns Whether or not this physical device contains all required queue family indices
  */
-bool VulkanQueueFamilyIndices::hasAllIndices() const {
+bool QueueFamilyIndices::hasAllIndices() const {
 	return graphicsFamilyIndex.has_value();
 }

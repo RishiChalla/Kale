@@ -48,13 +48,13 @@ static std::list<_WinGamePad> gamePads;
  */
 Window::Window() {
 	glfwInit();
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 }
 
 /**
  * Frees resources of the window
  */
 Window::~Window() {
-	cleanupVulkan();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	handlers = nullptr;
@@ -200,9 +200,6 @@ static void joystickCallback(int jid, int action) {
  * @param title The title of the window
  */
 void Window::create(const char* title) {
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	initVulkan();
-	
 	this->title = title;
 	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
 	

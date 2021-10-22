@@ -14,14 +14,14 @@
    limitations under the License.
 */
 
-#include "../Window.hpp"
-#include <Kale/Application/Application.hpp>
+#include "MainHandler.hpp"
 
 using namespace Kale;
+using namespace Kale::Vulkan;
 
 #ifdef KALE_DEBUG
 
-const std::vector<const char*> Window::vulkanValidationLayers = {
+const std::vector<const char*> MainHandler::validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
 };
 
@@ -29,10 +29,10 @@ const std::vector<const char*> Window::vulkanValidationLayers = {
  * Checks validation layer support for all given validation layers
  * @returns Whether or not all validation layers given are supported
  */
-bool Window::checkValidationLayerSupport() const {
+bool MainHandler::checkValidationLayerSupport() const {
 	auto availableLayers = vk::enumerateInstanceLayerProperties();
 	
-	for (const std::string& layerName : vulkanValidationLayers) {
+	for (const std::string& layerName : validationLayers) {
 		bool layerFound = false;
 		for (const auto& layerProperties : availableLayers) {
 			if (layerName == layerProperties.layerName) {
@@ -81,7 +81,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
 /**
  * Sets up the debug message callback
  */
-void Window::setupDebugMessageCallback() {
+void MainHandler::setupDebugMessageCallback() {
 	using MessageSeverity = vk::DebugUtilsMessageSeverityFlagBitsEXT;
 	using MessageType = vk::DebugUtilsMessageTypeFlagBitsEXT;
 
@@ -97,7 +97,7 @@ void Window::setupDebugMessageCallback() {
 	createInfo.pfnUserCallback = debugCallback;
 	createInfo.pUserData = nullptr;
 
-	auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkCreateDebugUtilsMessengerEXT"));
+	auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
 	
 	if (func == nullptr) {
 		console.error("Unable to load Debug Utils Extension");
@@ -105,7 +105,7 @@ void Window::setupDebugMessageCallback() {
 	}
 
 	const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo = &createInfo.operator const VkDebugUtilsMessengerCreateInfoEXT&();
-	if (func(vulkanInstance, pCreateInfo, nullptr, &vulkanDebugMessenger) != VK_SUCCESS) {
+	if (func(instance, pCreateInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
 		console.error("Failed to setup Debug Messenger");
 		return;
 	}
@@ -114,15 +114,15 @@ void Window::setupDebugMessageCallback() {
 /**
  * Destroys the debug message callback
  */
-void Window::destroyDebugMessageCallback() {
-	auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkDestroyDebugUtilsMessengerEXT"));
+void MainHandler::destroyDebugMessageCallback() {
+	auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
 
 	if (func == nullptr) {
 		console.error("Failed to load Debug Utils Deletion Extension");
 		return;
 	}
 
-	func(vulkanInstance, vulkanDebugMessenger, nullptr);
+	func(instance, debugMessenger, nullptr);
 }
 
 #endif

@@ -14,26 +14,10 @@
    limitations under the License.
 */
 
-#include "../Window.hpp"
-#include <Kale/Logger/Logger.hpp>
-#include <exception>
+#include "MainHandler.hpp"
 
 using namespace Kale;
+using namespace Kale::Vulkan;
 
-/**
- * Cleans vulkan objects before the application closes
- */
-void Window::cleanupVulkan() {
-	try {
-		#ifdef KALE_DEBUG
-		destroyDebugMessageCallback();
-		#endif
-		
-		vulkanLogicalDevice.destroy();
-		vulkanInstance.destroy();
-	}
-	catch (const std::exception& e) {
-		console.error(e.what());
-		exit(0);
-	}
-}
+MainHandler Kale::Vulkan::mainHandler;
+

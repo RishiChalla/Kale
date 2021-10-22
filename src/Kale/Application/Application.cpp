@@ -18,6 +18,7 @@
 #include <thread>
 #include <Kale/Clock/Clock.hpp>
 #include <Kale/Settings/Settings.hpp>
+#include <Kale/Vulkan/MainHandler/MainHandler.hpp>
 
 using namespace Kale;
 
@@ -88,6 +89,9 @@ void Application::update() {
  * Runs the application
  */
 void Application::run() {
+	// Setup Vulkan
+	Vulkan::mainHandler.setupHandler(window.getCreateInfoExtensions());
+
 	// Creates the window
     window.create(applicationName.c_str());
     
@@ -111,6 +115,9 @@ void Application::run() {
 
 	// Wait for the update thread to finish
 	updateThread.join();
+
+	// Cleanup vulkan now that execution is done
+	Vulkan::mainHandler.cleanupHandler();
 
 	onEnd();
 }

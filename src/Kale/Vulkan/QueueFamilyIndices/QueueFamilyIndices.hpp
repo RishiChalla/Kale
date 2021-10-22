@@ -24,7 +24,7 @@ namespace Kale::Vulkan {
 	/**
 	 * The indices for each queue family of a physical device which we need
 	 */
-	struct VulkanQueueFamilyIndices {
+	struct QueueFamilyIndices {
 
 		/**
 		 * The device ID of the physical device
@@ -41,7 +41,7 @@ namespace Kale::Vulkan {
 		 * @param deviceId the device to link to
 		 * @param properties All of the properties
 		 */
-		VulkanQueueFamilyIndices(uint32_t deviceId, const std::vector<vk::QueueFamilyProperties>& properties);
+		QueueFamilyIndices(uint32_t deviceId, const std::vector<vk::QueueFamilyProperties>& properties);
 
 		/**
 		 * Returns whether or not this physical device contains all required queue family indices

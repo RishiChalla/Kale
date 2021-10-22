@@ -48,90 +48,6 @@ namespace Kale {
 		 * A linked list of all event listeners for this window
 		 */
 		std::list<EventHandler*> eventHandlers;
-
-		// ------------------------------ Vulkan ------------------------------
-
-		// > DEBUG <
-		#ifdef KALE_DEBUG
-
-		/**
-		 * All the validatoin layers used when debugging
-		 */
-		static const std::vector<const char*> vulkanValidationLayers;
-
-		/**
-		 * The debug messenger used for vulkan output messages
-		 */
-		VkDebugUtilsMessengerEXT vulkanDebugMessenger;
-
-		/**
-		 * Sets up the debug message callback
-		 */
-		void setupDebugMessageCallback();
-
-		/**
-		 * Checks validation layer support for all given validation layers
-		 * @returns Whether or not all validation layers given are supported
-		 */
-		bool checkValidationLayerSupport() const;
-
-		/**
-		 * Destroys the debug message callback
-		 */
-		void destroyDebugMessageCallback();
-
-		#endif
-
-		/**
-		 * The vulkan instance used for this window
-		 */
-		vk::Instance vulkanInstance;
-
-		/**
-		 * The physical GPU used for rendering with vulkan for this application
-		 */
-		vk::PhysicalDevice vulkanPhysicalDevice;
-
-		/**
-		 * The Device used for using render commands to the chosen physical device
-		 */
-		vk::Device vulkanLogicalDevice;
-
-		/**
-		 * The graphics queue for passing graphics commands
-		 */
-		vk::Queue graphicsQueue;
-
-		/**
-		 * Creates the vulkan instance for this window
-		 */
-		void createVulkanInstance();
-
-		/**
-		 * Chooses the GPU from the available GPUs that support vulkan based on the user settings
-		 */
-		void chooseGPU();
-
-		/**
-		 * Creates the vulkan logical device object
-		 */
-		void createVulkanLogicalDevice();
-
-		/**
-		 * Initializes vulkan for use with both windowing APIs
-		 */
-		void initVulkan();
-
-		/**
-		 * Cleans vulkan objects before the application closes
-		 */
-		void cleanupVulkan();
-
-		/**
-		 * Gets the extensions required for VKCreateInfo depending on the windowing API
-		 * @returns The required extensions for the lower level windowing API
-		 */
-		std::vector<const char*> getCreateInfoExtensions() const;
 		
 	protected:
 		
@@ -156,6 +72,12 @@ namespace Kale {
 		 * Updates the window
 		 */
 		void update();
+
+		/**
+		 * Gets the extensions required for VKCreateInfo depending on the windowing API
+		 * @returns The required extensions for the lower level windowing API
+		 */
+		std::vector<const char*> getCreateInfoExtensions() const;
 		
 		friend class Application;
 		friend class Scene;
