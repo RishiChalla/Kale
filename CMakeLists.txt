@@ -104,8 +104,3 @@ if (KALE_USE_GLFW)
 	target_link_libraries(Kale glfw)
 	target_compile_definitions(Kale PUBLIC KALE_GLFW)
 endif()
-
-# Copy all resources (assets, shaders, etc) - Should be done in client CmakeLists
-# add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#                    COMMAND ${CMAKE_COMMAND} -E copy_directory
-#                        ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/.Islands/assets)
