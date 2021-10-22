@@ -70,10 +70,6 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(dependencies/json)
 target_link_libraries(Kale nlohmann_json)
 
-# LibPNG
-add_subdirectory(dependencies/libpng)
-target_link_libraries(Kale libpng)
-
 # Termcolor - Debug only since console is not used for release
 if(KALE_DEBUG)
 	add_subdirectory(dependencies/termcolor)

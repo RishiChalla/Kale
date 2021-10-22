@@ -73,6 +73,11 @@ namespace Kale {
 		virtual void onEnd() {}
 
 		/**
+		 * Runs the application
+		 */
+		void run();
+
+		/**
 		 * Creates a new application instance
 		 * @param applicationName The name of your application
 		 */
@@ -97,11 +102,6 @@ namespace Kale {
 		Application(Application&& other) = delete;
 		void operator=(const Application& other) = delete;
 		void operator=(Application&& other) = delete;
-
-		/**
-		 * Runs the application
-		 */
-		void run();
 		
 		/**
 		 * Gets the window

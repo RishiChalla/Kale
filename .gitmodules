@@ -19,6 +19,3 @@
 [submodule "doc/awesome-css"]
 	path = doc/awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
-[submodule "dependencies/libpng"]
-	path = dependencies/libpng
-	url = https://github.com/glennrp/libpng
