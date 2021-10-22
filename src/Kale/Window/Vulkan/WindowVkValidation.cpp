@@ -15,7 +15,7 @@
 */
 
 #include "../Window.hpp"
-#include <Application/Application.hpp>
+#include <Kale/Application/Application.hpp>
 
 using namespace Kale;
 

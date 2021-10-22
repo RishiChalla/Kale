@@ -18,9 +18,9 @@
 
 #include <memory>
 
-#include <Window/Window.hpp>
-#include <Logger/Logger.hpp>
-#include <Scene/Scene.hpp>
+#include <Kale/Window/Window.hpp>
+#include <Kale/Logger/Logger.hpp>
+#include <Kale/Scene/Scene.hpp>
 
 #include <string>
 

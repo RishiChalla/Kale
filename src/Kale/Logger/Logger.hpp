@@ -17,6 +17,8 @@
 #pragma once
 
 #include <fstream>
+#include <string>
+#include <string.h>
 
 #ifdef KALE_DEBUG
 
@@ -98,13 +100,18 @@ namespace Kale {
 		 * @returns The time prefix
 		 */
 		std::string getTimePrefix();
-
-	public:
+	
+	protected:
 
 		/**
-		 * Creates a new logger instance
+		 * Loads and sets up the console
+		 * @param applicationName The name of the application
 		 */
-		Logger();
+		void load(const std::string& applicationName);
+
+		friend class Application;
+
+	public:
 
 		/**
 		 * Logs output to the console
@@ -249,21 +256,30 @@ namespace Kale {
 }
 
 /**
+ * The base filename/relative file path without the source path
+ */
+#ifdef KALE_WINDOWS
+#define __FILENAME__ strrchr("\\" __FILE__, '\\') + 1
+#else
+#define __FILENAME__ strrchr("/" __FILE__, '/') + 1
+#endif
+
+/**
  * Prints output to the console/log file
  */
-#define cPrint(x) Kale::console.log(__LINE__, FILE_BASENAME, x)
+#define cPrint(x) Kale::console.log(__LINE__, __FILENAME__, x)
 
 /**
  * Prints info to the console/log file
  */
-#define cInfo(x) Kale::console.info(__LINE__, FILE_BASENAME, x)
+#define cInfo(x) Kale::console.info(__LINE__, __FILENAME__, x)
 
 /**
  * Prints a warning to the console/log file
  */
-#define cWarn(x) Kale::console.warn(__LINE__, FILE_BASENAME, x)
+#define cWarn(x) Kale::console.warn(__LINE__, __FILENAME__, x)
 
 /**
  * Prints an error to the console/log file
  */
-#define cError(x) Kale::console.error(__LINE__, FILE_BASENAME, x)
+#define cError(x) Kale::console.error(__LINE__, __FILENAME__, x)

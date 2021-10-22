@@ -18,8 +18,8 @@
 
 #include <list>
 
-#include <Node/Node.hpp>
-#include <Events/Events.hpp>
+#include <Kale/Node/Node.hpp>
+#include <Kale/Events/Events.hpp>
 
 namespace Kale {
 	

@@ -15,7 +15,7 @@
 */
 
 #include "Settings.hpp"
-#include <Application/Application.hpp>
+#include <Kale/Application/Application.hpp>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <filesystem>
@@ -27,15 +27,16 @@ Settings Kale::settings;
 /**
  * Loads the settings from the config json file
  * Should only be called once after the app is run
+ * @param applicationName the name of the application
  */
-void Settings::load() {
+void Settings::load(const std::string& applicationName) {
 	using namespace nlohmann;
 
-	settingsFilePath = "." + mainApp->applicationName + "/settings.json";
+	settingsFilePath = "." + applicationName + "/settings.json";
 
 	// Load the json from the settings file
-	if (!std::filesystem::exists("." + mainApp->applicationName))
-		std::filesystem::create_directory("." + mainApp->applicationName);
+	if (!std::filesystem::exists("." + applicationName))
+		std::filesystem::create_directory("." + applicationName);
 	
 	std::ifstream settingsFile(settingsFilePath);
 	json settingsJson;

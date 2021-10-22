@@ -11,6 +11,7 @@ add_library(Kale STATIC ${sources})
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${sources})
 
 target_include_directories(Kale PUBLIC src/)
+target_include_directories(Kale INTERFACE src/)
 
 option(KALE_USE_SDL = OFF)
 option(KALE_USE_GLFW = ON)

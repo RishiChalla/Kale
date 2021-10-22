@@ -15,10 +15,10 @@
 */
 
 #include "../Window.hpp"
-#include <Logger/Logger.hpp>
-#include <Settings/Settings.hpp>
-#include <Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
-#include <Vulkan/Extensions/Extensions.hpp>
+#include <Kale/Logger/Logger.hpp>
+#include <Kale/Settings/Settings.hpp>
+#include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
+#include <Kale/Vulkan/Extensions/Extensions.hpp>
 #include <vector>
 #include <algorithm>
 #include <exception>

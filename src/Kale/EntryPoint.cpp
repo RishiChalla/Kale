@@ -14,26 +14,29 @@
    limitations under the License.
 */
 
-#include "../Window.hpp"
-#include <Logger/Logger.hpp>
-#include <exception>
+#include <Kale/Application/Application.hpp>
 
 using namespace Kale;
 
 /**
- * Cleans vulkan objects before the application closes
+ * Create your inherited application here and heap allocate it.
+ * Do not worry about its destruction, the engine will take care of it.
  */
-void Window::cleanupVulkan() {
-	try {
-		#ifdef KALE_DEBUG
-		destroyDebugMessageCallback();
-		#endif
-		
-		vulkanLogicalDevice.destroy();
-		vulkanInstance.destroy();
-	}
-	catch (const std::exception& e) {
-		console.error(e.what());
-		exit(0);
-	}
+extern Application* createApplication();
+
+/**
+ * The main function/entry point of the program
+ */
+int main() {
+	// Heap allocate the main app instance
+	mainApp = createApplication();
+
+	// Run the app
+	mainApp->run();
+
+	// Delete the app/free the resources
+	delete mainApp;
+
+	// End the program
+	return 0;
 }

@@ -15,7 +15,7 @@
 */
 
 #include "Logger.hpp"
-#include <Application/Application.hpp>
+#include <Kale/Application/Application.hpp>
 #include <filesystem>
 #include <date/date.h>
 #include <date/tz.h>
@@ -32,18 +32,19 @@ using namespace Kale;
 Logger Kale::console;
 
 /**
- * Creates a new logger instance
+ * Loads and sets up the console
+ * @param applicationName The name of the application
  */
-Logger::Logger() {
+void Logger::load(const std::string& applicationName) {
 
 	// Create the folder for this application if it doesn't already exist
-	if (!std::filesystem::exists("." + mainApp->applicationName))
-		std::filesystem::create_directory("." + mainApp->applicationName);
-	if (!std::filesystem::exists("." + mainApp->applicationName + "/logs"))
-		std::filesystem::create_directory("." + mainApp->applicationName + "/logs");
+	if (!std::filesystem::exists("." + applicationName))
+		std::filesystem::create_directory("." + applicationName);
+	if (!std::filesystem::exists("." + applicationName + "/logs"))
+		std::filesystem::create_directory("." + applicationName + "/logs");
 
 	// Create/open the log file in the correct folder
-	logFile.open("." + mainApp->applicationName + "/logs/" + date::format("%F--%H-%M", std::chrono::system_clock::now()) + ".log");
+	logFile.open("." + applicationName + "/logs/" + date::format("%F--%H-%M", std::chrono::system_clock::now()) + ".log");
 
 	#ifdef KALE_WINDOWS
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);

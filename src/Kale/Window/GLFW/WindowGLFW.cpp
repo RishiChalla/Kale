@@ -16,9 +16,9 @@
 
 #ifdef KALE_GLFW
 
-#include <Application/Application.hpp>
-#include <Window/Window.hpp>
-#include <Events/Events.hpp>
+#include <Kale/Application/Application.hpp>
+#include <Kale/Window/Window.hpp>
+#include <Kale/Events/Events.hpp>
 
 using namespace Kale;
 

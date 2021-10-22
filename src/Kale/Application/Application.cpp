@@ -16,8 +16,8 @@
 
 #include "Application.hpp"
 #include <thread>
-#include <Clock/Clock.hpp>
-#include <Settings/Settings.hpp>
+#include <Kale/Clock/Clock.hpp>
+#include <Kale/Settings/Settings.hpp>
 
 using namespace Kale;
 
@@ -31,7 +31,8 @@ Application* Kale::mainApp = nullptr;
  * @param applicationName The name of your application
  */
 Application::Application(const char* applicationName) : applicationName(applicationName) {
-	settings.load();
+	console.load(this->applicationName);
+	settings.load(this->applicationName);
 }
 
 /**

@@ -19,7 +19,7 @@
 #include <map>
 #include <string>
 
-#include <Events/Events.hpp>
+#include <Kale/Events/Events.hpp>
 
 namespace Kale {
 	
@@ -133,8 +133,9 @@ namespace Kale {
 		/**
 		 * Loads the settings from the config json file
 		 * Should only be called once after the app is run
+		 * @param applicationName the name of the application
 		 */
-		void load();
+		void load(const std::string& applicationName);
 		
 		friend class Application;
 		
