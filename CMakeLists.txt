@@ -46,7 +46,7 @@ if (IOS)
 endif()
 
 # Debug Macros
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT EXISTS NDEBUG)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	target_compile_definitions(Kale PUBLIC KALE_DEBUG)
 	set(KALE_DEBUG ON)
 endif()

@@ -98,7 +98,7 @@ void MainHandler::createInstance(const std::vector<const char*>& windowRequiredE
 			requestedInstanceExtensions, [](const vk::ExtensionProperties& p) {
 			
 			// Map the vulkan extension type to a const char*
-			return p.extensionName;
+			return std::string(p.extensionName);
 		});
 
 		// Add the lower windowing API required extensions, usually don't need to check for support for these
@@ -129,7 +129,7 @@ void MainHandler::createInstance(const std::vector<const char*>& windowRequiredE
 			requestedValidationLayers, [](const vk::LayerProperties& p) {
 			
 			// Map the vulkan layer type to a const char*
-			return p.layerName;
+			return std::string(p.layerName);
 		});
 
 		// Add the layers to the create info
@@ -185,7 +185,7 @@ void MainHandler::createLogicalDevice() {
 		requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
 		
 		// Map extension proprty to a const char*
-		return p.extensionName;
+		return std::string(p.extensionName);
 	});
 
 	// Create the logical device create info
