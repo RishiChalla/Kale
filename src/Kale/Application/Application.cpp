@@ -18,7 +18,7 @@
 #include <thread>
 #include <Kale/Clock/Clock.hpp>
 #include <Kale/Settings/Settings.hpp>
-#include <Kale/Vulkan/MainHandler/MainHandler.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 using namespace Kale;
 
@@ -90,7 +90,7 @@ void Application::update() {
  */
 void Application::run() {
 	// Setup Vulkan
-	Vulkan::mainHandler.setupHandler(window.getCreateInfoExtensions());
+	Vulkan::renderer.setupRenderer(window.getCreateInfoExtensions());
 
 	// Creates the window
     window.create(applicationName.c_str());
@@ -117,7 +117,7 @@ void Application::run() {
 	updateThread.join();
 
 	// Cleanup vulkan now that execution is done
-	Vulkan::mainHandler.cleanupHandler();
+	Vulkan::renderer.cleanupRenderer();
 
 	onEnd();
 }

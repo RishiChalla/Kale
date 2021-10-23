@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "MainHandler.hpp"
+#include "Renderer.hpp"
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <stdexcept>
@@ -23,13 +23,13 @@
 using namespace Kale;
 using namespace Kale::Vulkan;
 
-MainHandler Kale::Vulkan::mainHandler;
+Renderer Kale::Vulkan::renderer;
 
 /**
  * Gets the vulkan instance for this program execution
  * @returns The vulkan instance
  */
-const vk::Instance& MainHandler::getInstance() const {
+const vk::Instance& Renderer::getInstance() const {
 	return instance;
 }
 
@@ -38,7 +38,7 @@ const vk::Instance& MainHandler::getInstance() const {
  * physical device at a time. The user may configure this device however
  * @returns The physical device
  */
-const vk::PhysicalDevice& MainHandler::getPhysicalDevice() const {
+const vk::PhysicalDevice& Renderer::getPhysicalDevice() const {
 	return physicalDevice;
 }
 
@@ -46,7 +46,7 @@ const vk::PhysicalDevice& MainHandler::getPhysicalDevice() const {
  * Gets the logical device used for commands for this program
  * @returns The logical device
  */
-const vk::Device& MainHandler::getLogicalDevice() const {
+const vk::Device& Renderer::getLogicalDevice() const {
 	return logicalDevice;
 }
 
@@ -55,7 +55,7 @@ const vk::Device& MainHandler::getLogicalDevice() const {
  * @param type The type of queue to get
  * @returns The queue to pass commands to, should be thread safe
  */
-vk::Queue& MainHandler::operator[](QueueType type) {
+vk::Queue& Renderer::operator[](QueueType type) {
 	return queues[type];
 }
 
@@ -64,7 +64,7 @@ vk::Queue& MainHandler::operator[](QueueType type) {
  * @param type The type of queue to get
  * @returns The queue to pass commands to, should be thread safe
  */
-const vk::Queue& MainHandler::operator[](QueueType type) const {
+const vk::Queue& Renderer::operator[](QueueType type) const {
 	return queues.at(type);
 }
 
@@ -72,7 +72,7 @@ const vk::Queue& MainHandler::operator[](QueueType type) const {
  * Gets all available GPUs to choose from with their IDs and Names
  * @returns A vector of the available GPUs with their ID and name
  */
-std::vector<std::tuple<uint32_t, std::string>> MainHandler::getAvailableGPUs() const {
+std::vector<std::tuple<uint32_t, std::string>> Renderer::getAvailableGPUs() const {
 	std::vector<std::tuple<uint32_t, std::string>> availableGPUs;
 
 	// Loop through all available devices
@@ -96,7 +96,7 @@ std::vector<std::tuple<uint32_t, std::string>> MainHandler::getAvailableGPUs() c
  * Gets the GPU information of the physical device currently being used for rendering
  * @returns A tuple of the GPU id and the name
  */
-std::tuple<uint32_t, std::string> MainHandler::getCurrentGPU() const {
+std::tuple<uint32_t, std::string> Renderer::getCurrentGPU() const {
 	// Get the GPU properties
 	vk::PhysicalDeviceProperties properties = physicalDevice.getProperties();
 	return std::make_tuple(properties.deviceID, std::string(properties.deviceName));
@@ -107,7 +107,7 @@ std::tuple<uint32_t, std::string> MainHandler::getCurrentGPU() const {
  * @param gpuID The id of the GPU to use
  * @throws If the GPU wasn't found
  */
-void MainHandler::useGPU(uint32_t gpuID) {
+void Renderer::useGPU(uint32_t gpuID) {
 
 	// Loop over all the devices
 	for (vk::PhysicalDevice& device : instance.enumeratePhysicalDevices()) {

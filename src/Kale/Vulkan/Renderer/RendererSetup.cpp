@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "MainHandler.hpp"
+#include "Renderer.hpp"
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
 #include <stdexcept>
@@ -24,11 +24,11 @@ using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
- * Sets up the main handler, any functions called prior to this will result in undefined behavior
+ * Sets up the renderer, any functions called prior to this will result in undefined behavior
  * @param windowRequiredExtensions The required extensions form the lower level windowing API
  * @param gpuID the ID of the GPU to use for rendering
  */
-void MainHandler::setupHandler(const std::vector<const char*>& windowRequiredExtensions, std::optional<uint32_t> gpuID) {
+void Renderer::setupRenderer(const std::vector<const char*>& windowRequiredExtensions, std::optional<uint32_t> gpuID) {
 
 	try {
 		createInstance(windowRequiredExtensions);
@@ -56,7 +56,7 @@ void MainHandler::setupHandler(const std::vector<const char*>& windowRequiredExt
 /**
  * Cleans vulkan objects before the application closes
  */
-void MainHandler::cleanupHandler() {
+void Renderer::cleanupRenderer() {
 	try {
 		#ifdef KALE_DEBUG
 		destroyDebugMessageCallback();
@@ -75,7 +75,7 @@ void MainHandler::cleanupHandler() {
  * Creates the vulkan instance for this window
  * @param windowRequiredExtensions The required extensions form the lower level windowing API
  */
-void MainHandler::createInstance(const std::vector<const char*>& windowRequiredExtensions) {
+void Renderer::createInstance(const std::vector<const char*>& windowRequiredExtensions) {
 	vk::ApplicationInfo appInfo;
 	appInfo.pApplicationName = mainApp->applicationName.c_str();
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -156,7 +156,7 @@ void MainHandler::createInstance(const std::vector<const char*>& windowRequiredE
 /**
  * Creates the vulkan logical device object
  */
-void MainHandler::createLogicalDevice() {
+void Renderer::createLogicalDevice() {
 
 	// Queues is not empty - meaning we've previously made a logical device which needs to be freed
 	if (!queues.empty()) {

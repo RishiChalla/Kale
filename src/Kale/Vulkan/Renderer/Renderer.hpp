@@ -38,7 +38,7 @@ namespace Kale::Vulkan {
 	/**
 	 * This class handles nearly all vulkan related details including setup, instances, validation layers, etc.
 	 */
-	class MainHandler {
+	class Renderer {
 	
 	private:
 
@@ -141,17 +141,17 @@ namespace Kale::Vulkan {
 	protected:
 
 		/**
-		 * Sets up the main handler, any functions called prior to this will result in undefined behavior
+		 * Sets up the main renderer, any functions called prior to this will result in undefined behavior
 		 * @param windowRequiredExtensions The required extensions form the lower level windowing API
 		 * @param gpuID the ID of the GPU to use for rendering
 		 */
-		void setupHandler(const std::vector<const char*>& windowRequiredExtensions,
+		void setupRenderer(const std::vector<const char*>& windowRequiredExtensions,
 			std::optional<uint32_t> gpuID = std::optional<uint32_t>());
 
 		/**
 		 * Cleans vulkan objects before the application closes
 		 */
-		void cleanupHandler();
+		void cleanupRenderer();
 
 		friend class Kale::Application;
 	
@@ -211,7 +211,7 @@ namespace Kale::Vulkan {
 	};
 
 	/**
-	 * The main vulkan handler for this program's execution
+	 * The main vulkan renderer for this program's execution
 	 */
-	extern MainHandler mainHandler;
+	extern Renderer renderer;
 }

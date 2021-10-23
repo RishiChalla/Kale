@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "MainHandler.hpp"
+#include "Renderer.hpp"
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -55,7 +55,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
 /**
  * Sets up the debug message callback
  */
-void MainHandler::setupDebugMessageCallback() {
+void Renderer::setupDebugMessageCallback() {
 	using MessageSeverity = vk::DebugUtilsMessageSeverityFlagBitsEXT;
 	using MessageType = vk::DebugUtilsMessageTypeFlagBitsEXT;
 
@@ -88,7 +88,7 @@ void MainHandler::setupDebugMessageCallback() {
 /**
  * Destroys the debug message callback
  */
-void MainHandler::destroyDebugMessageCallback() {
+void Renderer::destroyDebugMessageCallback() {
 	auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
 
 	if (func == nullptr) {
