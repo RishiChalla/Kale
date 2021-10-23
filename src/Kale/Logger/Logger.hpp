@@ -267,19 +267,19 @@ namespace Kale {
 /**
  * Prints output to the console/log file
  */
-#define cPrint(x) Kale::console.log(__LINE__, __FILENAME__, x)
+#define klPrint(x) Kale::console.log(__LINE__, __FILENAME__, x)
 
 /**
  * Prints info to the console/log file
  */
-#define cInfo(x) Kale::console.info(__LINE__, __FILENAME__, x)
+#define klInfo(x) Kale::console.info(__LINE__, __FILENAME__, x)
 
 /**
  * Prints a warning to the console/log file
  */
-#define cWarn(x) Kale::console.warn(__LINE__, __FILENAME__, x)
+#define klWarn(x) Kale::console.warn(__LINE__, __FILENAME__, x)
 
 /**
  * Prints an error to the console/log file
  */
-#define cError(x) Kale::console.error(__LINE__, __FILENAME__, x)
+#define klError(x) Kale::console.error(__LINE__, __FILENAME__, x)

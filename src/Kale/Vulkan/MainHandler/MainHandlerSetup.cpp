@@ -15,8 +15,10 @@
 */
 
 #include "MainHandler.hpp"
-#include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.cpp>
-#include <Kale/Settings/Settings.hpp>
+#include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
+#include <Kale/Vulkan/Extensions/Extensions.hpp>
+#include <stdexcept>
+#include <exception>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -24,18 +26,26 @@ using namespace Kale::Vulkan;
 /**
  * Sets up the main handler, any functions called prior to this will result in undefined behavior
  * @param windowRequiredExtensions The required extensions form the lower level windowing API
+ * @param gpuID the ID of the GPU to use for rendering
  */
-void MainHandler::setupHandler(const std::vector<const char*>& windowRequiredExtensions) {
+void MainHandler::setupHandler(const std::vector<const char*>& windowRequiredExtensions, std::optional<uint32_t> gpuID) {
 
 	try {
-		createVulkanInstance(windowRequiredExtensions);
+		createInstance(windowRequiredExtensions);
 
 		#ifdef KALE_DEBUG
 		setupDebugMessageCallback();
 		#endif
 
-		chooseGPU();
-		createVulkanLogicalDevice();
+		// Choose the GPU, useGPU will handle logical device creation
+		if (!gpuID.has_value()) {
+			std::vector<std::tuple<uint32_t, std::string>> gpus = getAvailableGPUs();
+			if (gpus.empty()) throw std::runtime_error("No Available GPU found.");
+			useGPU(std::get<0>(gpus[0]));
+		}
+		else {
+			useGPU(gpuID.value());
+		}
 	}
 	catch (const std::exception& e) {
 		console.error(e.what());
@@ -65,7 +75,7 @@ void MainHandler::cleanupHandler() {
  * Creates the vulkan instance for this window
  * @param windowRequiredExtensions The required extensions form the lower level windowing API
  */
-void MainHandler::createVulkanInstance(const std::vector<const char*>& windowRequiredExtensions) {
+void MainHandler::createInstance(const std::vector<const char*>& windowRequiredExtensions) {
 	vk::ApplicationInfo appInfo;
 	appInfo.pApplicationName = mainApp->applicationName.c_str();
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -75,28 +85,67 @@ void MainHandler::createVulkanInstance(const std::vector<const char*>& windowReq
 
 	vk::InstanceCreateInfo createInfo;
 	createInfo.pApplicationInfo = &appInfo;
-	std::vector<const char*> requiredExtensions = windowRequiredExtensions;
-	requiredExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+
+	std::vector<const char*> extensions;
+
+	// Load all required extensions
+	try {
+		// Get all available extensions
+		std::vector<vk::ExtensionProperties> availableExtensions(vk::enumerateInstanceExtensionProperties());
+
+		// Get all extensions given the available required and requested
+		extensions = getExtensions<vk::ExtensionProperties>(availableExtensions, requiredInstanceExtensions,
+			requestedInstanceExtensions, [](const vk::ExtensionProperties& p) {
+			
+			// Map the vulkan extension type to a const char*
+			return p.extensionName;
+		});
+
+		// Add the lower windowing API required extensions, usually don't need to check for support for these
+		extensions.reserve(extensions.size() + windowRequiredExtensions.size());
+		extensions.insert(extensions.end(), windowRequiredExtensions.begin(), windowRequiredExtensions.end());
+
+		// Add the extensions to the create info
+		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+		createInfo.ppEnabledExtensionNames = extensions.data();
+	}
+	catch (const std::exception& e) {
+		console.error(e.what());
+		exit(0);
+	}
 
 	// Validation Layers
 	#ifdef KALE_DEBUG
+	
+	std::vector<const char*> layers;
 
-	if (!checkValidationLayerSupport()) {
-		console.error("Validation Layers not Available");
+	try {
+
+		// Get all available layers
+		std::vector<vk::LayerProperties> availableLayers(vk::enumerateInstanceLayerProperties());
+
+		// Get all layers given the available required and requested
+		layers = getExtensions<vk::LayerProperties>(availableLayers, requiredValidationLayers,
+			requestedValidationLayers, [](const vk::LayerProperties& p) {
+			
+			// Map the vulkan layer type to a const char*
+			return p.layerName;
+		});
+
+		// Add the layers to the create info
+		createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+		createInfo.ppEnabledLayerNames = layers.data();
 	}
-
-	createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-	createInfo.ppEnabledLayerNames = validationLayers.data();
-	requiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+	catch (const std::exception& e) {
+		console.error("Validation Layers not Available");
+		createInfo.enabledLayerCount = 0;
+	}
 
 	#else
 
 	createInfo.enabledLayerCount = 0;
 
 	#endif
-
-	createInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
-	createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
 	if (vk::createInstance(&createInfo, nullptr, &instance) != vk::Result::eSuccess) {
 		console.error("Unable to Init Vulkan");
@@ -105,68 +154,17 @@ void MainHandler::createVulkanInstance(const std::vector<const char*>& windowReq
 }
 
 /**
- * Chooses the GPU from the available GPUs that support vulkan based on the user settings
- */
-void MainHandler::chooseGPU() {
-	std::vector<vk::PhysicalDevice> devices{instance.enumeratePhysicalDevices()};
-
-	// Remove devices which don't support swap chains/aren't compatible for our purposes
-	console.info("Available GPUs - ");
-	devices.erase(std::remove_if(devices.begin(), devices.end(), [](const vk::PhysicalDevice& device) {
-
-		// Get the GPU properties and queue family properties
-		vk::PhysicalDeviceProperties properties = device.getProperties();
-
-		// Ensure that the physical device is a GPU/has all required queue family indices
-		Vulkan::QueueFamilyIndices queueFamilyIndices(properties.deviceID, device.getQueueFamilyProperties());
-		if (!queueFamilyIndices.hasAllIndices()) return true;
-
-		// Print the available GPUs for debugging and don't remove it since it passed all checks
-		console.info(properties.deviceName);
-		return false;
-	}), devices.end());
-
-	if (devices.empty()) {
-		console.error("No Vulkan Compatible GPU Found");
-		exit(0);
-	}
-
-	// Select the GPU from the settings or set a default if there is none in the settings set yet
-	uint32_t gpuID = settings.getGPUID();
-
-	auto setDefaultGPU = [&]() {
-		vk::PhysicalDeviceProperties properties = devices[0].getProperties();
-		gpuID = properties.deviceID;
-		settings.setGPUID(gpuID);
-		physicalDevice = devices[0];
-		console.info(std::string("Chose ") + properties.deviceName.data() + " as rendering GPU");
-	};
-
-	if (gpuID == 0) {
-		setDefaultGPU();
-	}
-	else {
-		bool found = false;
-		for (vk::PhysicalDevice& device : devices) {
-			vk::PhysicalDeviceProperties properties = device.getProperties();
-			if (properties.deviceID != gpuID) continue;
-			found = true;
-			physicalDevice = device;
-			console.info(std::string("Settings GPU Found - ") + properties.deviceName.data());
-			break;
-		}
-
-		if (!found) {
-			console.warn("GPU in Settings not found - resetting default");
-			setDefaultGPU();
-		}
-	}
-}
-
-/**
  * Creates the vulkan logical device object
  */
-void MainHandler::createVulkanLogicalDevice() {
+void MainHandler::createLogicalDevice() {
+
+	// Queues is not empty - meaning we've previously made a logical device which needs to be freed
+	if (!queues.empty()) {
+
+		// Clear all queues then destroy the logical device
+		queues.clear();
+		logicalDevice.destroy();
+	}
 
 	// Get all the required indices
 	Vulkan::QueueFamilyIndices indices(physicalDevice.getProperties().deviceID, physicalDevice.getQueueFamilyProperties());
@@ -178,19 +176,20 @@ void MainHandler::createVulkanLogicalDevice() {
 	};
 
 	// Choose all required device features we desire
-	vk::PhysicalDeviceFeatures deviceFeatures;
+	vk::PhysicalDeviceFeatures features;
 	// TODO - set the required device features to true
 
 	// Set all required device extensions
-	std::vector<const char*> requiredDeviceExtensions;
-
-	// Loop through all the supported device extension properties
-	for (const vk::ExtensionProperties& property : physicalDevice.enumerateDeviceExtensionProperties()) {
-		// requiredDeviceExtensions.push_back(property.extensionName);
-	}
+	std::vector<const char*> extensions = getExtensions<vk::ExtensionProperties>(
+		physicalDevice.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
+		requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
+		
+		// Map extension proprty to a const char*
+		return p.extensionName;
+	});
 
 	// Create the logical device create info
-	vk::DeviceCreateInfo createInfo({}, queueCreateInfo, {}, requiredDeviceExtensions, &deviceFeatures);
+	vk::DeviceCreateInfo createInfo({}, queueCreateInfo, {}, extensions, &features);
 
 	// Create the logical device
 	logicalDevice = physicalDevice.createDevice(createInfo);

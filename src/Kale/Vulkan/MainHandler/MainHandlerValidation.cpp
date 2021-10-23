@@ -21,32 +21,6 @@ using namespace Kale::Vulkan;
 
 #ifdef KALE_DEBUG
 
-const std::vector<const char*> MainHandler::validationLayers = {
-	"VK_LAYER_KHRONOS_validation"
-};
-
-/**
- * Checks validation layer support for all given validation layers
- * @returns Whether or not all validation layers given are supported
- */
-bool MainHandler::checkValidationLayerSupport() const {
-	auto availableLayers = vk::enumerateInstanceLayerProperties();
-	
-	for (const std::string& layerName : validationLayers) {
-		bool layerFound = false;
-		for (const auto& layerProperties : availableLayers) {
-			if (layerName == layerProperties.layerName) {
-				layerFound = true;
-				break;
-			}
-		}
-
-		if (!layerFound) return false;
-	}
-
-	return true;
-}
-
 /**
  * The Vulkan Debug Validation Layer callback function
  * @param severity The severity of the message

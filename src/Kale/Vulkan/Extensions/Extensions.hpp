@@ -24,40 +24,35 @@ namespace Kale::Vulkan {
 	/**
 	 * Vulkan Instance extensions which are required, if these extensions are not found then the program will exit
 	 */
-	const std::vector<std::string> vulkanRequiredInstanceExtensions = {
-		// Empty for now
-	};
+	extern const std::vector<std::string> requiredInstanceExtensions;
 
 	/**
 	 * Vulkan Instance extensions which are not required but will be used if present/available
 	 */
-	const std::vector<std::string> vulkanRequestedInstanceExtensions = {
-		// Empty for now
-	};
+	extern const std::vector<std::string> requestedInstanceExtensions;
 
 	/**
 	 * Vulkan Device extensions which are required, if these extensions are not found then the program will
 	 * not consider the physical device for usage
 	 */
-	const std::vector<std::string> vulkanRequiredDeviceExtensions = {
-		// Empty for now
-	};
+	extern const std::vector<std::string> requiredDeviceExtensions;
 
 	/**
 	 * Vulkan Device extensions which are not required but will be used if present/available
 	 */
-	const std::vector<std::string> vulkanRequestedDeviceExtensions = {
-		// Empty for now
-	};
+	extern const std::vector<std::string> requestedDeviceExtensions;
+
+	#ifdef KALE_DEBUG
 
 	/**
-	 * Gets the list of vulkan extensions given the available extensions, required extensions, and requested extensions
-	 * @throws Throws when a required extension is not found
-	 * @param availableExtensions The available extensions directly from a vulkan enumeration
-	 * @param requiredExtensions The required extensions, if any of these are missing an exception will be thrown
-	 * @param requestedExtensions The requested extensions, these will be added if available
-	 * @returns The list of extensions accounting for all of the above
+	 * All the required validation layers used when debugging
 	 */
-	std::vector<const char*> getVulkanExtensions(const std::vector<const char*>& availableExtensions,
-		const std::vector<std::string>& requiredExtensions, const std::vector<std::string>& requestedExtensions);
+	extern const std::vector<std::string> requiredValidationLayers;
+
+	/**
+	 * All the requested validation layers used when debugging
+	 */
+	extern const std::vector<std::string> requestedValidationLayers;
+
+	#endif
 }
