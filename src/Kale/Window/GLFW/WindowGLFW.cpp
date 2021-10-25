@@ -20,6 +20,8 @@
 #include <Kale/Window/Window.hpp>
 #include <Kale/Events/Events.hpp>
 
+#include <stdexcept>
+
 using namespace Kale;
 
 static std::list<EventHandler*>* handlers = nullptr;
@@ -417,6 +419,20 @@ std::vector<const char*> Window::getCreateInfoExtensions() const {
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 	std::vector<const char*> requiredExtensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 	return requiredExtensions;
+}
+
+/**
+ * Creates a vuklan window surface given the instance and the surface references
+ * @param instance The instance reference
+ * @param surface The surface reference
+ * @throws If the surface creation failed
+ */
+void Window::createWindowSurface(const vk::Instance& instance, vk::SurfaceKHR& surface) const {
+	VkSurfaceKHR tmpSurface;
+	if (glfwCreateWindowSurface(instance, window, nullptr, &tmpSurface) != VK_SUCCESS) {
+		throw std::runtime_error("");
+	}
+	surface = tmpSurface;
 }
 
 /**

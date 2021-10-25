@@ -17,6 +17,7 @@
 #pragma once
 
 #include <optional>
+#include <unordered_set>
 #include <vulkan/vulkan.hpp>
 
 namespace Kale::Vulkan {
@@ -37,16 +38,27 @@ namespace Kale::Vulkan {
 		std::optional<uint32_t> graphicsFamilyIndex;
 
 		/**
-		 * Gets all the required queue family indices given all the properties
-		 * @param deviceId the device to link to
-		 * @param properties All of the properties
+		 * The presentation family queue index
 		 */
-		QueueFamilyIndices(uint32_t deviceId, const std::vector<vk::QueueFamilyProperties>& properties);
+		std::optional<uint32_t> presentFamilyIndex;
+
+		/**
+		 * Gets all the required queue family indices
+		 * @param device The physical device to check for
+		 * @param surface The surface for rendering
+		 */
+		QueueFamilyIndices(const vk::PhysicalDevice& device, const vk::SurfaceKHR& surface);
 
 		/**
 		 * Returns whether or not this physical device contains all required queue family indices
 		 * @returns Whether or not this physical device contains all required queue family indices
 		 */
 		bool hasAllIndices() const;
+
+		/**
+		 * Gets an unordered set of all the unique indices
+		 * @returns All the unique indices
+		 */
+		std::unordered_set<uint32_t> getUniqueIndices() const;
 	};
 }

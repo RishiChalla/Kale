@@ -32,7 +32,7 @@ namespace Kale::Vulkan {
 	 * All the types of queues used for the engine
 	 */
 	enum class QueueType {
-		Graphics
+		Graphics, Presentation
 	};
 
 	/**
@@ -46,6 +46,11 @@ namespace Kale::Vulkan {
 		 * The vulkan instance used for this window
 		 */
 		vk::Instance instance;
+
+		/**
+		 * The vulkan surface used for rendering
+		 */
+		vk::SurfaceKHR surface;
 
 		/**
 		 * The physical GPU used for rendering with vulkan for this application
@@ -86,6 +91,11 @@ namespace Kale::Vulkan {
 		 * @param windowRequiredExtensions The required extensions form the lower level windowing API
 		 */
 		void createInstance(const std::vector<const char*>& windowRequiredExtensions);
+
+		/**
+		 * Creates the vulkan window surface for rendering
+		 */
+		void createSurface();
 
 		/**
 		 * Creates the vulkan logical device object

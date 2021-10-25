@@ -89,11 +89,11 @@ void Application::update() {
  * Runs the application
  */
 void Application::run() {
-	// Setup Vulkan
-	Vulkan::renderer.setupRenderer(window.getCreateInfoExtensions());
-
 	// Creates the window
     window.create(applicationName.c_str());
+	
+	// Setup Vulkan
+	Vulkan::renderer.setupRenderer(window.getCreateInfoExtensions());
     
 	onBegin();
 

@@ -24,9 +24,6 @@ using namespace Kale::Vulkan;
  * Vulkan Instance extensions which are required, if these extensions are not found then the program will exit
  */
 const std::vector<std::string> Kale::Vulkan::requiredInstanceExtensions = {
-	#ifdef KALE_DEBUG
-	VK_EXT_DEBUG_UTILS_EXTENSION_NAME,
-	#endif
 	VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
 };
 
@@ -34,7 +31,9 @@ const std::vector<std::string> Kale::Vulkan::requiredInstanceExtensions = {
  * Vulkan Instance extensions which are not required but will be used if present/available
  */
 const std::vector<std::string> Kale::Vulkan::requestedInstanceExtensions = {
-	// Empty for now
+	#ifdef KALE_DEBUG
+	VK_EXT_DEBUG_UTILS_EXTENSION_NAME // Debug Utils, not a necessity but is nice in debug mode
+	#endif
 };
 
 /**
@@ -42,7 +41,7 @@ const std::vector<std::string> Kale::Vulkan::requestedInstanceExtensions = {
  * not consider the physical device for usage
  */
 const std::vector<std::string> Kale::Vulkan::requiredDeviceExtensions = {
-	// Empty for now
+	VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
 
 /**

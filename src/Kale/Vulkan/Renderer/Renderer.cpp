@@ -79,7 +79,7 @@ std::vector<std::tuple<uint32_t, std::string>> Renderer::getAvailableGPUs() cons
 	for (const vk::PhysicalDevice& device : instance.enumeratePhysicalDevices()) {
 
 		// Ensure that the physical device is a GPU/has all required queue family indices
-		Vulkan::QueueFamilyIndices queueFamilyIndices(0, device.getQueueFamilyProperties());
+		Vulkan::QueueFamilyIndices queueFamilyIndices(device, surface);
 		if (!queueFamilyIndices.hasAllIndices()) continue;
 
 		// Get the GPU properties and queue family properties

@@ -36,6 +36,8 @@ void Renderer::setupRenderer(const std::vector<const char*>& windowRequiredExten
 		#ifdef KALE_DEBUG
 		setupDebugMessageCallback();
 		#endif
+		
+		createSurface();
 
 		// Choose the GPU, useGPU will handle logical device creation
 		if (!gpuID.has_value()) {
@@ -62,6 +64,7 @@ void Renderer::cleanupRenderer() {
 		destroyDebugMessageCallback();
 		#endif
 		
+		vkDestroySurfaceKHR(instance, surface, nullptr);
 		logicalDevice.destroy();
 		instance.destroy();
 	}
@@ -154,6 +157,13 @@ void Renderer::createInstance(const std::vector<const char*>& windowRequiredExte
 }
 
 /**
+ * Creates the vulkan window surface for rendering
+ */
+void Renderer::createSurface() {
+	mainApp->getWindow().createWindowSurface(instance, surface);
+}
+
+/**
  * Creates the vulkan logical device object
  */
 void Renderer::createLogicalDevice() {
@@ -167,13 +177,17 @@ void Renderer::createLogicalDevice() {
 	}
 
 	// Get all the required indices
-	Vulkan::QueueFamilyIndices indices(physicalDevice.getProperties().deviceID, physicalDevice.getQueueFamilyProperties());
+	Vulkan::QueueFamilyIndices indices(physicalDevice, surface);
 	
 	// Create the queue create info
 	std::vector<const float> priorities = {1.0f};
-	std::vector<vk::DeviceQueueCreateInfo> queueCreateInfo = {
-		vk::DeviceQueueCreateInfo({}, indices.graphicsFamilyIndex.value(), priorities)
-	};
+	std::unordered_set<uint32_t> uniqueIndices = indices.getUniqueIndices();
+	std::vector<vk::DeviceQueueCreateInfo> queueCreateInfo;
+
+	// Populate the queue create info vector 
+	for (uint32_t i : uniqueIndices) {
+		queueCreateInfo.push_back(vk::DeviceQueueCreateInfo({}, i, priorities));
+	}
 
 	// Choose all required device features we desire
 	vk::PhysicalDeviceFeatures features;
@@ -194,4 +208,5 @@ void Renderer::createLogicalDevice() {
 	// Create the logical device
 	logicalDevice = physicalDevice.createDevice(createInfo);
 	queues[QueueType::Graphics] = logicalDevice.getQueue(indices.graphicsFamilyIndex.value(), 0);
+	queues[QueueType::Presentation] = logicalDevice.getQueue(indices.presentFamilyIndex.value(), 0);
 }

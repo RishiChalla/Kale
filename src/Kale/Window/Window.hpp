@@ -28,6 +28,17 @@
 #include <Kale/Math/Vector/Vector.hpp>
 
 namespace Kale {
+
+	/**
+	 * Forward declaration of vulkan namespace
+	 */
+	namespace Vulkan {
+
+		/**
+		 * Forward declaration of vulkan renderer class
+		 */
+		class Renderer;
+	}
 	
 	/**
 	 * Forward declaration of the event handler class
@@ -78,8 +89,17 @@ namespace Kale {
 		 * @returns The required extensions for the lower level windowing API
 		 */
 		std::vector<const char*> getCreateInfoExtensions() const;
+
+		/**
+		 * Creates a vuklan window surface given the instance and the surface references
+		 * @param instance The instance reference
+		 * @param surface The surface reference
+		 * @throws If the surface creation failed
+		 */
+		void createWindowSurface(const vk::Instance& instance, vk::SurfaceKHR& surface) const;
 		
 		friend class Application;
+		friend class Vulkan::Renderer;
 		friend class Scene;
 		
 	public:

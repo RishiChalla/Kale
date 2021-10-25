@@ -20,18 +20,19 @@ using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
- * Gets all the required queue family indices given all the properties
- * @param deviceId the device to link to
- * @param properties All of the properties
+ * Gets all the required queue family indices
+ * @param device The physical device to check for
+ * @param surface The surface for rendering
  */
-QueueFamilyIndices::QueueFamilyIndices(uint32_t deviceId, const std::vector<vk::QueueFamilyProperties>& properties) :
-	physicalDeviceId(deviceId) {
+QueueFamilyIndices::QueueFamilyIndices(const vk::PhysicalDevice& device, const vk::SurfaceKHR& surface) :
+	physicalDeviceId(device.getProperties().deviceID) {
 	
 	// Loop through the family properties and set each indices
 	uint32_t i = 0;
-	for (const vk::QueueFamilyProperties& familyProperties : properties) {
+	for (const vk::QueueFamilyProperties& familyProperties : device.getQueueFamilyProperties()) {
 		// Check the queue flags and set the indices based on them
 		if (familyProperties.queueFlags & vk::QueueFlagBits::eGraphics) graphicsFamilyIndex = i;
+		if (device.getSurfaceSupportKHR(i, surface)) presentFamilyIndex = i;
 
 		// Break the loop if we've completed all indices
 		if (hasAllIndices()) break;
@@ -44,5 +45,16 @@ QueueFamilyIndices::QueueFamilyIndices(uint32_t deviceId, const std::vector<vk::
  * @returns Whether or not this physical device contains all required queue family indices
  */
 bool QueueFamilyIndices::hasAllIndices() const {
-	return graphicsFamilyIndex.has_value();
+	return graphicsFamilyIndex.has_value() && presentFamilyIndex.has_value();
+}
+
+/**
+ * Gets an unordered set of all the unique indices
+ * @returns All the unique indices
+ */
+std::unordered_set<uint32_t> QueueFamilyIndices::getUniqueIndices() const {
+	std::unordered_set<uint32_t> set;
+	if (graphicsFamilyIndex.has_value()) set.insert(graphicsFamilyIndex.value());
+	if (presentFamilyIndex.has_value()) set.insert(presentFamilyIndex.value());
+	return set;
 }
