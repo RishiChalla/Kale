@@ -177,7 +177,7 @@ void Renderer::createLogicalDevice() {
 	}
 
 	// Get all the required indices
-	Vulkan::QueueFamilyIndices indices(physicalDevice, surface);
+	QueueFamilyIndices indices(physicalDevice, surface);
 	
 	// Create the queue create info
 	std::vector<const float> priorities = {1.0f};

@@ -17,6 +17,8 @@
 #include "Renderer.hpp"
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
+#include <Kale/Vulkan/Extensions/Extensions.hpp>
+#include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
 #include <stdexcept>
 #include <algorithm>
 
@@ -79,8 +81,27 @@ std::vector<std::tuple<uint32_t, std::string>> Renderer::getAvailableGPUs() cons
 	for (const vk::PhysicalDevice& device : instance.enumeratePhysicalDevices()) {
 
 		// Ensure that the physical device is a GPU/has all required queue family indices
-		Vulkan::QueueFamilyIndices queueFamilyIndices(device, surface);
+		QueueFamilyIndices queueFamilyIndices(device, surface);
 		if (!queueFamilyIndices.hasAllIndices()) continue;
+
+		// Ensure the GPU has all required extensions
+		try {
+			getExtensions<vk::ExtensionProperties>(
+				device.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
+				requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
+				
+				// Map extension proprty to a const char*
+				return std::string(p.extensionName);
+			});
+		}
+		catch (const std::exception& e) {
+			// This device is lacking a required extension
+			continue;
+		}
+
+		// Ensure the GPU has swap chain support
+		SwapChainSupportDetails swapChainSupport(device, surface);
+		if (!swapChainSupport.deviceIsAdequate()) continue;
 
 		// Get the GPU properties and queue family properties
 		vk::PhysicalDeviceProperties properties = device.getProperties();

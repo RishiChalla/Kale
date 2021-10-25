@@ -113,7 +113,7 @@ namespace Kale::Vulkan {
 		 */
 		template <typename T> std::vector<const char*> getExtensions(const std::vector<T>& availableExtensions,
 			const std::vector<std::string>& requiredExtensions, const std::vector<std::string>& requestedExtensions,
-			std::function<std::string (const T&)> mappingFn) {
+			std::function<std::string (const T&)> mappingFn) const {
 
 			// Filter the extensions out
 			std::vector<const char*> extensions;
