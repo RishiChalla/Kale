@@ -38,3 +38,15 @@ SwapChainSupportDetails::SwapChainSupportDetails(const vk::PhysicalDevice& physi
 bool SwapChainSupportDetails::deviceIsAdequate() const {
 	return !formats.empty() && !presentModes.empty();
 }
+
+/**
+ * Chooses a surface format which passes all required checks for use for rendering
+ * @returns The chosen surface format
+ */
+const vk::SurfaceFormatKHR& SwapChainSupportDetails::chooseFormat() const {
+	for (const vk::SurfaceFormatKHR& format : formats)
+		if (format.format == vk::Format::eR8G8B8A8Srgb && format.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear)
+			return format;
+	
+	return formats[0];
+}

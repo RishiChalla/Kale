@@ -58,5 +58,11 @@ namespace Kale::Vulkan {
 		 * @returns True when there is at least one format and present mode
 		 */
 		bool deviceIsAdequate() const;
+
+		/**
+		 * Chooses a surface format which passes all required checks for use for rendering
+		 * @returns The chosen surface format
+		 */
+		const vk::SurfaceFormatKHR& chooseFormat() const;
 	};
 }
