@@ -127,3 +127,9 @@ namespace Kale {
 	 */
 	extern Application* mainApp;
 }
+
+/**
+ * Create your inherited application here and heap allocate it.
+ * Do not worry about its destruction, the engine will take care of it.
+ */
+extern Kale::Application* createApplication();

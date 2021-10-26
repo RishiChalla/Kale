@@ -19,12 +19,6 @@
 using namespace Kale;
 
 /**
- * Create your inherited application here and heap allocate it.
- * Do not worry about its destruction, the engine will take care of it.
- */
-extern Application* createApplication();
-
-/**
  * The main function/entry point of the program
  */
 int main() {

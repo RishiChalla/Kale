@@ -64,8 +64,7 @@ void Renderer::setupDebugMessageCallback() {
 	createInfo.messageSeverity = MessageSeverity::eError | MessageSeverity::eWarning |
 		MessageSeverity::eInfo | MessageSeverity::eVerbose;
 	#else
-	createInfo.messageSeverity = MessageSeverity::eError | MessageSeverity::eWarning |
-		MessageSeverity::eInfo;
+	createInfo.messageSeverity = MessageSeverity::eError | MessageSeverity::eWarning;
 	#endif
 	createInfo.messageType = MessageType::eGeneral | MessageType::ePerformance | MessageType::eValidation;
 	createInfo.pfnUserCallback = debugCallback;

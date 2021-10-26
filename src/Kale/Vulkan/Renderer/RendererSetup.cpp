@@ -180,13 +180,13 @@ void Renderer::createLogicalDevice() {
 	QueueFamilyIndices indices(physicalDevice, surface);
 	
 	// Create the queue create info
-	std::vector<const float> priorities = {1.0f};
+	std::vector<float> priorities = {1.0f};
 	std::unordered_set<uint32_t> uniqueIndices = indices.getUniqueIndices();
 	std::vector<vk::DeviceQueueCreateInfo> queueCreateInfo;
 
 	// Populate the queue create info vector 
 	for (uint32_t i : uniqueIndices) {
-		queueCreateInfo.push_back(vk::DeviceQueueCreateInfo({}, i, priorities));
+		queueCreateInfo.emplace_back(vk::DeviceQueueCreateFlags(), i, 1, priorities.data());
 	}
 
 	// Choose all required device features we desire
@@ -203,7 +203,8 @@ void Renderer::createLogicalDevice() {
 	});
 
 	// Create the logical device create info
-	vk::DeviceCreateInfo createInfo({}, queueCreateInfo, {}, extensions, &features);
+	vk::DeviceCreateInfo createInfo(vk::DeviceCreateFlags(), queueCreateInfo.size(), queueCreateInfo.data(),
+		0, nullptr, extensions.size(), extensions.data(), &features);
 
 	// Create the logical device
 	logicalDevice = physicalDevice.createDevice(createInfo);

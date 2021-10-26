@@ -5,8 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.cpp src/*.hpp)
-
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.cpp src/*.hpp)
 add_library(Kale STATIC ${sources})
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${sources})
 
