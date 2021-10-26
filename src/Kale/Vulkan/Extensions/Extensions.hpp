@@ -18,8 +18,56 @@
 
 #include <string>
 #include <vector>
+#include <functional>
+#include <algorithm>
 
 namespace Kale::Vulkan {
+
+	/**
+	 * Gets the list of vulkan extensions given the available extensions, required extensions, and requested extensions
+	 * @throws Throws when a required extension is not found
+	 * @param availableExtensions The available extensions directly from a vulkan enumeration
+	 * @param requiredExtensions The required extensions, if any of these are missing an exception will be thrown
+	 * @param requestedExtensions The requested extensions, these will be added if available
+	 * @param mappingFn A lambda to map from a vulkan type or any other type to strings
+	 * @returns The list of extensions accounting for all of the above
+	 */
+	template <typename T> std::vector<const char*> getExtensions(const std::vector<T>& availableExtensions,
+		const std::vector<std::string>& requiredExtensions, const std::vector<std::string>& requestedExtensions,
+		std::function<std::string (const T&)> mappingFn) {
+
+		// Filter the extensions out
+		std::vector<const char*> extensions;
+
+		// Find all required extensions
+		for (const std::string& requiredExtension : requiredExtensions) {
+
+			// If a required extension isn't found then throw an error
+			if (std::find_if(availableExtensions.begin(), availableExtensions.end(), [&](const T& availableExtension) {
+				return requiredExtension == mappingFn(availableExtension);
+			}) == availableExtensions.end())
+				throw std::runtime_error("Unable to find required extension - " + requiredExtension);
+			
+			// Add the extension
+			extensions.push_back(requiredExtension.c_str());
+		}
+
+		// Find requested extensions
+		for (const std::string& requestedExtension : requestedExtensions) {
+
+			// Skip this extension if its not found
+			if (std::find_if(availableExtensions.begin(), availableExtensions.end(), [&](const T& availableExtension) {
+				return requestedExtension == mappingFn(availableExtension);
+			}) == availableExtensions.end())
+				continue;
+			
+			// If found add the extension
+			extensions.push_back(requestedExtension.c_str());
+		}
+
+		// Return our processed extensions
+		return extensions;
+	}
 
 	/**
 	 * Vulkan Instance extensions which are required, if these extensions are not found then the program will exit
