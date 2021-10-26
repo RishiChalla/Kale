@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cmath>
+#include <algorithm>
 
 namespace Kale {
 
@@ -58,13 +59,22 @@ namespace Kale {
 			y /= o.y;
 		}
 
-		Vector2<T> operator+(Vector2<T> o) { return Vector2<T>(x + o.x, y + o.y); }
-		Vector2<T> operator-(Vector2<T> o) { return Vector2<T>(x - o.x, y - o.y); }
-		Vector2<T> operator*(Vector2<T> o) { return Vector2<T>(x * o.x, y * o.y); }
-		Vector2<T> operator/(Vector2<T> o) { return Vector2<T>(x / o.x, y / o.y); }
+		Vector2<T> operator+(Vector2<T> o) const { return Vector2<T>(x + o.x, y + o.y); }
+		Vector2<T> operator-(Vector2<T> o) const { return Vector2<T>(x - o.x, y - o.y); }
+		Vector2<T> operator*(Vector2<T> o) const { return Vector2<T>(x * o.x, y * o.y); }
+		Vector2<T> operator/(Vector2<T> o) const { return Vector2<T>(x / o.x, y / o.y); }
 
-		T dot(Vector2<T> o) { return o.x * x + o.y * y; }
-		double magnitude() { return sqrt(static_cast<double>(x * x + y * y)); }
+		T dot(Vector2<T> o) const { return o.x * x + o.y * y; }
+		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y)); }
+
+		Vector2<T> clamp(T minX, T maxX, T minY, T maxY) const {
+			return Vector2<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY));
+		}
+
+		void clampTo(T minX, T maxX, T minY, T maxY) {
+			x = std::clamp(x, minX, maxX);
+			y = std::clamp(y, minY, maxY);
+		}
 
 		template <typename A>
 		Vector2<A> cast() const {
@@ -120,13 +130,23 @@ namespace Kale {
 			z /= o.z;
 		}
 
-		Vector3<T> operator+(Vector3<T> o) { return Vector3<T>(x + o.x, y + o.y, z + o.z); }
-		Vector3<T> operator-(Vector3<T> o) { return Vector3<T>(x - o.x, y - o.y, z - o.z); }
-		Vector3<T> operator*(Vector3<T> o) { return Vector3<T>(x * o.x, y * o.y, z * o.z); }
-		Vector3<T> operator/(Vector3<T> o) { return Vector3<T>(x / o.x, y / o.y, z / o.z); }
+		Vector3<T> operator+(Vector3<T> o) const { return Vector3<T>(x + o.x, y + o.y, z + o.z); }
+		Vector3<T> operator-(Vector3<T> o) const { return Vector3<T>(x - o.x, y - o.y, z - o.z); }
+		Vector3<T> operator*(Vector3<T> o) const { return Vector3<T>(x * o.x, y * o.y, z * o.z); }
+		Vector3<T> operator/(Vector3<T> o) const { return Vector3<T>(x / o.x, y / o.y, z / o.z); }
 
-		T dot(Vector3<T> o) { return o.x * x + o.y * y + o.z * z; }
-		double magnitude() { return sqrt(static_cast<double>(x * x + y * y + z * z)); }
+		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
+		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z)); }
+
+		Vector3<T> clamp(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) const {
+			return Vector3<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY), std::clamp(z, minZ, maxZ));
+		}
+
+		void clampTo(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) {
+			x = std::clamp(x, minX, maxX);
+			y = std::clamp(y, minY, maxY);
+			z = std::clamp(z, minZ, maxZ);
+		}
 
 		template <typename A>
 		Vector3<A> cast() const {
@@ -192,13 +212,25 @@ namespace Kale {
 			w /= o.w;
 		}
 
-		Vector4<T> operator+(Vector4<T> o) { return Vector4<T>(x + o.x, y + o.y, z + o.z, w + o.w); }
-		Vector4<T> operator-(Vector4<T> o) { return Vector4<T>(x - o.x, y - o.y, z - o.z, w - o.w); }
-		Vector4<T> operator*(Vector4<T> o) { return Vector4<T>(x * o.x, y * o.y, z * o.z, w * o.w); }
-		Vector4<T> operator/(Vector4<T> o) { return Vector4<T>(x / o.x, y / o.y, z / o.z, w / o.w); }
+		Vector4<T> operator+(Vector4<T> o) const { return Vector4<T>(x + o.x, y + o.y, z + o.z, w + o.w); }
+		Vector4<T> operator-(Vector4<T> o) const { return Vector4<T>(x - o.x, y - o.y, z - o.z, w - o.w); }
+		Vector4<T> operator*(Vector4<T> o) const { return Vector4<T>(x * o.x, y * o.y, z * o.z, w * o.w); }
+		Vector4<T> operator/(Vector4<T> o) const { return Vector4<T>(x / o.x, y / o.y, z / o.z, w / o.w); }
 
-		T dot(Vector4<T> o) { return o.x * x + o.y * y + o.z * z + o.w * w; }
-		double magnitude() { return sqrt(static_cast<double>(x * x + y * y + z * z + w * w)); }
+		T dot(Vector4<T> o) const { return o.x * x + o.y * y + o.z * z + o.w * w; }
+		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z + w * w)); }
+
+		Vector4<T> clamp(T minX, T maxX, T minY, T maxY, T minZ, T maxZ, T minW, T maxW) const {
+			return Vector4<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY),
+				std::clamp(z, minZ, maxZ), std::clamp(w, minW, maxW));
+		}
+
+		void clampTo(T minX, T maxX, T minY, T maxY, T minZ, T maxZ, T minW, T maxW) {
+			x = std::clamp(x, minX, maxX);
+			y = std::clamp(y, minY, maxY);
+			z = std::clamp(z, minZ, maxZ);
+			w = std::clamp(w, minW, maxW);
+		}
 
 		template <typename A> Vector4<A> cast() const {
 			return Vector4<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z), static_cast<A>(w));
@@ -216,6 +248,7 @@ namespace Kale {
 	typedef Vector2<long long> Vector2ll;
 	typedef Vector2<unsigned long long> Vector2ull;
 	typedef Vector2<size_t> Vector2st;
+	typedef Vector2<uint32_t> Vector2ui32;
 	typedef Vector2<float> Vector2f;
 	typedef Vector2<double> Vector2d;
 
@@ -230,6 +263,7 @@ namespace Kale {
 	typedef Vector3<long long> Vector3ll;
 	typedef Vector3<unsigned long long> Vector3ull;
 	typedef Vector3<size_t> Vector3st;
+	typedef Vector3<uint32_t> Vector3ui32;
 	typedef Vector3<float> Vector3f;
 	typedef Vector3<double> Vector3d;
 
@@ -244,6 +278,7 @@ namespace Kale {
 	typedef Vector4<long long> Vector4ll;
 	typedef Vector4<unsigned long long> Vector4ull;
 	typedef Vector4<size_t> Vector4st;
+	typedef Vector4<uint32_t> Vector4ui32;
 	typedef Vector4<float> Vector4f;
 	typedef Vector4<double> Vector4d;
 

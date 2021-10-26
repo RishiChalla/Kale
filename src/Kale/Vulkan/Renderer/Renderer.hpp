@@ -93,9 +93,9 @@ namespace Kale::Vulkan {
 		void createInstance(const std::vector<const char*>& windowRequiredExtensions);
 
 		/**
-		 * Creates the vulkan window surface for rendering
+		 * Creates the swapchain used for rendering this program
 		 */
-		void createSurface();
+		void createSwapChain();
 
 		/**
 		 * Creates the vulkan logical device object

@@ -17,8 +17,11 @@
 #include "Renderer.hpp"
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
+#include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
 #include <stdexcept>
 #include <exception>
+#include <algorithm>
+#include <limits>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -37,7 +40,8 @@ void Renderer::setupRenderer(const std::vector<const char*>& windowRequiredExten
 		setupDebugMessageCallback();
 		#endif
 		
-		createSurface();
+		// Create window surface for rendering
+		mainApp->getWindow().createWindowSurface(instance, surface);
 
 		// Choose the GPU, useGPU will handle logical device creation
 		if (!gpuID.has_value()) {
@@ -48,6 +52,8 @@ void Renderer::setupRenderer(const std::vector<const char*>& windowRequiredExten
 		else {
 			useGPU(gpuID.value());
 		}
+
+		createSwapChain();
 	}
 	catch (const std::exception& e) {
 		console.error(e.what());
@@ -157,13 +163,6 @@ void Renderer::createInstance(const std::vector<const char*>& windowRequiredExte
 }
 
 /**
- * Creates the vulkan window surface for rendering
- */
-void Renderer::createSurface() {
-	mainApp->getWindow().createWindowSurface(instance, surface);
-}
-
-/**
  * Creates the vulkan logical device object
  */
 void Renderer::createLogicalDevice() {
@@ -210,4 +209,26 @@ void Renderer::createLogicalDevice() {
 	logicalDevice = physicalDevice.createDevice(createInfo);
 	queues[QueueType::Graphics] = logicalDevice.getQueue(indices.graphicsFamilyIndex.value(), 0);
 	queues[QueueType::Presentation] = logicalDevice.getQueue(indices.presentFamilyIndex.value(), 0);
+}
+
+/**
+ * Creates the swapchain used for rendering this program
+ */
+void Renderer::createSwapChain() {
+	SwapChainSupportDetails details(physicalDevice, surface);
+	vk::SurfaceFormatKHR format = details.chooseFormat();
+	vk::PresentModeKHR presentMode = details.choosePresentMode();
+	vk::Extent2D extent = details.chooseSwapExtent();
+
+	uint32_t imageCount = std::min(details.capabilities.minImageCount + 1,
+		details.capabilities.maxImageCount == 0 ? std::numeric_limits<uint32_t>::max() : details.capabilities.maxImageCount);
+	
+	vk::SwapchainCreateInfoKHR createInfo;
+	createInfo.surface = surface;
+	createInfo.minImageCount = imageCount;
+	createInfo.imageFormat = format.format;
+	createInfo.imageColorSpace = format.colorSpace;
+	createInfo.imageExtent = extent;
+	createInfo.imageArrayLayers = 1;
+	createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
 }

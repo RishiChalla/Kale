@@ -15,6 +15,8 @@
 */
 
 #include "SwapChainSupportDetails.hpp"
+#include <limits>
+#include <Kale/Application/Application.hpp>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -43,10 +45,37 @@ bool SwapChainSupportDetails::deviceIsAdequate() const {
  * Chooses a surface format which passes all required checks for use for rendering
  * @returns The chosen surface format
  */
-const vk::SurfaceFormatKHR& SwapChainSupportDetails::chooseFormat() const {
+vk::SurfaceFormatKHR SwapChainSupportDetails::chooseFormat() const {
 	for (const vk::SurfaceFormatKHR& format : formats)
 		if (format.format == vk::Format::eR8G8B8A8Srgb && format.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear)
 			return format;
 	
 	return formats[0];
+}
+
+/**
+ * Chooses a presentation mode for the application to use
+ * @returns The chosen presentation mode
+ */
+vk::PresentModeKHR SwapChainSupportDetails::choosePresentMode() const {
+	// TODO - Add configuration settings for high/medium/low graphics
+	return vk::PresentModeKHR::eFifo;
+}
+
+/**
+ * Chooses The resolution of the swap chain images
+ * @returns The resolution of the swap chain images
+ */
+vk::Extent2D SwapChainSupportDetails::chooseSwapExtent() const {
+	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+		// We're required to use the vulkan/window currnet extent
+		return capabilities.currentExtent;
+	}
+	else {
+		// Get the window size and clamp it then return
+		Vector2ui32 winSize = mainApp->getWindow().getSize().cast<uint32_t>();
+		winSize.clampTo(capabilities.minImageExtent.width, capabilities.maxImageExtent.width,
+			capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+		return vk::Extent2D{winSize.x, winSize.y};
+	}
 }

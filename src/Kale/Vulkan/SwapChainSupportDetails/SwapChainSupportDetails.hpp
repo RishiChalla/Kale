@@ -63,6 +63,18 @@ namespace Kale::Vulkan {
 		 * Chooses a surface format which passes all required checks for use for rendering
 		 * @returns The chosen surface format
 		 */
-		const vk::SurfaceFormatKHR& chooseFormat() const;
+		vk::SurfaceFormatKHR chooseFormat() const;
+
+		/**
+		 * Chooses a presentation mode for the application to use
+		 * @returns The chosen presentation mode
+		 */
+		vk::PresentModeKHR choosePresentMode() const;
+
+		/**
+		 * Chooses The resolution of the swap chain images
+		 * @returns The resolution of the swap chain images
+		 */
+		vk::Extent2D chooseSwapExtent() const;
 	};
 }
