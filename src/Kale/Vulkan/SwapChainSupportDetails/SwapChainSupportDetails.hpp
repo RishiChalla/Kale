@@ -27,11 +27,6 @@ namespace Kale::Vulkan {
 	struct SwapChainSupportDetails {
 
 		/**
-		 * The id of the physical device this swap chain support details is linked to
-		 */
-		const uint32_t deviceId;
-
-		/**
 		 * The capabilities of the surface
 		 */
 		vk::SurfaceCapabilitiesKHR capabilities;
@@ -47,11 +42,15 @@ namespace Kale::Vulkan {
 		std::vector<vk::PresentModeKHR> presentModes;
 
 		/**
+		 * Creates an unitialized object
+		 */
+		SwapChainSupportDetails();
+
+		/**
 		 * Populates the struct given the physical device and the surface
 		 * @param physicalDevice The physical device to check for
-		 * @param surface The surface to check for
 		 */
-		SwapChainSupportDetails(const vk::PhysicalDevice& physicalDevice, const vk::SurfaceKHR& surface);
+		SwapChainSupportDetails(const vk::PhysicalDevice& physicalDevice);
 
 		/**
 		 * Checks whether or not the device is adequate for our purposes (Must have at least 1 format & present mode)

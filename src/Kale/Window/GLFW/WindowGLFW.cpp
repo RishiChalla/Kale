@@ -413,7 +413,7 @@ void Window::update() {
  * Gets the extensions required for VKCreateInfo depending on the windowing API
  * @returns The required extensions for the lower level windowing API
  */
-std::vector<const char*> Window::getCreateInfoExtensions() const {
+std::vector<const char*> Window::getInstanceExtensions() const {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions;
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);

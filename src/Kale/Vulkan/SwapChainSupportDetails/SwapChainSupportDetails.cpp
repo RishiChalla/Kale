@@ -17,18 +17,26 @@
 #include "SwapChainSupportDetails.hpp"
 #include <limits>
 #include <Kale/Application/Application.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
+ * Creates an unitialized object
+ */
+SwapChainSupportDetails::SwapChainSupportDetails() {
+	// Empty Body
+}
+
+/**
  * Populates the struct given the physical device and the surface
  * @param physicalDevice The physical device to check for
- * @param surface The surface to check for
  */
-SwapChainSupportDetails::SwapChainSupportDetails(const vk::PhysicalDevice& physicalDevice, const vk::SurfaceKHR& surface) :
-	deviceId(physicalDevice.getProperties().deviceID), capabilities(physicalDevice.getSurfaceCapabilitiesKHR(surface)),
-	formats(physicalDevice.getSurfaceFormatsKHR(surface)), presentModes(physicalDevice.getSurfacePresentModesKHR(surface)) {
+SwapChainSupportDetails::SwapChainSupportDetails(const vk::PhysicalDevice& physicalDevice) :
+	capabilities(physicalDevice.getSurfaceCapabilitiesKHR(renderer.surface)),
+	formats(physicalDevice.getSurfaceFormatsKHR(renderer.surface)),
+	presentModes(physicalDevice.getSurfacePresentModesKHR(renderer.surface)) {
 	
 	// Empty Body
 }

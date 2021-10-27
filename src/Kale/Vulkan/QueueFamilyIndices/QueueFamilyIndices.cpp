@@ -16,23 +16,30 @@
 
 #include "QueueFamilyIndices.hpp"
 
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
+
 using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
+ * Creates an unitialized object
+ */
+QueueFamilyIndices::QueueFamilyIndices() {
+	// Empty Body
+}
+
+/**
  * Gets all the required queue family indices
  * @param device The physical device to check for
- * @param surface The surface for rendering
  */
-QueueFamilyIndices::QueueFamilyIndices(const vk::PhysicalDevice& device, const vk::SurfaceKHR& surface) :
-	physicalDeviceId(device.getProperties().deviceID) {
+QueueFamilyIndices::QueueFamilyIndices(const vk::PhysicalDevice& device) {
 	
 	// Loop through the family properties and set each indices
 	uint32_t i = 0;
 	for (const vk::QueueFamilyProperties& familyProperties : device.getQueueFamilyProperties()) {
 		// Check the queue flags and set the indices based on them
 		if (familyProperties.queueFlags & vk::QueueFlagBits::eGraphics) graphicsFamilyIndex = i;
-		if (device.getSurfaceSupportKHR(i, surface)) presentFamilyIndex = i;
+		if (device.getSurfaceSupportKHR(i, renderer.surface)) presentFamilyIndex = i;
 
 		// Break the loop if we've completed all indices
 		if (hasAllIndices()) break;

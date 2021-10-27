@@ -28,99 +28,11 @@ using namespace Kale::Vulkan;
 Renderer Kale::Vulkan::renderer;
 
 /**
- * Gets the vulkan instance for this program execution
- * @returns The vulkan instance
- */
-const vk::Instance& Renderer::getInstance() const {
-	return instance;
-}
-
-/**
- * Gets the physical device used for this program, Kale only supports a single
- * physical device at a time. The user may configure this device however
- * @returns The physical device
- */
-const vk::PhysicalDevice& Renderer::getPhysicalDevice() const {
-	return physicalDevice;
-}
-
-/**
- * Gets the logical device used for commands for this program
- * @returns The logical device
- */
-const vk::Device& Renderer::getLogicalDevice() const {
-	return logicalDevice;
-}
-
-/**
- * Gets a Command Queue for passing commands through
- * @param type The type of queue to get
- * @returns The queue to pass commands to, should be thread safe
- */
-vk::Queue& Renderer::operator[](QueueType type) {
-	return queues[type];
-}
-
-/**
- * Gets a Command Queue for passing commands through
- * @param type The type of queue to get
- * @returns The queue to pass commands to, should be thread safe
- */
-const vk::Queue& Renderer::operator[](QueueType type) const {
-	return queues.at(type);
-}
-
-/**
- * Gets all available GPUs to choose from with their IDs and Names
- * @returns A vector of the available GPUs with their ID and name
- */
-std::vector<std::tuple<uint32_t, std::string>> Renderer::getAvailableGPUs() const {
-	std::vector<std::tuple<uint32_t, std::string>> availableGPUs;
-
-	// Loop through all available devices
-	for (const vk::PhysicalDevice& device : instance.enumeratePhysicalDevices()) {
-
-		// Ensure that the physical device is a GPU/has all required queue family indices
-		QueueFamilyIndices queueFamilyIndices(device, surface);
-		if (!queueFamilyIndices.hasAllIndices()) continue;
-
-		// Ensure the GPU has all required extensions
-		try {
-			getExtensions<vk::ExtensionProperties>(
-				device.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
-				requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
-				
-				// Map extension proprty to a const char*
-				return std::string(p.extensionName);
-			});
-		}
-		catch (const std::exception& e) {
-			// This device is lacking a required extension
-			continue;
-		}
-
-		// Ensure the GPU has swap chain support
-		SwapChainSupportDetails swapChainSupport(device, surface);
-		if (!swapChainSupport.deviceIsAdequate()) continue;
-
-		// Get the GPU properties and queue family properties
-		vk::PhysicalDeviceProperties properties = device.getProperties();
-
-		// Add it to the list of available GPUs
-		availableGPUs.push_back(std::make_tuple(properties.deviceID, std::string(properties.deviceName)));
-	}
-
-	return availableGPUs;
-}
-
-/**
  * Gets the GPU information of the physical device currently being used for rendering
- * @returns A tuple of the GPU id and the name
+ * @returns The GPU being used for rendering
  */
-std::tuple<uint32_t, std::string> Renderer::getCurrentGPU() const {
-	// Get the GPU properties
-	vk::PhysicalDeviceProperties properties = physicalDevice.getProperties();
-	return std::make_tuple(properties.deviceID, std::string(properties.deviceName));
+const Device& Renderer::getGPU() const {
+	return device;
 }
 
 /**
@@ -129,16 +41,13 @@ std::tuple<uint32_t, std::string> Renderer::getCurrentGPU() const {
  * @throws If the GPU wasn't found
  */
 void Renderer::useGPU(uint32_t gpuID) {
+	device = Device(gpuID);
+}
 
-	// Loop over all the devices
-	for (vk::PhysicalDevice& device : instance.enumeratePhysicalDevices()) {
-		vk::PhysicalDeviceProperties properties = device.getProperties();
-		if (properties.deviceID != gpuID) continue;
-		console.info("Now using GPU - " + std::string(properties.deviceName));
-		physicalDevice = device;
-		createLogicalDevice();
-		return;
-	}
-
-	throw std::runtime_error("GPU search by ID not found");
+/**
+ * Uses a specific GPU given the physical device
+ * @param pdevice The physical device
+ */
+void Renderer::useGPU(const vk::PhysicalDevice& pdevice) {
+	device = Device(pdevice);
 }

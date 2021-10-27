@@ -93,7 +93,7 @@ void Application::run() {
     window.create(applicationName.c_str());
 	
 	// Setup Vulkan
-	Vulkan::renderer.setupRenderer(window.getCreateInfoExtensions());
+	Vulkan::renderer.setupRenderer();
     
 	onBegin();
 

@@ -28,13 +28,12 @@ using namespace Kale::Vulkan;
 
 /**
  * Sets up the renderer, any functions called prior to this will result in undefined behavior
- * @param windowRequiredExtensions The required extensions form the lower level windowing API
  * @param gpuID the ID of the GPU to use for rendering
  */
-void Renderer::setupRenderer(const std::vector<const char*>& windowRequiredExtensions, std::optional<uint32_t> gpuID) {
+void Renderer::setupRenderer(std::optional<uint32_t> gpuID) {
 
 	try {
-		createInstance(windowRequiredExtensions);
+		createInstance();
 
 		#ifdef KALE_DEBUG
 		setupDebugMessageCallback();
@@ -44,16 +43,12 @@ void Renderer::setupRenderer(const std::vector<const char*>& windowRequiredExten
 		mainApp->getWindow().createWindowSurface(instance, surface);
 
 		// Choose the GPU, useGPU will handle logical device creation
-		if (!gpuID.has_value()) {
-			std::vector<std::tuple<uint32_t, std::string>> gpus = getAvailableGPUs();
-			if (gpus.empty()) throw std::runtime_error("No Available GPU found.");
-			useGPU(std::get<0>(gpus[0]));
-		}
+		if (gpuID.has_value()) device = Device(gpuID.value());
 		else {
-			useGPU(gpuID.value());
+			std::vector<vk::PhysicalDevice> devices(Device::availableDevices());
+			if (devices.empty()) throw std::runtime_error("No Available GPU Found");
+			device = Device(devices[0]);
 		}
-
-		createSwapChain();
 	}
 	catch (const std::exception& e) {
 		console.error(e.what());
@@ -71,7 +66,7 @@ void Renderer::cleanupRenderer() {
 		#endif
 		
 		vkDestroySurfaceKHR(instance, surface, nullptr);
-		logicalDevice.destroy();
+		device.freeResources();
 		instance.destroy();
 	}
 	catch (const std::exception& e) {
@@ -82,9 +77,8 @@ void Renderer::cleanupRenderer() {
 
 /**
  * Creates the vulkan instance for this window
- * @param windowRequiredExtensions The required extensions form the lower level windowing API
  */
-void Renderer::createInstance(const std::vector<const char*>& windowRequiredExtensions) {
+void Renderer::createInstance() {
 	vk::ApplicationInfo appInfo;
 	appInfo.pApplicationName = mainApp->applicationName.c_str();
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -111,6 +105,7 @@ void Renderer::createInstance(const std::vector<const char*>& windowRequiredExte
 		});
 
 		// Add the lower windowing API required extensions, usually don't need to check for support for these
+		std::vector<const char*> windowRequiredExtensions(mainApp->getWindow().getInstanceExtensions());
 		extensions.reserve(extensions.size() + windowRequiredExtensions.size());
 		extensions.insert(extensions.end(), windowRequiredExtensions.begin(), windowRequiredExtensions.end());
 
@@ -160,75 +155,4 @@ void Renderer::createInstance(const std::vector<const char*>& windowRequiredExte
 		console.error("Unable to Init Vulkan");
 		exit(0);
 	}
-}
-
-/**
- * Creates the vulkan logical device object
- */
-void Renderer::createLogicalDevice() {
-
-	// Queues is not empty - meaning we've previously made a logical device which needs to be freed
-	if (!queues.empty()) {
-
-		// Clear all queues then destroy the logical device
-		queues.clear();
-		logicalDevice.destroy();
-	}
-
-	// Get all the required indices
-	QueueFamilyIndices indices(physicalDevice, surface);
-	
-	// Create the queue create info
-	std::vector<float> priorities = {1.0f};
-	std::unordered_set<uint32_t> uniqueIndices = indices.getUniqueIndices();
-	std::vector<vk::DeviceQueueCreateInfo> queueCreateInfo;
-
-	// Populate the queue create info vector 
-	for (uint32_t i : uniqueIndices) {
-		queueCreateInfo.emplace_back(vk::DeviceQueueCreateFlags(), i, 1, priorities.data());
-	}
-
-	// Choose all required device features we desire
-	vk::PhysicalDeviceFeatures features;
-	// TODO - set the required device features to true
-
-	// Set all required device extensions
-	std::vector<const char*> extensions = getExtensions<vk::ExtensionProperties>(
-		physicalDevice.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
-		requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
-		
-		// Map extension proprty to a const char*
-		return std::string(p.extensionName);
-	});
-
-	// Create the logical device create info
-	vk::DeviceCreateInfo createInfo(vk::DeviceCreateFlags(), queueCreateInfo.size(), queueCreateInfo.data(),
-		0, nullptr, extensions.size(), extensions.data(), &features);
-
-	// Create the logical device
-	logicalDevice = physicalDevice.createDevice(createInfo);
-	queues[QueueType::Graphics] = logicalDevice.getQueue(indices.graphicsFamilyIndex.value(), 0);
-	queues[QueueType::Presentation] = logicalDevice.getQueue(indices.presentFamilyIndex.value(), 0);
-}
-
-/**
- * Creates the swapchain used for rendering this program
- */
-void Renderer::createSwapChain() {
-	SwapChainSupportDetails details(physicalDevice, surface);
-	vk::SurfaceFormatKHR format = details.chooseFormat();
-	vk::PresentModeKHR presentMode = details.choosePresentMode();
-	vk::Extent2D extent = details.chooseSwapExtent();
-
-	uint32_t imageCount = std::min(details.capabilities.minImageCount + 1,
-		details.capabilities.maxImageCount == 0 ? std::numeric_limits<uint32_t>::max() : details.capabilities.maxImageCount);
-	
-	vk::SwapchainCreateInfoKHR createInfo;
-	createInfo.surface = surface;
-	createInfo.minImageCount = imageCount;
-	createInfo.imageFormat = format.format;
-	createInfo.imageColorSpace = format.colorSpace;
-	createInfo.imageExtent = extent;
-	createInfo.imageArrayLayers = 1;
-	createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
 }

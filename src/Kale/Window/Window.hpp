@@ -88,7 +88,7 @@ namespace Kale {
 		 * Gets the extensions required for VKCreateInfo depending on the windowing API
 		 * @returns The required extensions for the lower level windowing API
 		 */
-		std::vector<const char*> getCreateInfoExtensions() const;
+		std::vector<const char*> getInstanceExtensions() const;
 
 		/**
 		 * Creates a vuklan window surface given the instance and the surface references

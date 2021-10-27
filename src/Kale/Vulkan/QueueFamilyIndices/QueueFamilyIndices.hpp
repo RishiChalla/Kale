@@ -28,11 +28,6 @@ namespace Kale::Vulkan {
 	struct QueueFamilyIndices {
 
 		/**
-		 * The device ID of the physical device
-		 */
-		const uint32_t physicalDeviceId;
-
-		/**
 		 * The graphics queue family index of the device if it exists
 		 */
 		std::optional<uint32_t> graphicsFamilyIndex;
@@ -43,11 +38,15 @@ namespace Kale::Vulkan {
 		std::optional<uint32_t> presentFamilyIndex;
 
 		/**
+		 * Creates an unitialized object
+		 */
+		QueueFamilyIndices();
+
+		/**
 		 * Gets all the required queue family indices
 		 * @param device The physical device to check for
-		 * @param surface The surface for rendering
 		 */
-		QueueFamilyIndices(const vk::PhysicalDevice& device, const vk::SurfaceKHR& surface);
+		QueueFamilyIndices(const vk::PhysicalDevice& device);
 
 		/**
 		 * Returns whether or not this physical device contains all required queue family indices

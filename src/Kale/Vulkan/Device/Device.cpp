@@ -15,7 +15,265 @@
 */
 
 #include "Device.hpp"
+#include <algorithm>
+#include <stdexcept>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Vulkan/Extensions/Extensions.hpp>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
 
+/**
+ * Creates an uninstantiated device
+ */
+Device::Device() {
+	// Empty Body
+}
+
+/**
+ * Creates a logical device and all appropriate queues given the physical device
+ * @param device The physical device
+ * @throws If the given device is not supported
+ */
+Device::Device(const vk::PhysicalDevice& device) : physicalDevice(device), physicalDeviceProprties(device.getProperties()),
+	queueIndices(device), swapChainSupport(device) {
+	
+	if (!deviceSupported(device)) throw std::runtime_error("Unsupported Device Used");
+
+	createLogicalDevice();
+	getQueues();
+}
+
+/**
+ * Creates a logical device and all appropriate queues given the physical device
+ * @param deviceId The id of the physical device
+ * @throws If the device was not found
+ */
+Device::Device(uint32_t deviceId) {
+	bool found = false;
+	for (const vk::PhysicalDevice& device : Device::availableDevices()) {
+		vk::PhysicalDeviceProperties properties = device.getProperties();
+		if (properties.deviceID != deviceId) continue;
+		physicalDevice = device;
+		physicalDeviceProprties = properties;
+		queueIndices = QueueFamilyIndices(device);
+		swapChainSupport = SwapChainSupportDetails(device);
+		found = true;
+		break;
+	}
+
+	if (!found) throw std::runtime_error("Device not Found");
+
+	createLogicalDevice();
+	getQueues();
+}
+
+/**
+ * Copy Constructor
+ * @param other Object to copy from
+ */
+Device::Device(const Device& other) {
+	physicalDeviceProprties = other.physicalDeviceProprties;
+	physicalDevice = other.physicalDevice;
+	swapchain = other.swapchain;
+	queueIndices = other.queueIndices;
+	swapChainSupport = other.swapChainSupport;
+
+	createLogicalDevice();
+	getQueues();
+}
+
+/**
+ * Move Constructor
+ * @param other Object to move from
+ */
+Device::Device(Device&& other) {
+	physicalDeviceProprties = other.physicalDeviceProprties;
+	physicalDevice = other.physicalDevice;
+	swapchain = other.swapchain;
+	queueIndices = other.queueIndices;
+	swapChainSupport = other.swapChainSupport;
+	logicalDevice = other.logicalDevice;
+	queueMap = other.queueMap; 
+	other.queueMap.clear();
+}
+
+/**
+ * Copy Assignment
+ * @param other Object to copy from
+ */
+void Device::operator=(const Device& other) {
+	freeResources();
+	physicalDeviceProprties = other.physicalDeviceProprties;
+	physicalDevice = other.physicalDevice;
+	swapchain = other.swapchain;
+	queueIndices = other.queueIndices;
+	swapChainSupport = other.swapChainSupport;
+
+	createLogicalDevice();
+	getQueues();
+}
+
+/**
+ * Move Assignment
+ * @param other Object to move from
+ */
+void Device::operator=(Device&& other) {
+	freeResources();
+	physicalDeviceProprties = other.physicalDeviceProprties;
+	physicalDevice = other.physicalDevice;
+	swapchain = other.swapchain;
+	queueIndices = other.queueIndices;
+	swapChainSupport = other.swapChainSupport;
+	logicalDevice = other.logicalDevice;
+	queueMap = other.queueMap; 
+	other.queueMap.clear();
+}
+
+/**
+ * Creates the logical device needed
+ */
+void Device::createLogicalDevice() {
+	
+	// Create the queue create info
+	std::vector<float> priorities = {1.0f};
+	std::unordered_set<uint32_t> uniqueIndices = queueIndices.getUniqueIndices();
+	std::vector<vk::DeviceQueueCreateInfo> queueCreateInfo;
+
+	// Populate the queue create info vector 
+	for (uint32_t i : uniqueIndices) {
+		queueCreateInfo.emplace_back(vk::DeviceQueueCreateFlags(), i, 1, priorities.data());
+	}
+
+	// Choose all required device features we desire
+	vk::PhysicalDeviceFeatures features;
+	// TODO - set the required device features to true
+
+	// Set all required device extensions
+	std::vector<const char*> extensions = getExtensions<vk::ExtensionProperties>(
+		physicalDevice.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
+		requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
+		
+		// Map extension proprty to a const char*
+		return std::string(p.extensionName);
+	});
+
+	// Create the logical device create info
+	vk::DeviceCreateInfo createInfo(vk::DeviceCreateFlags(), queueCreateInfo.size(), queueCreateInfo.data(),
+		0, nullptr, extensions.size(), extensions.data(), &features);
+
+	// Create the logical device
+	logicalDevice = physicalDevice.createDevice(createInfo);
+}
+
+/**
+ * Gets the appropriate queues from the logical device
+ */
+void Device::getQueues() {
+	queueMap[QueueType::Graphics] = logicalDevice.getQueue(queueIndices.graphicsFamilyIndex.value(), 0);
+	queueMap[QueueType::Presentation] = logicalDevice.getQueue(queueIndices.presentFamilyIndex.value(), 0);
+}
+
+/**
+ * Creates a swapchain from this device
+ */
+void Device::createSwapchain() {
+	vk::SurfaceFormatKHR format = swapChainSupport.chooseFormat();
+	vk::PresentModeKHR presentMode = swapChainSupport.choosePresentMode();
+	vk::Extent2D extent = swapChainSupport.chooseSwapExtent();
+
+	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+	if (swapChainSupport.capabilities.maxImageCount != 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
+		imageCount = swapChainSupport.capabilities.maxImageCount;
+	
+	vk::SwapchainCreateInfoKHR createInfo;
+	createInfo.surface = renderer.surface;
+	createInfo.minImageCount = imageCount;
+	createInfo.imageFormat = format.format;
+	createInfo.imageColorSpace = format.colorSpace;
+	createInfo.imageExtent = extent;
+	createInfo.imageArrayLayers = 1;
+	createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
+
+	uint32_t queueFamilyIndices[] = {queueIndices.graphicsFamilyIndex.value(), queueIndices.presentFamilyIndex.value()};
+
+	if (queueIndices.graphicsFamilyIndex == queueIndices.presentFamilyIndex) {
+		createInfo.imageSharingMode = vk::SharingMode::eExclusive;
+	}
+	else {
+		createInfo.imageSharingMode = vk::SharingMode::eConcurrent;
+		createInfo.queueFamilyIndexCount = 2;
+		createInfo.pQueueFamilyIndices = queueFamilyIndices;
+	}
+
+	createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+	createInfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
+	createInfo.presentMode = presentMode;
+	createInfo.clipped = VK_TRUE;
+	createInfo.oldSwapchain = nullptr;
+	
+	swapchain = logicalDevice.createSwapchainKHR(createInfo);
+}
+
+/**
+ * Frees resources if not already freed
+ */
+Device::~Device() {
+	freeResources();
+}
+
+/**
+ * Frees the resources from this device
+ */
+void Device::freeResources() {
+	if (!queueMap.empty()) {
+		vkDestroySwapchainKHR(logicalDevice, swapchain, nullptr);
+		logicalDevice.destroy();
+	}
+	queueMap.clear();
+}
+
+/**
+ * Gets all available and supported physical devices
+ * @returns The available physical devices
+ */
+std::vector<vk::PhysicalDevice> Device::availableDevices() {
+	std::vector<vk::PhysicalDevice> devices = renderer.instance.enumeratePhysicalDevices();
+	devices.erase(std::remove_if(devices.begin(), devices.end(), [](const vk::PhysicalDevice& device) {
+		return !Device::deviceSupported(device);
+	}), devices.end());
+	return devices;
+}
+
+/**
+ * Checks whether or not a given physical device is supported
+ * @param physicalDevice The physical device to check support for
+ * @returns Whether or not the device is supported
+ */
+bool Device::deviceSupported(const vk::PhysicalDevice& physicalDevice) {
+	// Ensure that the physical device is a GPU/has all required queue family indices
+	QueueFamilyIndices queueFamilyIndices(physicalDevice);
+	if (!queueFamilyIndices.hasAllIndices()) return false;
+
+	// Ensure the GPU has all required extensions
+	try {
+		getExtensions<vk::ExtensionProperties>(
+			physicalDevice.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
+			requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
+			
+			// Map extension proprty to a const char*
+			return std::string(p.extensionName);
+		});
+	}
+	catch (const std::exception& e) {
+		// This device is lacking a required extension
+		return false;
+	}
+
+	// Ensure the GPU has swap chain support
+	SwapChainSupportDetails swapChainSupport(physicalDevice);
+	if (!swapChainSupport.deviceIsAdequate()) return false;
+
+	// All checks passed
+	return true;
+}

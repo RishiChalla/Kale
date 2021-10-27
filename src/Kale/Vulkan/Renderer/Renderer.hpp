@@ -17,22 +17,13 @@
 #pragma once
 
 #include <vector>
-#include <map>
 #include <optional>
-#include <tuple>
-#include <string>
 #include <vulkan/vulkan.hpp>
 
+#include <Kale/Vulkan/Device/Device.hpp>
 #include <Kale/Application/Application.hpp>
 
 namespace Kale::Vulkan {
-
-	/**
-	 * All the types of queues used for the engine
-	 */
-	enum class QueueType {
-		Graphics, Presentation
-	};
 
 	/**
 	 * This class handles nearly all vulkan related details including setup, instances, validation layers, etc.
@@ -40,31 +31,6 @@ namespace Kale::Vulkan {
 	class Renderer {
 	
 	private:
-
-		/**
-		 * The vulkan instance used for this window
-		 */
-		vk::Instance instance;
-
-		/**
-		 * The vulkan surface used for rendering
-		 */
-		vk::SurfaceKHR surface;
-
-		/**
-		 * The physical GPU used for rendering with vulkan for this application
-		 */
-		vk::PhysicalDevice physicalDevice;
-
-		/**
-		 * The Device used for using render commands to the chosen physical device
-		 */
-		vk::Device logicalDevice;
-
-		/**
-		 * A map of all the queues this program is using from their type to the command queue
-		 */
-		std::map<QueueType, vk::Queue> queues;
 
 		#ifdef KALE_DEBUG
 
@@ -87,29 +53,31 @@ namespace Kale::Vulkan {
 
 		/**
 		 * Creates the vulkan instance for this window
-		 * @param windowRequiredExtensions The required extensions form the lower level windowing API
 		 */
-		void createInstance(const std::vector<const char*>& windowRequiredExtensions);
-
-		/**
-		 * Creates the swapchain used for rendering this program
-		 */
-		void createSwapChain();
-
-		/**
-		 * Creates the vulkan logical device object
-		 */
-		void createLogicalDevice();
+		void createInstance();
 	
 	protected:
 
 		/**
+		 * The vulkan instance used for this window
+		 */
+		vk::Instance instance;
+
+		/**
+		 * The vulkan surface used for rendering
+		 */
+		vk::SurfaceKHR surface;
+
+		/**
+		 * The GPU used for rendering
+		 */
+		Device device;
+
+		/**
 		 * Sets up the main renderer, any functions called prior to this will result in undefined behavior
-		 * @param windowRequiredExtensions The required extensions form the lower level windowing API
 		 * @param gpuID the ID of the GPU to use for rendering
 		 */
-		void setupRenderer(const std::vector<const char*>& windowRequiredExtensions,
-			std::optional<uint32_t> gpuID = std::optional<uint32_t>());
+		void setupRenderer(std::optional<uint32_t> gpuID = std::optional<uint32_t>());
 
 		/**
 		 * Cleans vulkan objects before the application closes
@@ -117,20 +85,17 @@ namespace Kale::Vulkan {
 		void cleanupRenderer();
 
 		friend class Kale::Application;
+		friend class Device;
+		friend class QueueFamilyIndices;
+		friend class SwapChainSupportDetails;
 	
 	public:
 
 		/**
-		 * Gets all available GPUs to choose from with their IDs and Names
-		 * @returns A vector of the available GPUs with their ID and name
-		 */
-		std::vector<std::tuple<uint32_t, std::string>> getAvailableGPUs() const;
-
-		/**
 		 * Gets the GPU information of the physical device currently being used for rendering
-		 * @returns A tuple of the GPU id and the name
+		 * @returns The GPU being used for rendering
 		 */
-		std::tuple<uint32_t, std::string> getCurrentGPU() const;
+		const Device& getGPU() const;
 
 		/**
 		 * Uses a specific GPU given the ID
@@ -140,37 +105,10 @@ namespace Kale::Vulkan {
 		void useGPU(uint32_t gpuID);
 
 		/**
-		 * Gets the vulkan instance for this program execution
-		 * @returns The vulkan instance
+		 * Uses a specific GPU given the physical device
+		 * @param device The physical device
 		 */
-		const vk::Instance& getInstance() const;
-
-		/**
-		 * Gets the physical device used for this program, Kale only supports a single
-		 * physical device at a time. The user may configure this device however
-		 * @returns The physical device
-		 */
-		const vk::PhysicalDevice& getPhysicalDevice() const;
-
-		/**
-		 * Gets the logical device used for commands for this program
-		 * @returns The logical device
-		 */
-		const vk::Device& getLogicalDevice() const;
-
-		/**
-		 * Gets a Command Queue for passing commands through
-		 * @param type The type of queue to get
-		 * @returns The queue to pass commands to, should be thread safe
-		 */
-		vk::Queue& operator[](QueueType type);
-
-		/**
-		 * Gets a Command Queue for passing commands through
-		 * @param type The type of queue to get
-		 * @returns The queue to pass commands to, should be thread safe
-		 */
-		const vk::Queue& operator[](QueueType type) const;
+		void useGPU(const vk::PhysicalDevice& device);
 	};
 
 	/**

@@ -17,6 +17,7 @@
 #pragma once
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
+#include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
 #include <vulkan/vulkan.hpp>
 #include <map>
 
@@ -32,15 +33,125 @@ namespace Kale::Vulkan {
 	/**
 	 * A simple Kale abstraction over the Vulkan Physical Device and Logical Devices
 	 */
-	struct Device {
+	class Device {
+	private:
+
+		/**
+		 * Creates the logical device needed
+		 */
+		void createLogicalDevice();
+
+		/**
+		 * Gets the appropriate queues from the logical device
+		 */
+		void getQueues();
+
+		/**
+		 * Creates a swapchain from this device given a surface
+		 */
+		void createSwapchain();
+
+	public:
+
+		/**
+		 * The logical device created by the physical device
+		 */
 		vk::Device logicalDevice;
+
+		/**
+		 * The device properties
+		 */
 		vk::PhysicalDeviceProperties physicalDeviceProprties;
+
+		/**
+		 * The physical device
+		 */
 		vk::PhysicalDevice physicalDevice;
+
+		/**
+		 * The swapchain
+		 */
+		vk::SwapchainKHR swapchain;
+
+		/**
+		 * A map of all queue types to their appropriate queues
+		 */
 		std::map<QueueType, vk::Queue> queueMap;
+
+		/**
+		 * All the available queue family indices
+		 */
 		QueueFamilyIndices queueIndices;
+
+		/**
+		 * Information regarding this device's swapchain support
+		 */
+		SwapChainSupportDetails swapChainSupport;
+
+		/**
+		 * Creates an uninstantiated device
+		 */
+		Device();
 		
-		static std::vector<vk::Device> availableDevices();
-		vk::SwapchainKHR createSwapchain(const vk::SurfaceKHR& surface) const;
+		/**
+		 * Creates a logical device and all appropriate queues given the physical device
+		 * @param device The physical device
+		 * @throws If the given device is not supported
+		 */
+		Device(const vk::PhysicalDevice& device);
+
+		/**
+		 * Creates a logical device and all appropriate queues given the physical device
+		 * @param deviceId The id of the physical device
+		 * @throws If the device was not found
+		 */
+		Device(uint32_t deviceId);
+
+		/**
+		 * Copy Constructor
+		 * @param other Object to copy from
+		 */
+		Device(const Device& other);
 		
+		/**
+		 * Move Constructor
+		 * @param other Object to move from
+		 */
+		Device(Device&& other);
+
+		/**
+		 * Copy Assignment
+		 * @param other Object to copy from
+		 */
+		void operator=(const Device& other);
+
+		/**
+		 * Move Assignment
+		 * @param other Object to move from
+		 */
+		void operator=(Device&& other);
+
+		/**
+		 * Frees resources if not already freed
+		 */
+		~Device();
+
+		/**
+		 * Frees the resources from this device
+		 */
+		void freeResources();
+
+		/**
+		 * Gets all available and supported physical devices
+		 * @returns The available physical devices
+		 */
+		static std::vector<vk::PhysicalDevice> availableDevices();
+
+		/**
+		 * Checks whether or not a given physical device is supported
+		 * @param physicalDevice The physical device to check support for
+		 * @returns Whether or not the device is supported
+		 */
+		static bool deviceSupported(const vk::PhysicalDevice& physicalDevice);
 	};
 }
