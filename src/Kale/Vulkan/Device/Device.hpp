@@ -18,6 +18,7 @@
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
+#include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 #include <vulkan/vulkan.hpp>
 #include <map>
 
@@ -46,11 +47,6 @@ namespace Kale::Vulkan {
 		 */
 		void getQueues();
 
-		/**
-		 * Creates a swapchain from this device given a surface
-		 */
-		void createSwapchain();
-
 	public:
 
 		/**
@@ -61,7 +57,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The device properties
 		 */
-		vk::PhysicalDeviceProperties physicalDeviceProprties;
+		vk::PhysicalDeviceProperties physicalDeviceProperties;
 
 		/**
 		 * The physical device
@@ -71,7 +67,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The swapchain
 		 */
-		vk::SwapchainKHR swapchain;
+		SwapChain swapchain;
 
 		/**
 		 * A map of all queue types to their appropriate queues
@@ -82,11 +78,6 @@ namespace Kale::Vulkan {
 		 * All the available queue family indices
 		 */
 		QueueFamilyIndices queueIndices;
-
-		/**
-		 * Information regarding this device's swapchain support
-		 */
-		SwapChainSupportDetails swapChainSupport;
 
 		/**
 		 * Creates an uninstantiated device

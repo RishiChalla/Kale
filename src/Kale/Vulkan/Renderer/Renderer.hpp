@@ -87,6 +87,7 @@ namespace Kale::Vulkan {
 		friend class Kale::Application;
 		friend class Device;
 		friend class QueueFamilyIndices;
+		friend class SwapChain;
 		friend class SwapChainSupportDetails;
 	
 	public:

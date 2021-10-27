@@ -35,13 +35,14 @@ Device::Device() {
  * @param device The physical device
  * @throws If the given device is not supported
  */
-Device::Device(const vk::PhysicalDevice& device) : physicalDevice(device), physicalDeviceProprties(device.getProperties()),
-	queueIndices(device), swapChainSupport(device) {
+Device::Device(const vk::PhysicalDevice& device) : physicalDevice(device), physicalDeviceProperties(device.getProperties()),
+	queueIndices(device) {
 	
 	if (!deviceSupported(device)) throw std::runtime_error("Unsupported Device Used");
 
 	createLogicalDevice();
 	getQueues();
+	swapchain = SwapChain(*this);
 }
 
 /**
@@ -55,9 +56,8 @@ Device::Device(uint32_t deviceId) {
 		vk::PhysicalDeviceProperties properties = device.getProperties();
 		if (properties.deviceID != deviceId) continue;
 		physicalDevice = device;
-		physicalDeviceProprties = properties;
+		physicalDeviceProperties = properties;
 		queueIndices = QueueFamilyIndices(device);
-		swapChainSupport = SwapChainSupportDetails(device);
 		found = true;
 		break;
 	}
@@ -66,35 +66,28 @@ Device::Device(uint32_t deviceId) {
 
 	createLogicalDevice();
 	getQueues();
+	swapchain = SwapChain(*this);
 }
 
 /**
  * Copy Constructor
  * @param other Object to copy from
  */
-Device::Device(const Device& other) {
-	physicalDeviceProprties = other.physicalDeviceProprties;
-	physicalDevice = other.physicalDevice;
-	swapchain = other.swapchain;
-	queueIndices = other.queueIndices;
-	swapChainSupport = other.swapChainSupport;
+Device::Device(const Device& other) : physicalDeviceProperties(other.physicalDeviceProperties),
+	physicalDevice(other.physicalDevice), queueIndices(other.queueIndices) {
 
 	createLogicalDevice();
 	getQueues();
+	swapchain = SwapChain(*this);
 }
 
 /**
  * Move Constructor
  * @param other Object to move from
  */
-Device::Device(Device&& other) {
-	physicalDeviceProprties = other.physicalDeviceProprties;
-	physicalDevice = other.physicalDevice;
-	swapchain = other.swapchain;
-	queueIndices = other.queueIndices;
-	swapChainSupport = other.swapChainSupport;
-	logicalDevice = other.logicalDevice;
-	queueMap = other.queueMap; 
+Device::Device(Device&& other) : physicalDeviceProperties(other.physicalDeviceProperties),
+	physicalDevice(other.physicalDevice), swapchain(other.swapchain), queueIndices(other.queueIndices),
+	logicalDevice(other.logicalDevice), queueMap(other.queueMap) {
 	other.queueMap.clear();
 }
 
@@ -104,14 +97,13 @@ Device::Device(Device&& other) {
  */
 void Device::operator=(const Device& other) {
 	freeResources();
-	physicalDeviceProprties = other.physicalDeviceProprties;
+	physicalDeviceProperties = other.physicalDeviceProperties;
 	physicalDevice = other.physicalDevice;
-	swapchain = other.swapchain;
 	queueIndices = other.queueIndices;
-	swapChainSupport = other.swapChainSupport;
 
 	createLogicalDevice();
 	getQueues();
+	swapchain = SwapChain(*this);
 }
 
 /**
@@ -120,11 +112,10 @@ void Device::operator=(const Device& other) {
  */
 void Device::operator=(Device&& other) {
 	freeResources();
-	physicalDeviceProprties = other.physicalDeviceProprties;
+	physicalDeviceProperties = other.physicalDeviceProperties;
 	physicalDevice = other.physicalDevice;
 	swapchain = other.swapchain;
 	queueIndices = other.queueIndices;
-	swapChainSupport = other.swapChainSupport;
 	logicalDevice = other.logicalDevice;
 	queueMap = other.queueMap; 
 	other.queueMap.clear();
@@ -175,47 +166,6 @@ void Device::getQueues() {
 }
 
 /**
- * Creates a swapchain from this device
- */
-void Device::createSwapchain() {
-	vk::SurfaceFormatKHR format = swapChainSupport.chooseFormat();
-	vk::PresentModeKHR presentMode = swapChainSupport.choosePresentMode();
-	vk::Extent2D extent = swapChainSupport.chooseSwapExtent();
-
-	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-	if (swapChainSupport.capabilities.maxImageCount != 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
-		imageCount = swapChainSupport.capabilities.maxImageCount;
-	
-	vk::SwapchainCreateInfoKHR createInfo;
-	createInfo.surface = renderer.surface;
-	createInfo.minImageCount = imageCount;
-	createInfo.imageFormat = format.format;
-	createInfo.imageColorSpace = format.colorSpace;
-	createInfo.imageExtent = extent;
-	createInfo.imageArrayLayers = 1;
-	createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
-
-	uint32_t queueFamilyIndices[] = {queueIndices.graphicsFamilyIndex.value(), queueIndices.presentFamilyIndex.value()};
-
-	if (queueIndices.graphicsFamilyIndex == queueIndices.presentFamilyIndex) {
-		createInfo.imageSharingMode = vk::SharingMode::eExclusive;
-	}
-	else {
-		createInfo.imageSharingMode = vk::SharingMode::eConcurrent;
-		createInfo.queueFamilyIndexCount = 2;
-		createInfo.pQueueFamilyIndices = queueFamilyIndices;
-	}
-
-	createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
-	createInfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
-	createInfo.presentMode = presentMode;
-	createInfo.clipped = VK_TRUE;
-	createInfo.oldSwapchain = nullptr;
-	
-	swapchain = logicalDevice.createSwapchainKHR(createInfo);
-}
-
-/**
  * Frees resources if not already freed
  */
 Device::~Device() {
@@ -227,7 +177,7 @@ Device::~Device() {
  */
 void Device::freeResources() {
 	if (!queueMap.empty()) {
-		vkDestroySwapchainKHR(logicalDevice, swapchain, nullptr);
+		swapchain.freeResources();
 		logicalDevice.destroy();
 	}
 	queueMap.clear();
