@@ -25,7 +25,8 @@ namespace Kale::Vulkan {
 	/**
 	 * The indices for each queue family of a physical device which we need
 	 */
-	struct QueueFamilyIndices {
+	class QueueFamilyIndices {
+	public:
 
 		/**
 		 * The graphics queue family index of the device if it exists

@@ -30,7 +30,7 @@ namespace Kale::Vulkan {
 	/**
 	 * Simple Kale Abstraction over vulkan swap chains
 	 */
-	struct SwapChain {
+	class SwapChain {
 	private:
 
 		/**

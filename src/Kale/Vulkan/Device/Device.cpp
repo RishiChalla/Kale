@@ -145,13 +145,13 @@ void Device::createLogicalDevice() {
 		physicalDevice.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
 		requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
 		
-		// Map extension proprty to a const char*
+		// Map extension property to a const char*
 		return std::string(p.extensionName);
 	});
 
 	// Create the logical device create info
-	vk::DeviceCreateInfo createInfo(vk::DeviceCreateFlags(), queueCreateInfo.size(), queueCreateInfo.data(),
-		0, nullptr, extensions.size(), extensions.data(), &features);
+	vk::DeviceCreateInfo createInfo(vk::DeviceCreateFlags(), static_cast<uint32_t>(queueCreateInfo.size()), queueCreateInfo.data(),
+		0, nullptr, static_cast<uint32_t>(extensions.size()), extensions.data(), &features);
 
 	// Create the logical device
 	logicalDevice = physicalDevice.createDevice(createInfo);
@@ -211,11 +211,11 @@ bool Device::deviceSupported(const vk::PhysicalDevice& physicalDevice) {
 			physicalDevice.enumerateDeviceExtensionProperties(), requiredDeviceExtensions,
 			requestedDeviceExtensions, [](const vk::ExtensionProperties& p) {
 			
-			// Map extension proprty to a const char*
+			// Map extension property to a const char*
 			return std::string(p.extensionName);
 		});
 	}
-	catch (const std::exception& e) {
+	catch (const std::exception&) {
 		// This device is lacking a required extension
 		return false;
 	}

@@ -24,7 +24,8 @@ namespace Kale::Vulkan {
 	/**
 	 * Holds information regarding the swap chain support details for a physical device
 	 */
-	struct SwapChainSupportDetails {
+	class SwapChainSupportDetails {
+	public:
 
 		/**
 		 * The capabilities of the surface
