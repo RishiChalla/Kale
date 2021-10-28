@@ -38,12 +38,27 @@ namespace Kale::Vulkan {
 		 */
 		void createSwapChain();
 
+		/**
+		 * Creates image views from the images and swapchain
+		 */
+		void createImageViews();
+
 	public:
 
 		/**
 		 * The swapchain object
 		 */
 		vk::SwapchainKHR swapchain;
+
+		/**
+		 * The extent of the swapchain
+		 */
+		vk::Extent2D extent;
+
+		/**
+		 * The format of the swapchain
+		 */
+		vk::Format format;
 
 		/**
 		 * The swapchain support information

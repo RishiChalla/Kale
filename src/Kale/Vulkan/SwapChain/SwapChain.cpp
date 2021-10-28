@@ -33,9 +33,9 @@ SwapChain::SwapChain(const Device& device) : support(device.physicalDevice), dev
  * Creates the swapchain
  */
 void SwapChain::createSwapChain() {
-	vk::SurfaceFormatKHR format = support.chooseFormat();
+	vk::SurfaceFormatKHR swapformat = support.chooseFormat();
 	vk::PresentModeKHR presentMode = support.choosePresentMode();
-	vk::Extent2D extent = support.chooseSwapExtent();
+	vk::Extent2D swapextent = support.chooseSwapExtent();
 
 	uint32_t imageCount = support.capabilities.minImageCount + 1;
 	if (support.capabilities.maxImageCount != 0 && imageCount > support.capabilities.maxImageCount)
@@ -44,9 +44,9 @@ void SwapChain::createSwapChain() {
 	vk::SwapchainCreateInfoKHR createInfo;
 	createInfo.surface = renderer.surface;
 	createInfo.minImageCount = imageCount;
-	createInfo.imageFormat = format.format;
-	createInfo.imageColorSpace = format.colorSpace;
-	createInfo.imageExtent = extent;
+	createInfo.imageFormat = swapformat.format;
+	createInfo.imageColorSpace = swapformat.colorSpace;
+	createInfo.imageExtent = swapextent;
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
 
@@ -71,6 +71,23 @@ void SwapChain::createSwapChain() {
 	createInfo.oldSwapchain = nullptr;
 	
 	swapchain = devicePtr->logicalDevice.createSwapchainKHR(createInfo);
+
+	// Get swapchain images
+	images = devicePtr->logicalDevice.getSwapchainImagesKHR(swapchain);
+	extent = swapextent;
+	format = swapformat.format;
+
+	createImageViews();
+}
+
+/**
+ * Creates image views from the images and swapchain
+ */
+void SwapChain::createImageViews() {
+	imageViews.reserve(images.size());
+	for (const vk::Image& image : images) {
+		
+	}
 }
 
 /**
@@ -93,7 +110,7 @@ SwapChain::SwapChain(const SwapChain& other) : support(other.support), devicePtr
  * @param other Object to move from
  */
 SwapChain::SwapChain(SwapChain&& other) : swapchain(other.swapchain), support(other.support), images(other.images),
-	imageViews(other.imageViews), devicePtr(other.devicePtr) {
+	imageViews(other.imageViews), devicePtr(other.devicePtr), extent(other.extent), format(other.format) {
 
 	other.devicePtr = nullptr;
 }
@@ -118,6 +135,8 @@ void SwapChain::operator=(SwapChain&& other) {
 	imageViews = other.imageViews;
 	images = other.images;
 	devicePtr = other.devicePtr;
+	extent = other.extent;
+	format = other.format;
 
 	other.devicePtr = nullptr;
 }
@@ -135,10 +154,7 @@ SwapChain::~SwapChain() {
 void SwapChain::freeResources() {
 	if (devicePtr == nullptr) return;
 
-	for (const vk::ImageView& imageView : imageViews) {
-		vkDestroyImageView(devicePtr->logicalDevice, imageView, nullptr);
-	}
-
-	vkDestroySwapchainKHR(devicePtr->logicalDevice, swapchain, nullptr);
+	for (const vk::ImageView& imageView : imageViews) devicePtr->logicalDevice.destroyImageView(imageView);
+	devicePtr->logicalDevice.destroySwapchainKHR(swapchain);
 	devicePtr = nullptr;
 }
