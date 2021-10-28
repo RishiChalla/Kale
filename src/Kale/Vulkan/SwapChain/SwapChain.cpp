@@ -140,4 +140,5 @@ void SwapChain::freeResources() {
 	}
 
 	vkDestroySwapchainKHR(devicePtr->logicalDevice, swapchain, nullptr);
+	devicePtr = nullptr;
 }
