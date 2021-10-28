@@ -65,8 +65,8 @@ void Renderer::cleanupRenderer() {
 		destroyDebugMessageCallback();
 		#endif
 		
-		vkDestroySurfaceKHR(instance, surface, nullptr);
 		device.freeResources();
+		vkDestroySurfaceKHR(instance, surface, nullptr);
 		instance.destroy();
 	}
 	catch (const std::exception& e) {
@@ -140,8 +140,8 @@ void Renderer::createInstance() {
 		createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
 		createInfo.ppEnabledLayerNames = layers.data();
 	}
-	catch (const std::exception& e) {
-		console.error("Validation Layers not Available");
+	catch (const std::exception&) {
+		console.warn("Validation Layers not Available");
 		createInfo.enabledLayerCount = 0;
 	}
 
