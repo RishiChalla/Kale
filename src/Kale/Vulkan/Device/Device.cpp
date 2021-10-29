@@ -42,7 +42,7 @@ Device::Device(const vk::PhysicalDevice& device) : physicalDevice(device), physi
 
 	createLogicalDevice();
 	getQueues();
-	swapchain = SwapChain(*this);
+	swapchain.init(*this);
 }
 
 /**
@@ -66,7 +66,44 @@ Device::Device(uint32_t deviceId) {
 
 	createLogicalDevice();
 	getQueues();
-	swapchain = SwapChain(*this);
+	swapchain.init(*this);
+}
+
+
+/**
+ * Initializes this object
+ * @param device The device to initialize with
+ */
+void Device::init(const vk::PhysicalDevice& device) {
+	physicalDevice = device;
+	physicalDeviceProperties = device.getProperties();
+	queueIndices = QueueFamilyIndices(device);
+	createLogicalDevice();
+	getQueues();
+	swapchain.init(*this);
+}
+
+/**
+ * Initializes this object
+ * @param deviceId The device to initialize with
+ */
+void Device::init(uint32_t deviceId) {
+	bool found = false;
+	for (const vk::PhysicalDevice& device : Device::availableDevices()) {
+		vk::PhysicalDeviceProperties properties = device.getProperties();
+		if (properties.deviceID != deviceId) continue;
+		physicalDevice = device;
+		physicalDeviceProperties = properties;
+		queueIndices = QueueFamilyIndices(device);
+		found = true;
+		break;
+	}
+
+	if (!found) throw std::runtime_error("Device not Found");
+
+	createLogicalDevice();
+	getQueues();
+	swapchain.init(*this);
 }
 
 /**

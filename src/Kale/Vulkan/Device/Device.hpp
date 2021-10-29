@@ -123,6 +123,18 @@ namespace Kale::Vulkan {
 		void operator=(Device&& other);
 
 		/**
+		 * Initializes this object
+		 * @param device The device to initialize with
+		 */
+		void init(const vk::PhysicalDevice& device);
+
+		/**
+		 * Initializes this object
+		 * @param deviceId The device to initialize with
+		 */
+		void init(uint32_t deviceId);
+
+		/**
 		 * Frees resources if not already freed
 		 */
 		~Device();

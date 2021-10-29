@@ -30,6 +30,16 @@ SwapChain::SwapChain(const Device& device) : support(device.physicalDevice), dev
 }
 
 /**
+ * Initializes the object
+ * @param device 
+ */
+void SwapChain::init(const Device& device) {
+	support = SwapChainSupportDetails(device.physicalDevice);
+	devicePtr = &device;
+	createSwapChain();
+}
+
+/**
  * Creates the swapchain
  */
 void SwapChain::createSwapChain() {
@@ -86,7 +96,9 @@ void SwapChain::createSwapChain() {
 void SwapChain::createImageViews() {
 	imageViews.reserve(images.size());
 	for (const vk::Image& image : images) {
-		
+		vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
+		vk::ImageViewCreateInfo createInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format, vk::ComponentMapping(), range);
+		imageViews.push_back(devicePtr->logicalDevice.createImageView(createInfo));
 	}
 }
 
@@ -153,7 +165,6 @@ SwapChain::~SwapChain() {
  */
 void SwapChain::freeResources() {
 	if (devicePtr == nullptr) return;
-
 	for (const vk::ImageView& imageView : imageViews) devicePtr->logicalDevice.destroyImageView(imageView);
 	devicePtr->logicalDevice.destroySwapchainKHR(swapchain);
 	devicePtr = nullptr;

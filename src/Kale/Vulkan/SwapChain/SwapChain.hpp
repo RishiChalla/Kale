@@ -121,6 +121,12 @@ namespace Kale::Vulkan {
 		~SwapChain();
 
 		/**
+		 * Initializes the object
+		 * @param device 
+		 */
+		void init(const Device& device);
+
+		/**
 		 * Frees resources if not already freed
 		 */
 		void freeResources();

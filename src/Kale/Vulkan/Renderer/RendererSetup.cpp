@@ -43,11 +43,11 @@ void Renderer::setupRenderer(std::optional<uint32_t> gpuID) {
 		mainApp->getWindow().createWindowSurface(instance, surface);
 
 		// Choose the GPU, useGPU will handle logical device creation
-		if (gpuID.has_value()) device = Device(gpuID.value());
+		if (gpuID.has_value()) device.init(gpuID.value());
 		else {
 			std::vector<vk::PhysicalDevice> devices(Device::availableDevices());
 			if (devices.empty()) throw std::runtime_error("No Available GPU Found");
-			device = Device(devices[0]);
+			device.init(devices[0]);
 		}
 	}
 	catch (const std::exception& e) {
@@ -66,7 +66,7 @@ void Renderer::cleanupRenderer() {
 		#endif
 		
 		device.freeResources();
-		vkDestroySurfaceKHR(instance, surface, nullptr);
+		instance.destroySurfaceKHR(surface);
 		instance.destroy();
 	}
 	catch (const std::exception& e) {
