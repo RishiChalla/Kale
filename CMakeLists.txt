@@ -98,3 +98,30 @@ if (KALE_USE_GLFW)
 	target_link_libraries(Kale glfw)
 	target_compile_definitions(Kale PUBLIC KALE_GLFW)
 endif()
+
+# Compile Shaders
+find_package(Vulkan REQUIRED COMPONENTS glslc)
+find_program(glslc_executable NAMES glslc HINTS Vulkan::glslc)
+
+file(GLOB_RECURSE shaders CONFIGURE_DEPENDS shaders/*.vert shaders/*.frag)
+set(SHADER_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders/)
+add_custom_command(
+  COMMAND
+    ${CMAKE_COMMAND} -E make_directory ${SHADER_BINARY_DIR}
+  OUTPUT ${SHADER_BINARY_DIR}
+)
+
+foreach(source IN LISTS shaders)
+	get_filename_component(FILENAME ${source} NAME)
+	add_custom_command(
+      COMMAND
+        ${glslc_executable}
+        -o ${SHADER_BINARY_DIR}/${FILENAME}.spv
+        ${source}
+      OUTPUT ${SHADER_BINARY_DIR}/${FILENAME}.spv
+      DEPENDS ${source} ${SHADER_BINARY_DIR}
+	)
+	list(APPEND SPV_SHADERS ${SHADER_BINARY_DIR}/${FILENAME}.spv)
+endforeach()
+
+add_custom_target(shaders ALL DEPENDS ${SPV_SHADERS})

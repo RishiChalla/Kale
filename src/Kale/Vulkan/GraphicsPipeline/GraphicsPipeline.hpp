@@ -17,8 +17,41 @@
 #pragma once
 
 #include <vulkan/vulkan.hpp>
+#include <Kale/Vulkan/Shader/Shader.hpp>
+#include <string>
 
 namespace Kale::Vulkan {
 
-	
+	/**
+	 * Represents the vulkan graphics pipeline
+	 */
+	class GraphicsPipeline {
+	private:
+		void setupInputAssembler();
+		void setupVertexShaders(const std::string& filename);
+		void setupTessellation();
+		void setupGeometry();
+		void setupRasterization();
+		void setupFragmentShaders(const std::string& filename);
+		void seutpColorBlending();
+
+	public:
+
+		/**
+		 * The graphics pipeline
+		 */
+		vk::Pipeline pipeline;
+
+		/**
+		 * Creates an uninitialized graphics pipeline
+		 */
+		GraphicsPipeline();
+
+		/**
+		 * Creates the graphics pipeline given the required shaders
+		 * @param vert The filename of the vertex shader (the assets/shaders/ path is prepended automatically)
+		 * @param frag The filename of the fragment shader (the assets/shaders/ path is prepended automatically)
+		 */
+		GraphicsPipeline(const std::string& vert, const std::string& frag);
+	};
 }

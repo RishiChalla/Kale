@@ -132,6 +132,7 @@ SwapChain::SwapChain(SwapChain&& other) : swapchain(other.swapchain), support(ot
  * @param other Object to copy from
  */
 void SwapChain::operator=(const SwapChain& other) {
+	freeResources();
 	support = other.support;
 	devicePtr = other.devicePtr;
 	createSwapChain();
@@ -142,6 +143,7 @@ void SwapChain::operator=(const SwapChain& other) {
  * @param other Object to move from
  */
 void SwapChain::operator=(SwapChain&& other) {
+	freeResources();
 	swapchain = other.swapchain;
 	support = other.support;
 	imageViews = other.imageViews;
