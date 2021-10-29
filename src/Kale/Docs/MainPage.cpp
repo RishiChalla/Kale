@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_DOXYGEN
+
 /**
  * @mainpage Kale Documentation
  * > Full disclosure that this is a closed source project, this is only ever intended to be read by the author. If you are
@@ -130,3 +132,5 @@
  * ```
  * 
  */
+
+#endif
