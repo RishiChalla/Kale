@@ -19,21 +19,20 @@
 #include <vulkan/vulkan.hpp>
 #include <Kale/Vulkan/Shader/Shader.hpp>
 #include <string>
+#include <vector>
 
 namespace Kale::Vulkan {
 
 	/**
 	 * Represents the vulkan graphics pipeline
 	 */
-	class GraphicsPipeline {
+	class GraphicsPipeline : public ChildResource {
 	private:
-		void setupInputAssembler();
-		void setupVertexShaders(const std::string& filename);
-		void setupTessellation();
-		void setupGeometry();
-		void setupRasterization();
-		void setupFragmentShaders(const std::string& filename);
-		void seutpColorBlending();
+
+		/**
+		 * Sets up the pipeline layout
+		 */
+		vk::PipelineLayout setupPipelineLayout();
 
 	public:
 
@@ -51,7 +50,49 @@ namespace Kale::Vulkan {
 		 * Creates the graphics pipeline given the required shaders
 		 * @param vert The filename of the vertex shader (the assets/shaders/ path is prepended automatically)
 		 * @param frag The filename of the fragment shader (the assets/shaders/ path is prepended automatically)
+		 * @param device The device to create the graphics pipeline on
 		 */
-		GraphicsPipeline(const std::string& vert, const std::string& frag);
+		GraphicsPipeline(const std::string& vert, const std::string& frag, Device& device);
+
+		/**
+		 * Sets up the graphics pipeline
+		 * @param vert The vertex shader filename (the assets/shaders/ path is prepended automatically)
+		 * @param frag The fragment shader filename (the assets/shaders/ path is prepended automatically)
+		 * @param device The device to create the graphics pipeline on
+		 */
+		void init(const std::string& vert, const std::string& frag, Device& device);
+
+		/**
+		 * Graphics Pipelines do not support copying
+		 */
+		GraphicsPipeline(const GraphicsPipeline& other) = delete;
+
+		/**
+		 * Graphics Pipelines do not support copying
+		 */
+		void operator=(const GraphicsPipeline& other) = delete;
+
+		/**
+		 * Moves the graphics pipeline
+		 * @param other Object to move from
+		 */
+		GraphicsPipeline(GraphicsPipeline&& other);
+		
+		/**
+		 * Moves the graphics pipeline
+		 * @param other Object to move from
+		 */
+		void operator=(GraphicsPipeline&& other);
+
+		/**
+		 * Frees resources if not already freed
+		 */
+		~GraphicsPipeline();
+
+		/**
+		 * Frees resources if not already freed
+		 */
+		void freeResources();
+
 	};
 }

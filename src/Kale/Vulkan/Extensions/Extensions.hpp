@@ -72,35 +72,49 @@ namespace Kale::Vulkan {
 	/**
 	 * Vulkan Instance extensions which are required, if these extensions are not found then the program will exit
 	 */
-	extern const std::vector<std::string> requiredInstanceExtensions;
+	const inline std::vector<std::string> requiredInstanceExtensions{
+		VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+	};
 
 	/**
 	 * Vulkan Instance extensions which are not required but will be used if present/available
 	 */
-	extern const std::vector<std::string> requestedInstanceExtensions;
+	const inline std::vector<std::string> requestedInstanceExtensions = {
+		#ifdef KALE_DEBUG
+		VK_EXT_DEBUG_UTILS_EXTENSION_NAME // Debug Utils, not a necessity but is nice in debug mode
+		#endif
+	};
 
 	/**
 	 * Vulkan Device extensions which are required, if these extensions are not found then the program will
 	 * not consider the physical device for usage
 	 */
-	extern const std::vector<std::string> requiredDeviceExtensions;
+	const inline std::vector<std::string> requiredDeviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
 
 	/**
 	 * Vulkan Device extensions which are not required but will be used if present/available
 	 */
-	extern const std::vector<std::string> requestedDeviceExtensions;
+	const inline std::vector<std::string> requestedDeviceExtensions = {
+		"VK_KHR_portability_subset" // Specification states that if supported must be added
+	};
 
 	#ifdef KALE_DEBUG
 
 	/**
 	 * All the required validation layers used when debugging
 	 */
-	extern const std::vector<std::string> requiredValidationLayers;
+	const inline std::vector<std::string> requiredValidationLayers = {
+		"VK_LAYER_KHRONOS_validation"
+	};
 
 	/**
 	 * All the requested validation layers used when debugging
 	 */
-	extern const std::vector<std::string> requestedValidationLayers;
+	const inline std::vector<std::string> requestedValidationLayers = {
+		// Empty for now
+	};
 
 	#endif
 }

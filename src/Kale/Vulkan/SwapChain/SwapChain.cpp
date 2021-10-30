@@ -25,7 +25,7 @@ using namespace Kale::Vulkan;
  * Creates a new swap chain given the device to create it from
  * @param device The device to create the swap chain from
  */
-SwapChain::SwapChain(const Device& device) : support(device.physicalDevice), devicePtr(&device) {
+SwapChain::SwapChain(Device& device) : ChildResource(device), support(device.physicalDevice) {
 	createSwapChain();
 }
 
@@ -33,9 +33,9 @@ SwapChain::SwapChain(const Device& device) : support(device.physicalDevice), dev
  * Initializes the object
  * @param device 
  */
-void SwapChain::init(const Device& device) {
+void SwapChain::init(Device& device) {
+	ChildResource::init(device);
 	support = SwapChainSupportDetails(device.physicalDevice);
-	devicePtr = &device;
 	createSwapChain();
 }
 
@@ -60,12 +60,14 @@ void SwapChain::createSwapChain() {
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
 
+	Device& device = *dynamic_cast<Device*>(parentPtr);
+
 	uint32_t queueFamilyIndices[] = {
-		devicePtr->queueIndices.graphicsFamilyIndex.value(),
-		devicePtr->queueIndices.presentFamilyIndex.value()
+		device.queueIndices.graphicsFamilyIndex.value(),
+		device.queueIndices.presentFamilyIndex.value()
 	};
 
-	if (devicePtr->queueIndices.graphicsFamilyIndex == devicePtr->queueIndices.presentFamilyIndex) {
+	if (device.queueIndices.graphicsFamilyIndex == device.queueIndices.presentFamilyIndex) {
 		createInfo.imageSharingMode = vk::SharingMode::eExclusive;
 	}
 	else {
@@ -80,10 +82,10 @@ void SwapChain::createSwapChain() {
 	createInfo.clipped = VK_TRUE;
 	createInfo.oldSwapchain = nullptr;
 	
-	swapchain = devicePtr->logicalDevice.createSwapchainKHR(createInfo);
+	swapchain = device.logicalDevice.createSwapchainKHR(createInfo);
 
 	// Get swapchain images
-	images = devicePtr->logicalDevice.getSwapchainImagesKHR(swapchain);
+	images = device.logicalDevice.getSwapchainImagesKHR(swapchain);
 	extent = swapextent;
 	format = swapformat.format;
 
@@ -98,7 +100,7 @@ void SwapChain::createImageViews() {
 	for (const vk::Image& image : images) {
 		vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
 		vk::ImageViewCreateInfo createInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format, vk::ComponentMapping(), range);
-		imageViews.push_back(devicePtr->logicalDevice.createImageView(createInfo));
+		imageViews.push_back(dynamic_cast<Device*>(parentPtr)->logicalDevice.createImageView(createInfo));
 	}
 }
 
@@ -110,32 +112,15 @@ SwapChain::SwapChain() {
 }
 
 /**
- * Copy Constructor
- * @param other Object to copy from
- */
-SwapChain::SwapChain(const SwapChain& other) : support(other.support), devicePtr(other.devicePtr) {
-	createSwapChain();
-}
-
-/**
  * Move Constructor
  * @param other Object to move from
  */
 SwapChain::SwapChain(SwapChain&& other) : swapchain(other.swapchain), support(other.support), images(other.images),
-	imageViews(other.imageViews), devicePtr(other.devicePtr), extent(other.extent), format(other.format) {
+	imageViews(other.imageViews), extent(other.extent), format(other.format) {
 
-	other.devicePtr = nullptr;
-}
-
-/**
- * Copy Assignment
- * @param other Object to copy from
- */
-void SwapChain::operator=(const SwapChain& other) {
-	freeResources();
-	support = other.support;
-	devicePtr = other.devicePtr;
-	createSwapChain();
+	if (other.parentPtr != nullptr)
+		ChildResource::init(*other.parentPtr);
+	other.parentPtr = nullptr;
 }
 
 /**
@@ -144,15 +129,18 @@ void SwapChain::operator=(const SwapChain& other) {
  */
 void SwapChain::operator=(SwapChain&& other) {
 	freeResources();
+
+	if (other.parentPtr != nullptr)
+		ChildResource::init(*other.parentPtr);
+	
 	swapchain = other.swapchain;
 	support = other.support;
 	imageViews = other.imageViews;
 	images = other.images;
-	devicePtr = other.devicePtr;
 	extent = other.extent;
 	format = other.format;
 
-	other.devicePtr = nullptr;
+	other.parentPtr = nullptr;
 }
 
 /**
@@ -166,8 +154,11 @@ SwapChain::~SwapChain() {
  * Frees resources if not already freed
  */
 void SwapChain::freeResources() {
-	if (devicePtr == nullptr) return;
-	for (const vk::ImageView& imageView : imageViews) devicePtr->logicalDevice.destroyImageView(imageView);
-	devicePtr->logicalDevice.destroySwapchainKHR(swapchain);
-	devicePtr = nullptr;
+	ChildResource::freeResources();
+	if (parentPtr == nullptr) return;
+	
+	Device& device = *dynamic_cast<Device*>(parentPtr);
+	for (const vk::ImageView& imageView : imageViews) device.logicalDevice.destroyImageView(imageView);
+	device.logicalDevice.destroySwapchainKHR(swapchain);
+	parentPtr = nullptr;
 }

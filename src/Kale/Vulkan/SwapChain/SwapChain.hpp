@@ -17,20 +17,21 @@
 #pragma once
 
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
+#include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <vulkan/vulkan.hpp>
 #include <vector>
 
 namespace Kale::Vulkan {
 
 	/**
-	 * Forward declaration of device class
+	 * Forward declaration of device
 	 */
 	class Device;
-	
+
 	/**
 	 * Simple Kale Abstraction over vulkan swap chains
 	 */
-	class SwapChain {
+	class SwapChain : public ChildResource {
 	private:
 
 		/**
@@ -76,15 +77,10 @@ namespace Kale::Vulkan {
 		std::vector<vk::Image> images;
 
 		/**
-		 * A pointer to the device if available
-		 */
-		const Device* devicePtr;
-
-		/**
 		 * Creates a new swap chain given the device to create it from
 		 * @param device The device to create the swap chain from
 		 */
-		SwapChain(const Device& device);
+		SwapChain(Device& device);
 
 		/**
 		 * Creates an uninstantiated SwapChain
@@ -92,10 +88,9 @@ namespace Kale::Vulkan {
 		SwapChain();
 
 		/**
-		 * Copy Constructor
-		 * @param other Object to copy from
+		 * GPU Objects do not support copying
 		 */
-		SwapChain(const SwapChain& other);
+		SwapChain(const SwapChain& other) = delete;
 		
 		/**
 		 * Move Constructor
@@ -104,10 +99,9 @@ namespace Kale::Vulkan {
 		SwapChain(SwapChain&& other);
 
 		/**
-		 * Copy Assignment
-		 * @param other Object to copy from
+		 * GPU Objects do not support copying
 		 */
-		void operator=(const SwapChain& other);
+		void operator=(const SwapChain& other) = delete;
 
 		/**
 		 * Move Assignment
@@ -124,11 +118,11 @@ namespace Kale::Vulkan {
 		 * Initializes the object
 		 * @param device 
 		 */
-		void init(const Device& device);
+		void init(Device& device);
 
 		/**
 		 * Frees resources if not already freed
 		 */
-		void freeResources();
+		void freeResources() override;
 	};
 }

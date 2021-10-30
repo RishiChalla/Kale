@@ -17,8 +17,10 @@
 #include "Device.hpp"
 #include <algorithm>
 #include <stdexcept>
+#include <exception>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
+#include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -42,7 +44,6 @@ Device::Device(const vk::PhysicalDevice& device) : physicalDevice(device), physi
 
 	createLogicalDevice();
 	getQueues();
-	swapchain.init(*this);
 }
 
 /**
@@ -66,7 +67,6 @@ Device::Device(uint32_t deviceId) {
 
 	createLogicalDevice();
 	getQueues();
-	swapchain.init(*this);
 }
 
 
@@ -75,12 +75,12 @@ Device::Device(uint32_t deviceId) {
  * @param device The device to initialize with
  */
 void Device::init(const vk::PhysicalDevice& device) {
+	freeResources();
 	physicalDevice = device;
 	physicalDeviceProperties = device.getProperties();
 	queueIndices = QueueFamilyIndices(device);
 	createLogicalDevice();
 	getQueues();
-	swapchain.init(*this);
 }
 
 /**
@@ -88,6 +88,7 @@ void Device::init(const vk::PhysicalDevice& device) {
  * @param deviceId The device to initialize with
  */
 void Device::init(uint32_t deviceId) {
+	freeResources();
 	bool found = false;
 	for (const vk::PhysicalDevice& device : Device::availableDevices()) {
 		vk::PhysicalDeviceProperties properties = device.getProperties();
@@ -103,44 +104,16 @@ void Device::init(uint32_t deviceId) {
 
 	createLogicalDevice();
 	getQueues();
-	swapchain.init(*this);
-}
-
-/**
- * Copy Constructor
- * @param other Object to copy from
- */
-Device::Device(const Device& other) : physicalDeviceProperties(other.physicalDeviceProperties),
-	physicalDevice(other.physicalDevice), queueIndices(other.queueIndices) {
-
-	createLogicalDevice();
-	getQueues();
-	swapchain = SwapChain(*this);
 }
 
 /**
  * Move Constructor
  * @param other Object to move from
  */
-Device::Device(Device&& other) : physicalDeviceProperties(other.physicalDeviceProperties),
-	physicalDevice(other.physicalDevice), swapchain(other.swapchain), queueIndices(other.queueIndices),
+Device::Device(Device&& other) : ParentResource(other), physicalDeviceProperties(other.physicalDeviceProperties),
+	physicalDevice(other.physicalDevice), queueIndices(other.queueIndices),
 	logicalDevice(other.logicalDevice), queueMap(other.queueMap) {
 	other.queueMap.clear();
-}
-
-/**
- * Copy Assignment
- * @param other Object to copy from
- */
-void Device::operator=(const Device& other) {
-	freeResources();
-	physicalDeviceProperties = other.physicalDeviceProperties;
-	physicalDevice = other.physicalDevice;
-	queueIndices = other.queueIndices;
-
-	createLogicalDevice();
-	getQueues();
-	swapchain = SwapChain(*this);
 }
 
 /**
@@ -149,12 +122,12 @@ void Device::operator=(const Device& other) {
  */
 void Device::operator=(Device&& other) {
 	freeResources();
+	ParentResource::operator=(other);
 	physicalDeviceProperties = other.physicalDeviceProperties;
 	physicalDevice = other.physicalDevice;
-	swapchain = other.swapchain;
 	queueIndices = other.queueIndices;
 	logicalDevice = other.logicalDevice;
-	queueMap = other.queueMap; 
+	queueMap = other.queueMap;
 	other.queueMap.clear();
 }
 
@@ -214,7 +187,7 @@ Device::~Device() {
  */
 void Device::freeResources() {
 	if (!queueMap.empty()) {
-		swapchain.freeResources();
+		ParentResource::freeResources();
 		logicalDevice.destroy();
 	}
 	queueMap.clear();

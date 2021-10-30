@@ -17,10 +17,10 @@
 #pragma once
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
-#include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
-#include <Kale/Vulkan/SwapChain/SwapChain.hpp>
+#include <Kale/Vulkan/ParentResource/ParentResource.hpp>
 #include <vulkan/vulkan.hpp>
 #include <map>
+#include <list>
 
 namespace Kale::Vulkan {
 
@@ -34,7 +34,7 @@ namespace Kale::Vulkan {
 	/**
 	 * A simple Kale abstraction over the Vulkan Physical Device and Logical Devices
 	 */
-	class Device {
+	class Device : public ParentResource {
 	private:
 
 		/**
@@ -63,11 +63,6 @@ namespace Kale::Vulkan {
 		 * The physical device
 		 */
 		vk::PhysicalDevice physicalDevice;
-
-		/**
-		 * The swapchain
-		 */
-		SwapChain swapchain;
 
 		/**
 		 * A map of all queue types to their appropriate queues
@@ -99,10 +94,9 @@ namespace Kale::Vulkan {
 		Device(uint32_t deviceId);
 
 		/**
-		 * Copy Constructor
-		 * @param other Object to copy from
+		 * Copying is not supported for resources living on the GPU
 		 */
-		Device(const Device& other);
+		Device(const Device& other) = delete;
 		
 		/**
 		 * Move Constructor
@@ -111,10 +105,9 @@ namespace Kale::Vulkan {
 		Device(Device&& other);
 
 		/**
-		 * Copy Assignment
-		 * @param other Object to copy from
+		 * Copying is not supported for resources living on the GPU
 		 */
-		void operator=(const Device& other);
+		void operator=(const Device& other) = delete;
 
 		/**
 		 * Move Assignment
@@ -142,7 +135,7 @@ namespace Kale::Vulkan {
 		/**
 		 * Frees the resources from this device
 		 */
-		void freeResources();
+		void freeResources() override;
 
 		/**
 		 * Gets all available and supported physical devices

@@ -15,6 +15,7 @@
 */
 
 #include "Shader.hpp"
+#include <Kale/Application/Application.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
 #include <fstream>
 #include <stdexcept>
@@ -23,7 +24,7 @@ using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
- * Creates an unitialized object
+ * Creates an uninitialized object
  */
 Shader::Shader() {
 	// Empty Body
@@ -36,7 +37,7 @@ Shader::Shader() {
  * @param device The device to link the shader to
  * @throws If unable to open the file
  */
-Shader::Shader(const std::string& filename, ShaderType type, const Device& device) : type(type), devicePtr(&device) {
+Shader::Shader(const std::string& filename, ShaderType type, Device& device) : ChildResource(device), type(type) {
 	std::vector<char> code = readFile(filename);
 	createShaderModule(code);
 }
@@ -48,9 +49,9 @@ Shader::Shader(const std::string& filename, ShaderType type, const Device& devic
  * @param device The device to link the shader to
  * @throws If unable to open the file
  */
-void Shader::init(const std::string filename, ShaderType type, const Device& device) {
+void Shader::init(const std::string filename, ShaderType type, Device& device) {
+	ChildResource::init(device);
 	this->type = type;
-	devicePtr = &device;
 
 	std::vector<char> code = readFile(filename);
 	createShaderModule(code);
@@ -63,7 +64,7 @@ void Shader::init(const std::string filename, ShaderType type, const Device& dev
  * @throws If unable to open the file
  */
 std::vector<char> Shader::readFile(const std::string& filename) const {
-	std::ifstream file(filename, std::ios::ate | std::ios::binary);
+	std::ifstream file("." + mainApp->applicationName + "/assets/shaders/" + filename, std::ios::ate | std::ios::binary);
 	if (!file.is_open()) throw std::runtime_error("Unable to open the file "+filename);
 	size_t fileSize = static_cast<size_t>(file.tellg());
 	std::vector<char> code(fileSize);
@@ -80,15 +81,17 @@ std::vector<char> Shader::readFile(const std::string& filename) const {
 void Shader::createShaderModule(const std::vector<char>& code) {
 	vk::ShaderModuleCreateInfo createInfo(vk::ShaderModuleCreateFlags(), code.size(),
 		reinterpret_cast<const uint32_t*>(code.data()));
-	shader = devicePtr->logicalDevice.createShaderModule(createInfo);
+	shader = dynamic_cast<Device*>(parentPtr)->logicalDevice.createShaderModule(createInfo);
 }
 
 /**
  * Moves a shader and steals its resources
  * @param other The shader to move from
  */
-Shader::Shader(Shader&& other) : type(other.type), shader(other.shader), devicePtr(other.devicePtr) {
-	other.devicePtr = nullptr;
+Shader::Shader(Shader&& other) : type(other.type), shader(other.shader) {
+	if (other.parentPtr != nullptr)
+		ChildResource::init(*other.parentPtr);
+	other.parentPtr = nullptr;
 }
 
 /**
@@ -97,10 +100,12 @@ Shader::Shader(Shader&& other) : type(other.type), shader(other.shader), deviceP
  */
 void Shader::operator=(Shader&& other) {
 	freeResources();
+	if (other.parentPtr != nullptr)
+		ChildResource::init(*other.parentPtr);
 	type = other.type;
 	shader = other.shader;
-	devicePtr = other.devicePtr;
-	other.devicePtr = nullptr;
+	parentPtr = other.parentPtr;
+	other.parentPtr = nullptr;
 }
 
 /**
@@ -114,10 +119,11 @@ Shader::~Shader() {
  * Frees resources for this shader
  */
 void Shader::freeResources() {
-	if (devicePtr == nullptr) return;
+	ChildResource::freeResources();
+	if (parentPtr == nullptr) return;
 
-	devicePtr->logicalDevice.destroyShaderModule(shader);
-	devicePtr = nullptr;
+	dynamic_cast<Device*>(parentPtr)->logicalDevice.destroyShaderModule(shader);
+	parentPtr = nullptr;
 }
 
 /**

@@ -49,6 +49,9 @@ void Renderer::setupRenderer(std::optional<uint32_t> gpuID) {
 			if (devices.empty()) throw std::runtime_error("No Available GPU Found");
 			device.init(devices[0]);
 		}
+
+		swapchain.init(device);
+		pipeline.init("shader.vert.spv", "shader.frag.spv", device);
 	}
 	catch (const std::exception& e) {
 		console.error(e.what());

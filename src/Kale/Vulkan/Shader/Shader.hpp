@@ -17,10 +17,16 @@
 #pragma once
 
 #include <vulkan/vulkan.hpp>
+#include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <string>
 #include <vector>
 
 namespace Kale::Vulkan {
+
+	/**
+	 * Forward declaration of device class
+	 */
+	class Device;
 
 	/**
 	 * Represents the type of shader being used
@@ -30,14 +36,9 @@ namespace Kale::Vulkan {
 	};
 
 	/**
-	 * Forward declaration of device
-	 */
-	class Device;
-
-	/**
 	 * Represents a simple Spir-V shader
 	 */
-	class Shader {
+	class Shader : public ChildResource {
 
 		/**
 		 * Reads a shader file
@@ -66,12 +67,7 @@ namespace Kale::Vulkan {
 		vk::ShaderModule shader;
 
 		/**
-		 * Pointer to the device this shader is held on
-		 */
-		const Device* devicePtr = nullptr;
-
-		/**
-		 * Creates an unitialized object
+		 * Creates an uninitialized object
 		 */
 		Shader();
 
@@ -82,7 +78,7 @@ namespace Kale::Vulkan {
 		 * @param device The device to link the shader to
 		 * @throws If unable to open the file
 		 */
-		Shader(const std::string& filename, ShaderType type, const Device& device);
+		Shader(const std::string& filename, ShaderType type, Device& device);
 
 		/**
 		 * Shaders don't support copying
@@ -118,12 +114,12 @@ namespace Kale::Vulkan {
 		 * @param device The device to link the shader to
 		 * @throws If unable to open the file
 		 */
-		void init(const std::string filename, ShaderType type, const Device& device);
+		void init(const std::string filename, ShaderType type, Device& device);
 
 		/**
 		 * Frees resources for this shader
 		 */
-		void freeResources();
+		void freeResources() override;
 
 		/**
 		 * Gets the shader stage from the type
