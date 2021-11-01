@@ -46,7 +46,7 @@ GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& f
  */
 GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) : pipeline(other.pipeline) {
 	if (other.parentPtr != nullptr)
-		ChildResource::init(*other.parentPtr);
+		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	other.parentPtr = nullptr;
 }
 
@@ -59,7 +59,7 @@ void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
 	parentPtr = other.parentPtr;
 	pipeline = other.pipeline;
 	if (other.parentPtr != nullptr)
-		ChildResource::init(*other.parentPtr);
+		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	other.parentPtr = nullptr;
 }
 
@@ -77,7 +77,7 @@ vk::PipelineLayout GraphicsPipeline::setupPipelineLayout() {
  * @param device The device to create the graphics pipeline on
  */
 void GraphicsPipeline::init(const std::string& vert, const std::string& frag, Device& device) {
-	ChildResource::init(device);
+	ChildResource::init(dynamic_cast<ParentResource&>(device));
 	Shader vertShader(vert, ShaderType::Vertex, device);
 	Shader fragShader(vert, ShaderType::Fragment, device);
 	std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStage = {

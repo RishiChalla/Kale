@@ -52,7 +52,9 @@ void ChildResource::init(ParentResource& parent) {
  */
 ChildResource::~ChildResource() {
 	if (parentPtr == nullptr) return;
-	parentPtr->resources.remove(this);
+	ParentResource& parent = *parentPtr;
+	parent.resources.erase(std::remove(parent.resources.begin(), parent.resources.end(), this),
+		parent.resources.end());
 }
 
 /**
@@ -60,5 +62,7 @@ ChildResource::~ChildResource() {
  */
 void ChildResource::freeResources() {
 	if (parentPtr == nullptr) return;
-	parentPtr->resources.remove(this);
+	ParentResource& parent = *parentPtr;
+	parent.resources.erase(std::remove(parent.resources.begin(), parent.resources.end(), this),
+		parent.resources.end());
 }

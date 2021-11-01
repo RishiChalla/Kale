@@ -110,7 +110,8 @@ void Device::init(uint32_t deviceId) {
  * Move Constructor
  * @param other Object to move from
  */
-Device::Device(Device&& other) : ParentResource(other), physicalDeviceProperties(other.physicalDeviceProperties),
+Device::Device(Device&& other) : ParentResource(dynamic_cast<ParentResource&&>(other)),
+	physicalDeviceProperties(other.physicalDeviceProperties),
 	physicalDevice(other.physicalDevice), queueIndices(other.queueIndices),
 	logicalDevice(other.logicalDevice), queueMap(other.queueMap) {
 	other.queueMap.clear();
@@ -122,7 +123,7 @@ Device::Device(Device&& other) : ParentResource(other), physicalDeviceProperties
  */
 void Device::operator=(Device&& other) {
 	freeResources();
-	ParentResource::operator=(other);
+	ParentResource::operator=(dynamic_cast<ParentResource&&>(other));
 	physicalDeviceProperties = other.physicalDeviceProperties;
 	physicalDevice = other.physicalDevice;
 	queueIndices = other.queueIndices;
@@ -186,8 +187,8 @@ Device::~Device() {
  * Frees the resources from this device
  */
 void Device::freeResources() {
+	ParentResource::freeResources();
 	if (!queueMap.empty()) {
-		ParentResource::freeResources();
 		logicalDevice.destroy();
 	}
 	queueMap.clear();

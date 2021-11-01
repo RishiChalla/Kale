@@ -25,7 +25,8 @@ using namespace Kale::Vulkan;
  * Creates a new swap chain given the device to create it from
  * @param device The device to create the swap chain from
  */
-SwapChain::SwapChain(Device& device) : ChildResource(device), support(device.physicalDevice) {
+SwapChain::SwapChain(Device& device) : ChildResource(dynamic_cast<ParentResource&>(device)),
+	support(device.physicalDevice) {
 	createSwapChain();
 }
 
@@ -34,7 +35,7 @@ SwapChain::SwapChain(Device& device) : ChildResource(device), support(device.phy
  * @param device 
  */
 void SwapChain::init(Device& device) {
-	ChildResource::init(device);
+	ChildResource::init(dynamic_cast<ParentResource&>(device));
 	support = SwapChainSupportDetails(device.physicalDevice);
 	createSwapChain();
 }
@@ -119,7 +120,7 @@ SwapChain::SwapChain(SwapChain&& other) : swapchain(other.swapchain), support(ot
 	imageViews(other.imageViews), extent(other.extent), format(other.format) {
 
 	if (other.parentPtr != nullptr)
-		ChildResource::init(*other.parentPtr);
+		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	other.parentPtr = nullptr;
 }
 
@@ -131,7 +132,7 @@ void SwapChain::operator=(SwapChain&& other) {
 	freeResources();
 
 	if (other.parentPtr != nullptr)
-		ChildResource::init(*other.parentPtr);
+		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	
 	swapchain = other.swapchain;
 	support = other.support;

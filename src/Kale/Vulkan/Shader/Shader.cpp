@@ -37,7 +37,8 @@ Shader::Shader() {
  * @param device The device to link the shader to
  * @throws If unable to open the file
  */
-Shader::Shader(const std::string& filename, ShaderType type, Device& device) : ChildResource(device), type(type) {
+Shader::Shader(const std::string& filename, ShaderType type, Device& device) :
+	ChildResource(dynamic_cast<ParentResource&>(device)), type(type) {
 	std::vector<char> code = readFile(filename);
 	createShaderModule(code);
 }
@@ -50,7 +51,7 @@ Shader::Shader(const std::string& filename, ShaderType type, Device& device) : C
  * @throws If unable to open the file
  */
 void Shader::init(const std::string filename, ShaderType type, Device& device) {
-	ChildResource::init(device);
+	ChildResource::init(dynamic_cast<ParentResource&>(device));
 	this->type = type;
 
 	std::vector<char> code = readFile(filename);
@@ -90,7 +91,7 @@ void Shader::createShaderModule(const std::vector<char>& code) {
  */
 Shader::Shader(Shader&& other) : type(other.type), shader(other.shader) {
 	if (other.parentPtr != nullptr)
-		ChildResource::init(*other.parentPtr);
+		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	other.parentPtr = nullptr;
 }
 
@@ -101,7 +102,7 @@ Shader::Shader(Shader&& other) : type(other.type), shader(other.shader) {
 void Shader::operator=(Shader&& other) {
 	freeResources();
 	if (other.parentPtr != nullptr)
-		ChildResource::init(*other.parentPtr);
+		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	type = other.type;
 	shader = other.shader;
 	parentPtr = other.parentPtr;

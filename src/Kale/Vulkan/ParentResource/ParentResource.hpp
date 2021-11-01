@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <list>
+#include <vector>
 
 namespace Kale::Vulkan {
 
@@ -34,7 +34,7 @@ namespace Kale::Vulkan {
 		/**
 		 * All child resources being managed by this parent resource
 		 */
-		std::list<ChildResource*> resources;
+		std::vector<ChildResource*> resources;
 
 		friend class ChildResource;
 	public:
