@@ -100,8 +100,30 @@ void SwapChain::createImageViews() {
 	imageViews.reserve(images.size());
 	for (const vk::Image& image : images) {
 		vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
-		vk::ImageViewCreateInfo createInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format, vk::ComponentMapping(), range);
+		vk::ImageViewCreateInfo createInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format,
+			vk::ComponentMapping(), range);
 		imageViews.push_back(dynamic_cast<Device*>(parentPtr)->logicalDevice.createImageView(createInfo));
+	}
+}
+
+/**
+ * Creates the frame buffers from the swap chain images/image views given the render pass
+ * @param renderPass The render pass to create from
+ */
+void SwapChain::createFrameBuffers(const vk::RenderPass& renderPass) {
+	// Clear the current frame buffers
+	for (const vk::Framebuffer& framebuffer : frameBuffers)
+		renderer.device.logicalDevice.destroyFramebuffer(framebuffer);
+	frameBuffers.clear();
+
+	// Reserve memory for the frame buffers
+	frameBuffers.reserve(imageViews.size());
+
+	// Create the frame buffers from the iamge views
+	for (const vk::ImageView& imageView : imageViews) {
+		vk::FramebufferCreateInfo createInfo(vk::FramebufferCreateFlags(), renderPass, 1, &imageView,
+			extent.width, extent.height, 1);
+		frameBuffers.push_back(renderer.device.logicalDevice.createFramebuffer(createInfo));
 	}
 }
 
@@ -158,7 +180,10 @@ void SwapChain::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
 	
 	Device& device = *dynamic_cast<Device*>(parentPtr);
-	for (const vk::ImageView& imageView : imageViews) device.logicalDevice.destroyImageView(imageView);
+	for (const vk::Framebuffer& framebuffer : frameBuffers)
+		renderer.device.logicalDevice.destroyFramebuffer(framebuffer);
+	for (const vk::ImageView& imageView : imageViews)
+		device.logicalDevice.destroyImageView(imageView);
 	device.logicalDevice.destroySwapchainKHR(swapchain);
 	ChildResource::freeResources(remove);
 	parentPtr = nullptr;

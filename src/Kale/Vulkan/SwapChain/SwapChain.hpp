@@ -77,6 +77,11 @@ namespace Kale::Vulkan {
 		std::vector<vk::Image> images;
 
 		/**
+		 * The frame buffers used for rendering
+		 */
+		std::vector<vk::Framebuffer> frameBuffers;
+
+		/**
 		 * Creates a new swap chain given the device to create it from
 		 * @param device The device to create the swap chain from
 		 */
@@ -119,6 +124,12 @@ namespace Kale::Vulkan {
 		 * @param device 
 		 */
 		void init(Device& device);
+
+		/**
+		 * Creates the frame buffers from the swap chain images/image views given the render pass
+		 * @param renderPass The render pass to create from
+		 */
+		void createFrameBuffers(const vk::RenderPass& renderPass);
 
 		/**
 		 * Frees resources if not already freed

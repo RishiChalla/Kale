@@ -52,6 +52,7 @@ void Renderer::setupRenderer(std::optional<uint32_t> gpuID) {
 
 		swapchain.init(device);
 		pipeline.init("shader.vert.spv", "shader.frag.spv", device);
+		swapchain.createFrameBuffers(pipeline.renderPass);
 	}
 	catch (const std::exception& e) {
 		console.error(e.what());
