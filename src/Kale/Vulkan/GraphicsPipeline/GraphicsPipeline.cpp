@@ -17,6 +17,7 @@
 */
 
 #include "GraphicsPipeline.hpp"
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
 #include <array>
 
@@ -67,6 +68,56 @@ void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
  * Sets up the pipeline layout
  */
 vk::PipelineLayout GraphicsPipeline::setupPipelineLayout() {
+
+	// Vertex Input - Choose defaults
+	vk::PipelineVertexInputStateCreateInfo vertexCreateInfo;
+
+	// Input Assembly
+	vk::PipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo(vk::PipelineInputAssemblyStateCreateFlags(),
+		vk::PrimitiveTopology::eTriangleList, VK_FALSE);
+
+	// Viewports & Scissors
+	std::vector<vk::Viewport> viewports;
+	viewports.emplace_back(0.0f, 0.0f, renderer.swapchain.extent.width, renderer.swapchain.extent.height, 0.0f, 1.0f);
+	std::vector<vk::Rect2D> scissors;
+	scissors.emplace_back(vk::Offset2D(), renderer.swapchain.extent);
+	vk::PipelineViewportStateCreateInfo viewportCreateInfo(vk::PipelineViewportStateCreateFlags(),
+		viewports, scissors);
+
+	// Rasterizer
+	vk::PipelineRasterizationStateCreateInfo rasterizerCreateInfo;
+	rasterizerCreateInfo.polygonMode = vk::PolygonMode::eFill;
+	rasterizerCreateInfo.lineWidth = 1.0f;
+	rasterizerCreateInfo.cullMode = vk::CullModeFlagBits::eBack;
+	rasterizerCreateInfo.frontFace = vk::FrontFace::eClockwise;
+
+	// Multisampling
+	vk::PipelineMultisampleStateCreateInfo multisamplingCreateInfo;
+	multisamplingCreateInfo.minSampleShading = 1.0f;
+
+	// Depth & Stencil Testing - Not using
+
+	// Color Blending
+	vk::PipelineColorBlendAttachmentState attachmentState;
+	attachmentState.srcColorBlendFactor = vk::BlendFactor::eOne;
+	attachmentState.srcAlphaBlendFactor = vk::BlendFactor::eOne;
+	attachmentState.colorWriteMask = vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG |
+		vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA;
+
+	/*
+	vk::PipelineColorBlendStateCreateFlags flags_
+	vk::Bool32 logicOpEnable_
+	vk::LogicOp logicOp_
+	const vk::ArrayProxyNoTemporaries<const vk::PipelineColorBlendAttachmentState> &attachments_
+	const std::__1::array<float
+	4UL> &blendConstants_ = {}
+	*/
+	// vk::PipelineColorBlendStateCreateInfo colorBlendingCreateInfo(vk::PipelineColorBlendStateCreateFlags(), );
+
+	// Dynamic State
+
+	// Pipeline Layout
+
 	return vk::PipelineLayout();
 }
 

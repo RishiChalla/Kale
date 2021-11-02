@@ -101,6 +101,7 @@ namespace Kale::Vulkan {
 		friend class QueueFamilyIndices;
 		friend class SwapChain;
 		friend class SwapChainSupportDetails;
+		friend class GraphicsPipeline;
 	
 	public:
 
