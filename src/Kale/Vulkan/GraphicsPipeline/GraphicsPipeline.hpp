@@ -30,9 +30,14 @@ namespace Kale::Vulkan {
 	private:
 
 		/**
-		 * Sets up the pipeline layout
+		 * Creates the pipeline layout
 		 */
-		vk::PipelineLayout setupPipelineLayout();
+		void createPipelineLayout();
+
+		/**
+		 * Creates the render pass object
+		 */
+		void createRenderPass();
 
 	public:
 
@@ -40,6 +45,16 @@ namespace Kale::Vulkan {
 		 * The graphics pipeline
 		 */
 		vk::Pipeline pipeline;
+
+		/**
+		 * The pipeline layout
+		 */
+		vk::PipelineLayout layout;
+
+		/**
+		 * The render pass object for this graphics pipeline
+		 */
+		vk::RenderPass renderPass;
 
 		/**
 		 * Creates an uninitialized graphics pipeline

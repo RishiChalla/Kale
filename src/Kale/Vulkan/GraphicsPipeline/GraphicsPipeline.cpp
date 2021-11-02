@@ -65,60 +65,29 @@ void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
 }
 
 /**
- * Sets up the pipeline layout
+ * Creates the pipeline layout
  */
-vk::PipelineLayout GraphicsPipeline::setupPipelineLayout() {
+void GraphicsPipeline::createPipelineLayout() {
+	vk::PipelineLayoutCreateInfo layoutCreateInfo;
+	layout = dynamic_cast<Device*>(parentPtr)->logicalDevice.createPipelineLayout(layoutCreateInfo);
+}
 
-	// Vertex Input - Choose defaults
-	vk::PipelineVertexInputStateCreateInfo vertexCreateInfo;
+/**
+ * Creates the render pass object
+ */
+void GraphicsPipeline::createRenderPass() {
+	vk::AttachmentDescription colorAttachment(vk::AttachmentDescriptionFlags(), renderer.swapchain.format,
+		vk::SampleCountFlagBits::e1, vk::AttachmentLoadOp::eClear, vk::AttachmentStoreOp::eStore,
+		vk::AttachmentLoadOp::eDontCare, vk::AttachmentStoreOp::eDontCare, vk::ImageLayout::eUndefined,
+		vk::ImageLayout::ePresentSrcKHR);
+	
+	vk::AttachmentReference colorAttachmentRef(0, vk::ImageLayout::eAttachmentOptimalKHR);
+	vk::SubpassDescription subpass(vk::SubpassDescriptionFlags(), vk::PipelineBindPoint::eGraphics);
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &colorAttachmentRef;
 
-	// Input Assembly
-	vk::PipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo(vk::PipelineInputAssemblyStateCreateFlags(),
-		vk::PrimitiveTopology::eTriangleList, VK_FALSE);
-
-	// Viewports & Scissors
-	std::vector<vk::Viewport> viewports;
-	viewports.emplace_back(0.0f, 0.0f, renderer.swapchain.extent.width, renderer.swapchain.extent.height, 0.0f, 1.0f);
-	std::vector<vk::Rect2D> scissors;
-	scissors.emplace_back(vk::Offset2D(), renderer.swapchain.extent);
-	vk::PipelineViewportStateCreateInfo viewportCreateInfo(vk::PipelineViewportStateCreateFlags(),
-		viewports, scissors);
-
-	// Rasterizer
-	vk::PipelineRasterizationStateCreateInfo rasterizerCreateInfo;
-	rasterizerCreateInfo.polygonMode = vk::PolygonMode::eFill;
-	rasterizerCreateInfo.lineWidth = 1.0f;
-	rasterizerCreateInfo.cullMode = vk::CullModeFlagBits::eBack;
-	rasterizerCreateInfo.frontFace = vk::FrontFace::eClockwise;
-
-	// Multisampling
-	vk::PipelineMultisampleStateCreateInfo multisamplingCreateInfo;
-	multisamplingCreateInfo.minSampleShading = 1.0f;
-
-	// Depth & Stencil Testing - Not using
-
-	// Color Blending
-	vk::PipelineColorBlendAttachmentState attachmentState;
-	attachmentState.srcColorBlendFactor = vk::BlendFactor::eOne;
-	attachmentState.srcAlphaBlendFactor = vk::BlendFactor::eOne;
-	attachmentState.colorWriteMask = vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG |
-		vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA;
-
-	/*
-	vk::PipelineColorBlendStateCreateFlags flags_
-	vk::Bool32 logicOpEnable_
-	vk::LogicOp logicOp_
-	const vk::ArrayProxyNoTemporaries<const vk::PipelineColorBlendAttachmentState> &attachments_
-	const std::__1::array<float
-	4UL> &blendConstants_ = {}
-	*/
-	// vk::PipelineColorBlendStateCreateInfo colorBlendingCreateInfo(vk::PipelineColorBlendStateCreateFlags(), );
-
-	// Dynamic State
-
-	// Pipeline Layout
-
-	return vk::PipelineLayout();
+	vk::RenderPassCreateInfo createInfo(vk::RenderPassCreateFlags(), 1, &colorAttachment, 1, &subpass);
+	renderPass = dynamic_cast<Device*>(parentPtr)->logicalDevice.createRenderPass(createInfo);
 }
 
 /**
@@ -129,18 +98,65 @@ vk::PipelineLayout GraphicsPipeline::setupPipelineLayout() {
  */
 void GraphicsPipeline::init(const std::string& vert, const std::string& frag, Device& device) {
 	ChildResource::init(dynamic_cast<ParentResource&>(device));
+
+	// Shaders
 	Shader vertShader(vert, ShaderType::Vertex, device);
-	Shader fragShader(vert, ShaderType::Fragment, device);
+	Shader fragShader(frag, ShaderType::Fragment, device);
 	std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStage = {
 		vertShader.getShaderPipelineInfo(),
 		fragShader.getShaderPipelineInfo()
 	};
 
-	vk::PipelineLayout layout(setupPipelineLayout());
-	
-	// Pipeline Creation Code
+	// Vertex Input - Choose defaults
+	vk::PipelineVertexInputStateCreateInfo vertexCreateInfo;
 
-	device.logicalDevice.destroyPipelineLayout(layout);
+	// Input Assembly
+	vk::PipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo(vk::PipelineInputAssemblyStateCreateFlags(),
+		vk::PrimitiveTopology::eTriangleList, VK_FALSE);
+
+	// Viewports & Scissors
+	vk::Viewport viewport(0.0f, 0.0f, renderer.swapchain.extent.width, renderer.swapchain.extent.height, 0.0f, 1.0f);
+	vk::Rect2D scissors(vk::Offset2D(), renderer.swapchain.extent);
+	vk::PipelineViewportStateCreateInfo viewportCreateInfo(vk::PipelineViewportStateCreateFlags(),
+		1, &viewport, 1, &scissors);
+
+	// Rasterizer
+	vk::PipelineRasterizationStateCreateInfo rasterizerCreateInfo;
+	rasterizerCreateInfo.polygonMode = vk::PolygonMode::eFill;
+	rasterizerCreateInfo.cullMode = vk::CullModeFlagBits::eBack;
+	rasterizerCreateInfo.lineWidth = 1.0f;
+	rasterizerCreateInfo.frontFace = vk::FrontFace::eClockwise;
+
+	// Multisampling
+	vk::PipelineMultisampleStateCreateInfo multisamplingCreateInfo;
+	multisamplingCreateInfo.minSampleShading = 1.0f;
+
+	// Color Blending
+	vk::PipelineColorBlendAttachmentState attachmentState(VK_TRUE, vk::BlendFactor::eSrcAlpha,
+		vk::BlendFactor::eOneMinusSrcAlpha, vk::BlendOp::eAdd, vk::BlendFactor::eOne,
+		vk::BlendFactor::eZero, vk::BlendOp::eAdd, vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG |
+		vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA);
+
+	vk::PipelineColorBlendStateCreateInfo colorBlendingCreateInfo(vk::PipelineColorBlendStateCreateFlags(),
+		VK_FALSE, vk::LogicOp::eCopy, 1, &attachmentState);
+
+	// Dynamic State - Viewport will not change on android/ios
+	#if defined(KALE_IOS) || defined(KALE_ANDROID)
+	std::vector<vk::DynamicState> dynamicStates;
+	#else
+	std::vector<vk::DynamicState> dynamicStates = {vk::DynamicState::eViewport};
+	#endif
+	vk::PipelineDynamicStateCreateInfo dynamicCreateInfo(vk::PipelineDynamicStateCreateFlags(), dynamicStates);
+
+	// Pipeline Layout/Render Pass
+	createPipelineLayout();
+	createRenderPass();
+
+	// Pipeline Create Info
+	vk::GraphicsPipelineCreateInfo createInfo(vk::PipelineCreateFlags(), shaderStage, &vertexCreateInfo,
+		&inputAssemblyCreateInfo, nullptr, &viewportCreateInfo, &rasterizerCreateInfo, &multisamplingCreateInfo,
+		nullptr, &colorBlendingCreateInfo, &dynamicCreateInfo, layout, renderPass);
+	pipeline = device.logicalDevice.createGraphicsPipeline(VK_NULL_HANDLE, createInfo).value;
 }
 
 /**
@@ -156,6 +172,8 @@ GraphicsPipeline::~GraphicsPipeline() {
 void GraphicsPipeline::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
 	Device& device = *dynamic_cast<Device*>(parentPtr);
+	device.logicalDevice.destroyPipelineLayout(layout);
+	device.logicalDevice.destroyRenderPass(renderPass);
 	device.logicalDevice.destroyPipeline(pipeline);
 	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
