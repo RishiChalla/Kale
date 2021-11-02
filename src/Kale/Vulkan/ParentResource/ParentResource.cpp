@@ -35,7 +35,7 @@ ParentResource::~ParentResource() {
 void ParentResource::freeResources() {
 	for (ChildResource* resource : resources) {
 		try {
-			resource->freeResources();
+			resource->freeResources(false);
 		}
 		catch (const std::exception& e) {
 			console.error(e.what());

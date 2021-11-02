@@ -51,18 +51,14 @@ void ChildResource::init(ParentResource& parent) {
  * Removes the child resource from the list of child resources to be managed
  */
 ChildResource::~ChildResource() {
-	if (parentPtr == nullptr) return;
-	ParentResource& parent = *parentPtr;
-	parent.resources.erase(std::remove(parent.resources.begin(), parent.resources.end(), this),
-		parent.resources.end());
+	freeResources();
 }
 
 /**
  * Frees resources if not already freed
+ * @param remove Whether or not to remove this from the list
  */
-void ChildResource::freeResources() {
-	if (parentPtr == nullptr) return;
-	ParentResource& parent = *parentPtr;
-	parent.resources.erase(std::remove(parent.resources.begin(), parent.resources.end(), this),
-		parent.resources.end());
+void ChildResource::freeResources(bool remove) {
+	if (!remove || parentPtr == nullptr) return;
+	parentPtr->resources.remove(this);
 }

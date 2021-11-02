@@ -154,12 +154,12 @@ SwapChain::~SwapChain() {
 /**
  * Frees resources if not already freed
  */
-void SwapChain::freeResources() {
-	ChildResource::freeResources();
+void SwapChain::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
 	
 	Device& device = *dynamic_cast<Device*>(parentPtr);
 	for (const vk::ImageView& imageView : imageViews) device.logicalDevice.destroyImageView(imageView);
 	device.logicalDevice.destroySwapchainKHR(swapchain);
+	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
 }

@@ -63,7 +63,8 @@ namespace Kale::Vulkan {
 
 		/**
 		 * Frees resources if not already freed
+		 * @param remove Whether or not to remove this from the list
 		 */
-		virtual void freeResources();
+		virtual void freeResources(bool remove = true);
 	};
 }

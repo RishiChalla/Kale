@@ -119,7 +119,7 @@ namespace Kale::Vulkan {
 		/**
 		 * Frees resources for this shader
 		 */
-		void freeResources() override;
+		void freeResources(bool remove = true) override;
 
 		/**
 		 * Gets the shader stage from the type

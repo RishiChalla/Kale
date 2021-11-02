@@ -102,10 +102,10 @@ GraphicsPipeline::~GraphicsPipeline() {
 /**
  * Frees resources if not already freed
  */
-void GraphicsPipeline::freeResources() {
-	ChildResource::freeResources();
+void GraphicsPipeline::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
 	Device& device = *dynamic_cast<Device*>(parentPtr);
 	device.logicalDevice.destroyPipeline(pipeline);
+	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
 }

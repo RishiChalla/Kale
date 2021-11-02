@@ -119,11 +119,10 @@ Shader::~Shader() {
 /**
  * Frees resources for this shader
  */
-void Shader::freeResources() {
-	ChildResource::freeResources();
+void Shader::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
-
 	dynamic_cast<Device*>(parentPtr)->logicalDevice.destroyShaderModule(shader);
+	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
 }
 

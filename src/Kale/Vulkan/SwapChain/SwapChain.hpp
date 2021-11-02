@@ -123,6 +123,6 @@ namespace Kale::Vulkan {
 		/**
 		 * Frees resources if not already freed
 		 */
-		void freeResources() override;
+		void freeResources(bool remove = true) override;
 	};
 }
