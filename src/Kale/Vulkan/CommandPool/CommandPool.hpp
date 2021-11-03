@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
+#pragma once
+
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
+#include <Kale/Math/Vector/Vector.hpp>
 #include <vulkan/vulkan.hpp>
 #include <vector>
 
@@ -29,6 +32,19 @@ namespace Kale::Vulkan {
 	 * The Kale abstraction over vulkan command pools and command buffers
 	 */
 	class CommandPool : public ChildResource<Device> {
+	private:
+
+		/**
+		 * Creates the command pool
+		 */
+		void createCommandPool();
+
+		/**
+		 * Creates the command buffers
+		 * @param clearColor The color to use for clearing the screen
+		 */
+		void createCommandBuffers(const Vector4f& clearColor);
+
 	public:
 
 		/**
@@ -48,15 +64,17 @@ namespace Kale::Vulkan {
 
 		/**
 		 * Creates a new command pool given the device
-		 * @param device The device to linkt o
+		 * @param device The device to link to
+		 * @param clearColor The color to use for clearing the screen
 		 */
-		CommandPool(Device& device);
+		CommandPool(Device& device, const Vector4f& clearColor);
 
 		/**
 		 * Instantiates this command pool given the device
 		 * @param device The device to link to
+		 * @param clearColor The color to use for clearing the screen
 		 */
-		void init(Device& device) override;
+		void init(Device& device, const Vector4f& clearColor);
 
 		/**
 		 * GPU Structures do not support copying

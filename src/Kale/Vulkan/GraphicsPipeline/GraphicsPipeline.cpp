@@ -174,3 +174,11 @@ void GraphicsPipeline::freeResources(bool remove) {
 	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
 }
+
+/**
+ * Binds the graphics pipeline to a command buffer for drawing
+ * @param commandBuffer The command buffer to bind to
+ */
+void GraphicsPipeline::bind(const vk::CommandBuffer& commandBuffer) const {
+	commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
+}

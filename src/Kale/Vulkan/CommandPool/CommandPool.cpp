@@ -16,6 +16,7 @@
 
 #include "CommandPool.hpp"
 #include <Kale/Vulkan/Device/Device.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -29,19 +30,64 @@ CommandPool::CommandPool() {
 
 /**
  * Creates a new command pool given the device
- * @param device The device to linkt o
+ * @param device The device to link to
+ * @param clearColor The color to use for clearing the screen
  */
-CommandPool::CommandPool(Device& device) : ChildResource(device) {
-	
+CommandPool::CommandPool(Device& device, const Vector4f& clearColor) : ChildResource(device) {
+	createCommandPool();
+	createCommandBuffers(clearColor);
 }
 
 /**
  * Instantiates this command pool given the device
  * @param device The device to link to
+ * @param clearColor The color to use for clearing the screen
  */
-void CommandPool::init(Device& device) {
+void CommandPool::init(Device& device, const Vector4f& clearColor) {
 	freeResources();
 	ChildResource::init(device);
+
+	createCommandPool();
+	createCommandBuffers(clearColor);
+}
+
+/**
+ * Creates the command pool
+ */
+void CommandPool::createCommandPool() {
+	vk::CommandPoolCreateInfo createInfo(vk::CommandPoolCreateFlags(),
+		parentPtr->queueIndices.graphicsFamilyIndex.value());
+	commandPool = parentPtr->logicalDevice.createCommandPool(createInfo);
+}
+
+/**
+ * Creates the command buffers
+ * @param clearColor The color to use for clearing the screen
+ */
+void CommandPool::createCommandBuffers(const Vector4f& clearColor) {
+	vk::CommandBufferAllocateInfo allocInfo(commandPool, vk::CommandBufferLevel::ePrimary,
+		static_cast<uint32_t>(renderer.swapchain.frameBuffers.size()));
+	commandBuffers = parentPtr->logicalDevice.allocateCommandBuffers(allocInfo);
+
+	// Start Command Buffer Recording
+	vk::Rect2D renderArea({0, 0}, renderer.swapchain.extent);
+	vk::CommandBufferBeginInfo cmdBeginInfo;
+	vk::ClearValue clearValue(vk::ClearColorValue(std::array<float, 4>({clearColor.x, clearColor.y,
+		clearColor.z, clearColor.w})));
+	vk::Viewport viewport(0.0f, 0.0f, mainApp->getWindow().getSizeF().x,
+		mainApp->getWindow().getSizeF().y, 0.0f, 1.0f);
+	for (size_t i = 0; i < commandBuffers.size(); i++) {
+		const vk::CommandBuffer& commandBuffer = commandBuffers[i];
+		commandBuffer.begin(cmdBeginInfo);
+		vk::RenderPassBeginInfo renderBeginInfo(renderer.pipeline.renderPass, renderer.swapchain.frameBuffers[i],
+			renderArea, 1, &clearValue);
+		commandBuffer.beginRenderPass(renderBeginInfo, vk::SubpassContents::eInline);
+		renderer.pipeline.bind(commandBuffer);
+		commandBuffer.setViewport(0, 1, &viewport);
+		commandBuffer.draw(3, 1, 0, 0);
+		commandBuffer.endRenderPass();
+		commandBuffer.end();
+	}
 }
 
 /**

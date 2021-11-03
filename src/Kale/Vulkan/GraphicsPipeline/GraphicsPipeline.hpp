@@ -109,5 +109,11 @@ namespace Kale::Vulkan {
 		 */
 		void freeResources(bool remove = true) override;
 
+		/**
+		 * Binds the graphics pipeline to a command buffer for drawing
+		 * @param commandBuffer The command buffer to bind to
+		 */
+		void bind(const vk::CommandBuffer& commandBuffer) const;
+
 	};
 }

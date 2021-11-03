@@ -23,6 +23,7 @@
 #include <Kale/Vulkan/Device/Device.hpp>
 #include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 #include <Kale/Vulkan/GraphicsPipeline/GraphicsPipeline.hpp>
+#include <Kale/Vulkan/CommandPool/CommandPool.hpp>
 #include <Kale/Application/Application.hpp>
 
 namespace Kale::Vulkan {
@@ -86,6 +87,11 @@ namespace Kale::Vulkan {
 		GraphicsPipeline pipeline;
 
 		/**
+		 * The command pool to render to
+		 */
+		CommandPool commandPool;
+
+		/**
 		 * Sets up the main renderer, any functions called prior to this will result in undefined behavior
 		 * @param gpuID the ID of the GPU to use for rendering
 		 */
@@ -102,6 +108,7 @@ namespace Kale::Vulkan {
 		friend class SwapChain;
 		friend class SwapChainSupportDetails;
 		friend class GraphicsPipeline;
+		friend class CommandPool;
 	
 	public:
 
