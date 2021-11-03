@@ -37,8 +37,7 @@ Shader::Shader() {
  * @param device The device to link the shader to
  * @throws If unable to open the file
  */
-Shader::Shader(const std::string& filename, ShaderType type, Device& device) :
-	ChildResource(dynamic_cast<ParentResource&>(device)), type(type) {
+Shader::Shader(const std::string& filename, ShaderType type, Device& device) : ChildResource(device), type(type) {
 	std::vector<char> code = readFile(filename);
 	createShaderModule(code);
 }
@@ -51,9 +50,8 @@ Shader::Shader(const std::string& filename, ShaderType type, Device& device) :
  * @throws If unable to open the file
  */
 void Shader::init(const std::string filename, ShaderType type, Device& device) {
-	ChildResource::init(dynamic_cast<ParentResource&>(device));
+	ChildResource::init(device);
 	this->type = type;
-
 	std::vector<char> code = readFile(filename);
 	createShaderModule(code);
 }
@@ -82,16 +80,15 @@ std::vector<char> Shader::readFile(const std::string& filename) const {
 void Shader::createShaderModule(const std::vector<char>& code) {
 	vk::ShaderModuleCreateInfo createInfo(vk::ShaderModuleCreateFlags(), code.size(),
 		reinterpret_cast<const uint32_t*>(code.data()));
-	shader = dynamic_cast<Device*>(parentPtr)->logicalDevice.createShaderModule(createInfo);
+	shader = parentPtr->logicalDevice.createShaderModule(createInfo);
 }
 
 /**
  * Moves a shader and steals its resources
  * @param other The shader to move from
  */
-Shader::Shader(Shader&& other) : type(other.type), shader(other.shader) {
-	if (other.parentPtr != nullptr)
-		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
+Shader::Shader(Shader&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)), type(other.type),
+	shader(other.shader) {
 	other.parentPtr = nullptr;
 }
 
@@ -101,8 +98,7 @@ Shader::Shader(Shader&& other) : type(other.type), shader(other.shader) {
  */
 void Shader::operator=(Shader&& other) {
 	freeResources();
-	if (other.parentPtr != nullptr)
-		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
+	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
 	type = other.type;
 	shader = other.shader;
 	parentPtr = other.parentPtr;
@@ -121,7 +117,7 @@ Shader::~Shader() {
  */
 void Shader::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
-	dynamic_cast<Device*>(parentPtr)->logicalDevice.destroyShaderModule(shader);
+	parentPtr->logicalDevice.destroyShaderModule(shader);
 	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
 }

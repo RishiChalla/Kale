@@ -31,7 +31,7 @@ namespace Kale::Vulkan {
 	/**
 	 * Simple Kale Abstraction over vulkan swap chains
 	 */
-	class SwapChain : public ChildResource {
+	class SwapChain : public ChildResource<Device> {
 	private:
 
 		/**
@@ -123,7 +123,7 @@ namespace Kale::Vulkan {
 		 * Initializes the object
 		 * @param device 
 		 */
-		void init(Device& device);
+		void init(Device& device) override;
 
 		/**
 		 * Creates the frame buffers from the swap chain images/image views given the render pass

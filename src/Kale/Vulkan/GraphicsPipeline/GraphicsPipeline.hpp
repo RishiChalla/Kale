@@ -26,7 +26,7 @@ namespace Kale::Vulkan {
 	/**
 	 * Represents the vulkan graphics pipeline
 	 */
-	class GraphicsPipeline : public ChildResource {
+	class GraphicsPipeline : public ChildResource<Device> {
 	private:
 
 		/**

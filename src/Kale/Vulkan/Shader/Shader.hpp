@@ -38,7 +38,7 @@ namespace Kale::Vulkan {
 	/**
 	 * Represents a simple Spir-V shader
 	 */
-	class Shader : public ChildResource {
+	class Shader : public ChildResource<Device> {
 
 		/**
 		 * Reads a shader file

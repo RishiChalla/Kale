@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <Kale/Logger/Logger.hpp>
 #include <list>
 
 namespace Kale::Vulkan {
@@ -23,30 +24,42 @@ namespace Kale::Vulkan {
 	/**
 	 * Forward declaration of child resource
 	 */
-	class ChildResource;
+	template <typename Parent> class ChildResource;
 
 	/**
 	 * Represents a single parent resource which manages several child resources
 	 */
-	class ParentResource {
+	template <typename Parent> class ParentResource {
 	protected:
 
 		/**
 		 * All child resources being managed by this parent resource
 		 */
-		std::list<ChildResource*> resources;
+		std::list<ChildResource<Parent>*> resources;
 
-		friend class ChildResource;
+		friend class ChildResource<Parent>;
 	public:
 
 		/**
 		 * Frees all children resources
 		 */
-		virtual ~ParentResource();
+		virtual ~ParentResource() {
+			freeResources();
+		}
 
 		/**
 		 * Frees all children resources
 		 */
-		virtual void freeResources();
+		virtual void freeResources() {
+			for (ChildResource<Parent>* resource : resources) {
+				try {
+					resource->freeResources(false);
+				}
+				catch (const std::exception& e) {
+					console.error(e.what());
+				}
+			}
+			resources.clear();
+		}
 	};
 }

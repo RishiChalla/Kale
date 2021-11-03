@@ -34,7 +34,7 @@ namespace Kale::Vulkan {
 	/**
 	 * A simple Kale abstraction over the Vulkan Physical Device and Logical Devices
 	 */
-	class Device : public ParentResource {
+	class Device : public ParentResource<Device> {
 	private:
 
 		/**

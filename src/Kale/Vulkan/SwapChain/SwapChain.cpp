@@ -25,7 +25,7 @@ using namespace Kale::Vulkan;
  * Creates a new swap chain given the device to create it from
  * @param device The device to create the swap chain from
  */
-SwapChain::SwapChain(Device& device) : ChildResource(dynamic_cast<ParentResource&>(device)),
+SwapChain::SwapChain(Device& device) : ChildResource(device),
 	support(device.physicalDevice) {
 	createSwapChain();
 }
@@ -35,7 +35,7 @@ SwapChain::SwapChain(Device& device) : ChildResource(dynamic_cast<ParentResource
  * @param device 
  */
 void SwapChain::init(Device& device) {
-	ChildResource::init(dynamic_cast<ParentResource&>(device));
+	ChildResource::init(device);
 	support = SwapChainSupportDetails(device.physicalDevice);
 	createSwapChain();
 }
@@ -61,14 +61,12 @@ void SwapChain::createSwapChain() {
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
 
-	Device& device = *dynamic_cast<Device*>(parentPtr);
-
 	uint32_t queueFamilyIndices[] = {
-		device.queueIndices.graphicsFamilyIndex.value(),
-		device.queueIndices.presentFamilyIndex.value()
+		parentPtr->queueIndices.graphicsFamilyIndex.value(),
+		parentPtr->queueIndices.presentFamilyIndex.value()
 	};
 
-	if (device.queueIndices.graphicsFamilyIndex == device.queueIndices.presentFamilyIndex) {
+	if (parentPtr->queueIndices.graphicsFamilyIndex == parentPtr->queueIndices.presentFamilyIndex) {
 		createInfo.imageSharingMode = vk::SharingMode::eExclusive;
 	}
 	else {
@@ -83,10 +81,10 @@ void SwapChain::createSwapChain() {
 	createInfo.clipped = VK_TRUE;
 	createInfo.oldSwapchain = nullptr;
 	
-	swapchain = device.logicalDevice.createSwapchainKHR(createInfo);
+	swapchain = parentPtr->logicalDevice.createSwapchainKHR(createInfo);
 
 	// Get swapchain images
-	images = device.logicalDevice.getSwapchainImagesKHR(swapchain);
+	images = parentPtr->logicalDevice.getSwapchainImagesKHR(swapchain);
 	extent = swapextent;
 	format = swapformat.format;
 
@@ -102,7 +100,7 @@ void SwapChain::createImageViews() {
 		vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
 		vk::ImageViewCreateInfo createInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format,
 			vk::ComponentMapping(), range);
-		imageViews.push_back(dynamic_cast<Device*>(parentPtr)->logicalDevice.createImageView(createInfo));
+		imageViews.push_back(parentPtr->logicalDevice.createImageView(createInfo));
 	}
 }
 
@@ -138,11 +136,9 @@ SwapChain::SwapChain() {
  * Move Constructor
  * @param other Object to move from
  */
-SwapChain::SwapChain(SwapChain&& other) : swapchain(other.swapchain), support(other.support), images(other.images),
+SwapChain::SwapChain(SwapChain&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
+	swapchain(other.swapchain), support(other.support), images(other.images),
 	imageViews(other.imageViews), extent(other.extent), format(other.format) {
-
-	if (other.parentPtr != nullptr)
-		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	other.parentPtr = nullptr;
 }
 
@@ -152,9 +148,7 @@ SwapChain::SwapChain(SwapChain&& other) : swapchain(other.swapchain), support(ot
  */
 void SwapChain::operator=(SwapChain&& other) {
 	freeResources();
-
-	if (other.parentPtr != nullptr)
-		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
+	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
 	
 	swapchain = other.swapchain;
 	support = other.support;
@@ -179,12 +173,11 @@ SwapChain::~SwapChain() {
 void SwapChain::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
 	
-	Device& device = *dynamic_cast<Device*>(parentPtr);
 	for (const vk::Framebuffer& framebuffer : frameBuffers)
 		renderer.device.logicalDevice.destroyFramebuffer(framebuffer);
 	for (const vk::ImageView& imageView : imageViews)
-		device.logicalDevice.destroyImageView(imageView);
-	device.logicalDevice.destroySwapchainKHR(swapchain);
+		parentPtr->logicalDevice.destroyImageView(imageView);
+	parentPtr->logicalDevice.destroySwapchainKHR(swapchain);
 	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
 }

@@ -16,48 +16,60 @@
 
 #pragma once
 
+#include <algorithm>
+
 namespace Kale::Vulkan {
 
 	/**
-	 * Forward declaration of parent class
+	 * Forward declaration of parent resource
 	 */
-	class ParentResource;
+	template <typename Parent> class ParentResource;
 
 	/**
 	 * Represents a single child resource, all child resources must inherit from this class
 	 */
-	class ChildResource {
+	template <typename Parent> class ChildResource {
 	protected:
 
 		/**
 		 * Creates an uninitialized resource, if this constructor is used then
 		 * the setup method MUST be called if the derived object is ever created
 		 */
-		ChildResource();
+		ChildResource() {
+			// Empty Body
+		}
 
 		/**
 		 * Adds a child resource to the list of child resources to be managed
 		 * @param parent The parent resource managing this resource
 		 */
-		ChildResource(ParentResource& parent);
+		ChildResource(Parent& parent) : parentPtr(&parent) {
+			parent.resources.push_back(this);
+		}
 
 		/**
 		 * Adds a child resource to the list of child resources to be managed
 		 * @param parent The parent resource managing this resource
 		 */
-		virtual void init(ParentResource& parent);
+		virtual void init(Parent& parent) {
+			parentPtr = &parent;
+			if (std::find(parent.resources.begin(), parent.resources.end(), this) == parent.resources.end())
+				parent.resources.push_back(this);
+		}
 
 		/**
 		 * Removes the child resource from the list of child resources to be managed
 		 */
-		~ChildResource();
+		~ChildResource() {
+			freeResources();
+		}
 
 		/**
 		 * The pointer to the parent
 		 */
-		ParentResource* parentPtr = nullptr;
+		Parent* parentPtr = nullptr;
 
-		friend class ParentResource;
+		friend class ParentResource<Parent>;
 
 	public:
 
@@ -65,6 +77,9 @@ namespace Kale::Vulkan {
 		 * Frees resources if not already freed
 		 * @param remove Whether or not to remove this from the list
 		 */
-		virtual void freeResources(bool remove = true);
+		virtual void freeResources(bool remove = true) {
+			if (!remove || parentPtr == nullptr) return;
+			parentPtr->resources.remove(this);
+		}
 	};
 }

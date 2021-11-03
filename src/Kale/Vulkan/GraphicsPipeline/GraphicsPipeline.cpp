@@ -45,9 +45,8 @@ GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& f
  * Moves the graphics pipeline
  * @param other Object to move from
  */
-GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) : pipeline(other.pipeline) {
-	if (other.parentPtr != nullptr)
-		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
+GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
+	pipeline(other.pipeline) {
 	other.parentPtr = nullptr;
 }
 
@@ -57,10 +56,8 @@ GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) : pipeline(other.pi
  */
 void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
 	freeResources();
-	parentPtr = other.parentPtr;
+	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
 	pipeline = other.pipeline;
-	if (other.parentPtr != nullptr)
-		ChildResource::init(dynamic_cast<ParentResource&>(*other.parentPtr));
 	other.parentPtr = nullptr;
 }
 
@@ -69,7 +66,7 @@ void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
  */
 void GraphicsPipeline::createPipelineLayout() {
 	vk::PipelineLayoutCreateInfo layoutCreateInfo;
-	layout = dynamic_cast<Device*>(parentPtr)->logicalDevice.createPipelineLayout(layoutCreateInfo);
+	layout = parentPtr->logicalDevice.createPipelineLayout(layoutCreateInfo);
 }
 
 /**
@@ -87,7 +84,7 @@ void GraphicsPipeline::createRenderPass() {
 	subpass.pColorAttachments = &colorAttachmentRef;
 
 	vk::RenderPassCreateInfo createInfo(vk::RenderPassCreateFlags(), 1, &colorAttachment, 1, &subpass);
-	renderPass = dynamic_cast<Device*>(parentPtr)->logicalDevice.createRenderPass(createInfo);
+	renderPass = parentPtr->logicalDevice.createRenderPass(createInfo);
 }
 
 /**
@@ -97,7 +94,7 @@ void GraphicsPipeline::createRenderPass() {
  * @param device The device to create the graphics pipeline on
  */
 void GraphicsPipeline::init(const std::string& vert, const std::string& frag, Device& device) {
-	ChildResource::init(dynamic_cast<ParentResource&>(device));
+	ChildResource::init(device);
 
 	// Shaders
 	Shader vertShader(vert, ShaderType::Vertex, device);
@@ -171,10 +168,9 @@ GraphicsPipeline::~GraphicsPipeline() {
  */
 void GraphicsPipeline::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
-	Device& device = *dynamic_cast<Device*>(parentPtr);
-	device.logicalDevice.destroyPipelineLayout(layout);
-	device.logicalDevice.destroyRenderPass(renderPass);
-	device.logicalDevice.destroyPipeline(pipeline);
+	parentPtr->logicalDevice.destroyPipelineLayout(layout);
+	parentPtr->logicalDevice.destroyRenderPass(renderPass);
+	parentPtr->logicalDevice.destroyPipeline(pipeline);
 	ChildResource::freeResources(remove);
 	parentPtr = nullptr;
 }
