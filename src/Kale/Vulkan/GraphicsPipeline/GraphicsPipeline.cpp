@@ -78,7 +78,7 @@ void GraphicsPipeline::createRenderPass() {
 		vk::AttachmentLoadOp::eDontCare, vk::AttachmentStoreOp::eDontCare, vk::ImageLayout::eUndefined,
 		vk::ImageLayout::ePresentSrcKHR);
 	
-	vk::AttachmentReference colorAttachmentRef(0, vk::ImageLayout::eAttachmentOptimalKHR);
+	vk::AttachmentReference colorAttachmentRef(0, vk::ImageLayout::eColorAttachmentOptimal);
 	vk::SubpassDescription subpass(vk::SubpassDescriptionFlags(), vk::PipelineBindPoint::eGraphics);
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &colorAttachmentRef;
@@ -112,7 +112,8 @@ void GraphicsPipeline::init(const std::string& vert, const std::string& frag, De
 		vk::PrimitiveTopology::eTriangleList, VK_FALSE);
 
 	// Viewports & Scissors
-	vk::Viewport viewport(0.0f, 0.0f, renderer.swapchain.extent.width, renderer.swapchain.extent.height, 0.0f, 1.0f);
+	vk::Viewport viewport(0.0f, 0.0f, static_cast<float>(renderer.swapchain.extent.width),
+		static_cast<float>(renderer.swapchain.extent.height), 0.0f, 1.0f);
 	vk::Rect2D scissors(vk::Offset2D(), renderer.swapchain.extent);
 	vk::PipelineViewportStateCreateInfo viewportCreateInfo(vk::PipelineViewportStateCreateFlags(),
 		1, &viewport, 1, &scissors);
@@ -143,17 +144,18 @@ void GraphicsPipeline::init(const std::string& vert, const std::string& frag, De
 	#else
 	std::vector<vk::DynamicState> dynamicStates = {vk::DynamicState::eViewport};
 	#endif
-	vk::PipelineDynamicStateCreateInfo dynamicCreateInfo(vk::PipelineDynamicStateCreateFlags(), dynamicStates);
+	vk::PipelineDynamicStateCreateInfo dynamicCreateInfo(vk::PipelineDynamicStateCreateFlags(),
+		static_cast<uint32_t>(dynamicStates.size()), dynamicStates.data());
 
 	// Pipeline Layout/Render Pass
 	createPipelineLayout();
 	createRenderPass();
 
 	// Pipeline Create Info
-	vk::GraphicsPipelineCreateInfo createInfo(vk::PipelineCreateFlags(), shaderStage, &vertexCreateInfo,
+	vk::GraphicsPipelineCreateInfo createInfo(vk::PipelineCreateFlags(), 2, shaderStage.data(), &vertexCreateInfo,
 		&inputAssemblyCreateInfo, nullptr, &viewportCreateInfo, &rasterizerCreateInfo, &multisamplingCreateInfo,
 		nullptr, &colorBlendingCreateInfo, &dynamicCreateInfo, layout, renderPass);
-	pipeline = device.logicalDevice.createGraphicsPipeline(VK_NULL_HANDLE, createInfo).value;
+	pipeline = device.logicalDevice.createGraphicsPipeline({}, createInfo).value;
 }
 
 /**
