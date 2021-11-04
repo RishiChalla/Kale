@@ -124,4 +124,6 @@ CommandPool::~CommandPool() {
 void CommandPool::freeResources(bool remove) {
 	if (parentPtr == nullptr) return;
 	parentPtr->logicalDevice.destroyCommandPool(commandPool);
+	ChildResource::freeResources(remove);
+	parentPtr = nullptr;
 }
