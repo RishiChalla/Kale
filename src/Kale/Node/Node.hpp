@@ -26,7 +26,7 @@ namespace Kale {
 
 	protected:
 		virtual void render() = 0;
-		virtual void update() = 0;
+		virtual void update(float ups) = 0;
 
 		friend class Scene;
 	};

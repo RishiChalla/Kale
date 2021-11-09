@@ -61,8 +61,9 @@ namespace Kale {
 
 		/**
 		 * Updates the current scene
+		 * @param ups The number of upates per second
 		 */
-		virtual void update();
+		virtual void update(float ups);
 
 		/**
 		 * Called when the current scene is presented

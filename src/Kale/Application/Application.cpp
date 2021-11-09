@@ -64,6 +64,8 @@ std::shared_ptr<Scene> Application::getPresentedScene() {
  */
 void Application::presentScene(std::shared_ptr<Scene> scene) {
 	presentedScene = scene;
+	scene->onPresent();
+	presentedScene->onSceneChange();
 }
 
 /**
@@ -81,7 +83,7 @@ void Application::update() {
 		// Perform updating
         onUpdate(ups);
 		if (presentedScene != nullptr)
-			presentedScene->update();
+			presentedScene->update(ups);
     }
 }
 

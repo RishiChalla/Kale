@@ -46,8 +46,9 @@ void Scene::render() {
 
 /**
  * Updates the current scene
+ * @param ups The number of upates per second
  */
-void Scene::update() {
+void Scene::update(float ups) {
 	for (Node* node : nodes)
-		node->update();
+		node->update(ups);
 }
