@@ -23,6 +23,7 @@ using namespace Kale;
  * @param node The node to add
  */
 void Scene::addNode(Node& node) {
+	std::lock_guard<std::mutex> guard(mutex);
 	nodes.push_back(&node);
 }
 
@@ -31,6 +32,7 @@ void Scene::addNode(Node& node) {
  * @param node The node to remove
  */
 void Scene::removeNode(Node* node) {
+	std::lock_guard<std::mutex> guard(mutex);
 	nodes.remove(node);
 }
 
@@ -38,7 +40,7 @@ void Scene::removeNode(Node* node) {
  * Renders the current scene
  * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */
-void Scene::render(size_t threadNum) {
+void Scene::render(size_t threadNum) const {
 	for (Node* node : nodes)
 		node->render(threadNum);
 }
@@ -56,7 +58,6 @@ void Scene::update(size_t threadNum, float ups) {
 /**
  * Renders the current scene - this is GUARANTEED to be called on the main thread
  */
-void Scene::present() {
-	
+void Scene::present() const {
 	// TODO - Vulkan commands to clear screen & swap frame buffers
 }

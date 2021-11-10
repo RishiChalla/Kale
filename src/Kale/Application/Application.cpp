@@ -121,7 +121,7 @@ void Application::update(size_t threadNum) {
  * Handles rendering the application in a separate thread
  * @param threadNum the index of this thread, ranged 0 - numRenderThreads
  */
-void Application::render(size_t threadNum) {
+void Application::render(size_t threadNum) const {
 
 	// Render Loop
 	Clock clock;

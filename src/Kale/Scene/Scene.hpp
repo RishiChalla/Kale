@@ -16,10 +16,11 @@
 
 #pragma once
 
-#include <list>
-
 #include <Kale/Node/Node.hpp>
 #include <Kale/Events/Events.hpp>
+
+#include <list>
+#include <mutex>
 
 namespace Kale {
 	
@@ -36,10 +37,15 @@ namespace Kale {
 		std::list<Node*> nodes;
 
 		/**
+		 * The mutex used for node thread safety
+		 */
+		std::mutex mutex;
+
+		/**
 		 * Renders the current scene
 		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
 		 */
-		void render(size_t threadNum);
+		void render(size_t threadNum) const;
 
 		/**
 		 * Updates the current scene
@@ -51,7 +57,7 @@ namespace Kale {
 		/**
 		 * Renders the current scene
 		 */
-		void present();
+		void present() const;
 
 		friend class Application;
 

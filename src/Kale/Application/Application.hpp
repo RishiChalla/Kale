@@ -59,7 +59,7 @@ namespace Kale {
 		 * Handles rendering the application in a separate thread
 		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
 		 */
-		void render(size_t threadNum);
+		void render(size_t threadNum) const;
 
 		/**
 		 * A pointer to the current scene to render

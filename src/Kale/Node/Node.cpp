@@ -20,12 +20,8 @@ using namespace Kale;
 
 /**
  * Creates the node parent
- * @param renderTime The average render time, please see Node::renderTime for documentation
- * @param updateTime The average update time, please see Node::updateTime for documentation
- * @param priority The priority, please see Node::priority for documentation
  */
-Node::Node(float renderTime, float updateTime, float priority) : renderTime(renderTime), updateTime(updateTime),
-	priority(priority) {
+Node::Node() {
 	// Empty Body
 }
 
@@ -35,5 +31,16 @@ Node::Node(float renderTime, float updateTime, float priority) : renderTime(rend
  * @param updateTime The average update time, please see Node::updateTime for documentation
  */
 Node::Node(float renderTime, float updateTime) : renderTime(renderTime), updateTime(updateTime) {
+	// Empty Body
+}
+
+/**
+ * Creates the node parent
+ * @param renderTime The average render time, please see Node::renderTime for documentation
+ * @param updateTime The average update time, please see Node::updateTime for documentation
+ * @param priority The priority, please see Node::priority for documentation
+ */
+Node::Node(float renderTime, float updateTime, float priority) : renderTime(renderTime), updateTime(updateTime),
+	priority(priority) {
 	// Empty Body
 }
