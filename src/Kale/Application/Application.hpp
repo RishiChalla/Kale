@@ -16,13 +16,14 @@
 
 #pragma once
 
-#include <memory>
-
 #include <Kale/Window/Window.hpp>
 #include <Kale/Logger/Logger.hpp>
 #include <Kale/Scene/Scene.hpp>
 
 #include <string>
+#include <memory>
+#include <thread>
+#include <list>
 
 /**
  * The entry point function/main function of the program
@@ -37,11 +38,28 @@ namespace Kale {
 	class Application {
 
 	private:
+		
+		/**
+		 * A list of the update threads
+		 */
+		std::list<std::thread> updateThreads;
+
+		/**
+		 * A list of the rendering threads
+		 */
+		std::list<std::thread> renderThreads;
 
 		/**
 		 * Handles updating the application in a separate thread
+		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
 		 */
-		void update();
+		void update(size_t threadNum);
+
+		/**
+		 * Handles rendering the application in a separate thread
+		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
+		 */
+		void render(size_t threadNum);
 
 		/**
 		 * A pointer to the current scene to render
@@ -54,13 +72,6 @@ namespace Kale {
 		 * The main sfml window used for rendering for this application instance
 		 */
 		Window window;
-
-		/**
-		 * Called on every update frame, must be thread safe.
-		 * Do not do anything heavy here, it will cause lag
-		 * @param ups The number of updates per second
-		 */
-		virtual void onUpdate(float ups) {}
 
 		/**
 		 * Called when the application begins, just before the window is run.
@@ -116,10 +127,34 @@ namespace Kale {
 		std::shared_ptr<Scene> getPresentedScene();
 
 		/**
+		 * Gets the window
+		 * @returns a pointer to the window
+		 */
+		const Window& getWindow() const;
+
+		/**
+		 * Gets the currently presented scene
+		 * @returns The currently presented scene pointer
+		 */
+		const std::shared_ptr<Scene> getPresentedScene() const;
+
+		/**
 		 * Presents a given scene
 		 * @param scene The scene to present
 		 */
 		void presentScene(std::shared_ptr<Scene> scene);
+
+		/**
+		 * Gets the number of threads currently being used to render
+		 * @returns The number of threads used for rendering
+		 */
+		size_t getNumRenderThreads() const;
+
+		/**
+		 * Gets the number of threads currently being used to update
+		 * @returns The number of threads used for updating
+		 */
+		size_t getNumUpdateThreads() const;
 	};
 
 	/**

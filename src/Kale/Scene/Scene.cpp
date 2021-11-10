@@ -36,19 +36,27 @@ void Scene::removeNode(Node* node) {
 
 /**
  * Renders the current scene
+ * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */
-void Scene::render() {
-	// TODO - Vulkan commands to clear screen with background color
-
+void Scene::render(size_t threadNum) {
 	for (Node* node : nodes)
-		node->render();
+		node->render(threadNum);
 }
 
 /**
  * Updates the current scene
+ * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
  * @param ups The number of upates per second
  */
-void Scene::update(float ups) {
+void Scene::update(size_t threadNum, float ups) {
 	for (Node* node : nodes)
-		node->update(ups);
+		node->update(threadNum, ups);
+}
+
+/**
+ * Renders the current scene - this is GUARANTEED to be called on the main thread
+ */
+void Scene::present() {
+	
+	// TODO - Vulkan commands to clear screen & swap frame buffers
 }

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 namespace Kale {
 	
 	/**
@@ -25,9 +27,65 @@ namespace Kale {
 	private:
 
 	protected:
-		virtual void render() = 0;
-		virtual void update(float ups) = 0;
+
+		/**
+		 * Renders the node
+		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
+		 */
+		virtual void render(size_t threadNum) = 0;
+
+		/**
+		 * Updates the node
+		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
+		 * @param ups The amount of updates the current thread is doing in a second
+		 */
+		virtual void update(size_t threadNum, float ups) = 0;
+
+		/**
+		 * Creates the node parent
+		 * @param renderTime The average render time, please see Node::renderTime for documentation
+		 * @param updateTime The average update time, please see Node::updateTime for documentation
+		 * @param priority The priority, please see Node::priority for documentation
+		 */
+		Node(float renderTime, float updateTime, float priority);
+
+		/**
+		 * Creates the node parent
+		 * @param renderTime The average render time, please see Node::renderTime for documentation
+		 * @param updateTime The average update time, please see Node::updateTime for documentation
+		 */
+		Node(float renderTime, float updateTime);
 
 		friend class Scene;
+	
+	public:
+
+		/**
+		 * The priority of updating this node
+		 * Update order within a thread is based on priority
+		 * 
+		 * The default is 1.0
+		 */
+		const float priority = 1.0f;
+
+		/**
+		 * The amount of time this node takes to render on average
+		 * 
+		 * You can gain this statistic using the Kale Editor callibration tools.
+		 * This measure is device specific, when developing on multiple devices it is recommended that you use
+		 * a low powered device for callibration, the same device must be used for callibrating all nodes
+		 * to avoid potential bias
+		 */
+		const float renderTime;
+
+		/**
+		 * The amount of time this node takes to update on average
+		 * 
+		 * You can gain this statistic using the Kale Editor callibration tools.
+		 * This measure is device specific, when developing on multiple devices it is recommended that you use
+		 * a low powered device for callibration, the same device must be used for callibrating all nodes
+		 * to avoid potential bias
+		 */
+		const float updateTime;
 	};
 }

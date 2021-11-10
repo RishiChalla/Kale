@@ -15,7 +15,6 @@
 */
 
 #include "Application.hpp"
-#include <thread>
 #include <Kale/Clock/Clock.hpp>
 #include <Kale/Settings/Settings.hpp>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
@@ -40,7 +39,7 @@ Application::Application(const char* applicationName) : applicationName(applicat
  * Frees resources and deletes the application
  */
 Application::~Application() {
-	
+	// Empty Body
 }
 
 /**
@@ -59,6 +58,37 @@ std::shared_ptr<Scene> Application::getPresentedScene() {
 }
 
 /**
+ * Gets the window
+ */
+const Window& Application::getWindow() const {
+	return window;
+}
+
+/**
+ * Gets the currently presented scene
+ * @returns The currently presented scene pointer
+ */
+const std::shared_ptr<Scene> Application::getPresentedScene() const {
+	return presentedScene;
+}
+
+/**
+ * Gets the number of threads currently being used to render
+ * @returns The number of threads used for rendering
+ */
+size_t Application::getNumRenderThreads() const {
+	return renderThreads.size();
+}
+
+/**
+ * Gets the number of threads currently being used to update
+ * @returns The number of threads used for updating
+ */
+size_t Application::getNumUpdateThreads() const {
+	return updateThreads.size();
+}
+
+/**
  * Presents a given scene
  * @param scene The scene to present
  */
@@ -70,8 +100,9 @@ void Application::presentScene(std::shared_ptr<Scene> scene) {
 
 /**
  * Handles updating the application in a separate thread
+ * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
  */
-void Application::update() {
+void Application::update(size_t threadNum) {
 
     // Update loop
 	Clock clock;
@@ -81,10 +112,28 @@ void Application::update() {
 		float ups = clock.sleep(settings.getMinMSpU());
 		
 		// Perform updating
-        onUpdate(ups);
 		if (presentedScene != nullptr)
-			presentedScene->update(ups);
+			presentedScene->update(threadNum, ups);
     }
+}
+
+/**
+ * Handles rendering the application in a separate thread
+ * @param threadNum the index of this thread, ranged 0 - numRenderThreads
+ */
+void Application::render(size_t threadNum) {
+
+	// Render Loop
+	Clock clock;
+	while (window.isOpen()) {
+
+		// Limit FPS and retrieve it
+		// TODO - replace clock sleeping with frame buffer synchronization
+		float fps = clock.sleep(settings.getMinMSpF());
+
+		if (presentedScene != nullptr)
+			presentedScene->render(threadNum);
+	}
 }
 
 /**
@@ -99,8 +148,22 @@ void Application::run() {
     
 	onBegin();
 
-	// Create the update thread
-	std::thread updateThread(&Application::update, this);
+	// Create threads
+	{
+		size_t threads = static_cast<float>(std::thread::hardware_concurrency()) - 1.0f;
+		size_t upper = static_cast<size_t>(std::ceilf(threads/2.0f));
+		size_t lower = static_cast<size_t>(std::floorf(threads/2.0f));
+
+		// Create update threads
+		for (size_t i = 0; i < upper; i++) {
+			updateThreads.emplace_back(&Application::update, this, i);
+		}
+
+		// Create render threads
+		for (size_t i = 0; i < lower; i++) {
+			renderThreads.emplace_back(&Application::render, this, i);
+		}
+	}
 
 	// Render loop
 	Clock clock;
@@ -112,11 +175,12 @@ void Application::run() {
 		// Update the window for event polling, etc
 		window.update();
 		if (presentedScene != nullptr)
-			presentedScene->render();
+			presentedScene->present();
     }
 
-	// Wait for the update thread to finish
-	updateThread.join();
+	// Wait for threads
+	for (std::thread& thread : updateThreads) thread.join();
+	for (std::thread& thread : renderThreads) thread.join();
 
 	// Cleanup vulkan now that execution is done
 	Vulkan::renderer.cleanupRenderer();

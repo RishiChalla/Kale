@@ -35,6 +35,26 @@ namespace Kale {
 		 */
 		std::list<Node*> nodes;
 
+		/**
+		 * Renders the current scene
+		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
+		 */
+		void render(size_t threadNum);
+
+		/**
+		 * Updates the current scene
+		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
+		 * @param ups The number of upates per second
+		 */
+		void update(size_t threadNum, float ups);
+
+		/**
+		 * Renders the current scene
+		 */
+		void present();
+
+		friend class Application;
+
 	protected:
 
 		/**
@@ -53,17 +73,6 @@ namespace Kale {
 		 * @param node The node to remove
 		 */
 		void removeNode(Node* node);
-
-		/**
-		 * Renders the current scene
-		 */
-		virtual void render();
-
-		/**
-		 * Updates the current scene
-		 * @param ups The number of upates per second
-		 */
-		virtual void update(float ups);
 
 		/**
 		 * Called when the current scene is presented
