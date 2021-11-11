@@ -18,6 +18,7 @@
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
+
 #include <vulkan/vulkan.hpp>
 #include <map>
 #include <list>
@@ -52,7 +53,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The logical device created by the physical device
 		 */
-		vk::Device logicalDevice;
+		vk::UniqueDevice logicalDevice;
 
 		/**
 		 * The device properties
@@ -126,11 +127,6 @@ namespace Kale::Vulkan {
 		 * @param deviceId The device to initialize with
 		 */
 		void init(uint32_t deviceId);
-
-		/**
-		 * Frees resources if not already freed
-		 */
-		~Device();
 
 		/**
 		 * Frees the resources from this device

@@ -15,6 +15,7 @@
 */
 
 #include "SwapChain.hpp"
+
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
 
@@ -53,7 +54,7 @@ void SwapChain::createSwapChain() {
 		imageCount = support.capabilities.maxImageCount;
 	
 	vk::SwapchainCreateInfoKHR createInfo;
-	createInfo.surface = renderer.surface;
+	createInfo.surface = renderer.surface.get();
 	createInfo.minImageCount = imageCount;
 	createInfo.imageFormat = swapformat.format;
 	createInfo.imageColorSpace = swapformat.colorSpace;
@@ -81,10 +82,10 @@ void SwapChain::createSwapChain() {
 	createInfo.clipped = VK_TRUE;
 	createInfo.oldSwapchain = nullptr;
 	
-	swapchain = parentPtr->logicalDevice.createSwapchainKHR(createInfo);
+	swapchain = parentPtr->logicalDevice->createSwapchainKHRUnique(createInfo);
 
 	// Get swapchain images
-	images = parentPtr->logicalDevice.getSwapchainImagesKHR(swapchain);
+	images = parentPtr->logicalDevice->getSwapchainImagesKHR(swapchain.get());
 	extent = swapextent;
 	format = swapformat.format;
 
@@ -100,7 +101,7 @@ void SwapChain::createImageViews() {
 		vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
 		vk::ImageViewCreateInfo createInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format,
 			vk::ComponentMapping(), range);
-		imageViews.push_back(parentPtr->logicalDevice.createImageView(createInfo));
+		imageViews.push_back(parentPtr->logicalDevice->createImageViewUnique(createInfo));
 	}
 }
 
@@ -108,20 +109,18 @@ void SwapChain::createImageViews() {
  * Creates the frame buffers from the swap chain images/image views given the render pass
  * @param renderPass The render pass to create from
  */
-void SwapChain::createFrameBuffers(const vk::RenderPass& renderPass) {
+void SwapChain::createFrameBuffers(const vk::UniqueRenderPass& renderPass) {
 	// Clear the current frame buffers
-	for (const vk::Framebuffer& framebuffer : frameBuffers)
-		renderer.device.logicalDevice.destroyFramebuffer(framebuffer);
 	frameBuffers.clear();
 
 	// Reserve memory for the frame buffers
 	frameBuffers.reserve(imageViews.size());
 
 	// Create the frame buffers from the iamge views
-	for (const vk::ImageView& imageView : imageViews) {
-		vk::FramebufferCreateInfo createInfo(vk::FramebufferCreateFlags(), renderPass, 1, &imageView,
+	for (const vk::UniqueImageView& imageView : imageViews) {
+		vk::FramebufferCreateInfo createInfo(vk::FramebufferCreateFlags(), renderPass.get(), 1, &imageView.get(),
 			extent.width, extent.height, 1);
-		frameBuffers.push_back(renderer.device.logicalDevice.createFramebuffer(createInfo));
+		frameBuffers.push_back(renderer.device.logicalDevice->createFramebufferUnique(createInfo));
 	}
 }
 
@@ -137,9 +136,10 @@ SwapChain::SwapChain() {
  * @param other Object to move from
  */
 SwapChain::SwapChain(SwapChain&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
-	swapchain(other.swapchain), support(other.support), images(other.images),
-	imageViews(other.imageViews), extent(other.extent), format(other.format) {
-	other.parentPtr = nullptr;
+	swapchain(std::move(other.swapchain)), support(std::move(other.support)), images(std::move(other.images)),
+	imageViews(std::move(other.imageViews)), extent(std::move(other.extent)), format(std::move(other.format)),
+	frameBuffers(std::move(other.frameBuffers)) {
+	// Empty Body
 }
 
 /**
@@ -147,37 +147,22 @@ SwapChain::SwapChain(SwapChain&& other) : ChildResource(dynamic_cast<ChildResour
  * @param other Object to move from
  */
 void SwapChain::operator=(SwapChain&& other) {
-	freeResources();
 	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	
-	swapchain = other.swapchain;
-	support = other.support;
-	imageViews = other.imageViews;
-	images = other.images;
-	extent = other.extent;
-	format = other.format;
-
-	other.parentPtr = nullptr;
-}
-
-/**
- * Frees resources if not already freed
- */
-SwapChain::~SwapChain() {
-	freeResources();
+	swapchain = std::move(other.swapchain);
+	support = std::move(other.support);
+	imageViews = std::move(other.imageViews);
+	images = std::move(other.images);
+	extent = std::move(other.extent);
+	format = std::move(other.format);
+	frameBuffers = std::move(other.frameBuffers);
 }
 
 /**
  * Frees resources if not already freed
  */
 void SwapChain::freeResources(bool remove) {
-	if (parentPtr == nullptr) return;
-	
-	for (const vk::Framebuffer& framebuffer : frameBuffers)
-		renderer.device.logicalDevice.destroyFramebuffer(framebuffer);
-	for (const vk::ImageView& imageView : imageViews)
-		parentPtr->logicalDevice.destroyImageView(imageView);
-	parentPtr->logicalDevice.destroySwapchainKHR(swapchain);
 	ChildResource::freeResources(remove);
-	parentPtr = nullptr;
+	frameBuffers.clear();
+	imageViews.clear();
+	swapchain.reset();
 }

@@ -18,6 +18,7 @@
 
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <Kale/Math/Vector/Vector.hpp>
+
 #include <vulkan/vulkan.hpp>
 #include <vector>
 
@@ -50,7 +51,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The command pool for submitting commands to
 		 */
-		vk::CommandPool commandPool;
+		vk::UniqueCommandPool commandPool;
 
 		/**
 		 * The command buffers
@@ -97,11 +98,6 @@ namespace Kale::Vulkan {
 		 * @param other The command pool to move from
 		 */
 		void operator=(CommandPool&& other);
-
-		/**
-		 * Frees resources if not already freed
-		 */
-		~CommandPool();
 
 		/**
 		 * Frees resources

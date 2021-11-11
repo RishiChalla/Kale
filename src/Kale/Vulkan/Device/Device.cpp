@@ -15,12 +15,14 @@
 */
 
 #include "Device.hpp"
-#include <algorithm>
-#include <stdexcept>
-#include <exception>
+
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
+
+#include <algorithm>
+#include <stdexcept>
+#include <exception>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -111,10 +113,9 @@ void Device::init(uint32_t deviceId) {
  * @param other Object to move from
  */
 Device::Device(Device&& other) : ParentResource(dynamic_cast<ParentResource&&>(other)),
-	physicalDeviceProperties(other.physicalDeviceProperties),
-	physicalDevice(other.physicalDevice), queueIndices(other.queueIndices),
-	logicalDevice(other.logicalDevice), queueMap(other.queueMap) {
-	other.queueMap.clear();
+	physicalDeviceProperties(std::move(other.physicalDeviceProperties)),
+	physicalDevice(std::move(other.physicalDevice)), queueIndices(std::move(other.queueIndices)),
+	logicalDevice(std::move(other.logicalDevice)), queueMap(std::move(other.queueMap)) {
 }
 
 /**
@@ -122,14 +123,12 @@ Device::Device(Device&& other) : ParentResource(dynamic_cast<ParentResource&&>(o
  * @param other Object to move from
  */
 void Device::operator=(Device&& other) {
-	freeResources();
 	ParentResource::operator=(dynamic_cast<ParentResource&&>(other));
-	physicalDeviceProperties = other.physicalDeviceProperties;
-	physicalDevice = other.physicalDevice;
-	queueIndices = other.queueIndices;
-	logicalDevice = other.logicalDevice;
-	queueMap = other.queueMap;
-	other.queueMap.clear();
+	physicalDeviceProperties = std::move(other.physicalDeviceProperties);
+	physicalDevice = std::move(other.physicalDevice);
+	queueIndices = std::move(other.queueIndices);
+	logicalDevice = std::move(other.logicalDevice);
+	queueMap = std::move(other.queueMap);
 }
 
 /**
@@ -165,22 +164,15 @@ void Device::createLogicalDevice() {
 		0, nullptr, static_cast<uint32_t>(extensions.size()), extensions.data(), &features);
 
 	// Create the logical device
-	logicalDevice = physicalDevice.createDevice(createInfo);
+	logicalDevice = physicalDevice.createDeviceUnique(createInfo);
 }
 
 /**
  * Gets the appropriate queues from the logical device
  */
 void Device::getQueues() {
-	queueMap[QueueType::Graphics] = logicalDevice.getQueue(queueIndices.graphicsFamilyIndex.value(), 0);
-	queueMap[QueueType::Presentation] = logicalDevice.getQueue(queueIndices.presentFamilyIndex.value(), 0);
-}
-
-/**
- * Frees resources if not already freed
- */
-Device::~Device() {
-	freeResources();
+	queueMap[QueueType::Graphics] = logicalDevice->getQueue(queueIndices.graphicsFamilyIndex.value(), 0);
+	queueMap[QueueType::Presentation] = logicalDevice->getQueue(queueIndices.presentFamilyIndex.value(), 0);
 }
 
 /**
@@ -188,10 +180,7 @@ Device::~Device() {
  */
 void Device::freeResources() {
 	ParentResource::freeResources();
-	if (!queueMap.empty()) {
-		logicalDevice.destroy();
-	}
-	queueMap.clear();
+	logicalDevice.reset();
 }
 
 /**
@@ -199,7 +188,7 @@ void Device::freeResources() {
  * @returns The available physical devices
  */
 std::vector<vk::PhysicalDevice> Device::availableDevices() {
-	std::vector<vk::PhysicalDevice> devices = renderer.instance.enumeratePhysicalDevices();
+	std::vector<vk::PhysicalDevice> devices = renderer.instance->enumeratePhysicalDevices();
 	devices.erase(std::remove_if(devices.begin(), devices.end(), [](const vk::PhysicalDevice& device) {
 		return !Device::deviceSupported(device);
 	}), devices.end());

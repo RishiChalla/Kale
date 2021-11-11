@@ -427,12 +427,13 @@ std::vector<const char*> Window::getInstanceExtensions() const {
  * @param surface The surface reference
  * @throws If the surface creation failed
  */
-void Window::createWindowSurface(const vk::Instance& instance, vk::SurfaceKHR& surface) const {
+void Window::createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueSurfaceKHR& surface) const {
 	VkSurfaceKHR tmpSurface;
-	if (glfwCreateWindowSurface(instance, window, nullptr, &tmpSurface) != VK_SUCCESS) {
-		throw std::runtime_error("");
-	}
-	surface = tmpSurface;
+	if (glfwCreateWindowSurface(instance.get(), window, nullptr, &tmpSurface) != VK_SUCCESS)
+		throw std::runtime_error("Unable to create window surface");
+
+	vk::ObjectDestroy<vk::Instance, VULKAN_HPP_DEFAULT_DISPATCHER_TYPE> deleter(instance.get());
+	surface = vk::UniqueSurfaceKHR({tmpSurface}, deleter);
 }
 
 /**
@@ -455,14 +456,14 @@ void setIcon(const char* filePath) {
  * Clears the screen for rendering the next frame
  */
 void Window::clear() {
-	
+	// TODO - Implement this
 }
 
 /**
  * Renders everything placed in the frame buffer
  */
 void Window::render() {
-    
+    // TODO - Implement this
 }
 
 #endif

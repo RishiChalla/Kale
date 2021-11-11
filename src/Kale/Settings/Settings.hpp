@@ -16,10 +16,10 @@
 
 #pragma once
 
+#include <Kale/Events/Events.hpp>
+
 #include <map>
 #include <string>
-
-#include <Kale/Events/Events.hpp>
 
 namespace Kale {
 	
@@ -44,6 +44,9 @@ namespace Kale {
 		MovementRight, MovementLeft, MovementDown, MovementUp
 	};
 	
+	/**
+	 * This class uses persistent storage to save all details regarding mappable input, etc
+	 */
 	class Settings {
 	private:
 

@@ -15,7 +15,9 @@
 */
 
 #include "Settings.hpp"
+
 #include <Kale/Application/Application.hpp>
+
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <filesystem>

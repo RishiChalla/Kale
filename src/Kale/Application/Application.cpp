@@ -15,6 +15,7 @@
 */
 
 #include "Application.hpp"
+
 #include <Kale/Clock/Clock.hpp>
 #include <Kale/Settings/Settings.hpp>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>

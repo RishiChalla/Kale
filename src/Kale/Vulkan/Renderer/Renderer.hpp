@@ -16,15 +16,15 @@
 
 #pragma once
 
-#include <vector>
-#include <optional>
-#include <vulkan/vulkan.hpp>
-
 #include <Kale/Vulkan/Device/Device.hpp>
 #include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 #include <Kale/Vulkan/GraphicsPipeline/GraphicsPipeline.hpp>
 #include <Kale/Vulkan/CommandPool/CommandPool.hpp>
 #include <Kale/Application/Application.hpp>
+
+#include <vector>
+#include <optional>
+#include <vulkan/vulkan.hpp>
 
 namespace Kale::Vulkan {
 
@@ -64,12 +64,12 @@ namespace Kale::Vulkan {
 		/**
 		 * The vulkan instance used for this window
 		 */
-		vk::Instance instance;
+		vk::UniqueInstance instance;
 
 		/**
 		 * The vulkan surface used for rendering
 		 */
-		vk::SurfaceKHR surface;
+		vk::UniqueSurfaceKHR surface;
 
 		/**
 		 * The GPU used for rendering

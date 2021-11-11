@@ -19,6 +19,7 @@
 #include <fstream>
 #include <string>
 #include <string.h>
+#include <mutex>
 
 #ifdef KALE_DEBUG
 
@@ -28,9 +29,8 @@
 
 #include <termcolor/termcolor.hpp>
 #include <iostream>
+
 #endif
-
-
 
 namespace Kale {
 
@@ -96,6 +96,11 @@ namespace Kale {
 		std::ofstream logFile;
 
 		/**
+		 * The mutex used for keeping the log file thread safe
+		 */
+		std::mutex mutex;
+
+		/**
 		 * Gets the time prefix for logging
 		 * @returns The time prefix
 		 */
@@ -114,12 +119,38 @@ namespace Kale {
 	public:
 
 		/**
+		 * Creates the logger object, this will not be initialized until load is called
+		 */
+		Logger();
+		
+		/**
+		 * Logger does not support copying/moving
+		 */
+		Logger(const Logger& other) = delete;
+		
+		/**
+		 * Logger does not support copying/moving
+		 */
+		Logger(Logger&& other) = delete;
+		
+		/**
+		 * Logger does not support copying/moving
+		 */
+		void operator=(const Logger& other) = delete;
+		
+		/**
+		 * Logger does not support copying/moving
+		 */
+		void operator=(Logger&& other) = delete;
+
+		/**
 		 * Logs output to the console
 		 * @param msg The message to log
 		 */
 		template <typename T> void log(T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] " << // [HH:MM AM]
 				lc << msg << "\n" << rc; // Msg
@@ -135,6 +166,7 @@ namespace Kale {
 		template <typename T> void info(T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				ic << "INFO" << dc << "] " << ic << msg << "\n" << rc; // [Info] Msg
@@ -150,6 +182,7 @@ namespace Kale {
 		template <typename T> void warn(T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				wc << "WARNING" << dc << "] " << wc << msg << "\n" << rc; // [Warning] Msg
@@ -165,6 +198,7 @@ namespace Kale {
 		template <typename T> void error(T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				ec << "ERROR" << dc << "] " << ec << msg << "\n" << rc; // [Error] Msg
@@ -182,6 +216,7 @@ namespace Kale {
 		template <typename T> void log(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] " << // [File:Line]
@@ -200,6 +235,7 @@ namespace Kale {
 		template <typename T> void info(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
@@ -219,6 +255,7 @@ namespace Kale {
 		template <typename T> void warn(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]
@@ -238,6 +275,7 @@ namespace Kale {
 		template <typename T> void error(unsigned int line, const char* file, T msg) {
 			std::string time = getTimePrefix();
 
+			std::lock_guard<std::mutex> guard(mutex);
 			#ifdef KALE_DEBUG
 			std::cout << dc << "[" << tc << time << dc <<  "] [" << // [HH:MM AM]
 				fc << file << dc << ":" << lic << line << dc << "] [" << // [File:Line]

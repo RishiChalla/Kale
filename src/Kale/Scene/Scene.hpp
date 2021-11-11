@@ -83,12 +83,12 @@ namespace Kale {
 		/**
 		 * Called when the current scene is presented
 		 */
-		virtual void onPresent() = 0;
+		virtual void onPresent();
 
 		/**
 		 * Called when the scene is about to be changed
 		 */
-		virtual void onSceneChange() = 0;
+		virtual void onSceneChange();
 
 		friend class Application;
 	};

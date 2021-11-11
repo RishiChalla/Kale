@@ -15,6 +15,7 @@
 */
 
 #include "CommandPool.hpp"
+
 #include <Kale/Vulkan/Device/Device.hpp>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 
@@ -57,7 +58,7 @@ void CommandPool::init(Device& device, const Vector4f& clearColor) {
 void CommandPool::createCommandPool() {
 	vk::CommandPoolCreateInfo createInfo(vk::CommandPoolCreateFlags(),
 		parentPtr->queueIndices.graphicsFamilyIndex.value());
-	commandPool = parentPtr->logicalDevice.createCommandPool(createInfo);
+	commandPool = parentPtr->logicalDevice->createCommandPoolUnique(createInfo);
 }
 
 /**
@@ -65,9 +66,9 @@ void CommandPool::createCommandPool() {
  * @param clearColor The color to use for clearing the screen
  */
 void CommandPool::createCommandBuffers(const Vector4f& clearColor) {
-	vk::CommandBufferAllocateInfo allocInfo(commandPool, vk::CommandBufferLevel::ePrimary,
+	vk::CommandBufferAllocateInfo allocInfo(*commandPool, vk::CommandBufferLevel::ePrimary,
 		static_cast<uint32_t>(renderer.swapchain.frameBuffers.size()));
-	commandBuffers = parentPtr->logicalDevice.allocateCommandBuffers(allocInfo);
+	commandBuffers = parentPtr->logicalDevice->allocateCommandBuffers(allocInfo);
 
 	// Start Command Buffer Recording
 	vk::Rect2D renderArea({0, 0}, renderer.swapchain.extent);
@@ -79,8 +80,8 @@ void CommandPool::createCommandBuffers(const Vector4f& clearColor) {
 	for (size_t i = 0; i < commandBuffers.size(); i++) {
 		const vk::CommandBuffer& commandBuffer = commandBuffers[i];
 		commandBuffer.begin(cmdBeginInfo);
-		vk::RenderPassBeginInfo renderBeginInfo(renderer.pipeline.renderPass, renderer.swapchain.frameBuffers[i],
-			renderArea, 1, &clearValue);
+		vk::RenderPassBeginInfo renderBeginInfo(renderer.pipeline.renderPass.get(),
+			renderer.swapchain.frameBuffers[i].get(), renderArea, 1, &clearValue);
 		commandBuffer.beginRenderPass(renderBeginInfo, vk::SubpassContents::eInline);
 		renderer.pipeline.bind(commandBuffer);
 		commandBuffer.setViewport(0, 1, &viewport);
@@ -95,8 +96,8 @@ void CommandPool::createCommandBuffers(const Vector4f& clearColor) {
  * @param other The command pool to move from
  */
 CommandPool::CommandPool(CommandPool&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
-	commandPool(other.commandPool), commandBuffers(other.commandBuffers) {
-	other.parentPtr = nullptr;
+	commandPool(std::move(other.commandPool)), commandBuffers(std::move(other.commandBuffers)) {
+	// Empty Body
 }
 
 /**
@@ -104,26 +105,15 @@ CommandPool::CommandPool(CommandPool&& other) : ChildResource(dynamic_cast<Child
  * @param other The command pool to move from
  */
 void CommandPool::operator=(CommandPool&& other) {
-	freeResources();
 	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	commandPool = other.commandPool;
-	commandBuffers = other.commandBuffers;
-	other.parentPtr = nullptr;
-}
-
-/**
- * Frees resources if not already freed
- */
-CommandPool::~CommandPool() {
-	freeResources();
+	commandPool = std::move(other.commandPool);
+	commandBuffers = std::move(other.commandBuffers);
 }
 
 /**
  * Frees resources
  */
 void CommandPool::freeResources(bool remove) {
-	if (parentPtr == nullptr) return;
-	parentPtr->logicalDevice.destroyCommandPool(commandPool);
 	ChildResource::freeResources(remove);
-	parentPtr = nullptr;
+	commandPool.reset();
 }

@@ -16,8 +16,9 @@
 
 #pragma once
 
-#include <vulkan/vulkan.hpp>
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
+
+#include <vulkan/vulkan.hpp>
 #include <string>
 #include <vector>
 
@@ -64,7 +65,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The shader module
 		 */
-		vk::ShaderModule shader;
+		vk::UniqueShaderModule shader;
 
 		/**
 		 * Creates an uninitialized object
@@ -92,11 +93,6 @@ namespace Kale::Vulkan {
 		Shader(Shader&& other);
 
 		/**
-		 * Frees resources if not already freed
-		 */
-		~Shader();
-
-		/**
 		 * Shaders don't support copying
 		 */
 		void operator=(const Shader& other) = delete;
@@ -114,7 +110,7 @@ namespace Kale::Vulkan {
 		 * @param device The device to link the shader to
 		 * @throws If unable to open the file
 		 */
-		void init(const std::string filename, ShaderType type, Device& device);
+		void init(const std::string& filename, ShaderType type, Device& device);
 
 		/**
 		 * Frees resources for this shader

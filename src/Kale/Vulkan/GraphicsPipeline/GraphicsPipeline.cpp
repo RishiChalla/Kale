@@ -17,8 +17,10 @@
 */
 
 #include "GraphicsPipeline.hpp"
+
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
+
 #include <array>
 
 using namespace Kale;
@@ -46,8 +48,8 @@ GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& f
  * @param other Object to move from
  */
 GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
-	pipeline(other.pipeline) {
-	other.parentPtr = nullptr;
+	pipeline(std::move(other.pipeline)) {
+	// Empty Body
 }
 
 /**
@@ -55,10 +57,8 @@ GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) : ChildResource(dyn
  * @param other Object to move from
  */
 void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
-	freeResources();
 	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	pipeline = other.pipeline;
-	other.parentPtr = nullptr;
+	pipeline = std::move(other.pipeline);
 }
 
 /**
@@ -66,7 +66,7 @@ void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
  */
 void GraphicsPipeline::createPipelineLayout() {
 	vk::PipelineLayoutCreateInfo layoutCreateInfo;
-	layout = parentPtr->logicalDevice.createPipelineLayout(layoutCreateInfo);
+	layout = parentPtr->logicalDevice->createPipelineLayoutUnique(layoutCreateInfo);
 }
 
 /**
@@ -84,7 +84,7 @@ void GraphicsPipeline::createRenderPass() {
 	subpass.pColorAttachments = &colorAttachmentRef;
 
 	vk::RenderPassCreateInfo createInfo(vk::RenderPassCreateFlags(), 1, &colorAttachment, 1, &subpass);
-	renderPass = parentPtr->logicalDevice.createRenderPass(createInfo);
+	renderPass = parentPtr->logicalDevice->createRenderPassUnique(createInfo);
 }
 
 /**
@@ -154,27 +154,18 @@ void GraphicsPipeline::init(const std::string& vert, const std::string& frag, De
 	// Pipeline Create Info
 	vk::GraphicsPipelineCreateInfo createInfo(vk::PipelineCreateFlags(), 2, shaderStage.data(), &vertexCreateInfo,
 		&inputAssemblyCreateInfo, nullptr, &viewportCreateInfo, &rasterizerCreateInfo, &multisamplingCreateInfo,
-		nullptr, &colorBlendingCreateInfo, &dynamicCreateInfo, layout, renderPass);
-	pipeline = device.logicalDevice.createGraphicsPipeline({}, createInfo).value;
-}
-
-/**
- * Frees resources if not already freed
- */
-GraphicsPipeline::~GraphicsPipeline() {
-	freeResources();
+		nullptr, &colorBlendingCreateInfo, &dynamicCreateInfo, layout.get(), renderPass.get());
+	pipeline = device.logicalDevice->createGraphicsPipelineUnique({}, createInfo).value;
 }
 
 /**
  * Frees resources if not already freed
  */
 void GraphicsPipeline::freeResources(bool remove) {
-	if (parentPtr == nullptr) return;
-	parentPtr->logicalDevice.destroyPipelineLayout(layout);
-	parentPtr->logicalDevice.destroyRenderPass(renderPass);
-	parentPtr->logicalDevice.destroyPipeline(pipeline);
 	ChildResource::freeResources(remove);
-	parentPtr = nullptr;
+	layout.reset();
+	renderPass.reset();
+	pipeline.reset();
 }
 
 /**
@@ -182,5 +173,5 @@ void GraphicsPipeline::freeResources(bool remove) {
  * @param commandBuffer The command buffer to bind to
  */
 void GraphicsPipeline::bind(const vk::CommandBuffer& commandBuffer) const {
-	commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
+	commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, *pipeline);
 }

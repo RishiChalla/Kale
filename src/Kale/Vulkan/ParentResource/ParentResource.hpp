@@ -17,6 +17,7 @@
 #pragma once
 
 #include <Kale/Logger/Logger.hpp>
+
 #include <list>
 
 namespace Kale::Vulkan {

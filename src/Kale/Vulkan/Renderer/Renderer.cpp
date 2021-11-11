@@ -19,6 +19,7 @@
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
+
 #include <stdexcept>
 #include <algorithm>
 

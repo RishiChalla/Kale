@@ -15,9 +15,11 @@
 */
 
 #include "Renderer.hpp"
+
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
+
 #include <stdexcept>
 #include <exception>
 #include <algorithm>
@@ -71,8 +73,8 @@ void Renderer::cleanupRenderer() {
 		#endif
 		
 		device.freeResources();
-		instance.destroySurfaceKHR(surface);
-		instance.destroy();
+		surface.reset();
+		instance.reset();
 	}
 	catch (const std::exception& e) {
 		console.error(e.what());
@@ -156,8 +158,5 @@ void Renderer::createInstance() {
 
 	#endif
 
-	if (vk::createInstance(&createInfo, nullptr, &instance) != vk::Result::eSuccess) {
-		console.error("Unable to Init Vulkan");
-		exit(0);
-	}
+	instance = vk::createInstanceUnique(createInfo);
 }

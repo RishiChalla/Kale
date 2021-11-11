@@ -16,6 +16,8 @@
 
 #include "Scene.hpp"
 
+#include <Kale/Application/Application.hpp>
+
 using namespace Kale;
 
 /**
@@ -60,4 +62,18 @@ void Scene::update(size_t threadNum, float ups) {
  */
 void Scene::present() const {
 	// TODO - Vulkan commands to clear screen & swap frame buffers
+}
+
+/**
+ * Called when the current scene is presented
+ */
+void Scene::onPresent() {
+	mainApp->getWindow().registerEvents(dynamic_cast<EventHandler*>(this));
+}
+
+/**
+ * Called when the scene is about to be changed
+ */
+void Scene::onSceneChange() {
+	mainApp->getWindow().removeEvents(dynamic_cast<EventHandler*>(this));
 }

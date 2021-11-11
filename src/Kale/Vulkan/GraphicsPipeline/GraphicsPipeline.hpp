@@ -16,8 +16,9 @@
 
 #pragma once
 
-#include <vulkan/vulkan.hpp>
 #include <Kale/Vulkan/Shader/Shader.hpp>
+
+#include <vulkan/vulkan.hpp>
 #include <string>
 #include <vector>
 
@@ -44,17 +45,17 @@ namespace Kale::Vulkan {
 		/**
 		 * The graphics pipeline
 		 */
-		vk::Pipeline pipeline;
+		vk::UniquePipeline pipeline;
 
 		/**
 		 * The pipeline layout
 		 */
-		vk::PipelineLayout layout;
+		vk::UniquePipelineLayout layout;
 
 		/**
 		 * The render pass object for this graphics pipeline
 		 */
-		vk::RenderPass renderPass;
+		vk::UniqueRenderPass renderPass;
 
 		/**
 		 * Creates an uninitialized graphics pipeline
@@ -98,11 +99,6 @@ namespace Kale::Vulkan {
 		 * @param other Object to move from
 		 */
 		void operator=(GraphicsPipeline&& other);
-
-		/**
-		 * Frees resources if not already freed
-		 */
-		~GraphicsPipeline();
 
 		/**
 		 * Frees resources if not already freed

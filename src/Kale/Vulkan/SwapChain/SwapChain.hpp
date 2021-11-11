@@ -18,6 +18,7 @@
 
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
+
 #include <vulkan/vulkan.hpp>
 #include <vector>
 
@@ -49,7 +50,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The swapchain object
 		 */
-		vk::SwapchainKHR swapchain;
+		vk::UniqueSwapchainKHR swapchain;
 
 		/**
 		 * The extent of the swapchain
@@ -69,7 +70,7 @@ namespace Kale::Vulkan {
 		/**
 		 * All available image views in this swap chain
 		 */
-		std::vector<vk::ImageView> imageViews;
+		std::vector<vk::UniqueImageView> imageViews;
 
 		/**
 		 * The images stored within the swapchain
@@ -79,7 +80,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The frame buffers used for rendering
 		 */
-		std::vector<vk::Framebuffer> frameBuffers;
+		std::vector<vk::UniqueFramebuffer> frameBuffers;
 
 		/**
 		 * Creates a new swap chain given the device to create it from
@@ -115,11 +116,6 @@ namespace Kale::Vulkan {
 		void operator=(SwapChain&& other);
 
 		/**
-		 * Frees resources if not already freed
-		 */
-		~SwapChain();
-
-		/**
 		 * Initializes the object
 		 * @param device 
 		 */
@@ -129,7 +125,7 @@ namespace Kale::Vulkan {
 		 * Creates the frame buffers from the swap chain images/image views given the render pass
 		 * @param renderPass The render pass to create from
 		 */
-		void createFrameBuffers(const vk::RenderPass& renderPass);
+		void createFrameBuffers(const vk::UniqueRenderPass& renderPass);
 
 		/**
 		 * Frees resources if not already freed

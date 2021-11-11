@@ -15,9 +15,11 @@
 */
 
 #include "SwapChainSupportDetails.hpp"
-#include <limits>
+
 #include <Kale/Application/Application.hpp>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
+
+#include <limits>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -34,9 +36,9 @@ SwapChainSupportDetails::SwapChainSupportDetails() {
  * @param physicalDevice The physical device to check for
  */
 SwapChainSupportDetails::SwapChainSupportDetails(const vk::PhysicalDevice& physicalDevice) :
-	capabilities(physicalDevice.getSurfaceCapabilitiesKHR(renderer.surface)),
-	formats(physicalDevice.getSurfaceFormatsKHR(renderer.surface)),
-	presentModes(physicalDevice.getSurfacePresentModesKHR(renderer.surface)) {
+	capabilities(physicalDevice.getSurfaceCapabilitiesKHR(renderer.surface.get())),
+	formats(physicalDevice.getSurfaceFormatsKHR(renderer.surface.get())),
+	presentModes(physicalDevice.getSurfacePresentModesKHR(renderer.surface.get())) {
 	
 	// Empty Body
 }

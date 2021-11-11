@@ -15,8 +15,10 @@
 */
 
 #include "Shader.hpp"
+
 #include <Kale/Application/Application.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
+
 #include <fstream>
 #include <stdexcept>
 
@@ -49,7 +51,7 @@ Shader::Shader(const std::string& filename, ShaderType type, Device& device) : C
  * @param device The device to link the shader to
  * @throws If unable to open the file
  */
-void Shader::init(const std::string filename, ShaderType type, Device& device) {
+void Shader::init(const std::string& filename, ShaderType type, Device& device) {
 	ChildResource::init(device);
 	this->type = type;
 	std::vector<char> code = readFile(filename);
@@ -80,16 +82,16 @@ std::vector<char> Shader::readFile(const std::string& filename) const {
 void Shader::createShaderModule(const std::vector<char>& code) {
 	vk::ShaderModuleCreateInfo createInfo(vk::ShaderModuleCreateFlags(), code.size(),
 		reinterpret_cast<const uint32_t*>(code.data()));
-	shader = parentPtr->logicalDevice.createShaderModule(createInfo);
+	shader = parentPtr->logicalDevice->createShaderModuleUnique(createInfo);
 }
 
 /**
  * Moves a shader and steals its resources
  * @param other The shader to move from
  */
-Shader::Shader(Shader&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)), type(other.type),
-	shader(other.shader) {
-	other.parentPtr = nullptr;
+Shader::Shader(Shader&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)), type(std::move(other.type)),
+	shader(std::move(other.shader)) {
+	// Empty Body
 }
 
 /**
@@ -97,29 +99,17 @@ Shader::Shader(Shader&& other) : ChildResource(dynamic_cast<ChildResource&&>(oth
  * @param other The shader to move from
  */
 void Shader::operator=(Shader&& other) {
-	freeResources();
 	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	type = other.type;
-	shader = other.shader;
-	parentPtr = other.parentPtr;
-	other.parentPtr = nullptr;
-}
-
-/**
- * Frees resources if not already freed
- */
-Shader::~Shader() {
-	freeResources();
+	type = std::move(other.type);
+	shader = std::move(other.shader);
 }
 
 /**
  * Frees resources for this shader
  */
 void Shader::freeResources(bool remove) {
-	if (parentPtr == nullptr) return;
-	parentPtr->logicalDevice.destroyShaderModule(shader);
 	ChildResource::freeResources(remove);
-	parentPtr = nullptr;
+	shader.reset();
 }
 
 /**
@@ -146,7 +136,7 @@ vk::ShaderStageFlagBits Shader::getShaderStage() const {
 vk::PipelineShaderStageCreateInfo Shader::getShaderPipelineInfo() const {
 	vk::PipelineShaderStageCreateInfo createInfo;
 	createInfo.stage = getShaderStage();
-	createInfo.module = shader;
+	createInfo.module = shader.get();
 	createInfo.pName = "main"; // All kale shaders are REQUIRED to have a main function
 	
 	return createInfo;

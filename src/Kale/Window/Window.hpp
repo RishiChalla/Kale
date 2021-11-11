@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <Kale/Math/Vector/Vector.hpp>
+
 #ifdef KALE_SDL
     #include "SDL/WindowOuter.hpp"
 #elif defined(KALE_GLFW)
@@ -25,7 +27,6 @@
 #include <list>
 #include <vector>
 #include <vulkan/vulkan.hpp>
-#include <Kale/Math/Vector/Vector.hpp>
 
 namespace Kale {
 
@@ -96,7 +97,7 @@ namespace Kale {
 		 * @param surface The surface reference
 		 * @throws If the surface creation failed
 		 */
-		void createWindowSurface(const vk::Instance& instance, vk::SurfaceKHR& surface) const;
+		void createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueSurfaceKHR& surface) const;
 		
 		friend class Application;
 		friend class Vulkan::Renderer;

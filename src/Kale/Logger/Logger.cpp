@@ -15,7 +15,9 @@
 */
 
 #include "Logger.hpp"
+
 #include <Kale/Application/Application.hpp>
+
 #include <filesystem>
 #include <date/date.h>
 #include <date/tz.h>
@@ -30,6 +32,13 @@ using namespace Kale;
  * The main console used for printing to the output
  */
 Logger Kale::console;
+
+/**
+ * Creates the logger object, this will not be initialized until load is called
+ */
+Logger::Logger() {
+	// Empty Body
+}
 
 /**
  * Loads and sets up the console

@@ -70,7 +70,8 @@ void Renderer::setupDebugMessageCallback() {
 	createInfo.pfnUserCallback = debugCallback;
 	createInfo.pUserData = nullptr;
 
-	auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
+	auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance.get(),
+		"vkCreateDebugUtilsMessengerEXT"));
 	
 	if (func == nullptr) {
 		console.error("Unable to load Debug Utils Extension");
@@ -78,7 +79,7 @@ void Renderer::setupDebugMessageCallback() {
 	}
 
 	const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo = &createInfo.operator const VkDebugUtilsMessengerCreateInfoEXT&();
-	if (func(instance, pCreateInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+	if (func(instance.get(), pCreateInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
 		console.error("Failed to setup Debug Messenger");
 		return;
 	}
@@ -88,14 +89,15 @@ void Renderer::setupDebugMessageCallback() {
  * Destroys the debug message callback
  */
 void Renderer::destroyDebugMessageCallback() {
-	auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
+	auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance.get(),
+		"vkDestroyDebugUtilsMessengerEXT"));
 
 	if (func == nullptr) {
 		console.error("Failed to load Debug Utils Deletion Extension");
 		return;
 	}
 
-	func(instance, debugMessenger, nullptr);
+	func(instance.get(), debugMessenger, nullptr);
 }
 
 #endif

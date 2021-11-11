@@ -23,7 +23,9 @@ using namespace Kale;
 /**
  * Creates a new clock instance and sets the first time point to now
  */
-Clock::Clock() : a(std::chrono::system_clock::now()), b(std::chrono::system_clock::now()) {}
+Clock::Clock() : a(std::chrono::system_clock::now()), b(std::chrono::system_clock::now()) {
+	// Empty Body
+}
 
 /**
  * Causes the thread to sleep if the call time exceeds the min call time
