@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <Kale/Events/Events.hpp>
+#include <Kale/Core/Events/Events.hpp>
 
 #include <map>
 #include <string>

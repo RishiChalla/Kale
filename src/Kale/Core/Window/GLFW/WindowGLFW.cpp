@@ -16,9 +16,9 @@
 
 #ifdef KALE_GLFW
 
-#include <Kale/Application/Application.hpp>
-#include <Kale/Window/Window.hpp>
-#include <Kale/Events/Events.hpp>
+#include <Kale/Core/Application/Application.hpp>
+#include <Kale/Core/Window/Window.hpp>
+#include <Kale/Core/Events/Events.hpp>
 
 #include <stdexcept>
 

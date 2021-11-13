@@ -16,7 +16,7 @@
 
 #include "Scene.hpp"
 
-#include <Kale/Application/Application.hpp>
+#include <Kale/Core/Application/Application.hpp>
 
 using namespace Kale;
 

@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <Kale/Node/Node.hpp>
-#include <Kale/Events/Events.hpp>
+#include <Kale/Core/Node/Node.hpp>
+#include <Kale/Core/Events/Events.hpp>
 
 #include <list>
 #include <mutex>

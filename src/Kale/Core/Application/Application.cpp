@@ -16,8 +16,8 @@
 
 #include "Application.hpp"
 
-#include <Kale/Clock/Clock.hpp>
-#include <Kale/Settings/Settings.hpp>
+#include <Kale/Core/Clock/Clock.hpp>
+#include <Kale/Core/Settings/Settings.hpp>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 using namespace Kale;

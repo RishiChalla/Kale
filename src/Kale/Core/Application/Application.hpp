@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include <Kale/Window/Window.hpp>
-#include <Kale/Logger/Logger.hpp>
-#include <Kale/Scene/Scene.hpp>
+#include <Kale/Core/Window/Window.hpp>
+#include <Kale/Core/Logger/Logger.hpp>
+#include <Kale/Core/Scene/Scene.hpp>
 
 #include <string>
 #include <memory>

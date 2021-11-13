@@ -16,7 +16,7 @@
 
 #include "SwapChainSupportDetails.hpp"
 
-#include <Kale/Application/Application.hpp>
+#include <Kale/Core/Application/Application.hpp>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 #include <limits>

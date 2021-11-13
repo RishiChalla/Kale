@@ -20,7 +20,7 @@
 #include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 #include <Kale/Vulkan/GraphicsPipeline/GraphicsPipeline.hpp>
 #include <Kale/Vulkan/CommandPool/CommandPool.hpp>
-#include <Kale/Application/Application.hpp>
+#include <Kale/Core/Application/Application.hpp>
 
 #include <vector>
 #include <optional>

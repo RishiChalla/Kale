@@ -18,6 +18,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <ostream>
 
 namespace Kale {
 
@@ -281,5 +282,32 @@ namespace Kale {
 	typedef Vector4<uint32_t> Vector4ui32;
 	typedef Vector4<float> Vector4f;
 	typedef Vector4<double> Vector4d;
+
+	/**
+	 * Prints a vector to an output stream
+	 */
+	template <typename T>
+	std::ostream& operator<<(std::ostream& os, const Kale::Vector2<T>& vec) {
+		os << "Vec2(" << vec.x << ", " << vec.y << ")";
+		return os;
+	}
+
+	/**
+	 * Prints a vector to an output stream
+	 */
+	template <typename T>
+	std::ostream& operator<<(std::ostream& os, const Kale::Vector3<T>& vec) {
+		os << "Vec3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+		return os;
+	}
+
+	/**
+	 * Prints a vector to an output stream
+	 */
+	template <typename T>
+	std::ostream& operator<<(std::ostream& os, const Kale::Vector4<T>& vec) {
+		os << "Vec4(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")";
+		return os;
+	}
 
 }

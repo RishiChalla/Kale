@@ -14,23 +14,13 @@
    limitations under the License.
 */
 
-#include <Kale/Application/Application.hpp>
+#pragma once
 
-using namespace Kale;
-
-/**
- * The main function/entry point of the program
- */
-int main() {
-	// Heap allocate the main app instance
-	mainApp = createApplication();
-
-	// Run the app
-	mainApp->run();
-
-	// Delete the app/free the resources
-	delete mainApp;
-
-	// End the program
-	return 0;
-}
+#include "Application/Application.hpp"
+#include "Clock/Clock.hpp"
+#include "Events/Events.hpp"
+#include "Logger/Logger.hpp"
+#include "Node/Node.hpp"
+#include "Scene/Scene.hpp"
+#include "Settings/Settings.hpp"
+#include "Window/Window.hpp"

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <Kale/Logger/Logger.hpp>
+#include <Kale/Core/Logger/Logger.hpp>
 
 #include <list>
 

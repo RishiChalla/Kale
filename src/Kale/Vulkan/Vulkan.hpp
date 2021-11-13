@@ -14,6 +14,16 @@
    limitations under the License.
 */
 
-#include "Events.hpp"
+#pragma once
 
-using namespace Kale;
+#include "ChildResource/ChildResource.hpp"
+#include "CommandPool/CommandPool.hpp"
+#include "Device/Device.hpp"
+#include "Extensions/Extensions.hpp"
+#include "GraphicsPipeline/GraphicsPipeline.hpp"
+#include "ParentResource/ParentResource.hpp"
+#include "QueueFamilyIndices/QueueFamilyIndices.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Shader/Shader.hpp"
+#include "SwapChain/SwapChain.hpp"
+#include "SwapChainSupportDetails/SwapChainSupportDetails.hpp"

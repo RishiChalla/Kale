@@ -16,7 +16,7 @@
 
 #include "Logger.hpp"
 
-#include <Kale/Application/Application.hpp>
+#include <Kale/Core/Application/Application.hpp>
 
 #include <filesystem>
 #include <date/date.h>

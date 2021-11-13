@@ -16,7 +16,7 @@
 
 #include "Shader.hpp"
 
-#include <Kale/Application/Application.hpp>
+#include <Kale/Core/Application/Application.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
 
 #include <fstream>
