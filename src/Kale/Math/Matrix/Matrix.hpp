@@ -23,6 +23,7 @@
 #include <ostream>
 #include <iomanip>
 #include <type_traits>
+#include <limits>
 
 #ifdef KALE_DEBUG
 #include <stdexcept>
@@ -296,6 +297,52 @@ namespace Kale {
 			return mat;
 		}
 
+		// >------------------- Elementary Row Operations -------------------<
+
+		/**
+		 * Swaps 2 rows within the matrix
+		 * @param row1 The first row
+		 * @param row2 The second row
+		 * @throws In debug mode only if the row is invalid, no release checks/throws are made. It will crash.
+		 */
+		void swapRows(size_t row1, size_t row2) {
+			#ifdef KALE_DEBUG
+			if (row1 > h || row2 > h) throw std::runtime_error("Invalid matrix row");
+			#endif
+			std::swap_ranges(data.begin() + row1 * w, data.begin() + row1 * w + w, data.begin() + row2 * w);
+		}
+
+		/**
+		 * Scales a row within the matrix
+		 * @param row The row to scale
+		 * @param scalar The scalar to scale by
+		 * @throws In debug mode only if the row is invalid, no release checks/throws are made. It will crash.
+		 */
+		void scaleRow(size_t row, T scalar) {
+			#ifdef KALE_DEBUG
+			if (row > h) throw std::runtime_error("Invalid matrix row");
+			#endif
+			for (size_t x = 0; x < w; x++) {
+				get(x, row) *= scalar;
+			}
+		}
+
+		/**
+		 * Adds a row scaled to another row and saves it
+		 * @param row1 The row to add to (this row is modified)
+		 * @param row2 The row to scale by and add from
+		 * @param scalar The scalar to scale row2 by
+		 * @throws In debug mode only if the row is invalid, no release checks/throws are made. It will crash.
+		 */
+		void addScaledRow(size_t row1, size_t row2, T scalar) {
+			#ifdef KALE_DEBUG
+			if (row1 > h || row2 > h) throw std::runtime_error("Invalid matrix row");
+			#endif
+			for (size_t x = 0; x < w; x++) {
+				get(x, row1) += scalar * get(x, row2);
+			}
+		}
+
 		// >------------------- Template Specializations -------------------<
 
 		/**
@@ -382,11 +429,79 @@ namespace Kale {
 		 * @returns The determinant of the matrix
 		 */
 		template <typename R, size_t W = w, size_t H = h>
-		typename std::enable_if<W == H && std::is_floating_point<T>::value &&
-			std::is_floating_point<R>::value, R>::type det() {
+		typename std::enable_if<W == 2 && H == 2, R>::type det() const {
 			
-			R det = static_cast<R>(0);
-			// TODO - Implement This
+			return static_cast<R>(data[0] * data[3] - data[1] * data[2]);
+		}
+
+		/**
+		 * Retrieves the determinant for any square matrix
+		 * @tparam R the return type to use (larger matrices may require a large type for determinants)
+		 * @returns The determinant of the matrix
+		 */
+		template <typename R, size_t W = w, size_t H = h>
+		typename std::enable_if<W == 3 && H == 3, R>::type det() const {
+			return static_cast<R>(
+				data[0] * data[4] * data[8] +
+				data[1] * data[5] * data[6] +
+				data[2] * data[3] * data[7] -
+				data[6] * data[4] * data[2] -
+				data[7] * data[5] * data[0] -
+				data[8] * data[3] * data[1]
+			);
+		}
+
+		/**
+		 * Retrieves the determinant for any square matrix
+		 * @tparam R the return type to use (larger matrices may require a large type for determinants)
+		 * @returns The determinant of the matrix
+		 */
+		template <typename R, size_t W = w, size_t H = h>
+		typename std::enable_if<W == H && (W > 3) && std::is_signed<R>::value, R>::type det() const {
+			
+			// Make copy of Matrix & create determinant variable
+			Matrix<w, h, T> mat(*this);
+			R det = static_cast<R>(1);
+			Vector2st pivot;
+
+			// Gaussian Elimination
+			while (pivot.y <= h && pivot.x <= w) {
+				
+				// Find the max pivot row with the current pivot column
+				size_t rowMax = std::numeric_limits<size_t>::max();
+				{
+					T max = std::numeric_limits<T>::min();
+					for (size_t r = 0; r < h; r++) {
+						T val = abs(mat.get(pivot.x, r));
+						if (val > max) {
+							max = val;
+							rowMax = r;
+						}
+					}
+				}
+
+				// No pivot rows in this column, move to next column
+				if (rowMax == std::numeric_limits<size_t>::max()) {
+					pivot.x++;
+					continue;
+				}
+				
+				mat.swapRows(pivot.y, rowMax);
+				det *= static_cast<R>(-1);
+
+				// Loop through all rows below pivot
+				for (size_t row = pivot.y + 1; row < h; row++) {
+					T f = mat.get(pivot.x, row) / mat.get(pivot.x, pivot.y);
+					det *= static_cast<R>(-f);
+					mat.addScaledRow(row, pivot.y, -f);
+				}
+
+				pivot.x += 1;
+				pivot.y += 1;
+			}
+
+			// Matrix is now in upper triangle form, multiply diagonals and return det
+			for (size_t i = 0; i < W; i++) det *= static_cast<R>(mat.get(i, i));
 			return det;
 		}
 	};
