@@ -109,29 +109,6 @@ void Device::init(uint32_t deviceId) {
 }
 
 /**
- * Move Constructor
- * @param other Object to move from
- */
-Device::Device(Device&& other) : ParentResource(dynamic_cast<ParentResource&&>(other)),
-	physicalDeviceProperties(std::move(other.physicalDeviceProperties)),
-	physicalDevice(std::move(other.physicalDevice)), queueIndices(std::move(other.queueIndices)),
-	logicalDevice(std::move(other.logicalDevice)), queueMap(std::move(other.queueMap)) {
-}
-
-/**
- * Move Assignment
- * @param other Object to move from
- */
-void Device::operator=(Device&& other) {
-	ParentResource::operator=(dynamic_cast<ParentResource&&>(other));
-	physicalDeviceProperties = std::move(other.physicalDeviceProperties);
-	physicalDevice = std::move(other.physicalDevice);
-	queueIndices = std::move(other.queueIndices);
-	logicalDevice = std::move(other.logicalDevice);
-	queueMap = std::move(other.queueMap);
-}
-
-/**
  * Creates the logical device needed
  */
 void Device::createLogicalDevice() {

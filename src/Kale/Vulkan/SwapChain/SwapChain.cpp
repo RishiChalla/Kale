@@ -132,32 +132,6 @@ SwapChain::SwapChain() {
 }
 
 /**
- * Move Constructor
- * @param other Object to move from
- */
-SwapChain::SwapChain(SwapChain&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
-	swapchain(std::move(other.swapchain)), support(std::move(other.support)), images(std::move(other.images)),
-	imageViews(std::move(other.imageViews)), extent(std::move(other.extent)), format(std::move(other.format)),
-	frameBuffers(std::move(other.frameBuffers)) {
-	// Empty Body
-}
-
-/**
- * Move Assignment
- * @param other Object to move from
- */
-void SwapChain::operator=(SwapChain&& other) {
-	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	swapchain = std::move(other.swapchain);
-	support = std::move(other.support);
-	imageViews = std::move(other.imageViews);
-	images = std::move(other.images);
-	extent = std::move(other.extent);
-	format = std::move(other.format);
-	frameBuffers = std::move(other.frameBuffers);
-}
-
-/**
  * Frees resources if not already freed
  */
 void SwapChain::freeResources(bool remove) {

@@ -95,28 +95,6 @@ namespace Kale::Vulkan {
 		Device(uint32_t deviceId);
 
 		/**
-		 * Copying is not supported for resources living on the GPU
-		 */
-		Device(const Device& other) = delete;
-		
-		/**
-		 * Move Constructor
-		 * @param other Object to move from
-		 */
-		Device(Device&& other);
-
-		/**
-		 * Copying is not supported for resources living on the GPU
-		 */
-		void operator=(const Device& other) = delete;
-
-		/**
-		 * Move Assignment
-		 * @param other Object to move from
-		 */
-		void operator=(Device&& other);
-
-		/**
 		 * Initializes this object
 		 * @param device The device to initialize with
 		 */

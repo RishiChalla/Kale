@@ -82,28 +82,6 @@ namespace Kale::Vulkan {
 		Shader(const std::string& filename, ShaderType type, Device& device);
 
 		/**
-		 * Shaders don't support copying
-		 */
-		Shader(const Shader& other) = delete;
-
-		/**
-		 * Moves a shader and steals its resources
-		 * @param other The shader to move from
-		 */
-		Shader(Shader&& other);
-
-		/**
-		 * Shaders don't support copying
-		 */
-		void operator=(const Shader& other) = delete;
-
-		/**
-		 * Move assignment
-		 * @param other The shader to move from
-		 */
-		void operator=(Shader&& other);
-
-		/**
 		 * Initializes this object
 		 * @param filename The shader file to initialize from
 		 * @param type The type of shader this is

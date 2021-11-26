@@ -79,28 +79,6 @@ namespace Kale::Vulkan {
 		void init(const std::string& vert, const std::string& frag, Device& device);
 
 		/**
-		 * Graphics Pipelines do not support copying
-		 */
-		GraphicsPipeline(const GraphicsPipeline& other) = delete;
-
-		/**
-		 * Graphics Pipelines do not support copying
-		 */
-		void operator=(const GraphicsPipeline& other) = delete;
-
-		/**
-		 * Moves the graphics pipeline
-		 * @param other Object to move from
-		 */
-		GraphicsPipeline(GraphicsPipeline&& other);
-		
-		/**
-		 * Moves the graphics pipeline
-		 * @param other Object to move from
-		 */
-		void operator=(GraphicsPipeline&& other);
-
-		/**
 		 * Frees resources if not already freed
 		 */
 		void freeResources(bool remove = true) override;

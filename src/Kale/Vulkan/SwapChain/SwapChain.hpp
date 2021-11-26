@@ -94,28 +94,6 @@ namespace Kale::Vulkan {
 		SwapChain();
 
 		/**
-		 * GPU Objects do not support copying
-		 */
-		SwapChain(const SwapChain& other) = delete;
-		
-		/**
-		 * Move Constructor
-		 * @param other Object to move from
-		 */
-		SwapChain(SwapChain&& other);
-
-		/**
-		 * GPU Objects do not support copying
-		 */
-		void operator=(const SwapChain& other) = delete;
-
-		/**
-		 * Move Assignment
-		 * @param other Object to move from
-		 */
-		void operator=(SwapChain&& other);
-
-		/**
 		 * Initializes the object
 		 * @param device 
 		 */

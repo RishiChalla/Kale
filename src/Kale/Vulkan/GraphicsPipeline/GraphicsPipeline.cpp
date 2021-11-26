@@ -44,24 +44,6 @@ GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& f
 }
 
 /**
- * Moves the graphics pipeline
- * @param other Object to move from
- */
-GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
-	pipeline(std::move(other.pipeline)) {
-	// Empty Body
-}
-
-/**
- * Moves the graphics pipeline
- * @param other Object to move from
- */
-void GraphicsPipeline::operator=(GraphicsPipeline&& other) {
-	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	pipeline = std::move(other.pipeline);
-}
-
-/**
  * Creates the pipeline layout
  */
 void GraphicsPipeline::createPipelineLayout() {

@@ -78,28 +78,6 @@ namespace Kale::Vulkan {
 		void init(Device& device, const Vector4f& clearColor);
 
 		/**
-		 * GPU Structures do not support copying
-		 */
-		CommandPool(const CommandPool& other) = delete;
-
-		/**
-		 * GPU Structures do not support copying
-		 */
-		void operator=(const CommandPool& other) = delete;
-
-		/**
-		 * Moves the other command pool to a new object
-		 * @param other The command pool to move from
-		 */
-		CommandPool(CommandPool&& other);
-
-		/**
-		 * Moves the other command pool to this object
-		 * @param other The command pool to move from
-		 */
-		void operator=(CommandPool&& other);
-
-		/**
 		 * Frees resources
 		 */
 		void freeResources(bool remove = true) override;

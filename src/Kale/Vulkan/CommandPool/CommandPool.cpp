@@ -92,25 +92,6 @@ void CommandPool::createCommandBuffers(const Vector4f& clearColor) {
 }
 
 /**
- * Moves the other command pool to a new object
- * @param other The command pool to move from
- */
-CommandPool::CommandPool(CommandPool&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)),
-	commandPool(std::move(other.commandPool)), commandBuffers(std::move(other.commandBuffers)) {
-	// Empty Body
-}
-
-/**
- * Moves the other command pool to this object
- * @param other The command pool to move from
- */
-void CommandPool::operator=(CommandPool&& other) {
-	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	commandPool = std::move(other.commandPool);
-	commandBuffers = std::move(other.commandBuffers);
-}
-
-/**
  * Frees resources
  */
 void CommandPool::freeResources(bool remove) {

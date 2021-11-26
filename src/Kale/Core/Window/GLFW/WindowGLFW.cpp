@@ -432,8 +432,7 @@ void Window::createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueS
 	if (glfwCreateWindowSurface(instance.get(), window, nullptr, &tmpSurface) != VK_SUCCESS)
 		throw std::runtime_error("Unable to create window surface");
 
-	vk::ObjectDestroy<vk::Instance, VULKAN_HPP_DEFAULT_DISPATCHER_TYPE> deleter(instance.get());
-	surface = vk::UniqueSurfaceKHR({tmpSurface}, deleter);
+	surface = vk::UniqueSurfaceKHR(tmpSurface, instance.get());
 }
 
 /**

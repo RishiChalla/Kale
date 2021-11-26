@@ -86,25 +86,6 @@ void Shader::createShaderModule(const std::vector<char>& code) {
 }
 
 /**
- * Moves a shader and steals its resources
- * @param other The shader to move from
- */
-Shader::Shader(Shader&& other) : ChildResource(dynamic_cast<ChildResource&&>(other)), type(std::move(other.type)),
-	shader(std::move(other.shader)) {
-	// Empty Body
-}
-
-/**
- * Move assignment
- * @param other The shader to move from
- */
-void Shader::operator=(Shader&& other) {
-	ChildResource::operator=(dynamic_cast<ChildResource&&>(other));
-	type = std::move(other.type);
-	shader = std::move(other.shader);
-}
-
-/**
  * Frees resources for this shader
  */
 void Shader::freeResources(bool remove) {
