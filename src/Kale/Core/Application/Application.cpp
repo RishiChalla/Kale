@@ -94,9 +94,9 @@ size_t Application::getNumUpdateThreads() const {
  * @param scene The scene to present
  */
 void Application::presentScene(std::shared_ptr<Scene> scene) {
-	presentedScene = scene;
 	scene->onPresent();
 	presentedScene->onSceneChange();
+	presentedScene = scene;
 }
 
 /**

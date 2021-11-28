@@ -20,6 +20,7 @@
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 #include <limits>
+#include <algorithm>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -69,7 +70,10 @@ vk::SurfaceFormatKHR SwapChainSupportDetails::chooseFormat() const {
  */
 vk::PresentModeKHR SwapChainSupportDetails::choosePresentMode() const {
 	// TODO - Add configuration settings for high/medium/low graphics
-	return vk::PresentModeKHR::eFifo;
+	if (std::find(presentModes.begin(), presentModes.end(), vk::PresentModeKHR::eMailbox) != presentModes.end())
+		return vk::PresentModeKHR::eMailbox;
+	else
+		return vk::PresentModeKHR::eFifo;
 }
 
 /**

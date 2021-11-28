@@ -83,13 +83,13 @@
  * ```
  * 
  * Add an src folder and create two files: `App.hpp` and `App.cpp` within it as a simple test. Copy the code below into each file to ensure
- * Kale is properly linked and working.
+ * Kale is properly linked and working. Be sure to also create an assets folder (this can be empty for now) in your parent directory.
  * 
  * > App.hpp
  * ```c++
  * #pragma once
  * 
- * #include <Kale/Application/Application.hpp>
+ * #include <Kale/Core/Core.hpp>
  * 
  * namespace KaleTesting {
  * 	

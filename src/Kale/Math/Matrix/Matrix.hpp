@@ -459,50 +459,51 @@ namespace Kale {
 		template <typename R, size_t W = w, size_t H = h>
 		typename std::enable_if<W == H && (W > 3) && std::is_signed<R>::value, R>::type det() const {
 			
-			// Make copy of Matrix & create determinant variable
-			Matrix<w, h, T> mat(*this);
-			R det = static_cast<R>(1);
-			Vector2st pivot;
+			throw std::runtime_error("Matrix Determinants are Unimplemented");
+			// // Make copy of Matrix & create determinant variable
+			// Matrix<w, h, T> mat(*this);
+			// R det = static_cast<R>(1);
+			// Vector2st pivot;
 
-			// Gaussian Elimination
-			while (pivot.y <= h && pivot.x <= w) {
+			// // Gaussian Elimination
+			// while (pivot.y <= h && pivot.x <= w) {
 				
-				// Find the max pivot row with the current pivot column
-				size_t rowMax = std::numeric_limits<size_t>::max();
-				{
-					T max = std::numeric_limits<T>::min();
-					for (size_t r = 0; r < h; r++) {
-						T val = abs(mat.get(pivot.x, r));
-						if (val > max) {
-							max = val;
-							rowMax = r;
-						}
-					}
-				}
+			// 	// Find the max pivot row with the current pivot column
+			// 	size_t rowMax = std::numeric_limits<size_t>::max();
+			// 	{
+			// 		T max = std::numeric_limits<T>::min();
+			// 		for (size_t r = 0; r < h; r++) {
+			// 			T val = abs(mat.get(pivot.x, r));
+			// 			if (val > max) {
+			// 				max = val;
+			// 				rowMax = r;
+			// 			}
+			// 		}
+			// 	}
 
-				// No pivot rows in this column, move to next column
-				if (rowMax == std::numeric_limits<size_t>::max()) {
-					pivot.x++;
-					continue;
-				}
+			// 	// No pivot rows in this column, move to next column
+			// 	if (rowMax == std::numeric_limits<size_t>::max()) {
+			// 		pivot.x++;
+			// 		continue;
+			// 	}
 				
-				mat.swapRows(pivot.y, rowMax);
-				det *= static_cast<R>(-1);
+			// 	mat.swapRows(pivot.y, rowMax);
+			// 	det *= static_cast<R>(-1);
 
-				// Loop through all rows below pivot
-				for (size_t row = pivot.y + 1; row < h; row++) {
-					T f = mat.get(pivot.x, row) / mat.get(pivot.x, pivot.y);
-					det *= static_cast<R>(-f);
-					mat.addScaledRow(row, pivot.y, -f);
-				}
+			// 	// Loop through all rows below pivot
+			// 	for (size_t row = pivot.y + 1; row < h; row++) {
+			// 		T f = mat.get(pivot.x, row) / mat.get(pivot.x, pivot.y);
+			// 		det *= static_cast<R>(-f);
+			// 		mat.addScaledRow(row, pivot.y, -f);
+			// 	}
 
-				pivot.x += 1;
-				pivot.y += 1;
-			}
+			// 	pivot.x += 1;
+			// 	pivot.y += 1;
+			// }
 
-			// Matrix is now in upper triangle form, multiply diagonals and return det
-			for (size_t i = 0; i < W; i++) det *= static_cast<R>(mat.get(i, i));
-			return det;
+			// // Matrix is now in upper triangle form, multiply diagonals and return det
+			// for (size_t i = 0; i < W; i++) det *= static_cast<R>(mat.get(i, i));
+			// return det;
 		}
 	};
 
