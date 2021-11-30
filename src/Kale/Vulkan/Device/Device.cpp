@@ -16,7 +16,7 @@
 
 #include "Device.hpp"
 
-#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Vulkan/Core/Core.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
 
@@ -165,7 +165,7 @@ void Device::freeResources() {
  * @returns The available physical devices
  */
 std::vector<vk::PhysicalDevice> Device::availableDevices() {
-	std::vector<vk::PhysicalDevice> devices = renderer.instance->enumeratePhysicalDevices();
+	std::vector<vk::PhysicalDevice> devices = Core::instance->enumeratePhysicalDevices();
 	devices.erase(std::remove_if(devices.begin(), devices.end(), [](const vk::PhysicalDevice& device) {
 		return !Device::deviceSupported(device);
 	}), devices.end());

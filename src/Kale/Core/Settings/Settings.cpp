@@ -24,8 +24,6 @@
 
 using namespace Kale;
 
-Settings Kale::settings;
-
 /**
  * Loads the settings from the config json file
  * Should only be called once after the app is run

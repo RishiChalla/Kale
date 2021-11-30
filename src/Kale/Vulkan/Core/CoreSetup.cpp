@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "Renderer.hpp"
+#include "Core.hpp"
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/Extensions/Extensions.hpp>
@@ -29,10 +29,10 @@ using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
- * Sets up the renderer, any functions called prior to this will result in undefined behavior
+ * Sets up the core, any functions called prior to this will result in undefined behavior
  * @param gpuID the ID of the GPU to use for rendering
  */
-void Renderer::setupRenderer(std::optional<uint32_t> gpuID) {
+void Core::setupCore(std::optional<uint32_t> gpuID) {
 
 	try {
 		createInstance();
@@ -44,18 +44,14 @@ void Renderer::setupRenderer(std::optional<uint32_t> gpuID) {
 		// Create window surface for rendering
 		mainApp->getWindow().createWindowSurface(instance, surface);
 
-		// Choose the GPU, useGPU will handle logical device creation
-		if (gpuID.has_value()) device.init(gpuID.value());
-		else {
-			std::vector<vk::PhysicalDevice> devices(Device::availableDevices());
-			if (devices.empty()) throw std::runtime_error("No Available GPU Found");
-			device.init(devices[0]);
-		}
+		// Choose the physical device and set it up
+		chooseDevice(gpuID);
 
 		swapchain.init(device);
-		pipeline.init("shader.vert.spv", "shader.frag.spv", device);
-		swapchain.createFrameBuffers(pipeline.renderPass);
-		commandPool.init(device, Vector4f(0.5f, 0.0f, 1.0f, 1.0f));
+		// pipeline.init("shader.vert.spv", "shader.frag.spv", device);
+		// swapchain.createFrameBuffers(pipeline.renderPass);
+		createCommandPool();
+		// commandPool.init(device, Vector4f(0.5f, 0.0f, 1.0f, 1.0f));
 	}
 	catch (const std::exception& e) {
 		console.error(e.what());
@@ -63,15 +59,17 @@ void Renderer::setupRenderer(std::optional<uint32_t> gpuID) {
 	}
 }
 
+
 /**
  * Cleans vulkan objects before the application closes
  */
-void Renderer::cleanupRenderer() {
+void Core::cleanupCore() {
 	try {
 		#ifdef KALE_DEBUG
 		destroyDebugMessageCallback();
 		#endif
 		
+		commandPool.reset();
 		device.freeResources();
 		surface.reset();
 		instance.reset();
@@ -85,7 +83,7 @@ void Renderer::cleanupRenderer() {
 /**
  * Creates the vulkan instance for this window
  */
-void Renderer::createInstance() {
+void Core::createInstance() {
 	vk::ApplicationInfo appInfo;
 	appInfo.pApplicationName = mainApp->applicationName.c_str();
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -159,4 +157,27 @@ void Renderer::createInstance() {
 	#endif
 
 	instance = vk::createInstanceUnique(createInfo);
+}
+
+/**
+ * Chooses the physical device and sets up the physical device and logical device with the appropriate extensions
+ * @param gpuID the ID of the GPU to use for rendering
+ */
+void Core::chooseDevice(std::optional<uint32_t> gpuID) {
+	// Choose the GPU, useGPU will handle logical device creation
+	if (gpuID.has_value()) device.init(gpuID.value());
+	else {
+		std::vector<vk::PhysicalDevice> devices(Device::availableDevices());
+		if (devices.empty()) throw std::runtime_error("No Available GPU Found");
+		device.init(devices[0]);
+	}
+}
+
+/**
+ * Sets up the command pool
+ */
+void Core::createCommandPool() {
+	vk::CommandPoolCreateInfo createInfo(vk::CommandPoolCreateFlags(),
+		device.queueIndices.graphicsFamilyIndex.value());
+	commandPool = device.logicalDevice->createCommandPoolUnique(createInfo);
 }

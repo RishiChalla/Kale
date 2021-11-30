@@ -16,7 +16,7 @@
 
 #include "SwapChain.hpp"
 
-#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Vulkan/Core/Core.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
 
 using namespace Kale;
@@ -54,7 +54,7 @@ void SwapChain::createSwapChain() {
 		imageCount = support.capabilities.maxImageCount;
 	
 	vk::SwapchainCreateInfoKHR createInfo;
-	createInfo.surface = renderer.surface.get();
+	createInfo.surface = Core::surface.get();
 	createInfo.minImageCount = imageCount;
 	createInfo.imageFormat = swapformat.format;
 	createInfo.imageColorSpace = swapformat.colorSpace;
@@ -120,7 +120,7 @@ void SwapChain::createFrameBuffers(const vk::UniqueRenderPass& renderPass) {
 	for (const vk::UniqueImageView& imageView : imageViews) {
 		vk::FramebufferCreateInfo createInfo(vk::FramebufferCreateFlags(), renderPass.get(), 1, &imageView.get(),
 			extent.width, extent.height, 1);
-		frameBuffers.push_back(renderer.device.logicalDevice->createFramebufferUnique(createInfo));
+		frameBuffers.push_back(Core::device.logicalDevice->createFramebufferUnique(createInfo));
 	}
 }
 

@@ -18,7 +18,7 @@
 
 #include "GraphicsPipeline.hpp"
 
-#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Vulkan/Core/Core.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
 
 #include <array>
@@ -37,10 +37,9 @@ GraphicsPipeline::GraphicsPipeline() {
  * Sets up the graphics pipeline
  * @param vert The vertex shader filename (the assets/shaders/ path is prepended automatically)
  * @param frag The fragment shader filename (the assets/shaders/ path is prepended automatically)
- * @param device The device to create the graphics pipeline on
  */
-GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& frag, Device& device) {
-	init(vert, frag, device);
+GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& frag) {
+	init(vert, frag);
 }
 
 /**
@@ -55,7 +54,7 @@ void GraphicsPipeline::createPipelineLayout() {
  * Creates the render pass object
  */
 void GraphicsPipeline::createRenderPass() {
-	vk::AttachmentDescription colorAttachment(vk::AttachmentDescriptionFlags(), renderer.swapchain.format,
+	vk::AttachmentDescription colorAttachment(vk::AttachmentDescriptionFlags(), Core::swapchain.format,
 		vk::SampleCountFlagBits::e1, vk::AttachmentLoadOp::eClear, vk::AttachmentStoreOp::eStore,
 		vk::AttachmentLoadOp::eDontCare, vk::AttachmentStoreOp::eDontCare, vk::ImageLayout::eUndefined,
 		vk::ImageLayout::ePresentSrcKHR);
@@ -73,14 +72,13 @@ void GraphicsPipeline::createRenderPass() {
  * Sets up the graphics pipeline
  * @param vert The vertex shader filename (the assets/shaders/ path is prepended automatically)
  * @param frag The fragment shader filename (the assets/shaders/ path is prepended automatically)
- * @param device The device to create the graphics pipeline on
  */
-void GraphicsPipeline::init(const std::string& vert, const std::string& frag, Device& device) {
-	ChildResource::init(device);
+void GraphicsPipeline::init(const std::string& vert, const std::string& frag) {
+	ChildResource::init(Core::device);
 
 	// Shaders
-	Shader vertShader(vert, ShaderType::Vertex, device);
-	Shader fragShader(frag, ShaderType::Fragment, device);
+	Shader vertShader(vert, ShaderType::Vertex, Core::device);
+	Shader fragShader(frag, ShaderType::Fragment, Core::device);
 	std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStage = {
 		vertShader.getShaderPipelineInfo(),
 		fragShader.getShaderPipelineInfo()
@@ -94,9 +92,9 @@ void GraphicsPipeline::init(const std::string& vert, const std::string& frag, De
 		vk::PrimitiveTopology::eTriangleList, VK_FALSE);
 
 	// Viewports & Scissors
-	vk::Viewport viewport(0.0f, 0.0f, static_cast<float>(renderer.swapchain.extent.width),
-		static_cast<float>(renderer.swapchain.extent.height), 0.0f, 1.0f);
-	vk::Rect2D scissors(vk::Offset2D(), renderer.swapchain.extent);
+	vk::Viewport viewport(0.0f, 0.0f, static_cast<float>(Core::swapchain.extent.width),
+		static_cast<float>(Core::swapchain.extent.height), 0.0f, 1.0f);
+	vk::Rect2D scissors(vk::Offset2D(), Core::swapchain.extent);
 	vk::PipelineViewportStateCreateInfo viewportCreateInfo(vk::PipelineViewportStateCreateFlags(),
 		1, &viewport, 1, &scissors);
 
@@ -137,7 +135,7 @@ void GraphicsPipeline::init(const std::string& vert, const std::string& frag, De
 	vk::GraphicsPipelineCreateInfo createInfo(vk::PipelineCreateFlags(), 2, shaderStage.data(), &vertexCreateInfo,
 		&inputAssemblyCreateInfo, nullptr, &viewportCreateInfo, &rasterizerCreateInfo, &multisamplingCreateInfo,
 		nullptr, &colorBlendingCreateInfo, &dynamicCreateInfo, layout.get(), renderPass.get());
-	pipeline = device.logicalDevice->createGraphicsPipelineUnique({}, createInfo).value;
+	pipeline = Core::device.logicalDevice->createGraphicsPipelineUnique({}, createInfo).value;
 }
 
 /**
@@ -154,6 +152,6 @@ void GraphicsPipeline::freeResources(bool remove) {
  * Binds the graphics pipeline to a command buffer for drawing
  * @param commandBuffer The command buffer to bind to
  */
-void GraphicsPipeline::bind(const vk::CommandBuffer& commandBuffer) const {
-	commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, *pipeline);
+void GraphicsPipeline::bind(const vk::UniqueCommandBuffer& commandBuffer) const {
+	commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *pipeline);
 }

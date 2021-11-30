@@ -39,6 +39,11 @@ namespace Kale {
 		 * Forward declaration of vulkan renderer class
 		 */
 		class Renderer;
+
+		/**
+		 * Forward declaration of vulkan core class
+		 */
+		class Core;
 	}
 	
 	/**
@@ -100,6 +105,7 @@ namespace Kale {
 		void createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueSurfaceKHR& surface) const;
 		
 		friend class Application;
+		friend class Vulkan::Core;
 		friend class Vulkan::Renderer;
 		friend class Scene;
 		

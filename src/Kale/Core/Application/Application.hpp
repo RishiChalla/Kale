@@ -160,7 +160,7 @@ namespace Kale {
 	/**
 	 * The main application instance
 	 */
-	extern Application* mainApp;
+	inline Application* mainApp = nullptr;
 }
 
 /**

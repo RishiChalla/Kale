@@ -462,7 +462,7 @@ void Window::clear() {
  * Renders everything placed in the frame buffer
  */
 void Window::render() {
-    // TODO - Implement this
+	// TODO - Implement this
 }
 
 #endif

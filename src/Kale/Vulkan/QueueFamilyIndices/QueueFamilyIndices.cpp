@@ -16,7 +16,7 @@
 
 #include "QueueFamilyIndices.hpp"
 
-#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Vulkan/Core/Core.hpp>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -39,7 +39,7 @@ QueueFamilyIndices::QueueFamilyIndices(const vk::PhysicalDevice& device) {
 	for (const vk::QueueFamilyProperties& familyProperties : device.getQueueFamilyProperties()) {
 		// Check the queue flags and set the indices based on them
 		if (familyProperties.queueFlags & vk::QueueFlagBits::eGraphics) graphicsFamilyIndex = i;
-		if (device.getSurfaceSupportKHR(i, renderer.surface.get())) presentFamilyIndex = i;
+		if (device.getSurfaceSupportKHR(i, Core::surface.get())) presentFamilyIndex = i;
 
 		// Break the loop if we've completed all indices
 		if (hasAllIndices()) break;

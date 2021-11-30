@@ -68,7 +68,7 @@ namespace Kale::Vulkan {
 		 * @param frag The filename of the fragment shader (the assets/shaders/ path is prepended automatically)
 		 * @param device The device to create the graphics pipeline on
 		 */
-		GraphicsPipeline(const std::string& vert, const std::string& frag, Device& device);
+		GraphicsPipeline(const std::string& vert, const std::string& frag);
 
 		/**
 		 * Sets up the graphics pipeline
@@ -76,7 +76,7 @@ namespace Kale::Vulkan {
 		 * @param frag The fragment shader filename (the assets/shaders/ path is prepended automatically)
 		 * @param device The device to create the graphics pipeline on
 		 */
-		void init(const std::string& vert, const std::string& frag, Device& device);
+		void init(const std::string& vert, const std::string& frag);
 
 		/**
 		 * Frees resources if not already freed
@@ -87,7 +87,7 @@ namespace Kale::Vulkan {
 		 * Binds the graphics pipeline to a command buffer for drawing
 		 * @param commandBuffer The command buffer to bind to
 		 */
-		void bind(const vk::CommandBuffer& commandBuffer) const;
+		void bind(const vk::UniqueCommandBuffer& commandBuffer) const;
 
 	};
 }

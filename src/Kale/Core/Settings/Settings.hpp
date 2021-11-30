@@ -224,5 +224,5 @@ namespace Kale {
 	/**
 	 * The main settings instance for this running application
 	 */
-	extern Settings settings;
+	inline Settings settings;
 }

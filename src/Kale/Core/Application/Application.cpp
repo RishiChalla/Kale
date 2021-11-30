@@ -18,14 +18,9 @@
 
 #include <Kale/Core/Clock/Clock.hpp>
 #include <Kale/Core/Settings/Settings.hpp>
-#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Vulkan/Core/Core.hpp>
 
 using namespace Kale;
-
-/**
- * The main application instance
- */
-Application* Kale::mainApp = nullptr;
 
 /**
  * Creates a new application instance
@@ -105,9 +100,9 @@ void Application::presentScene(std::shared_ptr<Scene> scene) {
  */
 void Application::update(size_t threadNum) {
 
-    // Update loop
+	// Update loop
 	Clock clock;
-    while (window.isOpen()) {
+	while (window.isOpen()) {
 
 		// Limit UPS and retrieve it
 		float ups = clock.sleep(settings.getMinMSpU());
@@ -115,7 +110,7 @@ void Application::update(size_t threadNum) {
 		// Perform updating
 		if (presentedScene != nullptr)
 			presentedScene->update(threadNum, ups);
-    }
+	}
 }
 
 /**
@@ -142,11 +137,11 @@ void Application::render(size_t threadNum) const {
  */
 void Application::run() {
 	// Creates the window
-    window.create(applicationName.c_str());
+	window.create(applicationName.c_str());
 	
 	// Setup Vulkan
-	Vulkan::renderer.setupRenderer();
-    
+	Vulkan::Core::setupCore();
+	
 	onBegin();
 
 	// Create threads
@@ -168,7 +163,7 @@ void Application::run() {
 
 	// Render loop
 	Clock clock;
-    while (window.isOpen()) {
+	while (window.isOpen()) {
 
 		// Limit FPS and retrieve it
 		float fps = clock.sleep(settings.getMinMSpF());
@@ -177,14 +172,14 @@ void Application::run() {
 		window.update();
 		if (presentedScene != nullptr)
 			presentedScene->present();
-    }
+	}
 
 	// Wait for threads
 	for (std::thread& thread : updateThreads) thread.join();
 	for (std::thread& thread : renderThreads) thread.join();
 
 	// Cleanup vulkan now that execution is done
-	Vulkan::renderer.cleanupRenderer();
+	Vulkan::Core::cleanupCore();
 
 	onEnd();
 }

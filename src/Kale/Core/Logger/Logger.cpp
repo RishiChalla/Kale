@@ -29,11 +29,6 @@
 using namespace Kale;
 
 /**
- * The main console used for printing to the output
- */
-Logger Kale::console;
-
-/**
  * Creates the logger object, this will not be initialized until load is called
  */
 Logger::Logger() {

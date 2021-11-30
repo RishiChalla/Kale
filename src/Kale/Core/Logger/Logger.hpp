@@ -290,7 +290,7 @@ namespace Kale {
 	/**
 	 * The main console used for printing to the output
 	 */
-	extern Logger console;
+	inline Logger console;
 }
 
 /**
