@@ -50,7 +50,7 @@ FrameBuffer::FrameBuffer(Renderer& renderer, const Vector2ui32& size) : ChildRes
 
 	// Allocate memory for the image and bind it
 	imageMemory.init(Core::device, Core::device.logicalDevice.get().getImageMemoryRequirements(image.get()),
-		vk::MemoryPropertyFlagBits::eHostCoherent | vk::MemoryPropertyFlagBits::eHostVisible);
+		vk::MemoryPropertyFlagBits::eDeviceLocal);
 	Core::device.logicalDevice.get().bindImageMemory(image.get(), imageMemory.deviceMemory.get(), imageMemory.memoryInfo.alignment);
 	
 	// Create the image view
