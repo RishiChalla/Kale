@@ -44,6 +44,7 @@ Device::Device(const vk::PhysicalDevice& device) : physicalDevice(device), physi
 	
 	if (!deviceSupported(device)) throw std::runtime_error("Unsupported Device Used");
 
+	memoryProperties = physicalDevice.getMemoryProperties();
 	createLogicalDevice();
 	getQueues();
 }
@@ -67,6 +68,7 @@ Device::Device(uint32_t deviceId) {
 
 	if (!found) throw std::runtime_error("Device not Found");
 
+	memoryProperties = physicalDevice.getMemoryProperties();
 	createLogicalDevice();
 	getQueues();
 }
@@ -81,6 +83,10 @@ void Device::init(const vk::PhysicalDevice& device) {
 	physicalDevice = device;
 	physicalDeviceProperties = device.getProperties();
 	queueIndices = QueueFamilyIndices(device);
+
+	if (!deviceSupported(device)) throw std::runtime_error("Unsupported Device Used");
+
+	memoryProperties = physicalDevice.getMemoryProperties();
 	createLogicalDevice();
 	getQueues();
 }
@@ -104,6 +110,7 @@ void Device::init(uint32_t deviceId) {
 
 	if (!found) throw std::runtime_error("Device not Found");
 
+	memoryProperties = physicalDevice.getMemoryProperties();
 	createLogicalDevice();
 	getQueues();
 }
@@ -158,6 +165,21 @@ void Device::getQueues() {
 void Device::freeResources() {
 	ParentResource::freeChildren();
 	logicalDevice.reset();
+}
+
+/**
+ * Finds a memory type given the type filter and properties
+ * @param typeFilter the filters to apply on the type of memory
+ * @param properties The properties required for the memory
+ * @throws If the device does not have an applicable memory type
+ */
+uint32_t Device::findMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties) const {
+	for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
+		// Check that the filter is correct and that all properties are within the property flags
+		if (typeFilter & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+			return i;
+
+	throw std::runtime_error("Failed to find applicable memory type");
 }
 
 /**

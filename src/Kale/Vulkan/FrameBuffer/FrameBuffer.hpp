@@ -18,6 +18,7 @@
 
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
+#include <Kale/Vulkan/DeviceMemory/DeviceMemory.hpp>
 #include <Kale/Math/Vector/Vector.hpp>
 
 #include <vulkan/vulkan.hpp>
@@ -39,6 +40,11 @@ namespace Kale::Vulkan {
 	 */
 	class FrameBuffer : public ParentResource<FrameBuffer>, public ChildResource<Renderer> {
 	private:
+
+		/**
+		 * The actual memory on the device storing the image
+		 */
+		DeviceMemory imageMemory;
 
 		/**
 		 * The image (ONLY if the object was initialized externally, not from a swapchain)

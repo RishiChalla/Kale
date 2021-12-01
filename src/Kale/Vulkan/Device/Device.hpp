@@ -18,6 +18,7 @@
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
+#include <Kale/Vulkan/DeviceMemory/DeviceMemory.hpp>
 
 #include <vulkan/vulkan.hpp>
 #include <map>
@@ -76,6 +77,11 @@ namespace Kale::Vulkan {
 		QueueFamilyIndices queueIndices;
 
 		/**
+		 * The memory properties of the device
+		 */
+		vk::PhysicalDeviceMemoryProperties memoryProperties;
+
+		/**
 		 * Creates an uninstantiated device
 		 */
 		Device();
@@ -110,6 +116,14 @@ namespace Kale::Vulkan {
 		 * Frees the resources from this device
 		 */
 		void freeResources();
+
+		/**
+		 * Finds a memory type given the type filter and properties
+		 * @param typeFilter the filters to apply on the type of memory
+		 * @param properties The properties required for the memory
+		 * @throws If the device does not have an applicable memory type
+		 */
+		uint32_t findMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties) const;
 
 		/**
 		 * Gets all available and supported physical devices

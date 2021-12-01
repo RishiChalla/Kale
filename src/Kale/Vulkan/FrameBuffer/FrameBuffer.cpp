@@ -43,9 +43,15 @@ FrameBuffer::FrameBuffer() {
 FrameBuffer::FrameBuffer(Renderer& renderer, const Vector2ui32& size) : ChildResource(renderer) {
 
 	// Create the image
-	const vk::Extent3D extent(size.x, size.y, 1);
-	const vk::ImageCreateInfo imageCreateInfo(vk::ImageCreateFlags(), vk::ImageType::e2D, Core::swapchain.format, extent);
+	const vk::ImageCreateInfo imageCreateInfo(vk::ImageCreateFlags(), vk::ImageType::e2D, Core::swapchain.format,
+		{size.x, size.y, 1}, 1, 1, vk::SampleCountFlagBits::e1, vk::ImageTiling::eOptimal,
+		vk::ImageUsageFlagBits::eColorAttachment | vk::ImageUsageFlagBits::eSampled);
 	image = Core::device.logicalDevice.get().createImageUnique(imageCreateInfo);
+
+	// Allocate memory for the image and bind it
+	imageMemory.init(Core::device, Core::device.logicalDevice.get().getImageMemoryRequirements(image.get()),
+		vk::MemoryPropertyFlagBits::eHostCoherent | vk::MemoryPropertyFlagBits::eHostVisible);
+	Core::device.logicalDevice.get().bindImageMemory(image.get(), imageMemory.deviceMemory.get(), imageMemory.memoryInfo.alignment);
 	
 	// Create the image view
 	const vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
@@ -139,4 +145,5 @@ void FrameBuffer::freeResources(bool remove) {
 	framebuffer.reset();
 	imageView.reset();
 	image.reset();
+	imageMemory.freeResources();
 }
