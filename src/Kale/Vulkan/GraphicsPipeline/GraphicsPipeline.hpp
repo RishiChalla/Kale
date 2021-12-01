@@ -17,6 +17,8 @@
 #pragma once
 
 #include <Kale/Vulkan/Shader/Shader.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 
 #include <vulkan/vulkan.hpp>
 #include <string>
@@ -27,18 +29,13 @@ namespace Kale::Vulkan {
 	/**
 	 * Represents the vulkan graphics pipeline
 	 */
-	class GraphicsPipeline : public ChildResource<Device> {
+	class GraphicsPipeline : public ChildResource<SwapChain> {
 	private:
 
 		/**
 		 * Creates the pipeline layout
 		 */
 		void createPipelineLayout();
-
-		/**
-		 * Creates the render pass object
-		 */
-		void createRenderPass();
 
 	public:
 
@@ -53,11 +50,6 @@ namespace Kale::Vulkan {
 		vk::UniquePipelineLayout layout;
 
 		/**
-		 * The render pass object for this graphics pipeline
-		 */
-		vk::UniqueRenderPass renderPass;
-
-		/**
 		 * Creates an uninitialized graphics pipeline
 		 */
 		GraphicsPipeline();
@@ -66,28 +58,22 @@ namespace Kale::Vulkan {
 		 * Creates the graphics pipeline given the required shaders
 		 * @param vert The filename of the vertex shader (the assets/shaders/ path is prepended automatically)
 		 * @param frag The filename of the fragment shader (the assets/shaders/ path is prepended automatically)
-		 * @param device The device to create the graphics pipeline on
+		 * @param renderer The renderer this graphics pipeline will render to
 		 */
-		GraphicsPipeline(const std::string& vert, const std::string& frag);
+		GraphicsPipeline(const std::string& vert, const std::string& frag, const Renderer& renderer);
 
 		/**
 		 * Sets up the graphics pipeline
 		 * @param vert The vertex shader filename (the assets/shaders/ path is prepended automatically)
 		 * @param frag The fragment shader filename (the assets/shaders/ path is prepended automatically)
-		 * @param device The device to create the graphics pipeline on
+		 * @param renderer The renderer this graphics pipeline will render to
 		 */
-		void init(const std::string& vert, const std::string& frag);
+		void init(const std::string& vert, const std::string& frag, const Renderer& renderer);
 
 		/**
 		 * Frees resources if not already freed
 		 */
 		void freeResources(bool remove = true) override;
-
-		/**
-		 * Binds the graphics pipeline to a command buffer for drawing
-		 * @param commandBuffer The command buffer to bind to
-		 */
-		void bind(const vk::UniqueCommandBuffer& commandBuffer) const;
 
 	};
 }

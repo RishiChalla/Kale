@@ -44,3 +44,14 @@ Node::Node(float renderTime, float updateTime, float priority) : renderTime(rend
 	priority(priority) {
 	// Empty Body
 }
+
+/**
+ * Renders the node
+ * @param renderer The renderer to render to
+ */
+void Node::render(const Vulkan::Renderer& renderer) const {
+	const Vulkan::CommandBuffer& commandBuffer(getCommandBuffer());
+	const Vulkan::GraphicsPipeline& graphicsPipeline(getGraphicsPipeline());
+
+	// commandBuffer.get().bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline.pipeline.get());
+}

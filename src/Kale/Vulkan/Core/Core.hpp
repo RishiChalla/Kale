@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#pragma once
+
 #include <Kale/Vulkan/Device/Device.hpp>
 #include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 #include <Kale/Core/Application/Application.hpp>

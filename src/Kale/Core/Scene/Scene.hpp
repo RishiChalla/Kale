@@ -18,6 +18,7 @@
 
 #include <Kale/Core/Node/Node.hpp>
 #include <Kale/Core/Events/Events.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 #include <list>
 #include <mutex>
@@ -32,6 +33,11 @@ namespace Kale {
 	private:
 
 		/**
+		 * The renderer used for rendering this scene
+		 */
+		Vulkan::Renderer renderer;
+
+		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
 		std::list<Node*> nodes;
@@ -43,9 +49,8 @@ namespace Kale {
 
 		/**
 		 * Renders the current scene
-		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
 		 */
-		void render(size_t threadNum) const;
+		void render() const;
 
 		/**
 		 * Updates the current scene
@@ -54,12 +59,8 @@ namespace Kale {
 		 */
 		void update(size_t threadNum, float ups);
 
-		/**
-		 * Renders the current scene
-		 */
-		void present() const;
-
 		friend class Application;
+		friend class Node;
 
 	protected:
 

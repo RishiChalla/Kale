@@ -156,7 +156,7 @@ void Device::getQueues() {
  * Frees the resources from this device
  */
 void Device::freeResources() {
-	ParentResource::freeResources();
+	ParentResource::freeChildren();
 	logicalDevice.reset();
 }
 

@@ -18,6 +18,8 @@
 
 #include <Kale/Vulkan/Core/Core.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
+#include <Kale/Vulkan/FrameBuffer/FrameBuffer.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 using namespace Kale;
 using namespace Kale::Vulkan;
@@ -26,8 +28,7 @@ using namespace Kale::Vulkan;
  * Creates a new swap chain given the device to create it from
  * @param device The device to create the swap chain from
  */
-SwapChain::SwapChain(Device& device) : ChildResource(device),
-	support(device.physicalDevice) {
+SwapChain::SwapChain(Device& device) : ChildResource(device), support(device.physicalDevice) {
 	createSwapChain();
 }
 
@@ -106,10 +107,10 @@ void SwapChain::createImageViews() {
 }
 
 /**
- * Creates the frame buffers from the swap chain images/image views given the render pass
- * @param renderPass The render pass to create from
+ * Creates the frame buffers from the swap chain images/image views given the renderer
+ * @param renderer The renderer to create from
  */
-void SwapChain::createFrameBuffers(const vk::UniqueRenderPass& renderPass) {
+void SwapChain::createFrameBuffers(Renderer& renderer) {
 	// Clear the current frame buffers
 	frameBuffers.clear();
 
@@ -117,11 +118,7 @@ void SwapChain::createFrameBuffers(const vk::UniqueRenderPass& renderPass) {
 	frameBuffers.reserve(imageViews.size());
 
 	// Create the frame buffers from the iamge views
-	for (const vk::UniqueImageView& imageView : imageViews) {
-		vk::FramebufferCreateInfo createInfo(vk::FramebufferCreateFlags(), renderPass.get(), 1, &imageView.get(),
-			extent.width, extent.height, 1);
-		frameBuffers.push_back(Core::device.logicalDevice->createFramebufferUnique(createInfo));
-	}
+	for (size_t i = 0; i < imageViews.size(); i++) frameBuffers.push_back(FrameBuffer(renderer, *this, i));
 }
 
 /**
@@ -136,6 +133,7 @@ SwapChain::SwapChain() {
  */
 void SwapChain::freeResources(bool remove) {
 	ChildResource::freeResources(remove);
+	ParentResource::freeChildren();
 	frameBuffers.clear();
 	imageViews.clear();
 	swapchain.reset();

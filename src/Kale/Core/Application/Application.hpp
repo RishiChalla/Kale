@@ -45,21 +45,10 @@ namespace Kale {
 		std::list<std::thread> updateThreads;
 
 		/**
-		 * A list of the rendering threads
-		 */
-		std::list<std::thread> renderThreads;
-
-		/**
 		 * Handles updating the application in a separate thread
 		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
 		 */
 		void update(size_t threadNum);
-
-		/**
-		 * Handles rendering the application in a separate thread
-		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
-		 */
-		void render(size_t threadNum) const;
 
 		/**
 		 * A pointer to the current scene to render
@@ -143,12 +132,6 @@ namespace Kale {
 		 * @param scene The scene to present
 		 */
 		void presentScene(std::shared_ptr<Scene> scene);
-
-		/**
-		 * Gets the number of threads currently being used to render
-		 * @returns The number of threads used for rendering
-		 */
-		size_t getNumRenderThreads() const;
 
 		/**
 		 * Gets the number of threads currently being used to update

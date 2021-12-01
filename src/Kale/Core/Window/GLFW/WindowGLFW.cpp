@@ -451,18 +451,4 @@ void setIcon(const char* filePath) {
 	throw std::runtime_error("Unimplemented Function Called");
 }
 
-/**
- * Clears the screen for rendering the next frame
- */
-void Window::clear() {
-	// TODO - Implement this
-}
-
-/**
- * Renders everything placed in the frame buffer
- */
-void Window::render() {
-	// TODO - Implement this
-}
-
 #endif

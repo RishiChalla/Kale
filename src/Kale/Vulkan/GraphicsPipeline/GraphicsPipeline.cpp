@@ -37,9 +37,10 @@ GraphicsPipeline::GraphicsPipeline() {
  * Sets up the graphics pipeline
  * @param vert The vertex shader filename (the assets/shaders/ path is prepended automatically)
  * @param frag The fragment shader filename (the assets/shaders/ path is prepended automatically)
+ * @param renderer The renderer this graphics pipeline will render to
  */
-GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& frag) {
-	init(vert, frag);
+GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& frag, const Renderer& renderer) {
+	init(vert, frag, renderer);
 }
 
 /**
@@ -47,34 +48,17 @@ GraphicsPipeline::GraphicsPipeline(const std::string& vert, const std::string& f
  */
 void GraphicsPipeline::createPipelineLayout() {
 	vk::PipelineLayoutCreateInfo layoutCreateInfo;
-	layout = parentPtr->logicalDevice->createPipelineLayoutUnique(layoutCreateInfo);
-}
-
-/**
- * Creates the render pass object
- */
-void GraphicsPipeline::createRenderPass() {
-	vk::AttachmentDescription colorAttachment(vk::AttachmentDescriptionFlags(), Core::swapchain.format,
-		vk::SampleCountFlagBits::e1, vk::AttachmentLoadOp::eClear, vk::AttachmentStoreOp::eStore,
-		vk::AttachmentLoadOp::eDontCare, vk::AttachmentStoreOp::eDontCare, vk::ImageLayout::eUndefined,
-		vk::ImageLayout::ePresentSrcKHR);
-	
-	vk::AttachmentReference colorAttachmentRef(0, vk::ImageLayout::eColorAttachmentOptimal);
-	vk::SubpassDescription subpass(vk::SubpassDescriptionFlags(), vk::PipelineBindPoint::eGraphics);
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &colorAttachmentRef;
-
-	vk::RenderPassCreateInfo createInfo(vk::RenderPassCreateFlags(), 1, &colorAttachment, 1, &subpass);
-	renderPass = parentPtr->logicalDevice->createRenderPassUnique(createInfo);
+	layout = Core::device.logicalDevice->createPipelineLayoutUnique(layoutCreateInfo);
 }
 
 /**
  * Sets up the graphics pipeline
  * @param vert The vertex shader filename (the assets/shaders/ path is prepended automatically)
  * @param frag The fragment shader filename (the assets/shaders/ path is prepended automatically)
+ * @param renderer The renderer this graphics pipeline will render to
  */
-void GraphicsPipeline::init(const std::string& vert, const std::string& frag) {
-	ChildResource::init(Core::device);
+void GraphicsPipeline::init(const std::string& vert, const std::string& frag, const Renderer& renderer) {
+	ChildResource::init(Core::swapchain);
 
 	// Shaders
 	Shader vertShader(vert, ShaderType::Vertex, Core::device);
@@ -127,14 +111,13 @@ void GraphicsPipeline::init(const std::string& vert, const std::string& frag) {
 	vk::PipelineDynamicStateCreateInfo dynamicCreateInfo(vk::PipelineDynamicStateCreateFlags(),
 		static_cast<uint32_t>(dynamicStates.size()), dynamicStates.data());
 
-	// Pipeline Layout/Render Pass
+	// Pipeline Layout
 	createPipelineLayout();
-	createRenderPass();
 
 	// Pipeline Create Info
 	vk::GraphicsPipelineCreateInfo createInfo(vk::PipelineCreateFlags(), 2, shaderStage.data(), &vertexCreateInfo,
 		&inputAssemblyCreateInfo, nullptr, &viewportCreateInfo, &rasterizerCreateInfo, &multisamplingCreateInfo,
-		nullptr, &colorBlendingCreateInfo, &dynamicCreateInfo, layout.get(), renderPass.get());
+		nullptr, &colorBlendingCreateInfo, &dynamicCreateInfo, layout.get(), renderer.renderPass.get());
 	pipeline = Core::device.logicalDevice->createGraphicsPipelineUnique({}, createInfo).value;
 }
 
@@ -144,14 +127,5 @@ void GraphicsPipeline::init(const std::string& vert, const std::string& frag) {
 void GraphicsPipeline::freeResources(bool remove) {
 	ChildResource::freeResources(remove);
 	layout.reset();
-	renderPass.reset();
 	pipeline.reset();
-}
-
-/**
- * Binds the graphics pipeline to a command buffer for drawing
- * @param commandBuffer The command buffer to bind to
- */
-void GraphicsPipeline::bind(const vk::UniqueCommandBuffer& commandBuffer) const {
-	commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *pipeline);
 }

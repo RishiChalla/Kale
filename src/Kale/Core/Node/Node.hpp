@@ -16,9 +16,16 @@
 
 #pragma once
 
-#include <cstddef>
+#include <Kale/Vulkan/GraphicsPipeline/GraphicsPipeline.hpp>
+#include <Kale/Vulkan/CommandBuffer/CommandBuffer.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 
 namespace Kale {
+
+	/**
+	 * Forward declaration of scene class
+	 */
+	class Scene;
 	
 	/**
 	 * The main class for nodes, all nodes must inherit from this class
@@ -29,10 +36,20 @@ namespace Kale {
 	protected:
 
 		/**
-		 * Renders the node
-		 * @param threadNum the index of this thread, ranged 0 - numRenderThreads
+		 * The graphics pipeline used for rendering this node
 		 */
-		virtual void render(size_t threadNum) const = 0;
+		virtual const Vulkan::GraphicsPipeline& getGraphicsPipeline() const = 0;
+
+		/**
+		 * Gets the command buffer with the draw calls
+		 */
+		virtual const Vulkan::CommandBuffer& getCommandBuffer() const = 0;
+
+		/**
+		 * Renders the node
+		 * @param renderer The renderer to render to
+		 */
+		void render(const Vulkan::Renderer& renderer) const;
 
 		/**
 		 * Updates the node

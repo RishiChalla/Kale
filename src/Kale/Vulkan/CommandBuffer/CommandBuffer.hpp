@@ -14,20 +14,27 @@
    limitations under the License.
 */
 
-#include "Window.hpp"
+#pragma once
 
-using namespace Kale;
+#include <Kale/Vulkan/FrameBuffer/FrameBuffer.hpp>
+#include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 
-/**
- * Starts listening to events, override the functions provided in EventHandler to handle the events
- */
-void Window::registerEvents(EventHandler* handler) {
-	eventHandlers.push_back(handler);
-}
+#include <vulkan/vulkan.hpp>
 
-/**
- * Stops listening to events
- */
-void Window::removeEvents(EventHandler* handler) {
-	eventHandlers.remove(handler);
+namespace Kale::Vulkan {
+
+	/**
+	 * The command buffer class used for draw commands
+	 */
+	class CommandBuffer : public ChildResource<FrameBuffer> {
+	private:
+
+	public:
+
+		/**
+		 * The command buffer object
+		 */
+		vk::UniqueCommandBuffer commandBuffer;
+
+	};
 }

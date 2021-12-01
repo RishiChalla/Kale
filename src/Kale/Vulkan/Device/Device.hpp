@@ -109,7 +109,7 @@ namespace Kale::Vulkan {
 		/**
 		 * Frees the resources from this device
 		 */
-		void freeResources() override;
+		void freeResources();
 
 		/**
 		 * Gets all available and supported physical devices

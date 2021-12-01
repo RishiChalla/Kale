@@ -17,6 +17,7 @@
 #include "Scene.hpp"
 
 #include <Kale/Core/Application/Application.hpp>
+#include <Kale/Vulkan/Core/Core.hpp>
 
 using namespace Kale;
 
@@ -42,9 +43,9 @@ void Scene::removeNode(Node* node) {
  * Renders the current scene
  * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */
-void Scene::render(size_t threadNum) const {
+void Scene::render() const {
 	for (Node* node : nodes)
-		node->render(threadNum);
+		node->render(renderer);
 }
 
 /**
@@ -58,17 +59,12 @@ void Scene::update(size_t threadNum, float ups) {
 }
 
 /**
- * Renders the current scene - this is GUARANTEED to be called on the main thread
- */
-void Scene::present() const {
-	// TODO - Vulkan commands to clear screen & swap frame buffers
-}
-
-/**
  * Called when the current scene is presented
  */
 void Scene::onPresent() {
 	mainApp->getWindow().registerEvents(dynamic_cast<EventHandler*>(this));
+	renderer.init();
+	Vulkan::Core::swapchain.createFrameBuffers(renderer);
 }
 
 /**
@@ -76,4 +72,5 @@ void Scene::onPresent() {
  */
 void Scene::onSceneChange() {
 	mainApp->getWindow().removeEvents(dynamic_cast<EventHandler*>(this));
+	renderer.freeResources();
 }

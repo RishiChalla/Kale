@@ -45,13 +45,13 @@ namespace Kale::Vulkan {
 		 * Frees all children resources
 		 */
 		virtual ~ParentResource() {
-			freeResources();
+			freeChildren();
 		}
 
 		/**
 		 * Frees all children resources
 		 */
-		virtual void freeResources() {
+		void freeChildren() {
 			for (ChildResource<Parent>* resource : resources) {
 				try {
 					resource->freeResources(false);

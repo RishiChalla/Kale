@@ -76,16 +76,6 @@ namespace Kale {
 		void create(const char* title);
 		
 		/**
-		 * Clears the screen for rendering the next frame
-		 */
-		void clear();
-		
-		/**
-		 * Renders everything placed in the frame buffer
-		 */
-		void render();
-		
-		/**
 		 * Updates the window
 		 */
 		void update();
@@ -106,8 +96,6 @@ namespace Kale {
 		
 		friend class Application;
 		friend class Vulkan::Core;
-		friend class Vulkan::Renderer;
-		friend class Scene;
 		
 	public:
 		

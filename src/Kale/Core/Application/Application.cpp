@@ -69,14 +69,6 @@ const std::shared_ptr<Scene> Application::getPresentedScene() const {
 }
 
 /**
- * Gets the number of threads currently being used to render
- * @returns The number of threads used for rendering
- */
-size_t Application::getNumRenderThreads() const {
-	return renderThreads.size();
-}
-
-/**
  * Gets the number of threads currently being used to update
  * @returns The number of threads used for updating
  */
@@ -114,25 +106,6 @@ void Application::update(size_t threadNum) {
 }
 
 /**
- * Handles rendering the application in a separate thread
- * @param threadNum the index of this thread, ranged 0 - numRenderThreads
- */
-void Application::render(size_t threadNum) const {
-
-	// Render Loop
-	Clock clock;
-	while (window.isOpen()) {
-
-		// Limit FPS and retrieve it
-		// TODO - replace clock sleeping with frame buffer synchronization
-		float fps = clock.sleep(settings.getMinMSpF());
-
-		if (presentedScene != nullptr)
-			presentedScene->render(threadNum);
-	}
-}
-
-/**
  * Runs the application
  */
 void Application::run() {
@@ -144,21 +117,9 @@ void Application::run() {
 	
 	onBegin();
 
-	// Create threads
-	{
-		size_t threads = static_cast<float>(std::thread::hardware_concurrency()) - 1.0f;
-		size_t upper = static_cast<size_t>(std::ceilf(threads/2.0f));
-		size_t lower = static_cast<size_t>(std::floorf(threads/2.0f));
-
-		// Create update threads
-		for (size_t i = 0; i < upper; i++) {
-			updateThreads.emplace_back(&Application::update, this, i);
-		}
-
-		// Create render threads
-		for (size_t i = 0; i < lower; i++) {
-			renderThreads.emplace_back(&Application::render, this, i);
-		}
+	// Create update threads
+	for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; i++) {
+		updateThreads.emplace_back(&Application::update, this, i);
 	}
 
 	// Render loop
@@ -170,16 +131,16 @@ void Application::run() {
 		
 		// Update the window for event polling, etc
 		window.update();
+
 		if (presentedScene != nullptr)
-			presentedScene->present();
+			presentedScene->render();
 	}
+
+	onEnd();
 
 	// Wait for threads
 	for (std::thread& thread : updateThreads) thread.join();
-	for (std::thread& thread : renderThreads) thread.join();
 
 	// Cleanup vulkan now that execution is done
 	Vulkan::Core::cleanupCore();
-
-	onEnd();
 }
