@@ -22,7 +22,7 @@ using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
- * Creates an unitialized object
+ * Creates an uninitialized object
  */
 DeviceMemory::DeviceMemory() {
 	// Empty Body

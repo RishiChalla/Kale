@@ -44,7 +44,7 @@ namespace Kale::Vulkan {
 	public:
 
 		/**
-		 * Creates an unitialized object
+		 * Creates an uninitialized object
 		 */
 		DeviceMemory();
 

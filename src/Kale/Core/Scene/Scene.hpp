@@ -55,7 +55,7 @@ namespace Kale {
 		/**
 		 * Updates the current scene
 		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
-		 * @param ups The number of upates per second
+		 * @param ups The number of updates per second
 		 */
 		void update(size_t threadNum, float ups);
 

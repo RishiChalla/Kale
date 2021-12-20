@@ -93,9 +93,9 @@ namespace Kale {
 		/**
 		 * The amount of time this node takes to render on average
 		 * 
-		 * You can gain this statistic using the Kale Editor callibration tools.
+		 * You can gain this statistic using the Kale Editor calibration tools.
 		 * This measure is device specific, when developing on multiple devices it is recommended that you use
-		 * a low powered device for callibration, the same device must be used for callibrating all nodes
+		 * a low powered device for calibration, the same device must be used for calibrating all nodes
 		 * to avoid potential bias
 		 */
 		const float renderTime = -1.0f;
@@ -103,9 +103,9 @@ namespace Kale {
 		/**
 		 * The amount of time this node takes to update on average
 		 * 
-		 * You can gain this statistic using the Kale Editor callibration tools.
+		 * You can gain this statistic using the Kale Editor calibration tools.
 		 * This measure is device specific, when developing on multiple devices it is recommended that you use
-		 * a low powered device for callibration, the same device must be used for callibrating all nodes
+		 * a low powered device for calibration, the same device must be used for calibrating all nodes
 		 * to avoid potential bias 
 		 */
 		const float updateTime = -1.0f;

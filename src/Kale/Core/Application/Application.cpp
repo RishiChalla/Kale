@@ -20,28 +20,30 @@
 #include <Kale/Core/Settings/Settings.hpp>
 #include <Kale/Vulkan/Core/Core.hpp>
 
+#include <exception>
+#include <string>
+
 using namespace Kale;
 
 /**
  * Creates a new application instance
  * @param applicationName The name of your application
  */
-Application::Application(const char* applicationName) : applicationName(applicationName) {
-	console.load(this->applicationName);
-	settings.load(this->applicationName);
-}
-
-/**
- * Frees resources and deletes the application
- */
-Application::~Application() {
-	// Empty Body
+Application::Application(const char* applicationName) noexcept : applicationName(applicationName) {
+	try {
+		console.load(this->applicationName);
+		settings.load(this->applicationName);
+	}
+	catch (const std::exception&) {
+		// We have no way of logging effectively, so we'll just have to exit
+		exit(-1);
+	}
 }
 
 /**
  * Gets the window
  */
-Window& Application::getWindow() {
+Window& Application::getWindow() noexcept {
 	return window;
 }
 
@@ -49,14 +51,14 @@ Window& Application::getWindow() {
  * Gets the currently presented scene
  * @returns The currently presented scene pointer
  */
-std::shared_ptr<Scene> Application::getPresentedScene() {
+std::shared_ptr<Scene> Application::getPresentedScene() noexcept {
 	return presentedScene;
 }
 
 /**
  * Gets the window
  */
-const Window& Application::getWindow() const {
+const Window& Application::getWindow() const noexcept {
 	return window;
 }
 
@@ -64,7 +66,7 @@ const Window& Application::getWindow() const {
  * Gets the currently presented scene
  * @returns The currently presented scene pointer
  */
-const std::shared_ptr<Scene> Application::getPresentedScene() const {
+std::shared_ptr<const Scene> Application::getPresentedScene() const noexcept {
 	return presentedScene;
 }
 
@@ -72,7 +74,7 @@ const std::shared_ptr<Scene> Application::getPresentedScene() const {
  * Gets the number of threads currently being used to update
  * @returns The number of threads used for updating
  */
-size_t Application::getNumUpdateThreads() const {
+size_t Application::getNumUpdateThreads() const noexcept {
 	return updateThreads.size();
 }
 
@@ -80,18 +82,26 @@ size_t Application::getNumUpdateThreads() const {
  * Presents a given scene
  * @param scene The scene to present
  */
-void Application::presentScene(std::shared_ptr<Scene> scene) {
-	scene->onPresent();
-	presentedScene->onSceneChange();
-	presentedScene = scene;
+void Application::presentScene(const std::shared_ptr<Scene>& scene) {
+	
+	using namespace std::string_literals;
+	
+	try {
+		scene->onPresent();
+		presentedScene->onSceneChange();
+		presentedScene = scene;
+	}
+	catch (const std::exception& e) {
+		console.error("Failed to present scene - "s + e.what());
+		throw e;
+	}
 }
 
 /**
  * Handles updating the application in a separate thread
  * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
  */
-void Application::update(size_t threadNum) {
-
+void Application::update(size_t threadNum) noexcept {
 	// Update loop
 	Clock clock;
 	while (window.isOpen()) {
@@ -100,22 +110,34 @@ void Application::update(size_t threadNum) {
 		float ups = clock.sleep(settings.getMinMSpU());
 		
 		// Perform updating
-		if (presentedScene != nullptr)
+		if (presentedScene != nullptr) try {
 			presentedScene->update(threadNum, ups);
+		}
+		catch (const std::exception& e) {
+			console.error("Failed to update presented screen on update thread " + std::to_string(threadNum) + " - " + e.what());
+		}
 	}
 }
 
 /**
  * Runs the application
  */
-void Application::run() {
+void Application::run() noexcept {
+	
+	using namespace std::string_literals;
+	
 	// Creates the window
 	window.create(applicationName.c_str());
 	
 	// Setup Vulkan
 	Vulkan::Core::setupCore();
 	
-	onBegin();
+	try {
+		onBegin();
+	}
+	catch (const std::exception& e) {
+		console.error("Failed to call onBegin in application - "s + e.what());
+	}
 
 	// Create update threads
 	for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; i++) {
@@ -127,7 +149,7 @@ void Application::run() {
 	while (window.isOpen()) {
 
 		// Limit FPS and retrieve it
-		float fps = clock.sleep(settings.getMinMSpF());
+		clock.sleep(settings.getMinMSpF());
 		
 		// Update the window for event polling, etc
 		window.update();

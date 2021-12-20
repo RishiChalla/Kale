@@ -39,7 +39,7 @@ namespace Kale::Vulkan {
 		std::optional<uint32_t> presentFamilyIndex;
 
 		/**
-		 * Creates an unitialized object
+		 * Creates an uninitialized object
 		 */
 		QueueFamilyIndices();
 

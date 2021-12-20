@@ -101,10 +101,8 @@ vk::ShaderStageFlagBits Shader::getShaderStage() const {
 	switch (type) {
 		case ShaderType::Vertex:
 			return vk::ShaderStageFlagBits::eVertex;
-			break;
 		case ShaderType::Fragment:
 			return vk::ShaderStageFlagBits::eFragment;
-			break;
 		default:
 			throw std::runtime_error("Invalid Shader Type");
 	}

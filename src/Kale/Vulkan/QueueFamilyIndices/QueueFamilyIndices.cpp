@@ -22,7 +22,7 @@ using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
- * Creates an unitialized object
+ * Creates an uninitialized object
  */
 QueueFamilyIndices::QueueFamilyIndices() {
 	// Empty Body
@@ -34,7 +34,7 @@ QueueFamilyIndices::QueueFamilyIndices() {
  */
 QueueFamilyIndices::QueueFamilyIndices(const vk::PhysicalDevice& device) {
 	
-	// Loop through the family properties and set each indices
+	// Loop through the family properties and set each index
 	uint32_t i = 0;
 	for (const vk::QueueFamilyProperties& familyProperties : device.getQueueFamilyProperties()) {
 		// Check the queue flags and set the indices based on them

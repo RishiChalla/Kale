@@ -43,7 +43,7 @@ namespace Kale::Vulkan {
 		std::vector<vk::PresentModeKHR> presentModes;
 
 		/**
-		 * Creates an unitialized object
+		 * Creates an uninitialized object
 		 */
 		SwapChainSupportDetails();
 

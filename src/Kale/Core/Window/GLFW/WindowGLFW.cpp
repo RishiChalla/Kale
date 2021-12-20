@@ -147,7 +147,6 @@ static void mouseButtonCallback(GLFWwindow* window, int button, int action, int 
 				case GLFW_MOUSE_BUTTON_RIGHT: for (auto handler : *handlers) handler->onRightClick(); return;
 				default: return;
 			}
-			break;
 		case GLFW_RELEASE:
 			switch (button) {
 				case GLFW_MOUSE_BUTTON_LEFT: for (auto handler : *handlers) handler->onLeftClickRelease(); return;
@@ -155,7 +154,6 @@ static void mouseButtonCallback(GLFWwindow* window, int button, int action, int 
 				case GLFW_MOUSE_BUTTON_RIGHT: for (auto handler : *handlers) handler->onRightClickRelease(); return;
 				default: return;
 			}
-			break;
 		default: return;
 	}
 }
@@ -422,7 +420,7 @@ std::vector<const char*> Window::getInstanceExtensions() const {
 }
 
 /**
- * Creates a vuklan window surface given the instance and the surface references
+ * Creates a vulkan window surface given the instance and the surface references
  * @param instance The instance reference
  * @param surface The surface reference
  * @throws If the surface creation failed
@@ -446,7 +444,7 @@ const char* Window::getTitle() const {
  * Sets the window icon to the given image
  * @param filePath The window icon to set to
  */
-void setIcon(const char* filePath) {
+void Window::setIcon(const char* filePath) {
 	// TODO - Implement this
 	throw std::runtime_error("Unimplemented Function Called");
 }

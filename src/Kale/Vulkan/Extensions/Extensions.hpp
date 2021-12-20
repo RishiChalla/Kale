@@ -55,7 +55,7 @@ namespace Kale::Vulkan {
 		// Find requested extensions
 		for (const std::string& requestedExtension : requestedExtensions) {
 
-			// Skip this extension if its not found
+			// Skip this extension if it's not found
 			if (std::find_if(availableExtensions.begin(), availableExtensions.end(), [&](const T& availableExtension) {
 				return requestedExtension == mappingFn(availableExtension);
 			}) == availableExtensions.end())

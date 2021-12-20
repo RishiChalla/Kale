@@ -48,7 +48,7 @@ namespace Kale {
 		 * Handles updating the application in a separate thread
 		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
 		 */
-		void update(size_t threadNum);
+		void update(size_t threadNum) noexcept;
 
 		/**
 		 * A pointer to the current scene to render
@@ -75,18 +75,13 @@ namespace Kale {
 		/**
 		 * Runs the application
 		 */
-		void run();
+		void run() noexcept;
 
 		/**
 		 * Creates a new application instance
 		 * @param applicationName The name of your application
 		 */
-		Application(const char* applicationName);
-
-		/**
-		 * Frees resources and deletes the application
-		 */
-		~Application();
+		explicit Application(const char* applicationName) noexcept;
 
 		friend int ::main();
 
@@ -107,37 +102,37 @@ namespace Kale {
 		 * Gets the window
 		 * @returns a pointer to the window
 		 */
-		Window& getWindow();
+		Window& getWindow() noexcept;
 
 		/**
 		 * Gets the currently presented scene
 		 * @returns The currently presented scene pointer
 		 */
-		std::shared_ptr<Scene> getPresentedScene();
+		[[nodiscard]] std::shared_ptr<Scene> getPresentedScene() noexcept;
 
 		/**
 		 * Gets the window
 		 * @returns a pointer to the window
 		 */
-		const Window& getWindow() const;
+		[[nodiscard]] const Window& getWindow() const noexcept;
 
 		/**
 		 * Gets the currently presented scene
 		 * @returns The currently presented scene pointer
 		 */
-		const std::shared_ptr<Scene> getPresentedScene() const;
+		[[nodiscard]] std::shared_ptr<const Scene> getPresentedScene() const noexcept;
 
 		/**
 		 * Presents a given scene
 		 * @param scene The scene to present
 		 */
-		void presentScene(std::shared_ptr<Scene> scene);
+		void presentScene(const std::shared_ptr<Scene>& scene);
 
 		/**
 		 * Gets the number of threads currently being used to update
 		 * @returns The number of threads used for updating
 		 */
-		size_t getNumUpdateThreads() const;
+		[[nodiscard]] size_t getNumUpdateThreads() const noexcept;
 	};
 
 	/**

@@ -87,7 +87,7 @@ namespace Kale {
 		std::vector<const char*> getInstanceExtensions() const;
 
 		/**
-		 * Creates a vuklan window surface given the instance and the surface references
+		 * Creates a vulkan window surface given the instance and the surface references
 		 * @param instance The instance reference
 		 * @param surface The surface reference
 		 * @throws If the surface creation failed

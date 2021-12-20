@@ -26,7 +26,7 @@ using namespace Kale;
 using namespace Kale::Vulkan;
 
 /**
- * Creates an unitialized object
+ * Creates an uninitialized object
  */
 SwapChainSupportDetails::SwapChainSupportDetails() {
 	// Empty Body
@@ -82,7 +82,7 @@ vk::PresentModeKHR SwapChainSupportDetails::choosePresentMode() const {
  */
 vk::Extent2D SwapChainSupportDetails::chooseSwapExtent() const {
 	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
-		// We're required to use the vulkan/window currnet extent
+		// We're required to use the vulkan/window current extent
 		return capabilities.currentExtent;
 	}
 	else {

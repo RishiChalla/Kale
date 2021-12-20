@@ -59,7 +59,7 @@ FrameBuffer::FrameBuffer(Renderer& renderer, const Vector2ui32& size) : ChildRes
 		Core::swapchain.format, vk::ComponentMapping(), range);
 	imageView = Core::device.logicalDevice.get().createImageViewUnique(imageViewCreateInfo);
 
-	// Setup the frame buffer
+	// Sets up the frame buffer
 	createFrameBuffer(imageView, {size.x, size.y}, renderer.renderPass);
 }
 
@@ -99,7 +99,7 @@ void FrameBuffer::init(Renderer& renderer, const Vector2ui32& size) {
 		Core::swapchain.format, vk::ComponentMapping(), range);
 	imageView = Core::device.logicalDevice.get().createImageViewUnique(imageViewCreateInfo);
 
-	// Setup the frame buffer
+	// Sets up the frame buffer
 	createFrameBuffer(imageView, {size.x, size.y}, renderer.renderPass);
 }
 

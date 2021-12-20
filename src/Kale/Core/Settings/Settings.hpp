@@ -37,7 +37,7 @@ namespace Kale {
 		// All inputs which the player may use to use the bounce ability are mapped to this control/action
 		Bounce,
 		
-		// All remote abilities (restore, spin, etc) are mapped to this control/action
+		// All remote abilities (restore, spin, etc.) are mapped to this control/action
 		Remote,
 		
 		// Movement inputs

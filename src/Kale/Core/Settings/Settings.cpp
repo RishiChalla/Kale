@@ -50,7 +50,6 @@ void Settings::load(const std::string& applicationName) {
 			{"keyMap", keyMap},
 			{"controllerMap", controllerMap}
 		};
-		std::ifstream settingsFile(settingsFilePath);
 		std::ofstream settingsFileOutput(settingsFilePath);
 		settingsFileOutput << settingsJson.dump(4);
 		settingsFileOutput.close();
