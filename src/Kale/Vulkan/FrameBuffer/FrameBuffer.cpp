@@ -17,7 +17,6 @@
 #include "FrameBuffer.hpp"
 
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
-#include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 #include <Kale/Vulkan/Core/Core.hpp>
 
 #ifdef KALE_DEBUG
@@ -64,23 +63,6 @@ FrameBuffer::FrameBuffer(Renderer& renderer, const Vector2ui32& size) : ChildRes
 }
 
 /**
- * Creates an initialized FrameBuffer
- * @param renderer The renderer this frame buffer will be rendered from
- * @param swapchain The swapchain this framebuffer is to be created from
- * @param imageViewIndex the image view index from the swapchain
- */ // TODO - remember to static assert that &swapchain == parentPtr->parentPtr (Our Parent Renderer->SwapChain)
-FrameBuffer::FrameBuffer(Renderer& renderer, const SwapChain& swapchain, size_t imageViewIndex) : ChildResource(renderer) {
-
-	// Ensure that the swapchain given is the same as our renderer's parent
-	#ifdef KALE_DEBUG
-	assert(&swapchain == renderer.getSwapChain());
-	#endif
-
-	// create the frame buffer
-	createFrameBuffer(swapchain.imageViews[imageViewIndex], swapchain.extent, renderer.renderPass);
-}
-
-/**
  * Initializes the object
  * @param renderer The renderer this frame buffer will be rendered from
  */
@@ -101,25 +83,6 @@ void FrameBuffer::init(Renderer& renderer, const Vector2ui32& size) {
 
 	// Sets up the frame buffer
 	createFrameBuffer(imageView, {size.x, size.y}, renderer.renderPass);
-}
-
-/**
- * Initializes the object
- * @param renderer The renderer this frame buffer will be rendered from
- * @param swapchain The swapchain this framebuffer is to be created from
- * @param imageViewIndex the image view index from the swapchain
- */ // TODO - remember to static assert that &swapchain == parentPtr->parentPtr (Our Parent Renderer->SwapChain)
-void FrameBuffer::init(Renderer& renderer, const SwapChain& swapchain, size_t imageViewIndex) {
-
-	ChildResource::init(renderer);
-
-	// Ensure that the swapchain given is the same as our renderer's parent
-	#ifdef KALE_DEBUG
-	assert(&swapchain == renderer.getSwapChain());
-	#endif
-
-	// create the frame buffer
-	createFrameBuffer(swapchain.imageViews[imageViewIndex], swapchain.extent, renderer.renderPass);
 }
 
 /**

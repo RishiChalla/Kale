@@ -118,7 +118,11 @@ void SwapChain::createFrameBuffers(Renderer& renderer) {
 	frameBuffers.reserve(imageViews.size());
 
 	// Create the frame buffers from the iamge views
-	for (size_t i = 0; i < imageViews.size(); i++) frameBuffers.push_back(FrameBuffer(renderer, *this, i));
+	for (const vk::UniqueImageView& imageView : imageViews) {
+		vk::FramebufferCreateInfo createInfo(vk::FramebufferCreateFlags(), renderer.renderPass.get(), 1, &imageView.get(),
+			extent.width, extent.height, 1);
+		frameBuffers.push_back(Core::device.logicalDevice->createFramebufferUnique(createInfo));
+	}
 }
 
 /**

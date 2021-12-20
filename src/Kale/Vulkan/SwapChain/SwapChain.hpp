@@ -20,7 +20,6 @@
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
-#include <Kale/Vulkan/FrameBuffer/FrameBuffer.hpp>
 
 #include <vulkan/vulkan.hpp>
 #include <vector>
@@ -83,7 +82,7 @@ namespace Kale::Vulkan {
 		/**
 		 * The frame buffers used for rendering
 		 */
-		std::vector<FrameBuffer> frameBuffers;
+		std::vector<vk::UniqueFramebuffer> frameBuffers;
 
 		/**
 		 * Creates a new swap chain given the device to create it from

@@ -19,24 +19,16 @@
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <Kale/Vulkan/DeviceMemory/DeviceMemory.hpp>
+#include <Kale/Vulkan/Renderer/Renderer.hpp>
 #include <Kale/Math/Vector/Vector.hpp>
 
 #include <vulkan/vulkan.hpp>
 
 namespace Kale::Vulkan {
-
-	/**
-	 * Forward Declaration of renderer class
-	 */
-	class Renderer;
-
-	/**
-	 * Forward Declaration of swapchain class
-	 */
-	class SwapChain;
 	
 	/**
-	 * Represents a single framebuffer
+	 * Represents a single framebuffer for offscreen rendering, NOT directly to the swapchain.
+	 * To render to the swapchain use the swapchain's framebuffers instead
 	 */
 	class FrameBuffer : public ParentResource<FrameBuffer>, public ChildResource<Renderer> {
 	private:
@@ -64,26 +56,6 @@ namespace Kale::Vulkan {
 		 */
 		void createFrameBuffer(const vk::UniqueImageView& imageView, const vk::Extent2D& extent,
 			const vk::UniqueRenderPass& renderPass);
-
-	protected:
-
-		/**
-		 * Creates an initialized FrameBuffer
-		 * @param renderer The renderer this frame buffer will be rendered from
-		 * @param swapchain The swapchain this framebuffer is to be created from
-		 * @param imageViewIndex the image view index from the swapchain
-		 */
-		FrameBuffer(Renderer& renderer, const SwapChain& swapchain, size_t imageViewIndex);
-
-		/**
-		 * Initializes the object
-		 * @param renderer The renderer this frame buffer will be rendered from
-		 * @param swapchain The swapchain this framebuffer is to be created from
-		 * @param imageViewIndex the image view index from the swapchain
-		 */
-		void init(Renderer& renderer, const SwapChain& swapchain, size_t imageViewIndex);
-
-		friend class SwapChain;
 
 	public:
 
