@@ -106,6 +106,16 @@ void FrameBuffer::freeResources(bool remove) {
 	ChildResource::freeResources(remove);
 	ParentResource::freeChildren();
 	framebuffer.reset();
+}
+
+/**
+ * Frees resources if not already freed
+ * Frees BOTH the imageview/image, and framebuffer
+ */
+void FrameBuffer::freeResources() {
+	ChildResource::freeResources();
+	ParentResource::freeChildren();
+	framebuffer.reset();
 	imageView.reset();
 	image.reset();
 	imageMemory.freeResources();

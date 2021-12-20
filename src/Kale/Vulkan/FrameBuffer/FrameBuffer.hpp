@@ -34,21 +34,6 @@ namespace Kale::Vulkan {
 	private:
 
 		/**
-		 * The actual memory on the device storing the image
-		 */
-		DeviceMemory imageMemory;
-
-		/**
-		 * The image (ONLY if the object was initialized externally, not from a swapchain)
-		 */
-		vk::UniqueImage image;
-
-		/**
-		 * The image view (ONLY if the object was initialized externally, not from a swapchain)
-		 */
-		vk::UniqueImageView imageView;
-
-		/**
 		 * Creates the frame buffer object
 		 * @param imageView the image view to create the framebuffer from
 		 * @param extent The extent of the image view to use
@@ -56,8 +41,31 @@ namespace Kale::Vulkan {
 		 */
 		void createFrameBuffer(const vk::UniqueImageView& imageView, const vk::Extent2D& extent,
 			const vk::UniqueRenderPass& renderPass);
+	
+	protected:
+
+		/**
+		 * Frees resources if not already freed
+		 * ONLY frees the frame buffer itself, not the image view or image
+		 */
+		void freeResources(bool remove) override;
 
 	public:
+
+		/**
+		 * The actual memory on the device storing the image
+		 */
+		DeviceMemory imageMemory;
+
+		/**
+		 * The image
+		 */
+		vk::UniqueImage image;
+
+		/**
+		 * The image view
+		 */
+		vk::UniqueImageView imageView;
 
 		/**
 		 * The frame buffer object
@@ -83,7 +91,8 @@ namespace Kale::Vulkan {
 
 		/**
 		 * Frees resources if not already freed
+		 * Frees BOTH the imageview/image, and framebuffer
 		 */
-		void freeResources(bool remove = true) override;
+		void freeResources();
 	};
 }
