@@ -58,7 +58,7 @@ namespace Kale {
 	protected:
 
 		/**
-		 * The main sfml window used for rendering for this application instance
+		 * The main window used for rendering for this application instance
 		 */
 		Window window;
 

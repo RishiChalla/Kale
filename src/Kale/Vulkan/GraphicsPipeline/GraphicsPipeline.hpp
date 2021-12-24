@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/Shader/Shader.hpp>
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
 #include <Kale/Vulkan/SwapChain/SwapChain.hpp>
@@ -77,3 +79,5 @@ namespace Kale::Vulkan {
 
 	};
 }
+
+#endif

@@ -36,20 +36,10 @@ namespace Kale {
 	protected:
 
 		/**
-		 * The graphics pipeline used for rendering this node
-		 */
-		virtual const Vulkan::GraphicsPipeline& getGraphicsPipeline() const = 0;
-
-		/**
-		 * Gets the command buffer with the draw calls
-		 */
-		virtual const Vulkan::CommandBuffer& getCommandBuffer() const = 0;
-
-		/**
 		 * Renders the node
 		 * @param renderer The renderer to render to
 		 */
-		void render(const Vulkan::Renderer& renderer) const;
+		virtual void render() = 0;
 
 		/**
 		 * Updates the node
@@ -65,18 +55,16 @@ namespace Kale {
 
 		/**
 		 * Creates the node parent
-		 * @param renderTime The average render time, please see Node::renderTime for documentation
 		 * @param updateTime The average update time, please see Node::updateTime for documentation
 		 */
-		Node(float renderTime, float updateTime);
+		Node(float updateTime);
 
 		/**
 		 * Creates the node parent
-		 * @param renderTime The average render time, please see Node::renderTime for documentation
 		 * @param updateTime The average update time, please see Node::updateTime for documentation
 		 * @param priority The priority, please see Node::priority for documentation
 		 */
-		Node(float renderTime, float updateTime, float priority);
+		Node(float updateTime, float priority);
 
 		friend class Scene;
 	
@@ -89,16 +77,6 @@ namespace Kale {
 		 * The default is 0.0
 		 */
 		const float priority = 0.0f;
-
-		/**
-		 * The amount of time this node takes to render on average
-		 * 
-		 * You can gain this statistic using the Kale Editor calibration tools.
-		 * This measure is device specific, when developing on multiple devices it is recommended that you use
-		 * a low powered device for calibration, the same device must be used for calibrating all nodes
-		 * to avoid potential bias
-		 */
-		const float renderTime = -1.0f;
 
 		/**
 		 * The amount of time this node takes to update on average

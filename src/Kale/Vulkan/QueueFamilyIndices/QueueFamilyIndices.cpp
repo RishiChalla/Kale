@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "QueueFamilyIndices.hpp"
 
 #include <Kale/Vulkan/Core/Core.hpp>
@@ -65,3 +67,5 @@ std::unordered_set<uint32_t> QueueFamilyIndices::getUniqueIndices() const {
 	if (presentFamilyIndex.has_value()) set.insert(presentFamilyIndex.value());
 	return set;
 }
+
+#endif

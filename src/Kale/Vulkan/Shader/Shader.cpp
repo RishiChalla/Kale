@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "Shader.hpp"
 
 #include <Kale/Core/Application/Application.hpp>
@@ -120,3 +122,5 @@ vk::PipelineShaderStageCreateInfo Shader::getShaderPipelineInfo() const {
 	
 	return createInfo;
 }
+
+#endif

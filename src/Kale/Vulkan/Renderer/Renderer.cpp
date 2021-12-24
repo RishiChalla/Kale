@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "Renderer.hpp"
 
 #include <Kale/Vulkan/Core/Core.hpp>
@@ -71,5 +73,7 @@ void Renderer::freeResources(bool remove) {
 const SwapChain* Renderer::getSwapChain() const {
 	return parentPtr;
 }
+
+#endif
 
 #endif

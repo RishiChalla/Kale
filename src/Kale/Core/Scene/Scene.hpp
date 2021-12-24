@@ -33,11 +33,6 @@ namespace Kale {
 	private:
 
 		/**
-		 * The renderer used for rendering this scene
-		 */
-		Vulkan::Renderer renderer;
-
-		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
 		std::list<Node*> nodes;
@@ -67,7 +62,7 @@ namespace Kale {
 		/**
 		 * The background color of the scene to use for clearing the screen
 		 */
-		Vector4f bgColor = {1.0f, 1.0f, 1.0f, 1.0f};
+		Vector4f bgColor = {1.0f, 0.0f, 1.0f, 1.0f};
 
 		/**
 		 * Adds a node to the scene to render/update

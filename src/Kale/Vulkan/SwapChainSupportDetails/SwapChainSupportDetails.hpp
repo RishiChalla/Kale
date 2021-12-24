@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <vector>
 #include <vulkan/vulkan.hpp>
 
@@ -78,3 +80,5 @@ namespace Kale::Vulkan {
 		vk::Extent2D chooseSwapExtent() const;
 	};
 }
+
+#endif

@@ -17,7 +17,18 @@
 #include "Scene.hpp"
 
 #include <Kale/Core/Application/Application.hpp>
+
+#ifdef KALE_OPENGL
+
+#include <Kale/OpenGL/Core/Core.hpp>
+
+#endif
+
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/Core/Core.hpp>
+
+#endif
 
 using namespace Kale;
 
@@ -44,8 +55,22 @@ void Scene::removeNode(Node* node) {
  * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */
 void Scene::render() const {
+
+#ifdef KALE_OPENGL
+	OpenGL::Core::clearScreen(bgColor);
+#endif
+
 	for (Node* node : nodes)
-		node->render(renderer);
+		node->render();
+	
+	// Swaps the buffers/uses the swapchain to display output
+#ifdef KALE_OPENGL
+	OpenGL::Core::swapBuffers();
+#endif
+
+#ifdef KALE_VULKAN
+	// Vulkan::Core::swapBuffers();
+#endif
 }
 
 /**
@@ -63,8 +88,6 @@ void Scene::update(size_t threadNum, float ups) {
  */
 void Scene::onPresent() {
 	mainApp->getWindow().registerEvents(dynamic_cast<EventHandler*>(this));
-	renderer.init();
-	Vulkan::Core::swapchain.createFrameBuffers(renderer);
 }
 
 /**
@@ -72,5 +95,4 @@ void Scene::onPresent() {
  */
 void Scene::onSceneChange() {
 	mainApp->getWindow().removeEvents(dynamic_cast<EventHandler*>(this));
-	renderer.freeResources();
 }

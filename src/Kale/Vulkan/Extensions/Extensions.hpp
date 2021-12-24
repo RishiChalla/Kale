@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <string>
 #include <vector>
 #include <functional>
@@ -118,3 +120,5 @@ namespace Kale::Vulkan {
 
 	#endif
 }
+
+#endif

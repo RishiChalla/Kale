@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "SwapChain.hpp"
 
 #include <Kale/Vulkan/Core/Core.hpp>
@@ -142,3 +144,5 @@ void SwapChain::freeResources(bool remove) {
 	imageViews.clear();
 	swapchain.reset();
 }
+
+#endif

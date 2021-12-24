@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <algorithm>
 
 namespace Kale::Vulkan {
@@ -83,3 +85,5 @@ namespace Kale::Vulkan {
 		}
 	};
 }
+
+#endif

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/FrameBuffer/FrameBuffer.hpp>
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 
@@ -38,3 +40,5 @@ namespace Kale::Vulkan {
 
 	};
 }
+
+#endif

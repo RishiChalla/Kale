@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "Device.hpp"
 
 #include <Kale/Vulkan/Core/Core.hpp>
@@ -226,3 +228,5 @@ bool Device::deviceSupported(const vk::PhysicalDevice& physicalDevice) {
 	// All checks passed
 	return true;
 }
+
+#endif

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 
 #include <vulkan/vulkan.hpp>
@@ -108,3 +110,5 @@ namespace Kale::Vulkan {
 		vk::PipelineShaderStageCreateInfo getShaderPipelineInfo() const;
 	};
 }
+
+#endif

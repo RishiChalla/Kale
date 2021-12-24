@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
 #include <Kale/Vulkan/Device/Device.hpp>
@@ -73,3 +75,5 @@ namespace Kale::Vulkan {
 
 	};
 }
+
+#endif

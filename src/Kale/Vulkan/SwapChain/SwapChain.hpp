@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/SwapChainSupportDetails/SwapChainSupportDetails.hpp>
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
@@ -113,3 +115,5 @@ namespace Kale::Vulkan {
 		void freeResources(bool remove = true) override;
 	};
 }
+
+#endif

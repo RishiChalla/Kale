@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include "ChildResource/ChildResource.hpp"
 #include "CommandBuffer/CommandBuffer.hpp"
 #include "Core/Core.hpp"
@@ -29,3 +31,5 @@
 #include "Shader/Shader.hpp"
 #include "SwapChain/SwapChain.hpp"
 #include "SwapChainSupportDetails/SwapChainSupportDetails.hpp"
+
+#endif

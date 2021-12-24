@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
 #include <Kale/Vulkan/DeviceMemory/DeviceMemory.hpp>
@@ -139,3 +141,5 @@ namespace Kale::Vulkan {
 		static bool deviceSupported(const vk::PhysicalDevice& physicalDevice);
 	};
 }
+
+#endif

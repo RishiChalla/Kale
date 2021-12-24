@@ -27,31 +27,17 @@ Node::Node() {
 
 /**
  * Creates the node parent
- * @param renderTime The average render time, please see Node::renderTime for documentation
  * @param updateTime The average update time, please see Node::updateTime for documentation
  */
-Node::Node(float renderTime, float updateTime) : renderTime(renderTime), updateTime(updateTime) {
+Node::Node(float updateTime) : updateTime(updateTime) {
 	// Empty Body
 }
 
 /**
  * Creates the node parent
- * @param renderTime The average render time, please see Node::renderTime for documentation
  * @param updateTime The average update time, please see Node::updateTime for documentation
  * @param priority The priority, please see Node::priority for documentation
  */
-Node::Node(float renderTime, float updateTime, float priority) : renderTime(renderTime), updateTime(updateTime),
-	priority(priority) {
+Node::Node(float updateTime, float priority) : updateTime(updateTime), priority(priority) {
 	// Empty Body
-}
-
-/**
- * Renders the node
- * @param renderer The renderer to render to
- */
-void Node::render(const Vulkan::Renderer& renderer) const {
-	const Vulkan::CommandBuffer& commandBuffer(getCommandBuffer());
-	const Vulkan::GraphicsPipeline& graphicsPipeline(getGraphicsPipeline());
-
-	// commandBuffer.get().bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline.pipeline.get());
 }

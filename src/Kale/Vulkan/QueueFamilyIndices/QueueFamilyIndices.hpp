@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <optional>
 #include <unordered_set>
 #include <vulkan/vulkan.hpp>
@@ -62,3 +64,5 @@ namespace Kale::Vulkan {
 		std::unordered_set<uint32_t> getUniqueIndices() const;
 	};
 }
+
+#endif

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/ParentResource/ParentResource.hpp>
 #include <Kale/Vulkan/ChildResource/ChildResource.hpp>
 #include <Kale/Vulkan/DeviceMemory/DeviceMemory.hpp>
@@ -96,3 +98,5 @@ namespace Kale::Vulkan {
 		void freeResources();
 	};
 }
+
+#endif

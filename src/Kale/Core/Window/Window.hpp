@@ -26,9 +26,14 @@
 
 #include <list>
 #include <vector>
-#include <vulkan/vulkan.hpp>
+
+#ifdef KALE_VULKAN
+	#include <vulkan/vulkan.hpp>
+#endif
 
 namespace Kale {
+
+#ifdef KALE_VULKAN
 
 	/**
 	 * Forward declaration of vulkan namespace
@@ -45,6 +50,23 @@ namespace Kale {
 		 */
 		class Core;
 	}
+
+#endif
+
+#ifdef KALE_OPENGL
+
+	/**
+	 * Forward declaration of OpenGL namespace
+	 */
+	namespace OpenGL {
+
+		/**
+		 * Forward declaration of OpenGL core class
+		 */
+		class Core;
+	}
+
+#endif
 	
 	/**
 	 * Forward declaration of the event handler class
@@ -86,6 +108,8 @@ namespace Kale {
 		 */
 		std::vector<const char*> getInstanceExtensions() const;
 
+#ifdef KALE_VULKAN
+
 		/**
 		 * Creates a vulkan window surface given the instance and the surface references
 		 * @param instance The instance reference
@@ -93,9 +117,29 @@ namespace Kale {
 		 * @throws If the surface creation failed
 		 */
 		void createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueSurfaceKHR& surface) const;
+
+		friend class Vulkan::Core;
+
+#endif
+
+#ifdef KALE_OPENGL
+
+		/**
+		 * Sets up Glad
+		 * @throws If setup fails
+		 */
+		void setupGlad() const;
+
+		/**
+		 * Uses the windowing API to swap the front and back buffers
+		 */
+		void swapBuffers() const noexcept;
+
+		friend class OpenGL::Core;
+
+#endif
 		
 		friend class Application;
-		friend class Vulkan::Core;
 		
 	public:
 		

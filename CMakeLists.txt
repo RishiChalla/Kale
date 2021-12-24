@@ -16,6 +16,8 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 option(KALE_USE_SDL = OFF)
 option(KALE_USE_GLFW = ON)
 option(KALE_VERBOSE = OFF)
+option(KALE_OPENGL = ON)
+option(KALE_VULKAN = OFF)
 
 # OS Macros
 if (WIN32)
@@ -76,10 +78,25 @@ if(KALE_DEBUG)
 	target_link_libraries(Kale termcolor)
 endif()
 
+
 # Vulkan
-find_package(Vulkan REQUIRED FATAL_ERROR)
-target_link_libraries(Kale ${Vulkan_LIBRARIES})
-target_include_directories(Kale PUBLIC ${Vulkan_INCLUDE_DIR})
+if (KALE_VULKAN)
+	target_compile_definitions(Kale PUBLIC KALE_VULKAN)
+	find_package(Vulkan REQUIRED FATAL_ERROR)
+	target_link_libraries(Kale ${Vulkan_LIBRARIES})
+	target_include_directories(Kale PUBLIC ${Vulkan_INCLUDE_DIR})
+endif()
+
+# OpenGL
+if (KALE_OPENGL)
+	target_compile_definitions(Kale PUBLIC KALE_OPENGL)
+	find_package(OpenGL REQUIRED)
+	target_link_libraries(Kale ${OpenGL_LIBRARIES})
+	target_include_directories(Kale PUBLIC ${OpenGL_INCLUDE_DIR})
+	add_subdirectory(dependencies/glad/)
+	target_link_libraries(Kale Glad)
+	target_include_directories(Kale PUBLIC dependencies/glad/include/)
+endif()
 
 # SDL
 if (KALE_USE_SDL)
@@ -101,29 +118,40 @@ if (KALE_USE_GLFW)
 	target_compile_definitions(Kale PUBLIC KALE_GLFW)
 endif()
 
-# Compile Shaders
-find_package(Vulkan REQUIRED COMPONENTS glslc)
-find_program(glslc_executable NAMES glslc HINTS Vulkan::glslc)
-
-file(GLOB_RECURSE shaders CONFIGURE_DEPENDS shaders/*.vert shaders/*.frag)
+# Shaders
 set(SHADER_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders/)
-add_custom_command(
-  COMMAND
-    ${CMAKE_COMMAND} -E make_directory ${SHADER_BINARY_DIR}
-  OUTPUT ${SHADER_BINARY_DIR}
-)
 
-foreach(source IN LISTS shaders)
-	get_filename_component(FILENAME ${source} NAME)
+# Compile Shaders - Vulkan
+if (KALE_VULKAN)
+	find_package(Vulkan REQUIRED COMPONENTS glslc)
+	find_program(glslc_executable NAMES glslc HINTS Vulkan::glslc)
+
+	file(GLOB_RECURSE shaders CONFIGURE_DEPENDS shaders/*.vert shaders/*.frag)
 	add_custom_command(
-      COMMAND
-        ${glslc_executable}
-        -o ${SHADER_BINARY_DIR}/${FILENAME}.spv
-        ${source}
-      OUTPUT ${SHADER_BINARY_DIR}/${FILENAME}.spv
-      DEPENDS ${source} ${SHADER_BINARY_DIR}
+		COMMAND
+			${CMAKE_COMMAND} -E make_directory ${SHADER_BINARY_DIR}
+		OUTPUT ${SHADER_BINARY_DIR}
 	)
-	list(APPEND SPV_SHADERS ${SHADER_BINARY_DIR}/${FILENAME}.spv)
-endforeach()
 
-add_custom_target(shaders ALL DEPENDS ${SPV_SHADERS})
+	foreach(source IN LISTS shaders)
+		get_filename_component(FILENAME ${source} NAME)
+		add_custom_command(
+		COMMAND
+			${glslc_executable}
+			-o ${SHADER_BINARY_DIR}/${FILENAME}.spv
+			${source}
+		OUTPUT ${SHADER_BINARY_DIR}/${FILENAME}.spv
+		DEPENDS ${source} ${SHADER_BINARY_DIR}
+		)
+		list(APPEND SPV_SHADERS ${SHADER_BINARY_DIR}/${FILENAME}.spv)
+	endforeach()
+
+	add_custom_target(shaders ALL DEPENDS ${SPV_SHADERS})
+endif()
+
+# Copy Shaders - OpenGL
+if (KALE_OPENGL)
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${CMAKE_CURRENT_SOURCE_DIR}/shaders/ ${SHADER_BINARY_DIR})
+endif()

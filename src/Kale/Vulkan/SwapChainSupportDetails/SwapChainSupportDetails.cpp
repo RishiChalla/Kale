@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "SwapChainSupportDetails.hpp"
 
 #include <Kale/Core/Application/Application.hpp>
@@ -93,3 +95,5 @@ vk::Extent2D SwapChainSupportDetails::chooseSwapExtent() const {
 		return vk::Extent2D{winSize.x, winSize.y};
 	}
 }
+
+#endif

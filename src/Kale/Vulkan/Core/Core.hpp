@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Vulkan/Device/Device.hpp>
 #include <Kale/Vulkan/SwapChain/SwapChain.hpp>
 #include <Kale/Core/Application/Application.hpp>
@@ -108,3 +110,5 @@ namespace Kale::Vulkan {
 	};
 
 }
+
+#endif

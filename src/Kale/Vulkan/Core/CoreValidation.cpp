@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "Core.hpp"
 
 using namespace Kale;
@@ -99,5 +101,7 @@ void Core::destroyDebugMessageCallback() {
 
 	func(instance.get(), debugMessenger, nullptr);
 }
+
+#endif
 
 #endif

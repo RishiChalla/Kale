@@ -18,7 +18,14 @@
 
 #include <Kale/Core/Clock/Clock.hpp>
 #include <Kale/Core/Settings/Settings.hpp>
+
+#ifdef KALE_VULKAN
 #include <Kale/Vulkan/Core/Core.hpp>
+#endif
+
+#ifdef KALE_OPENGL
+#include <Kale/OpenGL/Core/Core.hpp>
+#endif
 
 #include <exception>
 #include <string>
@@ -88,7 +95,7 @@ void Application::presentScene(const std::shared_ptr<Scene>& scene) {
 	
 	try {
 		scene->onPresent();
-		presentedScene->onSceneChange();
+		if (presentedScene != nullptr) presentedScene->onSceneChange();
 		presentedScene = scene;
 	}
 	catch (const std::exception& e) {
@@ -129,8 +136,16 @@ void Application::run() noexcept {
 	// Creates the window
 	window.create(applicationName.c_str());
 	
+	
+#ifdef KALE_VULKAN
 	// Setup Vulkan
 	Vulkan::Core::setupCore();
+#endif
+
+#ifdef KALE_OPENGL
+	// Setup OpenGL
+	OpenGL::Core::setupCore();
+#endif
 	
 	try {
 		onBegin();
@@ -163,6 +178,13 @@ void Application::run() noexcept {
 	// Wait for threads
 	for (std::thread& thread : updateThreads) thread.join();
 
+#ifdef KALE_VULKAN
 	// Cleanup vulkan now that execution is done
 	Vulkan::Core::cleanupCore();
+#endif
+
+#ifdef KALE_OPENGL
+	// Setup OpenGL
+	OpenGL::Core::cleanupCore();
+#endif
 }

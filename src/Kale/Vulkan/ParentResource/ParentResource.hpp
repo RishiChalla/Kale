@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_VULKAN
+
 #include <Kale/Core/Logger/Logger.hpp>
 
 #include <list>
@@ -64,3 +66,5 @@ namespace Kale::Vulkan {
 		}
 	};
 }
+
+#endif

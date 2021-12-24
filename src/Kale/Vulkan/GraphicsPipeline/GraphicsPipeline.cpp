@@ -16,6 +16,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "GraphicsPipeline.hpp"
 
 #include <Kale/Vulkan/Core/Core.hpp>
@@ -129,3 +131,5 @@ void GraphicsPipeline::freeResources(bool remove) {
 	layout.reset();
 	pipeline.reset();
 }
+
+#endif

@@ -19,10 +19,17 @@
 #ifdef KALE_GLFW
 
 #ifdef KALE_WINDOWS
-#include <Windows.h>
+	#include <Windows.h>
 #endif
 
-#define GLFW_INCLUDE_VULKAN
+#ifdef KALE_VULKAN
+	#define GLFW_INCLUDE_VULKAN
+#endif
+
+#ifdef KALE_OPENGL
+	#include <glad/glad.h>
+#endif
+
 #include <GLFW/glfw3.h>
 
 #endif

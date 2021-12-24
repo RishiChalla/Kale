@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "Core.hpp"
 
 #include <Kale/Vulkan/QueueFamilyIndices/QueueFamilyIndices.hpp>
@@ -181,3 +183,5 @@ void Core::createCommandPool() {
 		device.queueIndices.graphicsFamilyIndex.value());
 	commandPool = device.logicalDevice->createCommandPoolUnique(createInfo);
 }
+
+#endif

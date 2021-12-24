@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "FrameBuffer.hpp"
 
 #include <Kale/Vulkan/Renderer/Renderer.hpp>
@@ -120,3 +122,5 @@ void FrameBuffer::freeResources() {
 	image.reset();
 	imageMemory.freeResources();
 }
+
+#endif

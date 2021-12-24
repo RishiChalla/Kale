@@ -14,9 +14,13 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "CommandBuffer.hpp"
 
 using namespace Kale;
 using namespace Kale::Vulkan;
 
 
+
+#endif

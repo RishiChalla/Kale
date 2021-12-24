@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "DeviceMemory.hpp"
 
 #include <Kale/Vulkan/Device/Device.hpp>
@@ -94,3 +96,5 @@ void DeviceMemory::freeResources(bool remove) {
 	deviceMemory.reset();
 	memoryInfo = vk::MemoryRequirements();
 }
+
+#endif

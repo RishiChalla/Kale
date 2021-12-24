@@ -50,7 +50,16 @@ static std::list<_WinGamePad> gamePads;
  */
 Window::Window() {
 	glfwInit();
+
+#ifdef KALE_OPENGL
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
+
+#ifdef KALE_VULKAN
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+#endif
 }
 
 /**
@@ -202,6 +211,10 @@ static void joystickCallback(int jid, int action) {
 void Window::create(const char* title) {
 	this->title = title;
 	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
+
+#ifdef KALE_OPENGL
+	glfwMakeContextCurrent(window);
+#endif
 	
 	handlers = &eventHandlers;
 	glfwSetKeyCallback(window, keyCallback);
@@ -419,6 +432,8 @@ std::vector<const char*> Window::getInstanceExtensions() const {
 	return requiredExtensions;
 }
 
+#ifdef KALE_VULKAN
+
 /**
  * Creates a vulkan window surface given the instance and the surface references
  * @param instance The instance reference
@@ -432,6 +447,28 @@ void Window::createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueS
 
 	surface = vk::UniqueSurfaceKHR(tmpSurface, instance.get());
 }
+
+#endif
+
+#ifdef KALE_OPENGL
+
+/**
+ * Sets up Glad
+ * @throws If setup fails
+ */
+void Window::setupGlad() const {
+	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+		throw std::runtime_error("Unable to setup GLAD");
+}
+
+/**
+ * Uses the windowing API to swap the front and back buffers
+ */
+void Window::swapBuffers() const noexcept {
+	glfwSwapBuffers(window);
+}
+
+#endif
 
 /**
  * Gets the window title
