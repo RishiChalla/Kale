@@ -16,10 +16,12 @@
 
 #pragma once
 
+#ifdef KALE_OPENGL
+
 #include <Kale/Core/Application/Application.hpp>
 #include <Kale/Core/Events/Events.hpp>
 
-#ifdef KALE_OPENGL
+#include <mutex>
 
 namespace Kale::OpenGL {
 
@@ -72,6 +74,11 @@ namespace Kale::OpenGL {
 		friend class Kale::Scene;
 
 	public:
+
+		/**
+		 * The main mutex for rendering on separate threads
+		 */
+		static std::mutex mutex;
 	
 	};
 

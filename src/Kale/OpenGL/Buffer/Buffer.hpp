@@ -1,0 +1,217 @@
+/*
+   Copyright 2021 Rishi Challa
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+	   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+#pragma once
+
+#ifdef KALE_OPENGL
+
+#include <Kale/OpenGL/Utils/Utils.hpp>
+
+#include <vector>
+#include <array>
+#include <algorithm>
+
+#include <glad/glad.h>
+
+namespace Kale::OpenGL {
+
+	/**
+	 * The type of buffer a buffer can hold
+	 */
+	enum class BufferType : GLenum {
+		ElementBuffer = GL_ELEMENT_ARRAY_BUFFER,
+		VertexBuffer = GL_ARRAY_BUFFER,
+		TextureBuffer = GL_TEXTURE_BUFFER
+	};
+
+	/**
+	 * The usage of the buffer, static isn't modified frequently whereas dynamic is
+	 */
+	enum class BufferUsage : GLenum {
+		Static = GL_STATIC_DRAW,
+		Dynamic = GL_DYNAMIC_DRAW
+	};
+
+	/**
+	 * Represents a block of data on the GPU
+	 */
+	template <typename T>
+	class Buffer {
+	private:
+
+		/**
+		 * The data this buffer holds
+		 */
+		std::vector<T> data;
+
+		/**
+		 * The location of the buffer for opengl accessing
+		 */
+		unsigned int buffer;
+
+		/**
+		 * The type of buffer this is
+		 */
+		BufferType type;
+		
+	public:
+
+		/**
+		 * Creates an empty buffer
+		 * @param type The type of buffer
+		 */
+		Buffer(BufferType type) : buffer(0), type(type) {
+			glGenBuffers(1, &buffer);
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+		}
+
+		/**
+		 * Creates a buffer from an array
+		 * @param type The type of buffer
+		 * @param usage The usage of the buffer
+		 * @param data The data to create the buffer from
+		 */
+		template <size_t N> Buffer(BufferType type, BufferUsage usage, std::array<T, N> data) : type(type),
+			data(data.begin(), data.end()) {
+			
+			glGenBuffers(1, &buffer);
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+		}
+
+		/**
+		 * Creates a buffer from a vector
+		 * @param type The type of buffer
+		 * @param usage The usage of the buffer
+		 * @param data The data to create the buffer from
+		 */
+		Buffer(BufferType type, BufferUsage usage, std::vector<T> data) : type(type), data(data) {
+			glGenBuffers(1, &buffer);
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+		}
+
+		/**
+		 * Buffers do not support copying
+		 */
+		Buffer(const Buffer& other) = delete;
+
+		/**
+		 * Buffers do not support copying
+		 */
+		void operator=(const Buffer& other) = delete;
+
+		/**
+		 * Destroys the buffer and frees resources from the GPU
+		 */
+		~Buffer() {
+			glDeleteBuffers(1, &buffer);
+		}
+
+		/**
+		 * Returns the length of the data
+		 */
+		[[nodiscard]] size_t size() const {
+			return data.size();
+		}
+
+		/**
+		 * Retrieves the value in the buffer at a certain index
+		 * @param i The index
+		 * @returns The value within the buffer
+		 */
+		[[nodiscard]] const T& operator[](size_t i) const {
+			return data[i];
+		}
+
+		/**
+		 * Gets the OpenGL id of the buffer
+		 */
+		[[nodiscard]] unsigned int getId() {
+			return buffer;
+		}
+
+		/**
+		 * modifies the buffer
+		 * @param i The index to begin modifying at
+		 * @param val The data to modify and replace with
+		 */
+		template <size_t N> void modify(size_t i, std::array<T, N> val) {
+			std::copy(data.begin() + i, data.begin() + i + N, val.data());
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferSubData(getEnumValue<BufferType>(type), sizeof(T) * i, sizeof(T) * N, data.data());
+		}
+
+		/**
+		 * modifies the buffer
+		 * @param i The index to begin modifying at
+		 * @param val The data to modify and replace with
+		 */
+		void modify(size_t i, std::vector<T> val) {
+			std::copy(data.begin() + i, data.begin() + i + val.size(), val.data());
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferSubData(getEnumValue<BufferType>(type), sizeof(T) * i, sizeof(T) * val.size(), data.data());
+		}
+
+		/**
+		 * Modifies the buffer
+		 * @param i The index to modify
+		 * @param val The data to replace the existing data at the index with
+		 */
+		void modify(size_t i, T val) {
+			data[i] = val;
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferSubData(getEnumValue<BufferType>(type), sizeof(T) * i, sizeof(T) * val.size(), data.data());
+		}
+
+		/**
+		 * Resizes the buffer to a given new size
+		 * @param usage The usage for the buffer
+		 * @param newSize the new size of the buffer
+		 */
+		void resize(BufferUsage usage, size_t newSize) {
+			data.resize(newSize);
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+		}
+
+		/**
+		 * Resizes the buffer to a given array and replaces the data
+		 * @param usage The usage for the buffer
+		 * @param arr the array to resize to and replace with
+		 */
+		template <size_t N> void resize(BufferUsage usage, std::array<T, N> arr) {
+			data.resize(N);
+			std::copy(data.begin(), data.end(), arr.data());
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+		}
+
+		/**
+		 * Resizes the buffer to a given vector and replaces the data
+		 * @param usage The usage for the buffer
+		 * @param vec the vector to resize to and replace with
+		 */
+		void resize(BufferUsage usage, std::vector<T> vec) {
+			data = vec;
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+		}
+
+	};
+}
+
+#endif

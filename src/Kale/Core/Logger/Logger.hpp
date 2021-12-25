@@ -156,7 +156,7 @@ namespace Kale {
 				lc << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << "[" << time << "] " << msg << "\n";
+			logFile << "[" << time << "] " << msg << std::endl;
 		}
 
 		/**
@@ -172,7 +172,7 @@ namespace Kale {
 				ic << "INFO" << dc << "] " << ic << msg << "\n" << rc; // [Info] Msg
 			#endif
 
-			logFile << "[" << time << "] " << "[INFO] " << msg << "\n";
+			logFile << "[" << time << "] " << "[INFO] " << msg << std::endl;
 		}
 
 		/**
@@ -188,7 +188,7 @@ namespace Kale {
 				wc << "WARNING" << dc << "] " << wc << msg << "\n" << rc; // [Warning] Msg
 			#endif
 
-			logFile << "[" << time << "] " << "[WARNING] " << msg << "\n";
+			logFile << "[" << time << "] " << "[WARNING] " << msg << std::endl;
 		}
 
 		/**
@@ -204,7 +204,7 @@ namespace Kale {
 				ec << "ERROR" << dc << "] " << ec << msg << "\n" << rc; // [Error] Msg
 			#endif
 
-			logFile << "[" << time << "] " << "[ERROR] " << msg << "\n";
+			logFile << "[" << time << "] " << "[ERROR] " << msg << std::endl;
 		}
 
 		/**
@@ -223,7 +223,7 @@ namespace Kale {
 				lc << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << msg << std::endl;
 		}
 
 		/**
@@ -243,7 +243,7 @@ namespace Kale {
 				ic << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[INFO] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[INFO] " << msg << std::endl;
 		}
 
 		/**
@@ -263,7 +263,7 @@ namespace Kale {
 				wc << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[WARNING] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[WARNING] " << msg << std::endl;
 		}
 
 		/**
@@ -283,7 +283,7 @@ namespace Kale {
 				ec << msg << "\n" << rc; // Msg
 			#endif
 
-			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[ERROR] " << msg << "\n";
+			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[ERROR] " << msg << std::endl;
 		}
 	};
 

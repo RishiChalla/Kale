@@ -14,21 +14,16 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#pragma once
 
-using namespace Kale;
+#include <Kale/Core/Scene/Scene.hpp>
+#include <Kale/Core/Node/Node.hpp>
 
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
-}
-
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
-}
+#include "BlobNode/BlobNode.hpp"
+#include "CircleNode/CircleNode.hpp"
+#include "JointNode/JointNode.hpp"
+#include "ParticleSystemNode/ParticleSystemNode.hpp"
+#include "PathNode/PathNode.hpp"
+#include "PhysicsBody/PhysicsBody.hpp"
+#include "SpriteNode/SpriteNode.hpp"
+#include "UINode/UINode.hpp"

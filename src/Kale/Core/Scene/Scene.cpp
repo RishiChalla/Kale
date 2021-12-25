@@ -79,8 +79,9 @@ void Scene::render() const {
  * @param ups The number of updates per second
  */
 void Scene::update(size_t threadNum, float ups) {
-	for (Node* node : nodes)
-		node->update(threadNum, ups);
+	// TODO - Delegate updating on separate threads per node to minimize render time
+	// for (Node* node : nodes)
+	// 	node->update(threadNum, ups);
 }
 
 /**

@@ -14,21 +14,31 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#pragma once
 
-using namespace Kale;
+#include <Kale/Core/Node/Node.hpp>
 
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
-}
+namespace Kale {
 
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
+	class UINode : public Node {
+	private:
+
+	protected:
+
+		/**
+		 * Renders the node
+		 * @param renderer The renderer to render to
+		 */
+		void render() override;
+
+		/**
+		 * Updates the node
+		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
+		 * @param ups The amount of updates the current thread is doing in a second
+		 */
+		void update(size_t threadNum, float ups) override;
+
+	public:
+
+	};
 }

@@ -14,21 +14,23 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#pragma once
 
-using namespace Kale;
+#ifdef KALE_OPENGL
 
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
+namespace Kale::OpenGL {
+
+	/**
+	 * Represents a single shader for use by nodes
+	 */
+	class Shader {
+	private:
+	
+	protected:
+
+	public:
+
+	};
 }
 
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
-}
+#endif

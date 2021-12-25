@@ -14,21 +14,23 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#include "ParticleSystemNode.hpp"
 
 using namespace Kale;
 
 /**
- * Creates the node parent
+ * Renders the node
+ * @param renderer The renderer to render to
  */
-Node::Node() {
-	// Empty Body
+void ParticleSystemNode::render() {
+
 }
 
 /**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
+ * Updates the node
+ * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
+ * @param ups The amount of updates the current thread is doing in a second
  */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
+void ParticleSystemNode::update(size_t threadNum, float ups) {
+	
 }

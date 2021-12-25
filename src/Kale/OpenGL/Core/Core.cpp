@@ -67,6 +67,7 @@ void Core::swapBuffers() noexcept {
  * Cleans up the core renderer
  */
 void Core::cleanupCore() noexcept {
+	mainApp->getWindow().removeEvents(dynamic_cast<EventHandler*>(resizeHandler));
 	delete resizeHandler;
 }
 

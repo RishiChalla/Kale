@@ -1,5 +1,6 @@
 TODO - Noexcept
 TODO - NoDiscard
+TODO - Add virtual to all destructors
 TODO - Recreate all the below in wrapper classes/avoid using stl
 TODO - Kale::Vulkan::Utils, includes extension manipulating templates and enumerating templates
 

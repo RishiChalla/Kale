@@ -59,24 +59,9 @@ namespace Kale {
 		 */
 		Node(float updateTime);
 
-		/**
-		 * Creates the node parent
-		 * @param updateTime The average update time, please see Node::updateTime for documentation
-		 * @param priority The priority, please see Node::priority for documentation
-		 */
-		Node(float updateTime, float priority);
-
 		friend class Scene;
 	
 	public:
-
-		/**
-		 * The priority of updating this node
-		 * Update order within a thread is based on priority
-		 * 
-		 * The default is 0.0
-		 */
-		const float priority = 0.0f;
 
 		/**
 		 * The amount of time this node takes to update on average

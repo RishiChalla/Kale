@@ -14,21 +14,18 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#pragma once
 
-using namespace Kale;
+#include <glad/glad.h>
 
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
-}
+namespace Kale::OpenGL {
 
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
+	/**
+	 * Converts a OpenGL based enum to the GLEnum/unsigned int value
+	 * @param value The value of the enum type to convert
+	 */
+	template <typename T> GLenum getEnumValue(T value) {
+		return static_cast<GLenum>(value);
+	}
+	
 }

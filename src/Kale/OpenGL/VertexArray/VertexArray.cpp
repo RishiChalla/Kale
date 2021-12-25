@@ -14,21 +14,13 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#ifdef KALE_OPENGL
+
+#include "VertexArray.hpp"
 
 using namespace Kale;
+using namespace Kale::OpenGL;
 
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
-}
 
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
-}
+
+#endif

@@ -14,21 +14,16 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#pragma once
 
-using namespace Kale;
+namespace Kale {
 
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
-}
+	class PhysicsBody {
+	private:
 
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
+	protected:
+
+	public:
+
+	};
 }
