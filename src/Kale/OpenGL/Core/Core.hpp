@@ -74,11 +74,7 @@ namespace Kale::OpenGL {
 		friend class Kale::Scene;
 
 	public:
-
-		/**
-		 * The main mutex for rendering on separate threads
-		 */
-		static std::mutex mutex;
+	
 	
 	};
 

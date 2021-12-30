@@ -18,6 +18,8 @@
 
 #ifdef KALE_OPENGL
 
+#include <Kale/Math/Math.hpp>
+
 namespace Kale::OpenGL {
 
 	/**
@@ -25,10 +27,92 @@ namespace Kale::OpenGL {
 	 */
 	class Shader {
 	private:
-	
-	protected:
+
+		/**
+		 * The OpenGL id of the shader program
+		 */
+		unsigned int program;
+
+		/**
+		 * Creates a shader, compiles it, and throws if unable to compile.
+		 * @param type The type of shader
+		 * @param filePath the path to the source of the shader
+		 * @returns The shader
+		 * @throws If unable to compile
+		 */
+		unsigned int createShader(unsigned int type, const char* filePath);
 
 	public:
+
+		/**
+		 * Creates, loads, and compiles a new shader program.
+		 * @param vertShaderFile The file path of the vertex shader source
+		 * @param fragShaderFile The file path of the fragment shader source
+		 * @throws If unable to compile
+		 */
+		Shader(const char* vertShaderFile, const char* fragShaderFile);
+
+		/**
+		 * Shaders do not support copying
+		 */
+		Shader(const Shader& other) = delete;
+
+		/**
+		 * Shaders do not support copying
+		 */
+		void operator=(const Shader& other) = delete;
+
+		/**
+		 * Frees resources
+		 */
+		~Shader();
+
+		/**
+		 * Uses this shader program for rendering
+		 */
+		void useProgram() const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param value The value of the uniform
+		 */	
+		void uniform(unsigned int location, Vector2f value) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param value The value of the uniform
+		 */	
+		void uniform(unsigned int location, Vector3f value) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param value The value of the uniform
+		 */	
+		void uniform(unsigned int location, Vector4f value) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param value The value of the uniform
+		 */	
+		void uniform(unsigned int location, Matrix2f value) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param value The value of the uniform
+		 */	
+		void uniform(unsigned int location, Matrix3f value) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param value The value of the uniform
+		 */	
+		void uniform(unsigned int location, Matrix4f value) const;
 
 	};
 }

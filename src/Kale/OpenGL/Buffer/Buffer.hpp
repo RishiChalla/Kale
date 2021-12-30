@@ -66,6 +66,16 @@ namespace Kale::OpenGL {
 		 * The type of buffer this is
 		 */
 		BufferType type;
+
+		/**
+		 * Updates the buffer on the GPU to the data within the vector
+		 */
+		void updateBuffer() {
+			bind();
+			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+		}
+
+		template <typename T, size_t... NFloats> friend class VertexArray;
 		
 	public:
 
@@ -73,9 +83,9 @@ namespace Kale::OpenGL {
 		 * Creates an empty buffer
 		 * @param type The type of buffer
 		 */
-		Buffer(BufferType type) : buffer(0), type(type) {
+		Buffer(BufferType type) : type(type) {
 			glGenBuffers(1, &buffer);
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			bind();
 		}
 
 		/**
@@ -84,24 +94,44 @@ namespace Kale::OpenGL {
 		 * @param usage The usage of the buffer
 		 * @param data The data to create the buffer from
 		 */
-		template <size_t N> Buffer(BufferType type, BufferUsage usage, std::array<T, N> data) : type(type),
+		template <size_t N> Buffer(BufferType type, BufferUsage usage, const std::array<T, N>& data) : type(type),
 			data(data.begin(), data.end()) {
-			
 			glGenBuffers(1, &buffer);
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
-			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+			updateBuffer();
 		}
 
 		/**
 		 * Creates a buffer from a vector
 		 * @param type The type of buffer
 		 * @param usage The usage of the buffer
-		 * @param data The data to create the buffer from
+		 * @param dat The data to create the buffer from
 		 */
-		Buffer(BufferType type, BufferUsage usage, std::vector<T> data) : type(type), data(data) {
+		Buffer(BufferType type, BufferUsage usage, const std::vector<T>& dat) : type(type), data(dat) {
 			glGenBuffers(1, &buffer);
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
-			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+			updateBuffer();
+		}
+
+		/**
+		 * Creates a buffer from a vector
+		 * @param type The type of buffer
+		 * @param usage The usage of the buffer
+		 * @param dat The data to create the buffer from
+		 */
+		Buffer(BufferType type, BufferUsage usage, std::vector<T>&& dat) : type(type), data(std::move(dat)) {
+			glGenBuffers(1, &buffer);
+			updateBuffer();
+		}
+
+		/**
+		 * Creates a buffer from a C array
+		 * @param type The type of buffer
+		 * @param usage The usage of the buffer
+		 * @param arr The data to create the buffer from
+		 * @param n The length of the array
+		 */
+		Buffer(BufferType type, BufferUsage usage, const T* arr, size_t n) : type(type), data(arr, arr + n) {
+			glGenBuffers(1, &buffer);
+			updateBuffer();
 		}
 
 		/**
@@ -138,10 +168,10 @@ namespace Kale::OpenGL {
 		}
 
 		/**
-		 * Gets the OpenGL id of the buffer
+		 * Binds the buffer for use directly with opengl commands
 		 */
-		[[nodiscard]] unsigned int getId() {
-			return buffer;
+		void bind() const {
+			glBindBuffer(getEnumValue<BufferType>(type), buffer);
 		}
 
 		/**
@@ -149,9 +179,9 @@ namespace Kale::OpenGL {
 		 * @param i The index to begin modifying at
 		 * @param val The data to modify and replace with
 		 */
-		template <size_t N> void modify(size_t i, std::array<T, N> val) {
+		template <size_t N> void modify(size_t i, const std::array<T, N>& val) {
 			std::copy(data.begin() + i, data.begin() + i + N, val.data());
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			bind();
 			glBufferSubData(getEnumValue<BufferType>(type), sizeof(T) * i, sizeof(T) * N, data.data());
 		}
 
@@ -160,9 +190,21 @@ namespace Kale::OpenGL {
 		 * @param i The index to begin modifying at
 		 * @param val The data to modify and replace with
 		 */
-		void modify(size_t i, std::vector<T> val) {
+		void modify(size_t i, const std::vector<T>& val) {
 			std::copy(data.begin() + i, data.begin() + i + val.size(), val.data());
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			bind();
+			glBufferSubData(getEnumValue<BufferType>(type), sizeof(T) * i, sizeof(T) * val.size(), data.data());
+		}
+
+		/**
+		 * modifies the buffer
+		 * @param i The index to begin modifying at
+		 * @param arr The data to modify and replace with
+		 * @param n The length of the array/val data
+		 */
+		void modify(size_t i, const T* arr, size_t n) {
+			std::copy(data.begin() + i, data.begin() + i + n, arr);
+			bind();
 			glBufferSubData(getEnumValue<BufferType>(type), sizeof(T) * i, sizeof(T) * val.size(), data.data());
 		}
 
@@ -173,7 +215,7 @@ namespace Kale::OpenGL {
 		 */
 		void modify(size_t i, T val) {
 			data[i] = val;
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
+			bind();
 			glBufferSubData(getEnumValue<BufferType>(type), sizeof(T) * i, sizeof(T) * val.size(), data.data());
 		}
 
@@ -184,8 +226,7 @@ namespace Kale::OpenGL {
 		 */
 		void resize(BufferUsage usage, size_t newSize) {
 			data.resize(newSize);
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
-			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+			updateBuffer();
 		}
 
 		/**
@@ -193,11 +234,10 @@ namespace Kale::OpenGL {
 		 * @param usage The usage for the buffer
 		 * @param arr the array to resize to and replace with
 		 */
-		template <size_t N> void resize(BufferUsage usage, std::array<T, N> arr) {
+		template <size_t N> void resize(BufferUsage usage, const std::array<T, N>& arr) {
 			data.resize(N);
 			std::copy(data.begin(), data.end(), arr.data());
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
-			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+			updateBuffer();
 		}
 
 		/**
@@ -205,10 +245,31 @@ namespace Kale::OpenGL {
 		 * @param usage The usage for the buffer
 		 * @param vec the vector to resize to and replace with
 		 */
-		void resize(BufferUsage usage, std::vector<T> vec) {
+		void resize(BufferUsage usage, const std::vector<T>& vec) {
 			data = vec;
-			glBindBuffer(getEnumValue<BufferType>(type), buffer);
-			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+			updateBuffer();
+		}
+
+		/**
+		 * Resizes the buffer to a given vector and replaces the data
+		 * @param usage The usage for the buffer
+		 * @param vec the vector to resize to and replace with
+		 */
+		void resize(BufferUsage usage, std::vector<T>&& vec) {
+			data = std::move(vec);
+			updateBuffer();
+		}
+
+		/**
+		 * Resizes the buffer to a given c array and replaces the data
+		 * @param usage The usage for the buffer
+		 * @param arr the c array to resize to and replace with
+		 * @param n The length of the c array
+		 */
+		void resize(BufferUsage usage, const T* arr, size_t n) {
+			data.clear();
+			data.insert(data.begin(), arr, arr + n);
+			updateBuffer();
 		}
 
 	};

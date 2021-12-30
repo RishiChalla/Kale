@@ -16,4 +16,8 @@
 
 #pragma once
 
+#include "Buffer/Buffer.hpp"
 #include "Core/Core.hpp"
+#include "Shader/Shader.hpp"
+#include "Utils/Utils.hpp"
+#include "VertexArray/VertexArray.hpp"

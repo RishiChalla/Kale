@@ -65,6 +65,8 @@ namespace Kale {
 		Vector2<T> operator*(Vector2<T> o) const { return Vector2<T>(x * o.x, y * o.y); }
 		Vector2<T> operator/(Vector2<T> o) const { return Vector2<T>(x / o.x, y / o.y); }
 
+		bool operator==(Vector2<T> o) { return x == o.x && y == o.y; }
+
 		T dot(Vector2<T> o) const { return o.x * x + o.y * y; }
 		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y)); }
 
@@ -135,6 +137,8 @@ namespace Kale {
 		Vector3<T> operator-(Vector3<T> o) const { return Vector3<T>(x - o.x, y - o.y, z - o.z); }
 		Vector3<T> operator*(Vector3<T> o) const { return Vector3<T>(x * o.x, y * o.y, z * o.z); }
 		Vector3<T> operator/(Vector3<T> o) const { return Vector3<T>(x / o.x, y / o.y, z / o.z); }
+
+		bool operator==(Vector3<T> o) { return x == o.x && y == o.y && z == o.z; }
 
 		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
 		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z)); }
@@ -217,6 +221,8 @@ namespace Kale {
 		Vector4<T> operator-(Vector4<T> o) const { return Vector4<T>(x - o.x, y - o.y, z - o.z, w - o.w); }
 		Vector4<T> operator*(Vector4<T> o) const { return Vector4<T>(x * o.x, y * o.y, z * o.z, w * o.w); }
 		Vector4<T> operator/(Vector4<T> o) const { return Vector4<T>(x / o.x, y / o.y, z / o.z, w / o.w); }
+
+		bool operator==(Vector4<T> o) { return x == o.x && y == o.y && z == o.z && w == o.w; }
 
 		T dot(Vector4<T> o) const { return o.x * x + o.y * y + o.z * z + o.w * w; }
 		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z + w * w)); }

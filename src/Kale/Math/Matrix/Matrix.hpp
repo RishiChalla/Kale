@@ -39,13 +39,12 @@ namespace Kale {
 	 */
 	template <size_t w, size_t h, typename T>
 	class Matrix {
-	private:
+	public:
+
 		/**
 		 * The matrix internal data
 		 */
 		std::array<T, w*h> data;
-	
-	public:
 		
 		/**
 		 * Creates a 0 initialized matrix
