@@ -22,6 +22,7 @@
 #include <sstream>
 #include <string>
 #include <stdexcept>
+#include <memory>
 
 #include <glad/glad.h>
 
@@ -43,8 +44,7 @@ unsigned int Shader::createShader(unsigned int type, const char* filePath) {
 	// Read in the file source
 	std::string src;
 	{
-		std::ofstream file(filePath);
-		if (!file.is_open()) throw std::runtime_error("Unable to open shader file source");
+		std::ifstream file(filePath);
 		std::ostringstream stream;
 		stream << file.rdbuf();
 		src = stream.str();
@@ -62,14 +62,13 @@ unsigned int Shader::createShader(unsigned int type, const char* filePath) {
 
 	// deal with errors
 	if (!successful) {
-		int logLen;
+		int logLen = 0;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLen);
-		char* infoLog = new char[logLen];
-		glGetShaderInfoLog(shader, logLen, nullptr, infoLog);
-		std::string strInfoLog(infoLog);
-		delete infoLog;
+		std::unique_ptr<char*> infoLog = std::make_unique<char*>(new char[logLen]);
+		glGetShaderInfoLog(shader, logLen, nullptr, *infoLog.get());
+		std::string strInfoLog(*infoLog.get(), logLen);
 		glDeleteShader(shader);
-		throw std::runtime_error("Unable to compile shader ("s + filePath + ") - " + strInfoLog);
+		throw std::runtime_error("Unable to compile shader ("s + filePath + ") - \n" + strInfoLog);
 	}
 
 	return shader;
@@ -101,10 +100,9 @@ Shader::Shader(const char* vertShaderFile, const char* fragShaderFile) {
 	if (!success) {
 		int logLen;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLen);
-		char* infoLog = new char[logLen];
-		glGetProgramInfoLog(program, logLen, nullptr, infoLog);
-		std::string strInfoLog(infoLog);
-		delete infoLog;
+		std::unique_ptr<char*> infoLog = std::make_unique<char*>(new char[logLen]);
+		glGetProgramInfoLog(program, logLen, nullptr, *infoLog.get());
+		std::string strInfoLog(*infoLog.get(), logLen);
 
 		glDeleteProgram(program);
 		glDeleteShader(vertexShader);
@@ -189,6 +187,16 @@ void Shader::uniform(unsigned int location, Matrix3f value) const {
 void Shader::uniform(unsigned int location, Matrix4f value) const {
 	useProgram();
 	glUniformMatrix4fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param value The value of the uniform
+ */	
+void Shader::uniform(unsigned int location, float value) const {
+	useProgram();
+	glUniform1f(location, value);
 }
 
 #endif

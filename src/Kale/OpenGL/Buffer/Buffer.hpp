@@ -53,11 +53,6 @@ namespace Kale::OpenGL {
 	private:
 
 		/**
-		 * The data this buffer holds
-		 */
-		std::vector<T> data;
-
-		/**
 		 * The location of the buffer for opengl accessing
 		 */
 		unsigned int buffer;
@@ -66,18 +61,22 @@ namespace Kale::OpenGL {
 		 * The type of buffer this is
 		 */
 		BufferType type;
+		
+	public:
+
+		/**
+		 * The data this buffer holds
+		 */
+		std::vector<T> data;
 
 		/**
 		 * Updates the buffer on the GPU to the data within the vector
+		 * @param usage The usage of the buffer
 		 */
-		void updateBuffer() {
+		void updateBuffer(BufferUsage usage) {
 			bind();
-			glBufferData(getEnumValue<BufferType>(type), sizeof(T) * data.size(), data.data(), getEnumValue<BufferUsage>(usage));
+			glBufferData(getEnumValue(type), sizeof(T) * data.size(), data.data(), getEnumValue(usage));
 		}
-
-		template <typename T, size_t... NFloats> friend class VertexArray;
-		
-	public:
 
 		/**
 		 * Creates an empty buffer
@@ -97,7 +96,7 @@ namespace Kale::OpenGL {
 		template <size_t N> Buffer(BufferType type, BufferUsage usage, const std::array<T, N>& data) : type(type),
 			data(data.begin(), data.end()) {
 			glGenBuffers(1, &buffer);
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -108,7 +107,7 @@ namespace Kale::OpenGL {
 		 */
 		Buffer(BufferType type, BufferUsage usage, const std::vector<T>& dat) : type(type), data(dat) {
 			glGenBuffers(1, &buffer);
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -119,7 +118,7 @@ namespace Kale::OpenGL {
 		 */
 		Buffer(BufferType type, BufferUsage usage, std::vector<T>&& dat) : type(type), data(std::move(dat)) {
 			glGenBuffers(1, &buffer);
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -131,7 +130,7 @@ namespace Kale::OpenGL {
 		 */
 		Buffer(BufferType type, BufferUsage usage, const T* arr, size_t n) : type(type), data(arr, arr + n) {
 			glGenBuffers(1, &buffer);
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -226,7 +225,7 @@ namespace Kale::OpenGL {
 		 */
 		void resize(BufferUsage usage, size_t newSize) {
 			data.resize(newSize);
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -237,7 +236,7 @@ namespace Kale::OpenGL {
 		template <size_t N> void resize(BufferUsage usage, const std::array<T, N>& arr) {
 			data.resize(N);
 			std::copy(data.begin(), data.end(), arr.data());
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -247,7 +246,7 @@ namespace Kale::OpenGL {
 		 */
 		void resize(BufferUsage usage, const std::vector<T>& vec) {
 			data = vec;
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -257,7 +256,7 @@ namespace Kale::OpenGL {
 		 */
 		void resize(BufferUsage usage, std::vector<T>&& vec) {
 			data = std::move(vec);
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 		/**
@@ -269,7 +268,7 @@ namespace Kale::OpenGL {
 		void resize(BufferUsage usage, const T* arr, size_t n) {
 			data.clear();
 			data.insert(data.begin(), arr, arr + n);
-			updateBuffer();
+			updateBuffer(usage);
 		}
 
 	};

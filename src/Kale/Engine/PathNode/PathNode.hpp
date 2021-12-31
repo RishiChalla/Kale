@@ -17,13 +17,54 @@
 #pragma once
 
 #include <Kale/Core/Node/Node.hpp>
+#include <Kale/Math/Vector/Vector.hpp>
+
+#ifdef KALE_OPENGL
+
+#include <Kale/OpenGL/VertexArray/VertexArray.hpp>
+#include <Kale/OpenGL/Shader/Shader.hpp>
+
+#endif
+
+#include <vector>
+#include <array>
+#include <memory>
 
 namespace Kale {
 
 	class PathNode : public Node {
-	private:
-
 	protected:
+
+		/**
+		 * The vertex type for path nodes.
+		 * Path nodes only have positions, the color is uniform for the entire shape
+		 */
+		using Vertex = Vector2f;
+
+#ifdef KALE_OPENGL
+
+		/**
+		 * The vertex array containing the vertices on both the GPU and CPU
+		 */
+		OpenGL::VertexArray<Vertex, 2> vertexArray;
+
+		/**
+		 * The shader program used for rendering path nodes
+		 */
+		static std::unique_ptr<const OpenGL::Shader> shader;
+
+		/**
+		 * Creates the shaders
+		 */
+		void createShaders();
+
+#endif
+
+#ifdef KALE_VULKAN
+
+		// TODO - Vulkan Vertex Array & Shader
+
+#endif
 
 		/**
 		 * Renders the node
@@ -40,5 +81,68 @@ namespace Kale {
 
 	public:
 
+		/**
+		 * The color of this pathnode
+		 */
+		Vector4f color;
+
+		/**
+		 * The z position of this node
+		 */
+		float zPosition = 0.0f;
+
+		/**
+		 * Creates an empty path node
+		 */
+		PathNode();
+
+		/**
+		 * Creates a path node given the path
+		 * @param path The path
+		 */
+		PathNode(const std::vector<Vector2f>& path);
+
+		/**
+		 * Creates a path node given the path
+		 * @param path The path
+		 */
+		template <size_t N>
+		PathNode(const std::array<Vector2f, N>& path) : vertexArray(path, true), color(1.0f, 1.0f, 1.0f, 0.0f) {
+			createShaders();
+		}
+
+		/**
+		 * Creates a path node given the path and color
+		 * @param path The path
+		 * @param color The color
+		 */
+		PathNode(const std::vector<Vector2f>& path, const Vector4f& color);
+
+		/**
+		 * Creates a path node given the path and color
+		 * @param path The path
+		 * @param color The color
+		 */
+		template <size_t N>
+		PathNode(const std::array<Vector2f, N>& path, const Vector4f& color) : vertexArray(path, true), color(color) {
+			createShaders();
+		}
+
+		/**
+		 * Updates the path to a new one
+		 * @param newPath the path to update to
+		 * @param newPath the path to update to
+		 */
+		void updatePath(const std::vector<Vector2f>& newPath);
+
+		/**
+		 * Updates the path to a new one
+		 * @param newPath the path to update to
+		 * @param newPath the path to update to
+		 */
+		template <size_t N> void updatePath(const std::array<Vector2f, N>& newPath) {
+			vertexArray.updateVerticesCondense(newPath);
+		}
+		
 	};
 }

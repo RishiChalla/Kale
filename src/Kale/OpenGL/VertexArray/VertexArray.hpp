@@ -27,6 +27,15 @@
 namespace Kale::OpenGL {
 
 	/**
+	 * Type of object to draw
+	 */
+	enum class DrawType : GLenum {
+		Triangles = GL_TRIANGLES,
+		Points = GL_POINTS,
+		Lines = GL_LINES
+	};
+
+	/**
 	 * Represents an array of vertices, NOT an OpenGL vertex array
 	 * (although the class does use OpenGL vertex arrays internally)
 	 * @tparam T the struct containing an individual vertex
@@ -70,9 +79,9 @@ namespace Kale::OpenGL {
 		/**
 		 * Condenses vertices from a container into the vertices and elements buffers and syncs them with the GPU
 		 * @param verts The vertices
+		 * @param usage The usage of the vertex array
 		 */
-		template <typename Container> void condenseVertices(const Container& verts) {
-			glGenVertexArrays(1, &vertexArray);
+		template <typename Container> void condenseVertices(const Container& verts, BufferUsage usage) {
 			bind();
 
 			vertices.data.reserve(verts.size());
@@ -87,11 +96,11 @@ namespace Kale::OpenGL {
 				size_t existingVertIndex;
 
 				// Reverse iteration as same vertices are more likely to be near eachother in the array
-				for (size_t i = elements.data.size() - 1; i >= 0; i--) {
+				for (int i = static_cast<int>(elements.data.size()) - 1; i >= 0; i--) {
 
 					// Check if the vert in memory/the vert are equal
-					if (vertFloatPtrEqual(vertices.data[numFloatsInVert() * elements.data[i]], vert)) {
-						existingVertIndex = elements.data[i];
+					if (vertFloatPtrEqual(&vertices.data[numFloatsInVert() * elements.data[i]], vert)) {
+						existingVertIndex = static_cast<size_t>(elements.data[i]);
 						existingVertFound = true;
 						break;
 					}
@@ -99,20 +108,20 @@ namespace Kale::OpenGL {
 
 				// An existing vertex was found, just add it's index to the elements and continue
 				if (existingVertFound) {
-					elements.data.push_back(existingVertIndex);
+					elements.data.push_back(static_cast<unsigned int>(existingVertIndex));
 					continue;
 				}
 
 				// No existing vertex was found, add both the vertex to memory and the index
-				elements.data.push_back(vertIndex);
+				elements.data.push_back(static_cast<unsigned int>(vertIndex));
 				vertIndex++;
 
 				const float* vertLoc = reinterpret_cast<const float*>(&vert);
 				vertices.data.insert(vertices.data.end(), vertLoc, vertLoc + numFloatsInVert());
 			}
 
-			vertices.updateBuffer();
-			elements.updateBuffer();
+			vertices.updateBuffer(usage);
+			elements.updateBuffer(usage);
 			vertices.data.shrink_to_fit();
 			elements.data.shrink_to_fit();
 		}
@@ -122,15 +131,17 @@ namespace Kale::OpenGL {
 		 * elements
 		 * @param verts The vertices
 		 * @param func The function for setting the elements
+		 * @param usage The usage of the vertex array
 		 */
-		template <typename Verts, typename Func> void createVerticesAndElements(const Verts& verts, const Func& func) {
+		template <typename Verts, typename Func>
+		void createVerticesAndElements(const Verts& verts, const Func& func, BufferUsage usage) {
 			glGenVertexArrays(1, &vertexArray);
 			bind();
 			vertices.data.insert(vertices.data.begin(), reinterpret_cast<const float*>(verts.data()),
 				reinterpret_cast<const float*>(verts.data() + verts.size()));
-			func()
-			vertices.updateBuffer();
-			elements.updateBuffer();
+			func();
+			vertices.updateBuffer(usage);
+			elements.updateBuffer(usage);
 		}
 
 	public:
@@ -144,94 +155,123 @@ namespace Kale::OpenGL {
 		}
 		
 		/**
-		 * Creates a vertex array given the vertices (condenses them into elements)
+		 * Creates a vertex array given the vertices
 		 * @param verts The vertices
+		 * @param usage The usage of the vertex array
+		 * @param condense Whether or not to remove the duplicates of vertices given and condense it into elements
 		 */
 		template <size_t N>
-		VertexArray(const std::array<T, N>& verts) : vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
-			condenseVertices(verts);
+		VertexArray(const std::array<T, N>& verts, BufferUsage usage, bool condense = true) : vertices(BufferType::VertexBuffer),
+			elements(BufferType::ElementBuffer) {
+			
+			glGenVertexArrays(1, &vertexArray);
+			if (condense) condenseVertices(verts, usage);
+			else {
+				bind();
+				vertices.data.insert(vertices.data.begin(), reinterpret_cast<const float*>(verts.data()),
+					reinterpret_cast<const float*>(verts.data() + verts.size()));
+				vertices.updateBuffer(usage);
+			}
 		}
 		
 		/**
-		 * Creates a vertex array given the vertices (condenses them into elements)
+		 * Creates a vertex array given the vertices
 		 * @param verts The vertices
+		 * @param usage The usage of the vertex array
+		 * @param condense Whether or not to remove the duplicates of vertices given and condense it into elements
 		 */
-		VertexArray(const std::vector<T>& verts) : vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
-			condenseVertices(verts);
+		VertexArray(const std::vector<T>& verts, BufferUsage usage, bool condense = true) : vertices(BufferType::VertexBuffer),
+			elements(BufferType::ElementBuffer) {
+			
+			glGenVertexArrays(1, &vertexArray);
+			if (condense) condenseVertices(verts, usage);
+			else {
+				bind();
+				vertices.data.insert(vertices.data.begin(), reinterpret_cast<const float*>(verts.data()),
+					reinterpret_cast<const float*>(verts.data() + verts.size()));
+				vertices.updateBuffer(usage);
+			}
 		}
 		
 		/**
 		 * Creates a vertex array given the vertices and elements/indices
 		 * @param verts The vertices
 		 * @param indices The indices
+		 * @param usage The usage of the vertex array
 		 */
-		template <size_t N1, size_t N2> VertexArray(const std::array<T, N1>& verts, const std::array<unsigned int, N2>& indices) :
+		template <size_t N1, size_t N2>
+		VertexArray(const std::array<T, N1>& verts, const std::array<unsigned int, N2>& indices, BufferUsage usage) :
 			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
 				elements.data.insert(elements.data.begin(), indices.begin(), indices.end());
-			});
+			}, usage);
 		}
 		
 		/**
 		 * Creates a vertex array given the vertices and elements/indices
 		 * @param verts The vertices
 		 * @param indices The indices
+		 * @param usage The usage of the vertex array
 		 */
-		template <size_t N1, size_t N2> VertexArray(const std::array<T, N1>& verts, const std::array<size_t, N2>& indices) :
+		template <size_t N1, size_t N2>
+		VertexArray(const std::array<T, N1>& verts, const std::array<size_t, N2>& indices, BufferUsage usage) :
 			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
 				elements.reserve(indices.size());
 				for (const size_t& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
-			});
+			}, usage);
 		}
 		
 		/**
 		 * Creates a vertex array given the vertices and elements/indices
 		 * @param verts The vertices
 		 * @param indices The indices
+		 * @param usage The usage of the vertex array
 		 */
-		VertexArray(const std::vector<T>& verts, const std::vector<unsigned int>& indices) :
+		VertexArray(const std::vector<T>& verts, const std::vector<unsigned int>& indices, BufferUsage usage) :
 			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
 				elements.data.insert(elements.data.begin(), indices.begin(), indices.end());
-			});
+			}, usage);
 		}
 		
 		/**
 		 * Creates a vertex array given the vertices and elements/indices
 		 * @param verts The vertices
 		 * @param indices The indices
+		 * @param usage The usage of the vertex array
 		 */
-		VertexArray(const std::vector<T>& verts, std::vector<unsigned int>&& indices) : vertices(BufferType::VertexBuffer),
-			elements(BufferType::ElementBuffer) {
+		VertexArray(const std::vector<T>& verts, std::vector<unsigned int>&& indices, BufferUsage usage) :
+			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
 				elements.data = std::move(indices);
-			});
+			}, usage);
 		}
 		
 		/**
 		 * Creates a vertex array given the vertices and elements/indices
 		 * @param verts The vertices
 		 * @param indices The indices
+		 * @param usage The usage of the vertex array
 		 */
-		VertexArray(const std::vector<T>& verts, const std::vector<size_t>& indices) : vertices(BufferType::VertexBuffer),
-			elements(BufferType::ElementBuffer) {
+		VertexArray(const std::vector<T>& verts, const std::vector<size_t>& indices, BufferUsage usage) :
+			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
 				elements.reserve(indices.size());
 				for (const size_t& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
-			});
+			}, usage);
 		}
 
 		/**
 		 * Frees resources
 		 */
 		~VertexArray() {
-			glDeleteVertexArrays(1, vertexArray);
+			glDeleteVertexArrays(1, &vertexArray);
 		}
 
 		/**
@@ -242,10 +282,10 @@ namespace Kale::OpenGL {
 		void enableAttributePointer(const std::array<unsigned int, sizeof...(NFloats)>& attributes) const {
 			bind();
 			const std::array<size_t, sizeof...(NFloats)> nFloatsArr = {NFloats...};
-			size_t offset = 0;
+			const float* offset = nullptr;
 			for (size_t i = 0; i < attributes.size(); i++) {
-				glVertexAttribPointer(attributes[i], nFloatsArr[i], GL_FLOAT, GL_FALSE, sizeof(T),
-					static_cast<GLVoid*>(offset * sizeof(float)));
+				glVertexAttribPointer(attributes[i], static_cast<GLint>(nFloatsArr[i]), GL_FLOAT, GL_FALSE,
+					sizeof(T), static_cast<const void*>(offset));
 				glEnableVertexAttribArray(attributes[i]);
 				offset += nFloatsArr[i];
 			}
@@ -259,58 +299,63 @@ namespace Kale::OpenGL {
 		}
 
 		/**
-		 * Modifies an individual vertex
-		 * @param index The index of the vertex to modify
-		 * @param elementIndex whether or not the index given refers to an element
-		 * (this should be true if a constructor without indices was used in most cases)
-		 * @param newVertex The vertex to set at the index
+		 * Updates the vertices and condenses them
+		 * NOTE - This condenses again and updates both elements and vertices. If you're only updating vertices
+		 * and not elements it is highly recommended to directly update the buffers
+		 * @param verts The vertices
+		 * @param usage The usage of the vertex array
 		 */
-		void modifyVertex(size_t index, bool elementIndex, const T& newVertex) {
-			if (elementIndex) index = elements.data[index];
-			const float* newVertPtr = reinterpret_cast<const float*>(&newVertex);
-			std::copy(newVertPtr, newVertPtr + numFloatsInVert(), &vertices.data[index]);
+		template <size_t N> void updateVerticesCondense(const std::array<T, N>& verts, BufferUsage usage) {
+			vertices.data.clear();
+			elements.data.clear();
+			condenseVertices(verts, usage);
 		}
 
 		/**
-		 * Modifies multiple vertices at once
-		 * @param index The index of the vertex to modify
-		 * @param elementIndex whether or not the index given refers to an element
-		 * (this should be true if a constructor without indices was used in most cases)
-		 * @param newVertices The new vertices to replace with
+		 * Updates the vertices and condenses them
+		 * NOTE - This condenses again and updates both elements and vertices. If you're only updating vertices
+		 * and not elements it is highly recommended to directly update the buffers
+		 * @param verts The vertices
+		 * @param usage The usage of the vertex array
 		 */
-		template <size_t N> void modifyVertices(size_t index, bool elementIndex, const std::array<T, N>& newVertices) {
-			if (elementIndex) {
-				for (size_t i = 0; i < newVertices.size(); i++) {
-					size_t index = elements.data[index + i];
-					const float* newVertPtr = reinterpret_cast<const float*>(&newVertices[i]);
-					std::copy(newVertPtr, newVertPtr + numFloatsInVert(), &vertices.data[index]);
-				}
-			}
-			else {
-				const float* newVertPtr = reinterpret_cast<const float*>(&newVertices[0]);
-				std::copy(newVertPtr, newVertPtr + numFloatsInVert() * newVertices.size(), &vertices.data[index]);
-			}
+		void updateVerticesCondense(const std::vector<T>& verts, BufferUsage usage) {
+			vertices.data.clear();
+			elements.data.clear();
+			condenseVertices(verts, usage);
 		}
 
 		/**
-		 * Modifies multiple vertices at once
-		 * @param index The index of the vertex to modify
-		 * @param elementIndex whether or not the index given refers to an element
-		 * (this should be true if a constructor without indices was used in most cases)
-		 * @param newVertices The new vertices to replace with
+		 * Draws the vertex array as triangles
 		 */
-		void modifyVertices(size_t index, bool elementIndex, const std::vector<T>& newVertices) {
-			if (elementIndex) {
-				for (size_t i = 0; i < newVertices.size(); i++) {
-					size_t index = elements.data[index + i];
-					const float* newVertPtr = reinterpret_cast<const float*>(&newVertices[i]);
-					std::copy(newVertPtr, newVertPtr + numFloatsInVert(), &vertices.data[index]);
-				}
-			}
-			else {
-				const float* newVertPtr = reinterpret_cast<const float*>(&newVertices[0]);
-				std::copy(newVertPtr, newVertPtr + numFloatsInVert() * newVertices.size(), &vertices.data[index]);
-			}
+		void draw() const {
+			bind();
+			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(elements.data.size()), GL_UNSIGNED_INT, nullptr);
+		}
+
+		/**
+		 * Draws the vertex array as triangles directly using the vertex buffer
+		 */
+		void drawNoElements() const {
+			bind();
+			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.data.size()));
+		}
+
+		/**
+		 * Draws the vertex array
+		 * @param type The type of object to draw
+		 */
+		void draw(DrawType type) const {
+			bind();
+			glDrawElements(getEnumValue(type), static_cast<GLsizei>(elements.data.size()), GL_UNSIGNED_INT, nullptr);
+		}
+
+		/**
+		 * Draws the vertex array directly using the vertex buffer
+		 * @param type The type of object to draw
+		 */
+		void drawNoElements(DrawType type) const {
+			bind();
+			glDrawArrays(getEnumValue(type), 0, static_cast<GLsizei>(vertices.data.size()));
 		}
 
 	};
