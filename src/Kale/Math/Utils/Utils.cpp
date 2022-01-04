@@ -14,10 +14,26 @@
    limitations under the License.
 */
 
-#pragma once
+#include "Utils.hpp"
 
-#include "Constants/Constants.hpp"
-#include "Matrix/Matrix.hpp"
-#include "Transform/Transform.hpp"
-#include "Vector/Vector.hpp"
-#include "Utils/Utils.hpp"
+#include <Kale/Math/Constants/Constants.hpp>
+
+using namespace Kale;
+
+/**
+ * Converts an angle in degrees to radians
+ * @param deg The angle in degrees
+ * @returns The angle in radians
+ */
+float Kale::degToRad(float deg) {
+	return deg / 180.0f * PI;
+}
+
+/**
+ * Converts an angle in radians to degrees
+ * @param rad The angle in radians
+ * @returns The angle in degrees
+ */
+float Kale::radToDeg(float rad) {
+	return rad / PI * 180.0f;
+}

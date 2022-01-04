@@ -32,7 +32,8 @@ using namespace Kale;
  * Creates the logger object, this will not be initialized until load is called
  */
 Logger::Logger() {
-	// Empty Body
+	std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	std::cout.setf(std::ios::showpoint);
 }
 
 /**

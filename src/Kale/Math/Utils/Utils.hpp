@@ -16,8 +16,20 @@
 
 #pragma once
 
-#include "Constants/Constants.hpp"
-#include "Matrix/Matrix.hpp"
-#include "Transform/Transform.hpp"
-#include "Vector/Vector.hpp"
-#include "Utils/Utils.hpp"
+namespace Kale {
+
+	/**
+	 * Converts an angle in degrees to radians
+	 * @param deg The angle in degrees
+	 * @returns The angle in radians
+	 */
+	float degToRad(float deg);
+
+	/**
+	 * Converts an angle in radians to degrees
+	 * @param rad The angle in radians
+	 * @returns The angle in degrees
+	 */
+	float radToDeg(float rad);
+
+}

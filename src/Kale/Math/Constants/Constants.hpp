@@ -16,8 +16,15 @@
 
 #pragma once
 
-#include "Constants/Constants.hpp"
-#include "Matrix/Matrix.hpp"
-#include "Transform/Transform.hpp"
-#include "Vector/Vector.hpp"
-#include "Utils/Utils.hpp"
+namespace Kale {
+
+	/**
+	 * The PI number
+	 */
+	constexpr float PI = 3.14159265358979f;
+
+	/**
+	 * The euler's constant
+	 */
+	constexpr float E = 2.71828182845904f;
+}
