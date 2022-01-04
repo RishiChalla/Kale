@@ -134,7 +134,7 @@ void Shader::useProgram() const {
  * @param location The location of the uniform
  * @param value The value of the uniform
  */	
-void Shader::uniform(unsigned int location, Vector2f value) const {
+void Shader::uniform(unsigned int location, const Vector2f& value) const {
 	useProgram();
 	glUniform2f(location, value.x, value.y);
 }
@@ -144,7 +144,7 @@ void Shader::uniform(unsigned int location, Vector2f value) const {
  * @param location The location of the uniform
  * @param value The value of the uniform
  */	
-void Shader::uniform(unsigned int location, Vector3f value) const {
+void Shader::uniform(unsigned int location, const Vector3f& value) const {
 	useProgram();
 	glUniform3f(location, value.x, value.y, value.z);
 }
@@ -154,7 +154,7 @@ void Shader::uniform(unsigned int location, Vector3f value) const {
  * @param location The location of the uniform
  * @param value The value of the uniform
  */	
-void Shader::uniform(unsigned int location, Vector4f value) const {
+void Shader::uniform(unsigned int location, const Vector4f& value) const {
 	useProgram();
 	glUniform4f(location, value.x, value.y, value.z, value.w);
 }
@@ -164,7 +164,7 @@ void Shader::uniform(unsigned int location, Vector4f value) const {
  * @param location The location of the uniform
  * @param value The value of the uniform
  */	
-void Shader::uniform(unsigned int location, Matrix2f value) const {
+void Shader::uniform(unsigned int location, const Matrix2f& value) const {
 	useProgram();
 	glUniformMatrix2fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
 }
@@ -174,7 +174,7 @@ void Shader::uniform(unsigned int location, Matrix2f value) const {
  * @param location The location of the uniform
  * @param value The value of the uniform
  */	
-void Shader::uniform(unsigned int location, Matrix3f value) const {
+void Shader::uniform(unsigned int location, const Matrix3f& value) const {
 	useProgram();
 	glUniformMatrix3fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
 }
@@ -184,9 +184,19 @@ void Shader::uniform(unsigned int location, Matrix3f value) const {
  * @param location The location of the uniform
  * @param value The value of the uniform
  */	
-void Shader::uniform(unsigned int location, Matrix4f value) const {
+void Shader::uniform(unsigned int location, const Matrix4f& value) const {
 	useProgram();
 	glUniformMatrix4fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param value The value of the uniform
+ */	
+void Shader::uniform(unsigned int location, const Transform& value) const {
+	useProgram();
+	glUniformMatrix3fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
 }
 
 /**

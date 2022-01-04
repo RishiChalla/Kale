@@ -35,6 +35,22 @@ Transform::Transform() : Matrix3f({
 }
 
 /**
+ * Creates a transformation matrix from a matrix
+ * @param matrix The matrix
+ */
+Transform::Transform(const Matrix3f& matrix) : Matrix3f(matrix) {
+	// Empty Body
+}
+
+/**
+ * Creates a transformation matrix from a matrix
+ * @param matrix The matrix
+ */
+Transform::Transform(Matrix3f&& matrix) : Matrix3f(matrix) {
+	// Empty Body
+}
+
+/**
  * Creates a transformation matrix given an array
  * @param arr The array
  */
@@ -159,6 +175,97 @@ void Transform::rotateDeg(float angle) {
 		s, c, 0.0f,
 		0.0f, 0.0f, 1.0f
 	})).data);
+}
+
+/**
+ * Sets the translation of the matrix
+ * @param x The x component
+ * @param y The y component
+ */
+void Transform::setTranslation(float x, float y) {
+	data[2] = x;
+	data[5] = y;
+}
+
+/**
+ * Sets the translation of the matrix
+ * @param vec The translation
+ */
+void Transform::setTranslation(const Vector2f& vec) {
+	data[2] = vec.x;
+	data[5] = vec.y;
+}
+
+/**
+ * Gets the translation
+ * @param The translation
+ */
+Vector2f Transform::getTranslation() const {
+	return Vector2f(data[2], data[5]);
+}
+
+/**
+ * Sets the rotation of the matrix
+ * @param angle The angle of the rotation
+ * @param degrees Whether the angle is in degrees or radians (true = degrees)
+ */
+void Transform::setRotation(float angle, bool degrees) {
+	if (degrees) angle = degToRad(angle);
+	Vector2f scale = getScale();
+	float c = cos(angle);
+	float s = sin(angle);
+	data[0] = scale.x * c;
+	data[1] = scale.y * -s;
+	data[4] = scale.x * s;
+	data[5] = scale.y * c;
+}
+
+/**
+ * Gets the rotation in RADIANS
+ * @returns the rotation in RADIANS
+ */
+float Transform::getRotation() const {
+	return atan2(data[3], data[4]);
+}
+
+/**
+ * Gets the rotation in DEGREES
+ * @returns the rotation in DEGREES
+ */
+float Transform::getRotationDeg() const {
+	return radToDeg(getRotation());
+}
+
+/**
+ * Sets the scale of the matrix
+ * @param scaleX The x component
+ * @param scaleY The y component
+ */
+void Transform::setScale(float scaleX, float scaleY) {
+	float c = cos(getRotation());
+	data[0] = scaleX * c;
+	data[4] = scaleY * c;
+}
+
+/**
+ * Sets the scale of the matrix
+ * @param scale The scale factor (applies for both horizontal/vertical scaling)
+ */
+void Transform::setScale(float scale) {
+	float c = cos(getRotation());
+	data[0] = scale * c;
+	data[4] = scale * c;
+}
+
+/**
+ * Gets the scale of the matrix
+ * @returns the scale of the matrix
+ */
+Vector2f Transform::getScale() const {
+	return Vector2f(
+		sqrt(data[3] * data[3] + data[4] * data[4]),
+		sqrt(data[0] * data[0] + data[1] * data[1])
+	);
 }
 
 /**

@@ -32,6 +32,18 @@ namespace Kale {
 		Transform();
 
 		/**
+		 * Creates a transformation matrix from a matrix
+		 * @param matrix The matrix
+		 */
+		Transform(const Matrix3f& matrix);
+
+		/**
+		 * Creates a transformation matrix from a matrix
+		 * @param matrix The matrix
+		 */
+		Transform(Matrix3f&& matrix);
+
+		/**
 		 * Creates a transformation matrix given an array
 		 * @param arr The array
 		 */
@@ -102,6 +114,63 @@ namespace Kale {
 		void rotateDeg(float angle);
 
 		/**
+		 * Sets the translation of the matrix
+		 * @param x The x component
+		 * @param y The y component
+		 */
+		void setTranslation(float x, float y);
+
+		/**
+		 * Sets the translation of the matrix
+		 * @param vec The translation
+		 */
+		void setTranslation(const Vector2f& vec);
+
+		/**
+		 * Gets the translation
+		 * @param The translation
+		 */
+		Vector2f getTranslation() const;
+
+		/**
+		 * Sets the rotation of the matrix
+		 * @param angle The angle of the rotation
+		 * @param degrees Whether the angle is in degrees or radians (true = degrees)
+		 */
+		void setRotation(float angle, bool degrees);
+
+		/**
+		 * Gets the rotation in RADIANS
+		 * @returns the rotation in RADIANS
+		 */
+		float getRotation() const;
+		
+		/**
+		 * Gets the rotation in DEGREES
+		 * @returns the rotation in DEGREES
+		 */
+		float getRotationDeg() const;
+
+		/**
+		 * Sets the scale of the matrix
+		 * @param scaleX The x component
+		 * @param scaleY The y component
+		 */
+		void setScale(float scaleX, float scaleY);
+
+		/**
+		 * Sets the scale of the matrix
+		 * @param scale The scale factor (applies for both horizontal/vertical scaling)
+		 */
+		void setScale(float scale);
+
+		/**
+		 * Gets the scale of the matrix
+		 * @returns the scale of the matrix
+		 */
+		Vector2f getScale() const;
+
+		/**
 		 * Transforms a vector using this transformation matrix
 		 * @param vec The vector to transform
 		 * @returns The transformed vector
@@ -129,5 +198,10 @@ namespace Kale {
 		 */
 		void inverseTransformInplace(Vector2f& vec) const;
 	};
+
+	/**
+	 * Represents a camera for viewing scenes (This is just a typedef of Transform)
+	 */
+	typedef Transform Camera;
 
 }

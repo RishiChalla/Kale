@@ -77,42 +77,49 @@ namespace Kale::OpenGL {
 		 * @param location The location of the uniform
 		 * @param value The value of the uniform
 		 */	
-		void uniform(unsigned int location, Vector2f value) const;
+		void uniform(unsigned int location, const Vector2f& value) const;
 
 		/**
 		 * Passes a uniform at a certain location to the shader
 		 * @param location The location of the uniform
 		 * @param value The value of the uniform
 		 */	
-		void uniform(unsigned int location, Vector3f value) const;
+		void uniform(unsigned int location, const Vector3f& value) const;
 
 		/**
 		 * Passes a uniform at a certain location to the shader
 		 * @param location The location of the uniform
 		 * @param value The value of the uniform
 		 */	
-		void uniform(unsigned int location, Vector4f value) const;
+		void uniform(unsigned int location, const Vector4f& value) const;
 
 		/**
 		 * Passes a uniform at a certain location to the shader
 		 * @param location The location of the uniform
 		 * @param value The value of the uniform
 		 */	
-		void uniform(unsigned int location, Matrix2f value) const;
+		void uniform(unsigned int location, const Matrix2f& value) const;
 
 		/**
 		 * Passes a uniform at a certain location to the shader
 		 * @param location The location of the uniform
 		 * @param value The value of the uniform
 		 */	
-		void uniform(unsigned int location, Matrix3f value) const;
+		void uniform(unsigned int location, const Matrix3f& value) const;
 
 		/**
 		 * Passes a uniform at a certain location to the shader
 		 * @param location The location of the uniform
 		 * @param value The value of the uniform
 		 */	
-		void uniform(unsigned int location, Matrix4f value) const;
+		void uniform(unsigned int location, const Matrix4f& value) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param value The value of the uniform
+		 */	
+		void uniform(unsigned int location, const Transform& value) const;
 
 		/**
 		 * Passes a uniform at a certain location to the shader
