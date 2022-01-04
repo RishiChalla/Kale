@@ -19,3 +19,6 @@
 [submodule "doc/awesome-css"]
 	path = doc/awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "dependencies/delauntor-cpp"]
+	path = dependencies/delauntor-cpp
+	url = https://github.com/delfrrr/delaunator-cpp
