@@ -48,11 +48,12 @@ void PathNode::update(size_t threadNum, float ups) {
 }
 
 void PathNode::createShaders() {
-	const std::string folder = "." + mainApp->applicationName;
-	const std::string vertShaderPath = folder + "/assets/shaders/shader.vert";
-	const std::string fragShaderPath = folder + "/assets/shaders/shader.frag";
-	if (shader == nullptr)
+	if (shader == nullptr) {
+		const std::string folder = "." + mainApp->applicationName;
+		const std::string vertShaderPath = folder + "/assets/shaders/shader.vert";
+		const std::string fragShaderPath = folder + "/assets/shaders/shader.frag";
 		shader = std::make_unique<const OpenGL::Shader>(vertShaderPath.c_str(), fragShaderPath.c_str());
+	}
 	
 	vertexArray.enableAttributePointer({0});
 }
@@ -86,10 +87,16 @@ PathNode::PathNode(const std::vector<Vector2f>& path, const Vector4f& color) : v
 /**
  * Updates the path to a new one
  * @param newPath the path to update to
- * @param newPath the path to update to
  */
 void PathNode::updatePath(const std::vector<Vector2f>& newPath) {
-	vertexArray.updateVerticesCondense(newPath, OpenGL::BufferUsage::Static);
+	std::tuple<std::vector<float>, std::vector<unsigned int>> bufferInfo = triangulatePathFloat(newPath);
+	vertexArray.vertices.data.clear();
+	vertexArray.vertices.data = std::move(std::get<0>(bufferInfo));
+	vertexArray.vertices.updateBuffer(OpenGL::BufferUsage::Static);
+
+	vertexArray.elements.data.clear();
+	vertexArray.elements.data = std::move(std::get<1>(bufferInfo));
+	vertexArray.elements.updateBuffer(OpenGL::BufferUsage::Static);
 }
 
 #endif

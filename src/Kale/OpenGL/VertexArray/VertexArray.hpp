@@ -50,16 +50,6 @@ namespace Kale::OpenGL {
 		unsigned int vertexArray;
 
 		/**
-		 * The vertex data itself
-		 */
-		Buffer<float> vertices;
-
-		/**
-		 * The element buffer/index buffer
-		 */
-		Buffer<unsigned int> elements;
-
-		/**
 		 * The total number of floats within a single vertex
 		 */
 		constexpr size_t numFloatsInVert() {
@@ -145,6 +135,16 @@ namespace Kale::OpenGL {
 		}
 
 	public:
+
+		/**
+		 * The vertex data itself
+		 */
+		Buffer<float> vertices;
+
+		/**
+		 * The element buffer/index buffer
+		 */
+		Buffer<unsigned int> elements;
 		
 		/**
 		 * Creates an empty vertex array
@@ -152,6 +152,8 @@ namespace Kale::OpenGL {
 		VertexArray() : vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 			glGenVertexArrays(1, &vertexArray);
 			bind();
+			vertices.bind();
+			elements.bind();
 		}
 		
 		/**

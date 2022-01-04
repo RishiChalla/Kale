@@ -18,7 +18,10 @@
 
 #include "Core.hpp"
 
+#include <Kale/OpenGL/Utils/Utils.hpp>
+
 #include <string>
+#include <sstream>
 
 #include <glad/glad.h>
 
@@ -38,9 +41,45 @@ void Core::ResizeHandler::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 void Core::setupCore() noexcept {
 	try {
 		mainApp->getWindow().setupGlad();
+		glEnable(GL_MULTISAMPLE);
 		glViewport(0, 0, mainApp->getWindow().getSize().x, mainApp->getWindow().getSize().y);
 		resizeHandler = new ResizeHandler();
 		mainApp->getWindow().registerEvents(dynamic_cast<EventHandler*>(resizeHandler));
+
+#ifdef KALE_DEBUG
+
+		glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message,
+            const void *userParam) -> void {
+
+			std::stringstream outMessage;
+			
+			outMessage << "(" << enumStringValueMap.at(source) << ") Sent the following message -\n(Type: " <<
+				enumStringValueMap.at(type) << ")\n";
+			
+			// String isn't null terminated
+			if (length < 0) outMessage.write(message, length);
+			else outMessage << message;
+			
+			switch (severity) {
+#ifdef KALE_VERBOSE
+				case GL_DEBUG_SEVERITY_NOTIFICATION:
+					console.log(outMessage.str());
+				case GL_DEBUG_SEVERITY_LOW:
+					console.info(outMessage.str());
+#endif
+				case GL_DEBUG_SEVERITY_MEDIUM:
+					console.warn(outMessage.str());
+				case GL_DEBUG_SEVERITY_HIGH:
+					console.error(outMessage.str());
+				default:
+					// Shouldn't be possible
+					console.error("A debug message callback was provided from OpenGL with unknown severity. More info provided in next log.");
+					console.error(outMessage.str());
+			}
+			
+		}, nullptr);
+
+#endif
 	}
 	catch (const std::exception& e) {
 		console.error(std::string("Unable to setup OpenGL/Glad - ") + e.what());

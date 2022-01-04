@@ -18,6 +18,7 @@
 
 #include <Kale/Core/Node/Node.hpp>
 #include <Kale/Math/Vector/Vector.hpp>
+#include <Kale/Engine/Utils/Utils.hpp>
 
 #ifdef KALE_OPENGL
 
@@ -141,7 +142,14 @@ namespace Kale {
 		 * @param newPath the path to update to
 		 */
 		template <size_t N> void updatePath(const std::array<Vector2f, N>& newPath) {
-			vertexArray.updateVerticesCondense(newPath);
+			std::tuple<std::vector<float>, std::vector<unsigned int>> bufferInfo = triangulatePathFloat(newPath);
+			vertexArray.vertices.data.clear();
+			vertexArray.vertices.data = std::move(std::get<0>(bufferInfo));
+			vertexArray.vertices.updateBuffer(OpenGL::BufferUsage::Static);
+
+			vertexArray.elements.data.clear();
+			vertexArray.elements.data = std::move(std::get<1>(bufferInfo));
+			vertexArray.elements.updateBuffer(OpenGL::BufferUsage::Static);
 		}
 		
 	};

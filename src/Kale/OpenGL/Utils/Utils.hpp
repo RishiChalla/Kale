@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <map>
+
 #include <glad/glad.h>
 
 namespace Kale::OpenGL {
@@ -27,5 +29,33 @@ namespace Kale::OpenGL {
 	template <typename T> GLenum getEnumValue(T value) {
 		return static_cast<GLenum>(value);
 	}
-	
+
+#ifdef KALE_DEBUG
+
+	inline const std::map<GLenum, const char*> enumStringValueMap = {
+		{GL_DEBUG_SOURCE_API, "OpenGL API"},
+		{GL_DEBUG_SOURCE_APPLICATION, "Application"},
+		{GL_DEBUG_SOURCE_OTHER, "Other"},
+		{GL_DEBUG_SOURCE_SHADER_COMPILER, "Shader Compiler"},
+		{GL_DEBUG_SOURCE_THIRD_PARTY, "Third Party"},
+		{GL_DEBUG_SOURCE_WINDOW_SYSTEM, "Window System"},
+
+		{GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "Deprecated Behavior"},
+		{GL_DEBUG_TYPE_ERROR, "Error"},
+		{GL_DEBUG_TYPE_MARKER, "Marker"},
+		{GL_DEBUG_TYPE_OTHER, "Other"},
+		{GL_DEBUG_TYPE_PERFORMANCE, "Performance"},
+		{GL_DEBUG_TYPE_POP_GROUP, "Pop Group"},
+		{GL_DEBUG_TYPE_PORTABILITY, "Portability"},
+		{GL_DEBUG_TYPE_PUSH_GROUP, "Push Group"},
+		{GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "Undefined Behavior"},
+
+		{GL_DEBUG_SEVERITY_HIGH, "High"},
+		{GL_DEBUG_SEVERITY_LOW, "Low"},
+		{GL_DEBUG_SEVERITY_MEDIUM, "Medium"},
+		{GL_DEBUG_SEVERITY_NOTIFICATION, "Notification"}
+	};
+
+#endif
+
 }

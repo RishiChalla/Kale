@@ -72,12 +72,14 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(dependencies/json)
 target_link_libraries(Kale nlohmann_json)
 
+# Triangulization Library
+target_include_directories(Kale PUBLIC dependencies/delauntor-cpp/include/)
+
 # Termcolor - Debug only since console is not used for release
 if(KALE_DEBUG)
 	add_subdirectory(dependencies/termcolor)
 	target_link_libraries(Kale termcolor)
 endif()
-
 
 # Vulkan
 if (KALE_VULKAN)
