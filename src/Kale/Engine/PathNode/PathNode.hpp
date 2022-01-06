@@ -114,17 +114,9 @@ namespace Kale {
 		 */
 		template <typename T>
 		void recalculateCenter(const T& path) {
-			Vector2f min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-			Vector2f max(std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
-
-			std::for_each(path.begin(), path.end(), [&](const Vector2f& vec) {
-				if (vec.x < min.x) min.x = vec.x;
-				if (vec.x > max.x) max.x = vec.x;
-				if (vec.y < min.y) min.y = vec.y;
-				if (vec.y > max.y) max.y = vec.y;
-			});
-
-			center = max - min / 2.0f;
+			Vector2f sum;
+			std::for_each(path.begin(), path.end(), [&](const Vector2f& vec) { sum += vec; });
+			center = sum / static_cast<float>(path.size());
 		}
 
 		/**
@@ -158,7 +150,7 @@ namespace Kale {
 		float zPosition = 0.0f;
 
 		/**
-		 * The center of the path (calculated by mean of max and min points on x/y dimensions).
+		 * The center of the path (calculated by average of points).
 		 * Recalculated on path updates, inherited nodes must call the method to calculate this manually
 		 */
 		Vector2f center;

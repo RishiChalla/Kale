@@ -33,6 +33,7 @@ Clock::Clock() : a(std::chrono::system_clock::now()), b(std::chrono::system_cloc
  * @returns The cps of the thread
  */
 float Clock::sleep(double minMSPC) {
+	minMSPC /= 2;
 	a = std::chrono::system_clock::now();
 	std::chrono::duration<double, std::milli> work_time = a - b;
 	

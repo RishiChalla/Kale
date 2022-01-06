@@ -33,10 +33,10 @@ void PathNode::render(const Camera& camera) {
 	shader->useProgram();
 
 	Transform local;
-	local.setTranslation(center * -1.0f);
+	local.setTranslation(center);
 	local.scale(scale);
 	local.rotateDeg(rotation);
-	local.translate(center);
+	local.translate(center * -1.0f);
 
 	shader->uniform(localUniform, local);
 	shader->uniform(cameraUniform, camera);
