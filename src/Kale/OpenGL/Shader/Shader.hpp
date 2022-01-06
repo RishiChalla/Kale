@@ -73,6 +73,20 @@ namespace Kale::OpenGL {
 		void useProgram() const;
 
 		/**
+		 * Gets the location of an attribute
+		 * @param name The name of the attribute
+		 * @returns The location of the attribute
+		 */
+		int getAttributeLocation(const char* name) const;
+
+		/**
+		 * Gets the location of an uniform
+		 * @param name The name of the uniform
+		 * @returns The location of the uniform
+		 */
+		int getUniformLocation(const char* name) const;
+
+		/**
 		 * Passes a uniform at a certain location to the shader
 		 * @param location The location of the uniform
 		 * @param value The value of the uniform

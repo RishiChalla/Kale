@@ -60,10 +60,37 @@ namespace Kale {
 			y /= o.y;
 		}
 
+		void operator+=(T v) {
+			x += v;
+			y += v;
+		}
+		void operator-=(T v) {
+			x -= v;
+			y -= v;
+		}
+		void operator*=(T v) {
+			x *= v;
+			y *= v;
+		}
+		void operator/=(T v) {
+			x /= v;
+			y /= v;
+		}
+
 		Vector2<T> operator+(Vector2<T> o) const { return Vector2<T>(x + o.x, y + o.y); }
 		Vector2<T> operator-(Vector2<T> o) const { return Vector2<T>(x - o.x, y - o.y); }
 		Vector2<T> operator*(Vector2<T> o) const { return Vector2<T>(x * o.x, y * o.y); }
 		Vector2<T> operator/(Vector2<T> o) const { return Vector2<T>(x / o.x, y / o.y); }
+
+		Vector2<T> operator+(T v) const { return Vector2<T>(x + v, y + v); }
+		Vector2<T> operator-(T v) const { return Vector2<T>(x - v, y - v); }
+		Vector2<T> operator*(T v) const { return Vector2<T>(x * v, y * v); }
+		Vector2<T> operator/(T v) const { return Vector2<T>(x / v, y / v); }
+
+		friend Vector2<T> operator+(float n, Vector2<T> v) { return Vector2<T>(n + v.x, n + v.y); }
+		friend Vector2<T> operator-(float n, Vector2<T> v) { return Vector2<T>(n - v.x, n - v.y); }
+		friend Vector2<T> operator*(float n, Vector2<T> v) { return Vector2<T>(n * v.x, n * v.y); }
+		friend Vector2<T> operator/(float n, Vector2<T> v) { return Vector2<T>(n / v.x, n / v.y); }
 
 		bool operator==(Vector2<T> o) { return x == o.x && y == o.y; }
 
@@ -133,10 +160,41 @@ namespace Kale {
 			z /= o.z;
 		}
 
+		void operator+=(T v) {
+			x += v;
+			y += v;
+			z += v;
+		}
+		void operator-=(T v) {
+			x -= v;
+			y -= v;
+			z -= v;
+		}
+		void operator*=(T v) {
+			x *= v;
+			y *= v;
+			z *= v;
+		}
+		void operator/=(T v) {
+			x /= v;
+			y /= v;
+			z /= v;
+		}
+
 		Vector3<T> operator+(Vector3<T> o) const { return Vector3<T>(x + o.x, y + o.y, z + o.z); }
 		Vector3<T> operator-(Vector3<T> o) const { return Vector3<T>(x - o.x, y - o.y, z - o.z); }
 		Vector3<T> operator*(Vector3<T> o) const { return Vector3<T>(x * o.x, y * o.y, z * o.z); }
 		Vector3<T> operator/(Vector3<T> o) const { return Vector3<T>(x / o.x, y / o.y, z / o.z); }
+		
+		Vector3<T> operator+(T v) const { return Vector3<T>(x + v, y + v, z + v); }
+		Vector3<T> operator-(T v) const { return Vector3<T>(x - v, y - v, z - v); }
+		Vector3<T> operator*(T v) const { return Vector3<T>(x * v, y * v, z * v); }
+		Vector3<T> operator/(T v) const { return Vector3<T>(x / v, y / v, z / v); }
+
+		friend Vector3<T> operator+(float n, Vector3<T> v) { return Vector3<T>(n + v.x, n + v.y, n + v.z); }
+		friend Vector3<T> operator-(float n, Vector3<T> v) { return Vector3<T>(n - v.x, n - v.y, n - v.z); }
+		friend Vector3<T> operator*(float n, Vector3<T> v) { return Vector3<T>(n * v.x, n * v.y, n * v.z); }
+		friend Vector3<T> operator/(float n, Vector3<T> v) { return Vector3<T>(n / v.x, n / v.y, n / v.z); }
 
 		bool operator==(Vector3<T> o) { return x == o.x && y == o.y && z == o.z; }
 
@@ -217,10 +275,45 @@ namespace Kale {
 			w /= o.w;
 		}
 
+		void operator+=(T v) {
+			x += v;
+			y += v;
+			z += v;
+			w += v;
+		}
+		void operator-=(T v) {
+			x -= v;
+			y -= v;
+			z -= v;
+			w -= v;
+		}
+		void operator*=(T v) {
+			x *= v;
+			y *= v;
+			z *= v;
+			w *= v;
+		}
+		void operator/=(T v) {
+			x /= v;
+			y /= v;
+			z /= v;
+			w /= v;
+		}
+
 		Vector4<T> operator+(Vector4<T> o) const { return Vector4<T>(x + o.x, y + o.y, z + o.z, w + o.w); }
 		Vector4<T> operator-(Vector4<T> o) const { return Vector4<T>(x - o.x, y - o.y, z - o.z, w - o.w); }
 		Vector4<T> operator*(Vector4<T> o) const { return Vector4<T>(x * o.x, y * o.y, z * o.z, w * o.w); }
 		Vector4<T> operator/(Vector4<T> o) const { return Vector4<T>(x / o.x, y / o.y, z / o.z, w / o.w); }
+
+		Vector4<T> operator+(T v) const { return Vector4<T>(x + v, y + v, z + v, w + v); }
+		Vector4<T> operator-(T v) const { return Vector4<T>(x - v, y - v, z - v, w - v); }
+		Vector4<T> operator*(T v) const { return Vector4<T>(x * v, y * v, z * v, w * v); }
+		Vector4<T> operator/(T v) const { return Vector4<T>(x / v, y / v, z / v, w / v); }
+
+		friend Vector4<T> operator+(float n, Vector4<T> v) { return Vector4<T>(n + v.x, n + v.y, n + v.z, n + v.w); }
+		friend Vector4<T> operator-(float n, Vector4<T> v) { return Vector4<T>(n - v.x, n - v.y, n - v.z, n - v.w); }
+		friend Vector4<T> operator*(float n, Vector4<T> v) { return Vector4<T>(n * v.x, n * v.y, n * v.z, n * v.w); }
+		friend Vector4<T> operator/(float n, Vector4<T> v) { return Vector4<T>(n / v.x, n / v.y, n / v.z, n / v.w); }
 
 		bool operator==(Vector4<T> o) { return x == o.x && y == o.y && z == o.z && w == o.w; }
 

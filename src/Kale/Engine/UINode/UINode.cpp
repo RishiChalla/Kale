@@ -20,9 +20,9 @@ using namespace Kale;
 
 /**
  * Renders the node
- * @param renderer The renderer to render to
+ * @param camera The camera to render with
  */
-void UINode::render() {
+void UINode::render(const Camera& camera) {
 
 }
 

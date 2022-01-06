@@ -99,6 +99,17 @@ Transform::Transform(float translateX, float translateY, float rotation, float s
 }
 
 /**
+ * Sets this matrix to the identity matrix
+ */
+void Transform::setIdentity() {
+	data = {
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f
+	};
+}
+
+/**
  * Scales the transformation matrix
  * @param vec The vector to scale by
  */
@@ -119,6 +130,18 @@ void Transform::scale(float x, float y) {
 	data = std::move(Matrix3f::operator*(Matrix3f({
 		x, 0.0f, 0.0f,
 		0.0f, y, 0.0f,
+		0.0f, 0.0f, 1.0f
+	})).data);
+}
+
+/**
+ * Scales the transformation matrix
+ * @param factor The scale factor
+ */
+void Transform::scale(float factor) {
+	data = std::move(Matrix3f::operator*(Matrix3f({
+		factor, 0.0f, 0.0f,
+		0.0f, factor, 0.0f,
 		0.0f, 0.0f, 1.0f
 	})).data);
 }

@@ -18,7 +18,7 @@
 
 #include <Kale/Core/Node/Node.hpp>
 #include <Kale/Core/Events/Events.hpp>
-#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Math/Transform/Transform.hpp>
 
 #include <list>
 #include <mutex>
@@ -43,6 +43,12 @@ namespace Kale {
 		std::mutex mutex;
 
 		/**
+		 * The world to screen transformation matrix. Used internally for rendering and converting
+		 * vertices from world points to screen points.
+		 */
+		Transform worldToScreen;
+
+		/**
 		 * Renders the current scene
 		 */
 		void render() const;
@@ -63,6 +69,19 @@ namespace Kale {
 		 * The background color of the scene to use for clearing the screen
 		 */
 		Vector4f bgColor = {1.0f, 0.0f, 1.0f, 1.0f};
+
+		/**
+		 * The scene's camera for viewing
+		 */
+		Camera camera;
+		
+		/**
+		 * The viewport of the world
+		 * (the width and height of the screen in the world's coordinates)
+		 * This always has a height of 1080p and the width is dependant on the screen's aspect ratio.
+		 * It is recommended to code all nodes based off of the 1080p height and let the engine do the scaling
+		 */
+		Vector2f viewport;
 
 		/**
 		 * Adds a node to the scene to render/update
@@ -86,6 +105,18 @@ namespace Kale {
 		 */
 		virtual void onSceneChange();
 
+		/**
+		 * Called when the event is fired
+		 */
+		void onWindowResize(Vector2ui oldSize, Vector2ui newSize) override;
+
 		friend class Application;
+
+	public:
+
+		/**
+		 * Constructs a new scene
+		 */
+		Scene();
 	};
 }

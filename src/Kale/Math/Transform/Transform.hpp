@@ -76,6 +76,11 @@ namespace Kale {
 		Transform(float translateX, float translateY, float rotation, float scaleX, float scaleY, bool degrees);
 
 		/**
+		 * Sets this matrix to the identity matrix
+		 */
+		void setIdentity();
+
+		/**
 		 * Scales the transformation matrix
 		 * @param vec The vector to scale by
 		 */
@@ -87,6 +92,12 @@ namespace Kale {
 		 * @param y The y scale factor
 		 */
 		void scale(float x, float y);
+
+		/**
+		 * Scales the transformation matrix
+		 * @param factor The scale factor
+		 */
+		void scale(float factor);
 
 		/**
 		 * Translates the transformation matrix

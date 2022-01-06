@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <Kale/Core/Application/Application.hpp>
 #include <Kale/Core/Node/Node.hpp>
 #include <Kale/Math/Vector/Vector.hpp>
 #include <Kale/Engine/Utils/Utils.hpp>
@@ -28,8 +29,10 @@
 #endif
 
 #include <vector>
+#include <limits>
 #include <array>
 #include <memory>
+#include <algorithm>
 
 namespace Kale {
 
@@ -41,6 +44,31 @@ namespace Kale {
 		 * Path nodes only have positions, the color is uniform for the entire shape
 		 */
 		using Vertex = Vector2f;
+
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int cameraUniform = 0;
+		
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int localUniform = 0;
+		
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int vertexColorUniform = 0;
+		
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int zPositionUniform = 0;
+
+		/**
+		 * The location of the attribute within the shader for rendering this node
+		 */
+		inline static unsigned int vertexPositionAttribute = 0;
 
 #ifdef KALE_OPENGL
 
@@ -69,9 +97,9 @@ namespace Kale {
 
 		/**
 		 * Renders the node
-		 * @param renderer The renderer to render to
+		 * @param camera The camera to render with
 		 */
-		void render() override;
+		void render(const Camera& camera) override;
 
 		/**
 		 * Updates the node
@@ -79,6 +107,43 @@ namespace Kale {
 		 * @param ups The amount of updates the current thread is doing in a second
 		 */
 		void update(size_t threadNum, float ups) override;
+
+		/**
+		 * Recalculates the center of the node based on the min and max averages
+		 * @param path The path, can be arrays/vectors of Vector2f
+		 */
+		template <typename T>
+		void recalculateCenter(const T& path) {
+			Vector2f min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+			Vector2f max(std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
+
+			std::for_each(path.begin(), path.end(), [&](const Vector2f& vec) {
+				if (vec.x < min.x) min.x = vec.x;
+				if (vec.x > max.x) max.x = vec.x;
+				if (vec.y < min.y) min.y = vec.y;
+				if (vec.y > max.y) max.y = vec.y;
+			});
+
+			center = max - min / 2.0f;
+		}
+
+		/**
+		 * Creates the path given the path
+		 * @param path The path, can be arrays/vectors of Vector2f
+		 */
+		template <typename T>
+		void createPath(const T& path) {
+			recalculateCenter(path);
+
+			std::tuple<std::vector<float>, std::vector<unsigned int>> bufferInfo = triangulatePathFloat(path);
+			vertexArray.vertices.data.clear();
+			vertexArray.vertices.data = std::move(std::get<0>(bufferInfo));
+			vertexArray.vertices.updateBuffer(OpenGL::BufferUsage::Static);
+
+			vertexArray.elements.data.clear();
+			vertexArray.elements.data = std::move(std::get<1>(bufferInfo));
+			vertexArray.elements.updateBuffer(OpenGL::BufferUsage::Static);
+		}
 
 	public:
 
@@ -91,6 +156,22 @@ namespace Kale {
 		 * The z position of this node
 		 */
 		float zPosition = 0.0f;
+
+		/**
+		 * The center of the path (calculated by mean of max and min points on x/y dimensions).
+		 * Recalculated on path updates, inherited nodes must call the method to calculate this manually
+		 */
+		Vector2f center;
+
+		/**
+		 * The scale of the path, can be used for shrinking or expanding the path as a whole without updating points
+		 */
+		Vector2f scale = Vector2f(1.0f, 1.0f);
+
+		/**
+		 * The rotation of the path in DEGREES, can be used for rotating the path without updating points
+		 */
+		float rotation = 0.0f;
 
 		/**
 		 * Creates an empty path node
@@ -108,8 +189,9 @@ namespace Kale {
 		 * @param path The path
 		 */
 		template <size_t N>
-		PathNode(const std::array<Vector2f, N>& path) : vertexArray(path, true), color(1.0f, 1.0f, 1.0f, 0.0f) {
+		PathNode(const std::array<Vector2f, N>& path) : color(1.0f, 1.0f, 1.0f, 0.0f) {
 			createShaders();
+			createPath(path);
 		}
 
 		/**
@@ -125,8 +207,9 @@ namespace Kale {
 		 * @param color The color
 		 */
 		template <size_t N>
-		PathNode(const std::array<Vector2f, N>& path, const Vector4f& color) : vertexArray(path, true), color(color) {
+		PathNode(const std::array<Vector2f, N>& path, const Vector4f& color) : color(color) {
 			createShaders();
+			createPath(path);
 		}
 
 		/**
@@ -142,14 +225,7 @@ namespace Kale {
 		 * @param newPath the path to update to
 		 */
 		template <size_t N> void updatePath(const std::array<Vector2f, N>& newPath) {
-			std::tuple<std::vector<float>, std::vector<unsigned int>> bufferInfo = triangulatePathFloat(newPath);
-			vertexArray.vertices.data.clear();
-			vertexArray.vertices.data = std::move(std::get<0>(bufferInfo));
-			vertexArray.vertices.updateBuffer(OpenGL::BufferUsage::Static);
-
-			vertexArray.elements.data.clear();
-			vertexArray.elements.data = std::move(std::get<1>(bufferInfo));
-			vertexArray.elements.updateBuffer(OpenGL::BufferUsage::Static);
+			createPath(newPath);
 		}
 		
 	};

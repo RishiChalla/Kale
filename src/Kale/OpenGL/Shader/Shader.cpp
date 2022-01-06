@@ -130,6 +130,24 @@ void Shader::useProgram() const {
 }
 
 /**
+ * Gets the location of an attribute
+ * @param name The name of the attribute
+ * @returns The location of the attribute
+ */
+int Shader::getAttributeLocation(const char* name) const {
+	return glGetAttribLocation(program, name);
+}
+
+/**
+ * Gets the location of an uniform
+ * @param name The name of the uniform
+ * @returns The location of the uniform
+ */
+int Shader::getUniformLocation(const char* name) const {
+	return glGetUniformLocation(program, name);
+}
+
+/**
  * Passes a uniform at a certain location to the shader
  * @param location The location of the uniform
  * @param value The value of the uniform
@@ -166,7 +184,7 @@ void Shader::uniform(unsigned int location, const Vector4f& value) const {
  */	
 void Shader::uniform(unsigned int location, const Matrix2f& value) const {
 	useProgram();
-	glUniformMatrix2fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
+	glUniformMatrix2fv(location, 1, GL_FALSE, value.data.data());
 }
 
 /**
@@ -176,7 +194,7 @@ void Shader::uniform(unsigned int location, const Matrix2f& value) const {
  */	
 void Shader::uniform(unsigned int location, const Matrix3f& value) const {
 	useProgram();
-	glUniformMatrix3fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
+	glUniformMatrix3fv(location, 1, GL_FALSE, value.data.data());
 }
 
 /**
@@ -186,7 +204,7 @@ void Shader::uniform(unsigned int location, const Matrix3f& value) const {
  */	
 void Shader::uniform(unsigned int location, const Matrix4f& value) const {
 	useProgram();
-	glUniformMatrix4fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
+	glUniformMatrix4fv(location, 1, GL_FALSE, value.data.data());
 }
 
 /**
@@ -196,7 +214,7 @@ void Shader::uniform(unsigned int location, const Matrix4f& value) const {
  */	
 void Shader::uniform(unsigned int location, const Transform& value) const {
 	useProgram();
-	glUniformMatrix3fv(location, static_cast<GLsizei>(value.data.size()), GL_FALSE, value.data.data());
+	glUniformMatrix3fv(location, 1, GL_FALSE, value.data.data());
 }
 
 /**

@@ -27,9 +27,9 @@ namespace Kale {
 
 		/**
 		 * Renders the node
-		 * @param renderer The renderer to render to
+		 * @param camera The camera to render with
 		 */
-		void render() override;
+		void render(const Camera& camera) override;
 
 		/**
 		 * Updates the node

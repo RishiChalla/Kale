@@ -33,6 +33,29 @@
 using namespace Kale;
 
 /**
+ * Constructs a new scene
+ */
+Scene::Scene()  {
+	Vector2f size = mainApp->getWindow().getSizeF();
+	viewport = {size.x * 1080.0f / size.y, 1080.0f};
+
+	worldToScreen.scale(2.0f / viewport);
+	worldToScreen.translate(viewport / -2.0f);
+}
+
+/**
+ * Called when the event is fired
+ */
+void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
+	Vector2f size = newSize.cast<float>();
+	viewport = {size.x * 1080.0f / size.y, 1080.0f};
+
+	worldToScreen.setIdentity();
+	worldToScreen.scale(2.0f / viewport);
+	worldToScreen.translate(viewport / -2.0f);
+}
+
+/**
  * Adds a node to the scene to render/update
  * @param node The node to add
  */
@@ -60,8 +83,9 @@ void Scene::render() const {
 	OpenGL::Core::clearScreen(bgColor);
 #endif
 
+	Transform cameraToScreen(worldToScreen * camera);
 	for (Node* node : nodes)
-		node->render();
+		node->render(cameraToScreen);
 	
 	// Swaps the buffers/uses the swapchain to display output
 #ifdef KALE_OPENGL

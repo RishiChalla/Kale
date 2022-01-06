@@ -42,6 +42,7 @@ void Core::setupCore() noexcept {
 	try {
 		mainApp->getWindow().setupGlad();
 		glEnable(GL_MULTISAMPLE);
+		glEnable(GL_DEPTH_TEST);
 		glViewport(0, 0, mainApp->getWindow().getSize().x, mainApp->getWindow().getSize().y);
 		resizeHandler = new ResizeHandler();
 		mainApp->getWindow().registerEvents(dynamic_cast<EventHandler*>(resizeHandler));
@@ -72,9 +73,7 @@ void Core::setupCore() noexcept {
 				case GL_DEBUG_SEVERITY_HIGH:
 					console.error(outMessage.str());
 				default:
-					// Shouldn't be possible
-					console.error("A debug message callback was provided from OpenGL with unknown severity. More info provided in next log.");
-					console.error(outMessage.str());
+					return;
 			}
 			
 		}, nullptr);
@@ -92,7 +91,7 @@ void Core::setupCore() noexcept {
  */
 void Core::clearScreen(const Vector4f& color) noexcept {
 	glClearColor(color.x, color.y, color.z, color.w);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 /**

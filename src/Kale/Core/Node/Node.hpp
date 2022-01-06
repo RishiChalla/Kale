@@ -16,9 +16,7 @@
 
 #pragma once
 
-#include <Kale/Vulkan/GraphicsPipeline/GraphicsPipeline.hpp>
-#include <Kale/Vulkan/CommandBuffer/CommandBuffer.hpp>
-#include <Kale/Vulkan/Renderer/Renderer.hpp>
+#include <Kale/Math/Transform/Transform.hpp>
 
 namespace Kale {
 
@@ -37,9 +35,9 @@ namespace Kale {
 
 		/**
 		 * Renders the node
-		 * @param renderer The renderer to render to
+		 * @param camera The camera to render with
 		 */
-		virtual void render() = 0;
+		virtual void render(const Camera& camera) = 0;
 
 		/**
 		 * Updates the node

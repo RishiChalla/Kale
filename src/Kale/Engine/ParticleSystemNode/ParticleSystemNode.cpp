@@ -20,9 +20,9 @@ using namespace Kale;
 
 /**
  * Renders the node
- * @param renderer The renderer to render to
+ * @param camera The camera to render with
  */
-void ParticleSystemNode::render() {
+void ParticleSystemNode::render(const Camera& camera) {
 
 }
 

@@ -16,8 +16,6 @@
 
 #ifdef KALE_OPENGL
 
-#include <Kale/Core/Application/Application.hpp>
-
 #include "PathNode.hpp"
 
 using namespace Kale;
@@ -29,12 +27,21 @@ std::unique_ptr<const OpenGL::Shader> PathNode::shader = nullptr;
 
 /**
  * Renders the node
- * @param renderer The renderer to render to
+ * @param camera The camera to render with
  */
-void PathNode::render() {
+void PathNode::render(const Camera& camera) {
 	shader->useProgram();
-	shader->uniform(1, color);
-	shader->uniform(2, zPosition);
+
+	Transform local;
+	local.setTranslation(center * -1.0f);
+	local.scale(scale);
+	local.rotateDeg(rotation);
+	local.translate(center);
+
+	shader->uniform(localUniform, local);
+	shader->uniform(cameraUniform, camera);
+	shader->uniform(vertexColorUniform, color);
+	shader->uniform(zPositionUniform, zPosition);
 	vertexArray.draw();
 }
 
@@ -53,9 +60,14 @@ void PathNode::createShaders() {
 		const std::string vertShaderPath = folder + "/assets/shaders/shader.vert";
 		const std::string fragShaderPath = folder + "/assets/shaders/shader.frag";
 		shader = std::make_unique<const OpenGL::Shader>(vertShaderPath.c_str(), fragShaderPath.c_str());
+		cameraUniform = static_cast<unsigned int>(shader->getUniformLocation("camera"));
+		localUniform = static_cast<unsigned int>(shader->getUniformLocation("local"));
+		vertexColorUniform = static_cast<unsigned int>(shader->getUniformLocation("vertexColor"));
+		zPositionUniform = static_cast<unsigned int>(shader->getUniformLocation("zPosition"));
+		vertexPositionAttribute = static_cast<unsigned int>(shader->getAttributeLocation("vertexPosition"));
 	}
 	
-	vertexArray.enableAttributePointer({0});
+	vertexArray.enableAttributePointer({vertexPositionAttribute});
 }
 
 /**
@@ -69,9 +81,9 @@ PathNode::PathNode() {
  * Creates a path node given the path
  * @param path The path
  */
-PathNode::PathNode(const std::vector<Vector2f>& path) : vertexArray(path, OpenGL::BufferUsage::Static, true),
-	color(1.0f, 1.0f, 1.0f, 0.0f) {
+PathNode::PathNode(const std::vector<Vector2f>& path) : color(1.0f, 1.0f, 1.0f, 0.0f) {
 	createShaders();
+	createPath(path);
 }
 
 /**
@@ -79,9 +91,9 @@ PathNode::PathNode(const std::vector<Vector2f>& path) : vertexArray(path, OpenGL
  * @param path The path
  * @param color The color
  */
-PathNode::PathNode(const std::vector<Vector2f>& path, const Vector4f& color) : vertexArray(path, OpenGL::BufferUsage::Static, true),
-	color(color) {
+PathNode::PathNode(const std::vector<Vector2f>& path, const Vector4f& color) : color(color) {
 	createShaders();
+	createPath(path);
 }
 
 /**
@@ -89,14 +101,7 @@ PathNode::PathNode(const std::vector<Vector2f>& path, const Vector4f& color) : v
  * @param newPath the path to update to
  */
 void PathNode::updatePath(const std::vector<Vector2f>& newPath) {
-	std::tuple<std::vector<float>, std::vector<unsigned int>> bufferInfo = triangulatePathFloat(newPath);
-	vertexArray.vertices.data.clear();
-	vertexArray.vertices.data = std::move(std::get<0>(bufferInfo));
-	vertexArray.vertices.updateBuffer(OpenGL::BufferUsage::Static);
-
-	vertexArray.elements.data.clear();
-	vertexArray.elements.data = std::move(std::get<1>(bufferInfo));
-	vertexArray.elements.updateBuffer(OpenGL::BufferUsage::Static);
+	createPath(newPath);
 }
 
 #endif
