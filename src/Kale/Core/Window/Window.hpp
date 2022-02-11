@@ -27,46 +27,11 @@
 #include <list>
 #include <vector>
 
-#ifdef KALE_VULKAN
-	#include <vulkan/vulkan.hpp>
-#endif
+#include <gpu/GrDirectContext.h>
+#include <core/SkSurface.h>
+#include <core/SkCanvas.h>
 
 namespace Kale {
-
-#ifdef KALE_VULKAN
-
-	/**
-	 * Forward declaration of vulkan namespace
-	 */
-	namespace Vulkan {
-
-		/**
-		 * Forward declaration of vulkan renderer class
-		 */
-		class Renderer;
-
-		/**
-		 * Forward declaration of vulkan core class
-		 */
-		class Core;
-	}
-
-#endif
-
-#ifdef KALE_OPENGL
-
-	/**
-	 * Forward declaration of OpenGL namespace
-	 */
-	namespace OpenGL {
-
-		/**
-		 * Forward declaration of OpenGL core class
-		 */
-		class Core;
-	}
-
-#endif
 	
 	/**
 	 * Forward declaration of the event handler class
@@ -87,6 +52,16 @@ namespace Kale {
 		 * A linked list of all event listeners for this window
 		 */
 		std::list<EventHandler*> eventHandlers;
+
+		/**
+		 * The skia context used for rendering
+		 */
+		GrDirectContext* skiaContext;
+
+		/**
+		 * The Skia surface connecting this window to the rendering API
+		 */
+		SkSurface* skiaSurface;
 		
 	protected:
 		
@@ -103,41 +78,9 @@ namespace Kale {
 		void update();
 
 		/**
-		 * Gets the extensions required for VKCreateInfo depending on the windowing API
-		 * @returns The required extensions for the lower level windowing API
-		 */
-		std::vector<const char*> getInstanceExtensions() const;
-
-#ifdef KALE_VULKAN
-
-		/**
-		 * Creates a vulkan window surface given the instance and the surface references
-		 * @param instance The instance reference
-		 * @param surface The surface reference
-		 * @throws If the surface creation failed
-		 */
-		void createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueSurfaceKHR& surface) const;
-
-		friend class Vulkan::Core;
-
-#endif
-
-#ifdef KALE_OPENGL
-
-		/**
-		 * Sets up Glad
-		 * @throws If setup fails
-		 */
-		void setupGlad() const;
-
-		/**
 		 * Uses the windowing API to swap the front and back buffers
 		 */
 		void swapBuffers() const noexcept;
-
-		friend class OpenGL::Core;
-
-#endif
 		
 		friend class Application;
 		
@@ -192,6 +135,18 @@ namespace Kale {
 		 * @returns The window title
 		 */
 		const char* getTitle() const;
+
+		/**
+		 * Recreates the skia surface (should be called on window resize)
+		 */
+		void recreateSkiaSurface();
+
+		/**
+		 * Gets the canvas to draw to
+		 * @throws If the canvas does not currently exist
+		 * @returns The canvas
+		 */
+		SkCanvas& getCanvas();
 		
 		/**
 		 * Starts listening to events, override the functions provided in EventHandler to handle the events

@@ -18,18 +18,6 @@
 
 #include <Kale/Core/Application/Application.hpp>
 
-#ifdef KALE_OPENGL
-
-#include <Kale/OpenGL/Core/Core.hpp>
-
-#endif
-
-#ifdef KALE_VULKAN
-
-#include <Kale/Vulkan/Core/Core.hpp>
-
-#endif
-
 using namespace Kale;
 
 /**
@@ -39,8 +27,7 @@ Scene::Scene()  {
 	Vector2f size = mainApp->getWindow().getSizeF();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 
-	worldToScreen.scale(2.0f / viewport);
-	worldToScreen.translate(viewport / -2.0f);
+	worldToScreen.scale(size / 1080.0f);
 }
 
 /**
@@ -51,8 +38,7 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 
 	worldToScreen.setIdentity();
-	worldToScreen.scale(2.0f / viewport);
-	worldToScreen.translate(viewport / -2.0f);
+	worldToScreen.scale(size / 1080.0f);
 }
 
 /**
@@ -78,23 +64,9 @@ void Scene::removeNode(Node* node) {
  * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */
 void Scene::render() const {
-
-#ifdef KALE_OPENGL
-	OpenGL::Core::clearScreen(bgColor);
-#endif
-
 	Transform cameraToScreen(worldToScreen * camera);
 	for (Node* node : nodes)
 		node->render(cameraToScreen);
-	
-	// Swaps the buffers/uses the swapchain to display output
-#ifdef KALE_OPENGL
-	OpenGL::Core::swapBuffers();
-#endif
-
-#ifdef KALE_VULKAN
-	// Vulkan::Core::swapBuffers();
-#endif
 }
 
 /**

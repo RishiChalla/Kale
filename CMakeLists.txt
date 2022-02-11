@@ -16,8 +16,6 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 option(KALE_USE_SDL = OFF)
 option(KALE_USE_GLFW = ON)
 option(KALE_VERBOSE = OFF)
-option(KALE_OPENGL = ON)
-option(KALE_VULKAN = OFF)
 
 # OS Macros
 if (WIN32)
@@ -72,32 +70,52 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(dependencies/json)
 target_link_libraries(Kale nlohmann_json)
 
-# Triangulization Library
-target_include_directories(Kale PUBLIC dependencies/delauntor-cpp/include/)
+# Skia
+
+# To generate skia files (m1 mac), change debug/official build depending on debug or not -
+# bin/gn gen out/Static/Release --args='is_debug=false is_official_build=true skia_use_gl=true skia_use_system_expat=false skia_use_system_harfbuzz=false
+# skia_use_system_icu=false skia_use_system_libjpeg_turbo=false skia_use_system_libpng=false skia_use_system_libwebp=false skia_use_system_zlib=false
+# target_cpu="arm64"'
+
+set(SKIA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/skia")
+
+target_include_directories(Kale PUBLIC
+	${SKIA_DIR}/
+	${SKIA_DIR}/include
+)
+
+target_compile_definitions(Kale PUBLIC SK_GL)
+
+if (WIN32)
+	if(KALE_DEBUG)
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Debug/libskia.lib)
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Debug/libpathkit.lib)
+	else()
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Release/libskia.lib)
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Release/libpathkit.lib)
+	endif()
+endif()
+if (UNIX)
+	if(KALE_DEBUG)
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Debug/libskia.a)
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Debug/libpathkit.a)
+	else()
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Release/libskia.a)
+		target_link_libraries(Kale ${SKIA_DIR}/out/Static/Release/libpathkit.a)
+	endif()
+endif()
+
+if (APPLE)
+    target_link_libraries(Kale "-framework CoreServices")
+    target_link_libraries(Kale "-framework CoreGraphics")
+    target_link_libraries(Kale "-framework CoreText")
+    target_link_libraries(Kale "-framework CoreFoundation")
+endif()
 
 # Termcolor - Debug only since console is not used for release
 if(KALE_DEBUG)
 	add_subdirectory(dependencies/termcolor)
 	target_link_libraries(Kale termcolor)
-endif()
-
-# Vulkan
-if (KALE_VULKAN)
-	target_compile_definitions(Kale PUBLIC KALE_VULKAN)
-	find_package(Vulkan REQUIRED FATAL_ERROR)
-	target_link_libraries(Kale ${Vulkan_LIBRARIES})
-	target_include_directories(Kale PUBLIC ${Vulkan_INCLUDE_DIR})
-endif()
-
-# OpenGL
-if (KALE_OPENGL)
-	target_compile_definitions(Kale PUBLIC KALE_OPENGL)
-	find_package(OpenGL REQUIRED)
-	target_link_libraries(Kale ${OpenGL_LIBRARIES})
-	target_include_directories(Kale PUBLIC ${OpenGL_INCLUDE_DIR})
-	add_subdirectory(dependencies/glad/)
-	target_link_libraries(Kale Glad)
-	target_include_directories(Kale PUBLIC dependencies/glad/include/)
 endif()
 
 # SDL
@@ -123,37 +141,7 @@ endif()
 # Shaders
 set(SHADER_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders/)
 
-# Compile Shaders - Vulkan
-if (KALE_VULKAN)
-	find_package(Vulkan REQUIRED COMPONENTS glslc)
-	find_program(glslc_executable NAMES glslc HINTS Vulkan::glslc)
-
-	file(GLOB_RECURSE shaders CONFIGURE_DEPENDS shaders/*.vert shaders/*.frag)
-	add_custom_command(
-		COMMAND
-			${CMAKE_COMMAND} -E make_directory ${SHADER_BINARY_DIR}
-		OUTPUT ${SHADER_BINARY_DIR}
-	)
-
-	foreach(source IN LISTS shaders)
-		get_filename_component(FILENAME ${source} NAME)
-		add_custom_command(
-		COMMAND
-			${glslc_executable}
-			-o ${SHADER_BINARY_DIR}/${FILENAME}.spv
-			${source}
-		OUTPUT ${SHADER_BINARY_DIR}/${FILENAME}.spv
-		DEPENDS ${source} ${SHADER_BINARY_DIR}
-		)
-		list(APPEND SPV_SHADERS ${SHADER_BINARY_DIR}/${FILENAME}.spv)
-	endforeach()
-
-	add_custom_target(shaders ALL DEPENDS ${SPV_SHADERS})
-endif()
-
-# Copy Shaders - OpenGL
-if (KALE_OPENGL)
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		${CMAKE_CURRENT_SOURCE_DIR}/shaders/ ${SHADER_BINARY_DIR})
-endif()
+# Copy Skia Shaders
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${CMAKE_CURRENT_SOURCE_DIR}/shaders/ ${SHADER_BINARY_DIR})

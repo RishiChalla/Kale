@@ -22,7 +22,7 @@
  * > not the author of this software or do not have their permission please delete the software immediately.
  * 
  * @section s1 What is Kale?
- * Kale is a 2D Game Engine made with Vulkan with specialized "blobby" graphics. Kale supports Mac OSX, Windows, Linux,
+ * Kale is a 2D Game Engine made with Skia with specialized "blobby" graphics. Kale supports Mac OSX, Windows, Linux,
  * ~~IOS~~, ~~Android~~, and the ~~Nintendo Switch~~ (Striked platforms currently do not have support but are planned in
  * the near future). This guide will teach you how to get back on your feet and use Kale for development if you ever forget.
  * 

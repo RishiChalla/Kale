@@ -49,29 +49,28 @@ static std::list<_WinGamePad> gamePads;
  * Initializes GLFW
  */
 Window::Window() {
-	glfwInit();
+	if (!glfwInit()) {
+		console.error("Unable to initialize GLFW");
+		exit(0);
+	}
 
-#ifdef KALE_OPENGL
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	glfwWindowHint(GLFW_STENCIL_BITS, 0);
+	glfwWindowHint(GLFW_DEPTH_BITS, 0);
+	
 	glfwWindowHint(GLFW_SAMPLES, 4);
-
-#ifdef KALE_DEBUG
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-#endif
-
-#endif
-
-#ifdef KALE_VULKAN
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-#endif
 }
 
 /**
  * Frees resources of the window
  */
 Window::~Window() {
+	if (skiaSurface != nullptr) delete skiaSurface;
+	if (skiaContext != nullptr) delete skiaContext;
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	handlers = nullptr;
@@ -179,10 +178,14 @@ static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 static void resizeCallback(GLFWwindow* window, int width, int height) {
-	if (handlers == nullptr) return;
+	Vector2ui tmp_oldWinSize(oldWinSize);
 	Vector2ui size = Vector2i(width, height).cast<unsigned int>();
-	for (auto handler : *handlers) handler->onWindowResize(oldWinSize, size);
+	// Set the oldWinSize static variable here to avoid client calling getSize() and retrieving incorrect size
 	oldWinSize = size;
+
+	mainApp->getWindow().recreateSkiaSurface();
+	if (handlers == nullptr) return;
+	for (auto handler : *handlers) handler->onWindowResize(tmp_oldWinSize, size);
 }
 
 static void focusCallback(GLFWwindow* window, int focused) {
@@ -216,11 +219,17 @@ static void joystickCallback(int jid, int action) {
  */
 void Window::create(const char* title) {
 	this->title = title;
-	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
+	window = glfwCreateWindow(oldWinSize.x, oldWinSize.y, title, nullptr, nullptr);
 
-#ifdef KALE_OPENGL
+	if (!window) {
+		glfwTerminate();
+		console.error("Unable to create GLFW window");
+		exit(0);
+	}
+
 	glfwMakeContextCurrent(window);
-#endif
+	glfwSwapInterval(1);
+	recreateSkiaSurface();
 	
 	handlers = &eventHandlers;
 	glfwSetKeyCallback(window, keyCallback);
@@ -427,54 +436,12 @@ void Window::update() {
 }
 
 /**
- * Gets the extensions required for VKCreateInfo depending on the windowing API
- * @returns The required extensions for the lower level windowing API
- */
-std::vector<const char*> Window::getInstanceExtensions() const {
-	uint32_t glfwExtensionCount = 0;
-	const char** glfwExtensions;
-	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-	std::vector<const char*> requiredExtensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-	return requiredExtensions;
-}
-
-#ifdef KALE_VULKAN
-
-/**
- * Creates a vulkan window surface given the instance and the surface references
- * @param instance The instance reference
- * @param surface The surface reference
- * @throws If the surface creation failed
- */
-void Window::createWindowSurface(const vk::UniqueInstance& instance, vk::UniqueSurfaceKHR& surface) const {
-	VkSurfaceKHR tmpSurface;
-	if (glfwCreateWindowSurface(instance.get(), window, nullptr, &tmpSurface) != VK_SUCCESS)
-		throw std::runtime_error("Unable to create window surface");
-
-	surface = vk::UniqueSurfaceKHR(tmpSurface, instance.get());
-}
-
-#endif
-
-#ifdef KALE_OPENGL
-
-/**
- * Sets up Glad
- * @throws If setup fails
- */
-void Window::setupGlad() const {
-	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
-		throw std::runtime_error("Unable to setup GLAD");
-}
-
-/**
  * Uses the windowing API to swap the front and back buffers
  */
 void Window::swapBuffers() const noexcept {
+	skiaContext->flush();
 	glfwSwapBuffers(window);
 }
-
-#endif
 
 /**
  * Gets the window title

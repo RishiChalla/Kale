@@ -22,14 +22,6 @@
 	#include <Windows.h>
 #endif
 
-#ifdef KALE_VULKAN
-	#define GLFW_INCLUDE_VULKAN
-#endif
-
-#ifdef KALE_OPENGL
-	#include <glad/glad.h>
-#endif
-
 #include <GLFW/glfw3.h>
 
 #endif

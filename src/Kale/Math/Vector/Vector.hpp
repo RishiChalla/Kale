@@ -116,8 +116,7 @@ namespace Kale {
 	 * Represents a vector in a 3 dimensional space
 	 */
 	template <typename T>
-	class Vector3
-	{
+	class Vector3 {
 	public:
 		T x, y, z;
 
@@ -221,8 +220,7 @@ namespace Kale {
 	 * Represents a vector in a 3 dimensional space
 	 */
 	template <typename T>
-	class Vector4
-	{
+	class Vector4 {
 	public:
 		T x, y, z, w;
 

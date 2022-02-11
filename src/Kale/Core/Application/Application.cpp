@@ -17,15 +17,6 @@
 #include "Application.hpp"
 
 #include <Kale/Core/Clock/Clock.hpp>
-#include <Kale/Core/Settings/Settings.hpp>
-
-#ifdef KALE_VULKAN
-#include <Kale/Vulkan/Core/Core.hpp>
-#endif
-
-#ifdef KALE_OPENGL
-#include <Kale/OpenGL/Core/Core.hpp>
-#endif
 
 #include <exception>
 #include <string>
@@ -39,7 +30,6 @@ using namespace Kale;
 Application::Application(const char* applicationName) noexcept : applicationName(applicationName) {
 	try {
 		console.load(this->applicationName);
-		settings.load(this->applicationName);
 	}
 	catch (const std::exception&) {
 		// We have no way of logging effectively, so we'll just have to exit
@@ -114,7 +104,7 @@ void Application::update(size_t threadNum) noexcept {
 	while (window.isOpen()) {
 
 		// Limit UPS and retrieve it
-		float ups = clock.sleep(settings.getMinMSpU());
+		float ups = clock.sleep(1000.0f / 144.0f);
 		
 		// Perform updating
 		if (presentedScene != nullptr) try {
@@ -135,18 +125,7 @@ void Application::run() noexcept {
 	
 	// Creates the window
 	window.create(applicationName.c_str());
-	
-	
-#ifdef KALE_VULKAN
-	// Setup Vulkan
-	Vulkan::Core::setupCore();
-#endif
 
-#ifdef KALE_OPENGL
-	// Setup OpenGL
-	OpenGL::Core::setupCore();
-#endif
-	
 	try {
 		onBegin();
 	}
@@ -162,29 +141,18 @@ void Application::run() noexcept {
 	// Render loop
 	Clock clock;
 	while (window.isOpen()) {
-
-		// Limit FPS and retrieve it
-		clock.sleep(settings.getMinMSpF());
 		
 		// Update the window for event polling, etc
 		window.update();
 
 		if (presentedScene != nullptr)
 			presentedScene->render();
+		
+		window.swapBuffers();
 	}
 
 	onEnd();
 
 	// Wait for threads
 	for (std::thread& thread : updateThreads) thread.join();
-
-#ifdef KALE_VULKAN
-	// Cleanup vulkan now that execution is done
-	Vulkan::Core::cleanupCore();
-#endif
-
-#ifdef KALE_OPENGL
-	// Setup OpenGL
-	OpenGL::Core::cleanupCore();
-#endif
 }
