@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -338,4 +338,154 @@ void Transform::inverseTransformInplace(Vector2f& vec) const {
 	float den = data[0] * data[4] - data[1] * data[3];
 	vec.x = (data[1] * data[5] - data[1] * vec.y - data[2] * data[4] + data[4] * vec.x) / den;
 	vec.y = (-data[0] * data[5] + data[0] * vec.y + data[2] * data[3] - data[3] * vec.x) / den;
+}
+
+/**
+ * Transforms a rect using this transformation matrix
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+Rect Transform::transform(const Rect& rect) const {
+	return Rect{transform(rect.topLeft), transform(rect.bottomRight)};
+}
+
+/**
+ * Inverse transforms a rect using this transformation matrix
+ * (Returns a rect transformed by this matrix to its original)
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+Rect Transform::inverseTransform(const Rect& rect) const {
+	return Rect{inverseTransform(rect.topLeft), inverseTransform(rect.bottomRight)};
+}
+
+/**
+ * Transforms a ray using this transformation matrix
+ * @param ray The ray to transform
+ * @returns The transformed ray
+ */
+Ray Transform::transform(const Ray& ray) const {
+	Ray newRay;
+	newRay.origin = transform(ray.origin);
+	newRay.direction = transform(ray.direction + ray.origin) - newRay.origin;
+	newRay.direction /= newRay.direction.magnitude();
+	return newRay;
+}
+
+/**
+ * Inverse transforms a ray using this transformation matrix
+ * (Returns a ray transformed by this matrix to its original)
+ * @param ray The ray to transform
+ * @returns The transformed ray
+ */
+Ray Transform::inverseTransform(const Ray& ray) const {
+	Ray newRay;
+	newRay.origin = inverseTransform(ray.origin);
+	newRay.direction = inverseTransform(ray.direction + ray.origin) - newRay.origin;
+	newRay.direction /= newRay.direction.magnitude();
+	return newRay;
+}
+
+/**
+ * Transforms a line using this transformation matrix
+ * @param line The line to transform
+ * @returns The transformed line
+ */
+Line Transform::transform(const Line& line) const {
+	return Line{transform(line.point1), transform(line.point2)};
+}
+
+/**
+ * Inverse transforms a line using this transformation matrix
+ * (Returns a line transformed by this matrix to its original)
+ * @param line The line to transform
+ * @returns The transformed line
+ */
+Line Transform::inverseTransform(const Line& line) const {
+	return Line{inverseTransform(line.point1), inverseTransform(line.point2)};
+}
+
+/**
+ * Transforms a path using this transformation matrix
+ * @param path The path to transform
+ * @returns The transformed path
+ */
+Path Transform::transform(const Path& path) const {
+	Path newPath;
+	newPath.beziers.reserve(path.beziers.size());
+	newPath.origin = transform(path.origin);
+	for (const CubicBezier& bezier : path.beziers)
+		newPath.beziers.push_back(CubicBezier{transform(bezier.controlPoint1), transform(bezier.controlPoint2), transform(bezier.destination)});
+	return newPath;
+}
+
+/**
+ * Transforms a path using this transformation matrix
+ * @param path The path to transform
+ * @returns The transformed path
+ */
+Path Transform::transform(Path&& path) const {
+	path.origin = transform(path.origin);
+	for (CubicBezier& bezier : path.beziers) {
+		bezier.controlPoint1 = transform(bezier.controlPoint1);
+		bezier.controlPoint2 = transform(bezier.controlPoint2);
+		bezier.destination = transform(bezier.destination);
+	}
+	return std::move(path);
+}
+
+/**
+ * Inverse transforms a path using this transformation matrix
+ * (Returns a path transformed by this matrix to its original)
+ * @param path The path to transform
+ * @returns The transformed path
+ */
+Path Transform::inverseTransform(const Path& path) const {
+	Path newPath;
+	newPath.beziers.reserve(path.beziers.size());
+	newPath.origin = inverseTransform(path.origin);
+	for (const CubicBezier& bezier : path.beziers)
+		newPath.beziers.push_back(CubicBezier{inverseTransform(bezier.controlPoint1), inverseTransform(bezier.controlPoint2), inverseTransform(bezier.destination)});
+	return newPath;
+}
+
+/**
+ * Inverse transforms a path using this transformation matrix
+ * (Returns a path transformed by this matrix to its original)
+ * @param path The path to transform
+ * @returns The transformed path
+ */
+Path Transform::inverseTransform(Path&& path) const {
+	path.origin = inverseTransform(path.origin);
+	for (CubicBezier& bezier : path.beziers) {
+		bezier.controlPoint1 = inverseTransform(bezier.controlPoint1);
+		bezier.controlPoint2 = inverseTransform(bezier.controlPoint2);
+		bezier.destination = inverseTransform(bezier.destination);
+	}
+	return std::move(path);
+}
+
+/**
+ * Transforms a circle using this transformation matrix
+ * @param circle The circle to transform
+ * @returns The transformed circle
+ */
+Circle Transform::transform(const Circle& circle) const {
+	Circle newCircle;
+	newCircle.center = transform(circle.center);
+	newCircle.radius = transform({circle.radius, 0.0f}).magnitude();
+	return newCircle;
+}
+
+/**
+ * Inverse transforms a circle using this transformation matrix
+ * (Returns a circle transformed by this matrix to its original)
+ * @param circle The circle to transform
+ * @returns The transformed circle
+ */
+Circle Transform::inverseTransform(const Circle& circle) const {
+	Circle newCircle;
+	newCircle.center = inverseTransform(circle.center);
+	newCircle.radius = inverseTransform({circle.radius, 0.0f}).magnitude();
+	return newCircle;
 }

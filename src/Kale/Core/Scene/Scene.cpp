@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -45,16 +45,16 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
  * Adds a node to the scene to render/update
  * @param node The node to add
  */
-void Scene::addNode(Node& node) {
+void Scene::addNode(std::shared_ptr<Node> node) {
 	std::lock_guard<std::mutex> guard(mutex);
-	nodes.push_back(&node);
+	nodes.push_back(node);
 }
 
 /**
  * Removes a node from the scene
  * @param node The node to remove
  */
-void Scene::removeNode(Node* node) {
+void Scene::removeNode(std::shared_ptr<Node> node) {
 	std::lock_guard<std::mutex> guard(mutex);
 	nodes.remove(node);
 }
@@ -64,8 +64,19 @@ void Scene::removeNode(Node* node) {
  * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */
 void Scene::render() const {
+	// Clear screen with background color
+	{
+		Vector2f size(mainApp->getWindow().getSizeF());
+		SkColor4f color;
+		color.fR = bgColor.x;
+		color.fG = bgColor.y;
+		color.fB = bgColor.z;
+		color.fA = bgColor.w;
+		mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(color));
+	}
+
 	Transform cameraToScreen(worldToScreen * camera);
-	for (Node* node : nodes)
+	for (std::shared_ptr<Node> node : nodes)
 		node->render(cameraToScreen);
 }
 

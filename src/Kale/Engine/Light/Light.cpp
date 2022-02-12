@@ -14,26 +14,8 @@
    limitations under the License.
 */
 
-#include "Utils.hpp"
-
-#include <Kale/Math/Constants/Constants.hpp>
+#include "Light.hpp"
 
 using namespace Kale;
 
-/**
- * Converts an angle in degrees to radians
- * @param deg The angle in degrees
- * @returns The angle in radians
- */
-float Kale::degToRad(float deg) {
-	return deg / 180.0f * PI;
-}
 
-/**
- * Converts an angle in radians to degrees
- * @param rad The angle in radians
- * @returns The angle in degrees
- */
-float Kale::radToDeg(float rad) {
-	return rad / PI * 180.0f;
-}

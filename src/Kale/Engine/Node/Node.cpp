@@ -14,26 +14,21 @@
    limitations under the License.
 */
 
-#include "Utils.hpp"
-
-#include <Kale/Math/Constants/Constants.hpp>
+#include "Node.hpp"
 
 using namespace Kale;
 
 /**
- * Converts an angle in degrees to radians
- * @param deg The angle in degrees
- * @returns The angle in radians
+ * Creates the node parent
  */
-float Kale::degToRad(float deg) {
-	return deg / 180.0f * PI;
+Node::Node() {
+	// Empty Body
 }
 
 /**
- * Converts an angle in radians to degrees
- * @param rad The angle in radians
- * @returns The angle in degrees
+ * Creates the node parent
+ * @param updateTime The average update time, please see Node::updateTime for documentation
  */
-float Kale::radToDeg(float rad) {
-	return rad / PI * 180.0f;
+Node::Node(float updateTime) : updateTime(updateTime) {
+	// Empty Body
 }

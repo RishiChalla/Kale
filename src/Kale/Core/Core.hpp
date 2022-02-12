@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,6 +20,5 @@
 #include "Clock/Clock.hpp"
 #include "Events/Events.hpp"
 #include "Logger/Logger.hpp"
-#include "Node/Node.hpp"
 #include "Scene/Scene.hpp"
 #include "Window/Window.hpp"

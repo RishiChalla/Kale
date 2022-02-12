@@ -1,11 +1,11 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-	   http://www.apache.org/licenses/LICENSE-2.0
+       http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,21 +14,8 @@
    limitations under the License.
 */
 
-#include "Node.hpp"
+#include "Ray.hpp"
 
 using namespace Kale;
 
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
-}
 
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
-}

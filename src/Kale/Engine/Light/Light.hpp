@@ -14,26 +14,27 @@
    limitations under the License.
 */
 
-#include "Utils.hpp"
+#pragma once
 
-#include <Kale/Math/Constants/Constants.hpp>
+#include <Kale/Math/Transform/Transform.hpp>
 
-using namespace Kale;
+namespace Kale {
 
-/**
- * Converts an angle in degrees to radians
- * @param deg The angle in degrees
- * @returns The angle in radians
- */
-float Kale::degToRad(float deg) {
-	return deg / 180.0f * PI;
-}
+	/**
+	 * The main Light class, all other light emitting entities are inherited from this class
+	 */
+	class Light {
+   private:
 
-/**
- * Converts an angle in radians to degrees
- * @param rad The angle in radians
- * @returns The angle in degrees
- */
-float Kale::radToDeg(float rad) {
-	return rad / PI * 180.0f;
+   protected:
+
+      /**
+		 * Renders the light
+		 * @param camera The camera to render with
+		 */
+		virtual void render(const Camera& camera) = 0;
+
+   public:
+
+	};
 }

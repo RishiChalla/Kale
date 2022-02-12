@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 
 #pragma once
 
-#include <Kale/Core/Node/Node.hpp>
 #include <Kale/Core/Events/Events.hpp>
 #include <Kale/Math/Transform/Transform.hpp>
+#include <Kale/Engine/Node/Node.hpp>
+#include <Kale/Engine/Light/Light.hpp>
 
 #include <list>
+#include <memory>
 #include <mutex>
 
 namespace Kale {
@@ -35,7 +37,12 @@ namespace Kale {
 		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
-		std::list<Node*> nodes;
+		std::list<std::shared_ptr<Node>> nodes;
+
+		/**
+		 * A list of the lights affecting the current scene
+		 */
+		std::list<std::shared_ptr<Light>> lights;
 
 		/**
 		 * The mutex used for node thread safety
@@ -87,13 +94,13 @@ namespace Kale {
 		 * Adds a node to the scene to render/update
 		 * @param node The node to add
 		 */
-		void addNode(Node& node);
+		void addNode(std::shared_ptr<Node> node);
 
 		/**
 		 * Removes a node from the scene
 		 * @param node The node to remove
 		 */
-		void removeNode(Node* node);
+		void removeNode(std::shared_ptr<Node> node);
 
 		/**
 		 * Called when the current scene is presented

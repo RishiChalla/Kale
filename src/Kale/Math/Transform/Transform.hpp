@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,6 +17,11 @@
 #pragma once
 
 #include <Kale/Math/Matrix/Matrix.hpp>
+#include <Kale/Math/Rect/Rect.hpp>
+#include <Kale/Math/Ray/Ray.hpp>
+#include <Kale/Math/Line/Line.hpp>
+#include <Kale/Math/Path/Path.hpp>
+#include <Kale/Math/Circle/Circle.hpp>
 
 namespace Kale {
 
@@ -208,6 +213,96 @@ namespace Kale {
 		 * @param vec The vector to transform
 		 */
 		void inverseTransformInplace(Vector2f& vec) const;
+
+		/**
+		 * Transforms a rect using this transformation matrix
+		 * @param rect The rect to transform
+		 * @returns The transformed rect
+		 */
+		Rect transform(const Rect& rect) const;
+		
+		/**
+		 * Inverse transforms a rect using this transformation matrix
+		 * (Returns a rect transformed by this matrix to its original)
+		 * @param rect The rect to transform
+		 * @returns The transformed rect
+		 */
+		Rect inverseTransform(const Rect& rect) const;
+		
+		/**
+		 * Transforms a ray using this transformation matrix
+		 * @param ray The ray to transform
+		 * @returns The transformed ray
+		 */
+		Ray transform(const Ray& ray) const;
+		
+		/**
+		 * Inverse transforms a ray using this transformation matrix
+		 * (Returns a ray transformed by this matrix to its original)
+		 * @param ray The ray to transform
+		 * @returns The transformed ray
+		 */
+		Ray inverseTransform(const Ray& ray) const;
+		
+		/**
+		 * Transforms a line using this transformation matrix
+		 * @param line The line to transform
+		 * @returns The transformed line
+		 */
+		Line transform(const Line& line) const;
+		
+		/**
+		 * Inverse transforms a line using this transformation matrix
+		 * (Returns a line transformed by this matrix to its original)
+		 * @param line The line to transform
+		 * @returns The transformed line
+		 */
+		Line inverseTransform(const Line& line) const;
+		
+		/**
+		 * Transforms a path using this transformation matrix
+		 * @param path The path to transform
+		 * @returns The transformed path
+		 */
+		Path transform(const Path& path) const;
+		
+		/**
+		 * Transforms a path using this transformation matrix
+		 * @param path The path to transform
+		 * @returns The transformed path
+		 */
+		Path transform(Path&& path) const;
+		
+		/**
+		 * Inverse transforms a path using this transformation matrix
+		 * (Returns a path transformed by this matrix to its original)
+		 * @param path The path to transform
+		 * @returns The transformed path
+		 */
+		Path inverseTransform(const Path& path) const;
+		
+		/**
+		 * Inverse transforms a path using this transformation matrix
+		 * (Returns a path transformed by this matrix to its original)
+		 * @param path The path to transform
+		 * @returns The transformed path
+		 */
+		Path inverseTransform(Path&& path) const;
+		
+		/**
+		 * Transforms a circle using this transformation matrix
+		 * @param circle The circle to transform
+		 * @returns The transformed circle
+		 */
+		Circle transform(const Circle& circle) const;
+		
+		/**
+		 * Inverse transforms a circle using this transformation matrix
+		 * (Returns a circle transformed by this matrix to its original)
+		 * @param circle The circle to transform
+		 * @returns The transformed circle
+		 */
+		Circle inverseTransform(const Circle& circle) const;
 	};
 
 	/**
