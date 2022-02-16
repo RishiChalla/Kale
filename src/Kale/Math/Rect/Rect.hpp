@@ -44,26 +44,24 @@ namespace Kale {
 	struct Rect {
 
 		/**
-		 * The top left corner of the rectangle
+		 * The first point in the rectangle
 		 */
-		Vector2f topLeft;
+		Vector2f point1;
 
 		/**
-		 * The bottom right corner of the rectangle
+		 * The second point in the rectangle
 		 */
-		Vector2f bottomRight;
+		Vector2f point2;
 
 		/**
-		 * Gets the top right corner of the rectangle
-		 * @returns the top right corner of the rectangle
+		 * The third point in the rectangle
 		 */
-		Vector2f topRight() const;
+		Vector2f point3;
 
 		/**
-		 * Gets the bottom left corner of the rectangle
-		 * @returns the bottom left corner of the rectangle
+		 * The fourth point in the rectangle
 		 */
-		Vector2f bottomLeft() const;
+		Vector2f point4;
 
 		/**
 		 * Gets the center of the rectangle

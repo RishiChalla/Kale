@@ -346,7 +346,7 @@ void Transform::inverseTransformInplace(Vector2f& vec) const {
  * @returns The transformed rect
  */
 Rect Transform::transform(const Rect& rect) const {
-	return Rect{transform(rect.topLeft), transform(rect.bottomRight)};
+	return Rect{transform(rect.point1), transform(rect.point2), transform(rect.point3), transform(rect.point4)};
 }
 
 /**
@@ -356,7 +356,7 @@ Rect Transform::transform(const Rect& rect) const {
  * @returns The transformed rect
  */
 Rect Transform::inverseTransform(const Rect& rect) const {
-	return Rect{inverseTransform(rect.topLeft), inverseTransform(rect.bottomRight)};
+	return Rect{inverseTransform(rect.point1), inverseTransform(rect.point2), inverseTransform(rect.point3), inverseTransform(rect.point4)};
 }
 
 /**

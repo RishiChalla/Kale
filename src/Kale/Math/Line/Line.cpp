@@ -16,6 +16,125 @@
 
 #include "Line.hpp"
 
+#include <Kale/Math/Rect/Rect.hpp>
+#include <Kale/Math/Ray/Ray.hpp>
+#include <Kale/Math/Path/Path.hpp>
+#include <Kale/Math/Circle/Circle.hpp>
+
+#include <stdexcept>
+
 using namespace Kale;
 
+/**
+ * Gets the angle of the direction in degrees
+ * @returns the angle of the direction in degrees
+ */
+float Line::getAngleDeg() const {
+    throw std::runtime_error("Unimplemented method");
+}
 
+/**
+ * Gets The angle of the direction in radians
+ * @returns The angle of the direction in radians
+ */
+float Line::getAngleRad() const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Returns the normal unit vector of the direction of this line
+ * @returns The normal unit vector
+ */
+Vector2f Line::getNormal() const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks whether or not the ray is perpendicular with this line
+ * @param ray The ray to check with
+ * @returns Whether or not the ray is perpendicular with this line
+ */
+bool Line::isPerpendicular(Ray ray) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks whether or not the line is perpendicular with this line
+ * @param line The line to check with
+ * @returns Whether or not the line is perpendicular with this line
+ */
+bool Line::isPerpendicular(Line line) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks whether or not the ray is parallel with this line
+ * @param ray The ray to check with
+ * @returns Whether or not the ray is parallel with this line
+ */
+bool Line::isParallel(Ray ray) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks whether or not the line is parallel with this line
+ * @param line The line to check with
+ * @returns Whether or not the line is parallel with this line
+ */
+bool Line::isParallel(Line line) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks for collision with a point
+ * @param point The point to check collision for
+ * @returns True if there is a collision, false for no collision
+ */
+bool Line::pointCollision(Vector2f point) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks for collision with a rectangle
+ * @param rect The rectangle to check collision for
+ * @returns True if there is a collision, false for no collision
+ */
+bool Line::rectCollision(Rect rect) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks for collision with a circle
+ * @param circle The circle to check collision for
+ * @returns True if there is a collision, false for no collision
+ */
+bool Line::circleCollision(Circle circle) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks for collision with a ray
+ * @param ray The ray to check collision for
+ * @returns True if there is a collision, false for no collision
+ */
+bool Line::rayCollision(Ray ray) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks for collision with a path
+ * @param path The path to check collision for
+ * @returns True if there is a collision, false for no collision
+ */
+bool Line::pathCollision(Path path) const {
+    throw std::runtime_error("Unimplemented method");
+}
+
+/**
+ * Checks for collision with a line
+ * @param line The line to check collision for
+ * @returns True if there is a collision, false for no collision
+ */
+bool Line::lineCollision(Line line) const {
+    throw std::runtime_error("Unimplemented method");
+}

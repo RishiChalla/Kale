@@ -67,12 +67,7 @@ void Scene::render() const {
 	// Clear screen with background color
 	{
 		Vector2f size(mainApp->getWindow().getSizeF());
-		SkColor4f color;
-		color.fR = bgColor.x;
-		color.fG = bgColor.y;
-		color.fB = bgColor.z;
-		color.fA = bgColor.w;
-		mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(color));
+		mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(bgColor));
 	}
 
 	Transform cameraToScreen(worldToScreen * camera);

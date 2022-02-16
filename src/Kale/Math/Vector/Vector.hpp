@@ -19,6 +19,9 @@
 #include <cmath>
 #include <algorithm>
 #include <ostream>
+#include <type_traits>
+
+#include <core/SkColor.h>
 
 namespace Kale {
 
@@ -92,7 +95,11 @@ namespace Kale {
 		friend Vector2<T> operator*(float n, Vector2<T> v) { return Vector2<T>(n * v.x, n * v.y); }
 		friend Vector2<T> operator/(float n, Vector2<T> v) { return Vector2<T>(n / v.x, n / v.y); }
 
+		bool operator>(Vector2<T> o) const { return x > o.x && y > o.y; }
+		bool operator<(Vector2<T> o) const { return x < o.x && y < o.y; }
 		bool operator==(Vector2<T> o) { return x == o.x && y == o.y; }
+		bool operator<=(Vector2<T> o) { return x <= o.x && y <= o.y; }
+		bool operator>=(Vector2<T> o) { return x >= o.x && y >= o.y; }
 
 		T dot(Vector2<T> o) const { return o.x * x + o.y * y; }
 		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y)); }
@@ -195,7 +202,11 @@ namespace Kale {
 		friend Vector3<T> operator*(float n, Vector3<T> v) { return Vector3<T>(n * v.x, n * v.y, n * v.z); }
 		friend Vector3<T> operator/(float n, Vector3<T> v) { return Vector3<T>(n / v.x, n / v.y, n / v.z); }
 
+		bool operator>(Vector3<T> o) { return x > o.x && y > o.y && z > o.z; }
+		bool operator<(Vector3<T> o) { return x < o.x && y < o.y && z < o.z; }
 		bool operator==(Vector3<T> o) { return x == o.x && y == o.y && z == o.z; }
+		bool operator>=(Vector3<T> o) { return x >= o.x && y >= o.y && z >= o.z; }
+		bool operator<=(Vector3<T> o) { return x <= o.x && y <= o.y && z <= o.z; }
 
 		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
 		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z)); }
@@ -210,9 +221,18 @@ namespace Kale {
 			z = std::clamp(z, minZ, maxZ);
 		}
 
-		template <typename A>
-		Vector3<A> cast() const {
+		template <typename A> Vector3<A> cast() const {
 			return Vector3<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z));
+		}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		operator SkColor4f() const {
+			SkColor4f color;
+			color.fR = x;
+			color.fG = y;
+			color.fB = z;
+			color.fA = 1.0f;
+			return color;
 		}
 	};
 
@@ -313,7 +333,11 @@ namespace Kale {
 		friend Vector4<T> operator*(float n, Vector4<T> v) { return Vector4<T>(n * v.x, n * v.y, n * v.z, n * v.w); }
 		friend Vector4<T> operator/(float n, Vector4<T> v) { return Vector4<T>(n / v.x, n / v.y, n / v.z, n / v.w); }
 
+		bool operator>(Vector4<T> o) { return x > o.x && y > o.y && z > o.z && w > o.w; }
+		bool operator<(Vector4<T> o) { return x < o.x && y < o.y && z < o.z && w < o.w; }
 		bool operator==(Vector4<T> o) { return x == o.x && y == o.y && z == o.z && w == o.w; }
+		bool operator>=(Vector4<T> o) { return x >= o.x && y >= o.y && z >= o.z && w >= o.w; }
+		bool operator<=(Vector4<T> o) { return x <= o.x && y <= o.y && z <= o.z && w <= o.w; }
 
 		T dot(Vector4<T> o) const { return o.x * x + o.y * y + o.z * z + o.w * w; }
 		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z + w * w)); }
@@ -332,6 +356,16 @@ namespace Kale {
 
 		template <typename A> Vector4<A> cast() const {
 			return Vector4<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z), static_cast<A>(w));
+		}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		operator SkColor4f() const {
+			SkColor4f color;
+			color.fR = x;
+			color.fG = y;
+			color.fB = z;
+			color.fA = w;
+			return color;
 		}
 	};
 
