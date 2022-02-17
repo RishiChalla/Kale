@@ -117,6 +117,10 @@ namespace Kale {
 		Vector2<A> cast() const {
 			return Vector2<A>(static_cast<A>(x), static_cast<A>(y));
 		}
+
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector2<T>>::type unit() const {
+			return *this / magnitude();
+		}
 	};
 
 	/**
@@ -223,6 +227,10 @@ namespace Kale {
 
 		template <typename A> Vector3<A> cast() const {
 			return Vector3<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z));
+		}
+
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector3<T>>::type unit() const {
+			return *this / magnitude();
 		}
 
 		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
@@ -356,6 +364,10 @@ namespace Kale {
 
 		template <typename A> Vector4<A> cast() const {
 			return Vector4<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z), static_cast<A>(w));
+		}
+
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector4<T>>::type unit() const {
+			return *this / magnitude();
 		}
 
 		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>

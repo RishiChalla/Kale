@@ -82,7 +82,7 @@ bool Path::rayCollision(Ray ray) const {
  * @param path The path to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Path::pathCollision(Path path) const {
+bool Path::pathCollision(const Path& path) const {
     throw std::runtime_error("Unimplemented method");
 }
 

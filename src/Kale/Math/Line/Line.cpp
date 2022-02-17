@@ -26,6 +26,22 @@
 using namespace Kale;
 
 /**
+ * Initializes the line from 0, 0 to 0, 0
+ */
+Line::Line() : point1(0, 0), point2(0, 0) {
+	// Empty Body
+}
+
+/**
+ * Creates a new line given the two endpoints
+ * @param point1 The first endpoint
+ * @param point2 The second endpoint
+ */
+Line::Line(const Vector2f &point1, const Vector2f &point2) : point1(point1), point2(point2) {
+    // Empty Body
+}
+
+/**
  * Gets the angle of the direction in degrees
  * @returns the angle of the direction in degrees
  */
@@ -126,7 +142,7 @@ bool Line::rayCollision(Ray ray) const {
  * @param path The path to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Line::pathCollision(Path path) const {
+bool Line::pathCollision(const Path& path) const {
     throw std::runtime_error("Unimplemented method");
 }
 

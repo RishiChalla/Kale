@@ -26,6 +26,22 @@
 using namespace Kale;
 
 /**
+ * Creates a circle at 0, 0 with a radius of 1
+ */
+Circle::Circle() : center(0, 0), radius(1) {
+	// Empty Body
+}
+
+/**
+ * Creates a circle given the center and radius
+ * @param center The center
+ * @param radius The radius
+ */
+Circle::Circle(const Vector2f& center, float radius) : center(center), radius(radius) {
+	// Empty Body
+}
+
+/**
  * Checks for collision with a point
  * @param point The point to check collision for
  * @returns True if there is a collision, false for no collision
@@ -66,7 +82,7 @@ bool Circle::rayCollision(Ray ray) const {
  * @param path The path to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Circle::pathCollision(Path path) const {
+bool Circle::pathCollision(const Path& path) const {
     throw std::runtime_error("Unimplemented method");
 }
 

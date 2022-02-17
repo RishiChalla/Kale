@@ -17,109 +17,60 @@
 #pragma once
 
 #include <Kale/Math/Vector/Vector.hpp>
-#include <Kale/Math/Geometry/Geometry.hpp>
-
-#include <core/SkPath.h>
-
-#include <vector>
 
 namespace Kale {
 
 	/**
-	 * Forward declaration of Circle struct
+	 * Forward declarations of structs
 	 */
-	struct Circle;
+	struct Rect; struct Circle; struct Ray; struct Path; struct Line;
 
 	/**
-	 * Forward declaration of Ray struct
+	 * All geometries (rect/path/line/etc) must inherit from this struct.
+	 * This struct contains function pointers to all collision methods
 	 */
-	struct Ray;
-
-	/**
-	 * Forward declaration of Rect struct
-	 */
-	struct Rect;
-
-	/**
-	 * Forward declaration of Line struct
-	 */
-	struct Line;
-
-	/**
-	 * Represents a single cubic bezier
-	 */
-	struct CubicBezier {
-		Vector2f controlPoint1, controlPoint2, destination;
-	};
-
-	/**
-	 * Represents a single path of cubic bezier curves
-	 */
-	struct Path : public Geometry {
-
-		/**
-		 * The origin of the path
-		 */
-		Vector2f origin;
-
-		/**
-		 * A vector of tuples of cubic beziers. Each tuple contains 2 control points and the destination point
-		 */
-		std::vector<CubicBezier> beziers;
-
-		/**
-		 * Converts the path to a skia path
-		 * @returns The skia path
-		 */
-		operator SkPath() const;
-
-		/**
-		 * Adds a cubic bezier to the path
-		 * @param bezier The bezier curve to use
-		 */
-		void cubicBezierTo(CubicBezier bezier);
+	struct Geometry {
 
 		/**
 		 * Checks for collision with a point
 		 * @param point The point to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool pointCollision(Vector2f point) const override;
+		virtual bool pointCollision(Vector2f point) const = 0;
 
 		/**
 		 * Checks for collision with a rectangle
 		 * @param rect The rectangle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool rectCollision(Rect rect) const override;
+		virtual bool rectCollision(Rect rect) const = 0;
 
 		/**
 		 * Checks for collision with a circle
 		 * @param circle The circle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool circleCollision(Circle circle) const override;
+		virtual bool circleCollision(Circle circle) const = 0;
 
 		/**
 		 * Checks for collision with a ray
 		 * @param ray The ray to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool rayCollision(Ray ray) const override;
+		virtual bool rayCollision(Ray ray) const = 0;
 
 		/**
 		 * Checks for collision with a path
 		 * @param path The path to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool pathCollision(const Path& path) const override;
+		virtual bool pathCollision(const Path& path) const = 0;
 
 		/**
 		 * Checks for collision with a line
 		 * @param line The line to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool lineCollision(Line line) const override;
-
+		virtual bool lineCollision(Line line) const = 0;
 	};
 }

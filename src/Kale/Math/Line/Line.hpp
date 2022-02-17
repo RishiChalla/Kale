@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
+#pragma once
+
 #include <Kale/Math/Vector/Vector.hpp>
+#include <Kale/Math/Geometry/Geometry.hpp>
 
 namespace Kale {
 
@@ -41,7 +44,7 @@ namespace Kale {
 	/**
 	 * Represents a line formed by two points
 	 */
-	struct Line {
+	struct Line : public Geometry {
 
 		/**
 		 * The first point of the line
@@ -54,9 +57,21 @@ namespace Kale {
 		Vector2f point2;
 
 		/**
-		 * Gets the angle of the direction in degrees
-		 * @returns the angle of the direction in degrees
+		 * Initializes the line from 0, 0 to 0, 0
 		 */
+		Line();
+
+        /**
+         * Creates a new line given the two endpoints
+         * @param point1 The first endpoint
+         * @param point2 The second endpoint
+         */
+        Line(const Vector2f& point1, const Vector2f& point2);
+
+        /**
+         * Gets the angle of the direction in degrees
+         * @returns the angle of the direction in degrees
+         */
 		float getAngleDeg() const;
 
 		/**
@@ -104,42 +119,42 @@ namespace Kale {
 		 * @param point The point to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool pointCollision(Vector2f point) const;
+		bool pointCollision(Vector2f point) const override;
 
 		/**
 		 * Checks for collision with a rectangle
 		 * @param rect The rectangle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool rectCollision(Rect rect) const;
+		bool rectCollision(Rect rect) const override;
 
 		/**
 		 * Checks for collision with a circle
 		 * @param circle The circle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool circleCollision(Circle circle) const;
+		bool circleCollision(Circle circle) const override;
 
 		/**
 		 * Checks for collision with a ray
 		 * @param ray The ray to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool rayCollision(Ray ray) const;
+		bool rayCollision(Ray ray) const override;
 
 		/**
 		 * Checks for collision with a path
 		 * @param path The path to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool pathCollision(Path path) const;
+		bool pathCollision(const Path& path) const override;
 
 		/**
 		 * Checks for collision with a line
 		 * @param line The line to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool lineCollision(Line line) const;
+		bool lineCollision(Line line) const override;
 
 	};
 }

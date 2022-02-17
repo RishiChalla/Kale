@@ -26,6 +26,34 @@
 using namespace Kale;
 
 /**
+ * Creates a rectangle with all points at 0, 0
+ */
+Rect::Rect() : point1(0, 0), point2(0, 0), point3(0, 0), point4(0, 0) {
+	// Empty Body
+}
+
+/**
+ * Creates a new rectangle given four points
+ * @param point1 The first point
+ * @param point2 The second point
+ * @param point3 The third point
+ * @param point4 The fourth point
+ */
+Rect::Rect(const Vector2f &point1, const Vector2f &point2, const Vector2f &point3, const Vector2f &point4) :
+    point1(point1), point2(point2), point3(point3), point4(point4) {
+    // Empty Body
+}
+
+/**
+ * Creates a new rectangle from the topLeft and bottomRight points
+ * @param topLeft The top left point
+ * @param bottomRight The bottom right point
+ */
+Rect::Rect(const Vector2f &point1, const Vector2f &point3) : point1(point1), point3(point3) {
+    // Empty Body
+}
+
+/**
  * Gets the center of the rectangle
  * @returns the center of the rectangle
  */
@@ -85,7 +113,7 @@ throw std::runtime_error("Unimplemented method");
  * @param path The path to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::pathCollision(Path path) const {
+bool Rect::pathCollision(const Path& path) const {
     throw std::runtime_error("Unimplemented method");
 }
 

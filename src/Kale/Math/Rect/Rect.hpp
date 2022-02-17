@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
+#pragma once
+
 #include <Kale/Math/Vector/Vector.hpp>
+#include <Kale/Math/Geometry/Geometry.hpp>
 
 namespace Kale {
 
@@ -41,7 +44,7 @@ namespace Kale {
 	/**
 	 * Represents a rectangular structure of float vectors
 	 */
-	struct Rect {
+	struct Rect : public Geometry {
 
 		/**
 		 * The first point in the rectangle
@@ -64,9 +67,30 @@ namespace Kale {
 		Vector2f point4;
 
 		/**
-		 * Gets the center of the rectangle
-		 * @returns the center of the rectangle
+		 * Creates a rectangle with all points at 0, 0
 		 */
+		Rect();
+
+        /**
+         * Creates a new rectangle given four points
+         * @param point1 The first point
+         * @param point2 The second point
+         * @param point3 The third point
+         * @param point4 The fourth point
+         */
+        Rect(const Vector2f& point1, const Vector2f& point2, const Vector2f& point3, const Vector2f& point4);
+
+        /**
+         * Creates a new rectangle from the topLeft and bottomRight points
+         * @param topLeft The top left point
+         * @param bottomRight The bottom right point
+         */
+        Rect(const Vector2f& topLeft, const Vector2f& bottomRight);
+
+        /**
+         * Gets the center of the rectangle
+         * @returns the center of the rectangle
+         */
 		Vector2f center() const;
 
 		/**
@@ -74,42 +98,42 @@ namespace Kale {
 		 * @param point The point to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool pointCollision(Vector2f point) const;
+		bool pointCollision(Vector2f point) const override;
 
 		/**
 		 * Checks for collision with a rectangle
 		 * @param rect The rectangle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool rectCollision(Rect rect) const;
+		bool rectCollision(Rect rect) const override;
 
 		/**
 		 * Checks for collision with a circle
 		 * @param circle The circle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool circleCollision(Circle circle) const;
+		bool circleCollision(Circle circle) const override;
 
 		/**
 		 * Checks for collision with a ray
 		 * @param ray The ray to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool rayCollision(Ray ray) const;
+		bool rayCollision(Ray ray) const override;
 
 		/**
 		 * Checks for collision with a path
 		 * @param path The path to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool pathCollision(Path path) const;
+		bool pathCollision(const Path& path) const override;
 
 		/**
 		 * Checks for collision with a line
 		 * @param line The line to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		bool lineCollision(Line line) const;
+		bool lineCollision(Line line) const override;
 
 	};
 }
