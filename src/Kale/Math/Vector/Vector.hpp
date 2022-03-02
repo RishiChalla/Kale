@@ -97,20 +97,30 @@ namespace Kale {
 
 		bool operator>(Vector2<T> o) const { return x > o.x && y > o.y; }
 		bool operator<(Vector2<T> o) const { return x < o.x && y < o.y; }
-		bool operator==(Vector2<T> o) { return x == o.x && y == o.y; }
-		bool operator<=(Vector2<T> o) { return x <= o.x && y <= o.y; }
-		bool operator>=(Vector2<T> o) { return x >= o.x && y >= o.y; }
+		bool operator==(Vector2<T> o) const { return x == o.x && y == o.y; }
+		bool operator<=(Vector2<T> o) const { return x <= o.x && y <= o.y; }
+		bool operator>=(Vector2<T> o) const { return x >= o.x && y >= o.y; }
 
 		T dot(Vector2<T> o) const { return o.x * x + o.y * y; }
-		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y)); }
+		T cross(Vector2<T> o) const { return x * o.y - y * o.x; }
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
+			return sqrt(x * x + y * y);
+		}
 
 		Vector2<T> clamp(T minX, T maxX, T minY, T maxY) const {
 			return Vector2<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY));
+		}
+		Vector2<T> clamp(Vector2<T> min, Vector2<T> max) const {
+			return Vector2<T>(std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y));
 		}
 
 		void clampTo(T minX, T maxX, T minY, T maxY) {
 			x = std::clamp(x, minX, maxX);
 			y = std::clamp(y, minY, maxY);
+		}
+		void clampTo(Vector2<T> min, Vector2<T> max) {
+			x = std::clamp(x, min.x, max.x);
+			y = std::clamp(y, min.y, max.y);
 		}
 
 		template <typename A>
@@ -120,6 +130,10 @@ namespace Kale {
 
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector2<T>>::type unit() const {
 			return *this / magnitude();
+		}
+
+		Vector2<T> perpendicular(Vector2<T> o) const {
+			return {x + o.y - y, y - o.x + x};
 		}
 	};
 
@@ -206,23 +220,33 @@ namespace Kale {
 		friend Vector3<T> operator*(float n, Vector3<T> v) { return Vector3<T>(n * v.x, n * v.y, n * v.z); }
 		friend Vector3<T> operator/(float n, Vector3<T> v) { return Vector3<T>(n / v.x, n / v.y, n / v.z); }
 
-		bool operator>(Vector3<T> o) { return x > o.x && y > o.y && z > o.z; }
-		bool operator<(Vector3<T> o) { return x < o.x && y < o.y && z < o.z; }
-		bool operator==(Vector3<T> o) { return x == o.x && y == o.y && z == o.z; }
-		bool operator>=(Vector3<T> o) { return x >= o.x && y >= o.y && z >= o.z; }
-		bool operator<=(Vector3<T> o) { return x <= o.x && y <= o.y && z <= o.z; }
+		bool operator>(Vector3<T> o) const { return x > o.x && y > o.y && z > o.z; }
+		bool operator<(Vector3<T> o) const { return x < o.x && y < o.y && z < o.z; }
+		bool operator==(Vector3<T> o) const { return x == o.x && y == o.y && z == o.z; }
+		bool operator>=(Vector3<T> o) const { return x >= o.x && y >= o.y && z >= o.z; }
+		bool operator<=(Vector3<T> o) const { return x <= o.x && y <= o.y && z <= o.z; }
 
 		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
-		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z)); }
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
+			return sqrt(x * x + y * y + z * z);
+		}
 
 		Vector3<T> clamp(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) const {
 			return Vector3<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY), std::clamp(z, minZ, maxZ));
+		}
+		Vector3<T> clamp(Vector3<T> min, Vector3<T> max) const {
+			return Vector3<T>(std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y), std::clamp(z, min.z, max.z));
 		}
 
 		void clampTo(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) {
 			x = std::clamp(x, minX, maxX);
 			y = std::clamp(y, minY, maxY);
 			z = std::clamp(z, minZ, maxZ);
+		}
+		void clampTo(Vector3<T> min, Vector3<T> max) {
+			x = std::clamp(x, min.x, max.x);
+			y = std::clamp(y, min.y, max.y);
+			z = std::clamp(z, min.z, max.z);
 		}
 
 		template <typename A> Vector3<A> cast() const {
@@ -341,18 +365,24 @@ namespace Kale {
 		friend Vector4<T> operator*(float n, Vector4<T> v) { return Vector4<T>(n * v.x, n * v.y, n * v.z, n * v.w); }
 		friend Vector4<T> operator/(float n, Vector4<T> v) { return Vector4<T>(n / v.x, n / v.y, n / v.z, n / v.w); }
 
-		bool operator>(Vector4<T> o) { return x > o.x && y > o.y && z > o.z && w > o.w; }
-		bool operator<(Vector4<T> o) { return x < o.x && y < o.y && z < o.z && w < o.w; }
-		bool operator==(Vector4<T> o) { return x == o.x && y == o.y && z == o.z && w == o.w; }
-		bool operator>=(Vector4<T> o) { return x >= o.x && y >= o.y && z >= o.z && w >= o.w; }
-		bool operator<=(Vector4<T> o) { return x <= o.x && y <= o.y && z <= o.z && w <= o.w; }
+		bool operator>(Vector4<T> o) const { return x > o.x && y > o.y && z > o.z && w > o.w; }
+		bool operator<(Vector4<T> o) const { return x < o.x && y < o.y && z < o.z && w < o.w; }
+		bool operator==(Vector4<T> o) const { return x == o.x && y == o.y && z == o.z && w == o.w; }
+		bool operator>=(Vector4<T> o) const { return x >= o.x && y >= o.y && z >= o.z && w >= o.w; }
+		bool operator<=(Vector4<T> o) const { return x <= o.x && y <= o.y && z <= o.z && w <= o.w; }
 
 		T dot(Vector4<T> o) const { return o.x * x + o.y * y + o.z * z + o.w * w; }
-		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z + w * w)); }
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
+			return sqrt(x * x + y * y + z * z + w * w);
+		}
 
 		Vector4<T> clamp(T minX, T maxX, T minY, T maxY, T minZ, T maxZ, T minW, T maxW) const {
 			return Vector4<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY),
 				std::clamp(z, minZ, maxZ), std::clamp(w, minW, maxW));
+		}
+		Vector4<T> clamp(Vector4<T> min, Vector4<T> max) const {
+			return Vector4<T>(std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y),
+				std::clamp(z, min.z, max.z), std::clamp(w, min.w, max.w));
 		}
 
 		void clampTo(T minX, T maxX, T minY, T maxY, T minZ, T maxZ, T minW, T maxW) {
@@ -360,6 +390,12 @@ namespace Kale {
 			y = std::clamp(y, minY, maxY);
 			z = std::clamp(z, minZ, maxZ);
 			w = std::clamp(w, minW, maxW);
+		}
+		void clampTo(Vector4<T> min, Vector4<T> max) {
+			x = std::clamp(x, min.x, max.x);
+			y = std::clamp(y, min.y, max.y);
+			z = std::clamp(z, min.z, max.z);
+			w = std::clamp(w, min.w, max.w);
 		}
 
 		template <typename A> Vector4<A> cast() const {

@@ -14,23 +14,37 @@
    limitations under the License.
 */
 
-#include "Rect.hpp"
+#include "RotatedRect.hpp"
 
-#include <Kale/Math/RotatedRect/RotatedRect.hpp>
+#include <Kale/Math/Utils/Utils.hpp>
+#include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Ray/Ray.hpp>
 #include <Kale/Math/Line/Line.hpp>
 #include <Kale/Math/Path/Path.hpp>
 #include <Kale/Math/Circle/Circle.hpp>
 
 #include <stdexcept>
+#include <array>
 
 using namespace Kale;
 
 /**
  * Creates a rectangle with all points at 0, 0
  */
-Rect::Rect() : topLeft(0, 0), bottomRight(0, 0) {
+RotatedRect::RotatedRect() : point1(0, 0), point2(0, 0), point3(0, 0), point4(0, 0) {
 	// Empty Body
+}
+
+/**
+ * Creates a new rectangle given four points
+ * @param point1 The first point
+ * @param point2 The second point
+ * @param point3 The third point
+ * @param point4 The fourth point
+ */
+RotatedRect::RotatedRect(const Vector2f &point1, const Vector2f &point2, const Vector2f &point3, const Vector2f &point4) :
+    point1(point1), point2(point2), point3(point3), point4(point4) {
+    // Empty Body
 }
 
 /**
@@ -38,32 +52,16 @@ Rect::Rect() : topLeft(0, 0), bottomRight(0, 0) {
  * @param topLeft The top left point
  * @param bottomRight The bottom right point
  */
-Rect::Rect(const Vector2f &topLeft, const Vector2f &bottomRight) : topLeft(topLeft), bottomRight(bottomRight) {
-	// Empty Body
+RotatedRect::RotatedRect(const Vector2f &point1, const Vector2f &point3) : point1(point1), point2(point3.x, point1.y), point3(point3), point4(point1.x, point3.y) {
+    // Empty Body
 }
 
 /**
  * Gets the center of the rectangle
  * @returns the center of the rectangle
  */
-Vector2f Rect::center() const {
-	return (topLeft + bottomRight) / 2;
-}
-
-/**
- * Gets the top right point of the rectangle
- * @return the top right point of the rectangle
- */
-Vector2f Rect::topRight() const {
-	return {bottomRight.x, topLeft.y};
-}
-
-/**
- * Gets the bottom left point of the rectangle
- * @return the bottom left point of the rectangle
- */
-Vector2f Rect::bottomLeft() const {
-	return {topLeft.x, bottomRight.y};
+Vector2f RotatedRect::center() const {
+    return (point1 + point3) / 2;
 }
 
 /**
@@ -71,8 +69,11 @@ Vector2f Rect::bottomLeft() const {
  * @param point The point to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::pointCollision(Vector2f point) const {
-	return point >= topLeft && point <= bottomRight;
+bool RotatedRect::pointCollision(Vector2f point) const {
+	return (point1 - point2).dot(point - point2) > 0.0f &&
+		(point3 - point4).dot(point - point4) > 0.0f &&
+		(point1 - point4).dot(point - point4) > 0.0f &&
+		(point3 - point2).dot(point - point2) > 0.0f;
 }
 
 /**
@@ -80,8 +81,11 @@ bool Rect::pointCollision(Vector2f point) const {
  * @param rect The rectangle to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::rectCollision(RotatedRect rect) const {
-	return rect.rectCollision(RotatedRect{topLeft, bottomRight});
+bool RotatedRect::rectCollision(RotatedRect rect) const {
+	return (point2 - point1).dot(rect.point3 - point1) > 0.0f &&
+		(point4 - point1).dot(rect.point3 - point1) > 0.0f &&
+		(rect.point2 - rect.point1).dot(point3 - rect.point1) > 0.0f &&
+		(rect.point4 - rect.point1).dot(point3 - rect.point1) > 0.0f;
 }
 
 /**
@@ -89,8 +93,8 @@ bool Rect::rectCollision(RotatedRect rect) const {
  * @param rect The rectangle to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::rectCollision(Rect rect) const {
-	return topLeft <= rect.bottomRight && bottomRight >= rect.topLeft;
+bool RotatedRect::rectCollision(Rect rect) const {
+	return rectCollision(RotatedRect{rect.topLeft, rect.bottomRight});
 }
 
 /**
@@ -98,9 +102,18 @@ bool Rect::rectCollision(Rect rect) const {
  * @param circle The circle to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::circleCollision(Circle circle) const {
-	Vector2f closest = circle.center.clamp(topLeft, bottomRight);
-	return (circle.center - closest).magnitude() <= circle.radius;
+bool RotatedRect::circleCollision(Circle circle) const {
+	Vector2f closest;
+	std::array<const Vector2f*, 4> points = {&point1, &point2, &point3, &point4};
+	for (size_t i = 0; i < points.size(); i++) {
+		closest = points[i]->perpendicular(circle.center);
+		size_t i2 = i < points.size() ? i + 1 : 0;
+		if (isFloating0((closest - *points[i]).cross(*points[i2] - *points[i]))) {
+			closest.clampTo(*points[i], *points[i2]);
+			break;
+		}
+	}
+	return (circle.center - closest).magnitude() < circle.radius;
 }
 
 /**
@@ -108,7 +121,7 @@ bool Rect::circleCollision(Circle circle) const {
  * @param ray The ray to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::rayCollision(Ray ray) const {
+bool RotatedRect::rayCollision(Ray ray) const {
 	throw std::runtime_error("Unimplemented method");
 }
 
@@ -117,8 +130,8 @@ bool Rect::rayCollision(Ray ray) const {
  * @param path The path to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::pathCollision(const Path& path) const {
-	throw std::runtime_error("Unimplemented method");
+bool RotatedRect::pathCollision(const Path& path) const {
+    throw std::runtime_error("Unimplemented method");
 }
 
 /**
@@ -126,17 +139,11 @@ bool Rect::pathCollision(const Path& path) const {
  * @param line The line to check collision for
  * @returns True if there is a collision, false for no collision
  */
-bool Rect::lineCollision(Line line) const {
-	// Check if line cap points are in rectangle
-	if (pointCollision(line.point1) || pointCollision(line.point2)) return true;
-
-	// Calculate x location of line at rectangle top y and bottom y
-	Vector2f dist = line.point1 - line.point2;
-	float col1x = dist.x * (topLeft.y - line.point1.y) / dist.y;
-	float col2x = dist.x * (bottomRight.y - line.point1.y) / dist.y;
-
-	// Check if the x location of the line at the top/bottom y of rect is within rect x bounds
-	return (topLeft.x >= col1x && col1x <= bottomRight.x) || (topLeft.x >= col2x && col2x <= bottomRight.x);
+bool RotatedRect::lineCollision(Line line) const {
+	return (point2 - point1).dot(line.point1 - point1) > 0.0f && (point2 - point1).dot(line.point2 - point1) < 0.0f &&
+		(point3 - point2).dot(line.point1 - point2) > 0.0f && (point3 - point2).dot(line.point2 - point2) < 0.0f &&
+		(point4 - point3).dot(line.point1 - point3) > 0.0f && (point4 - point3).dot(line.point2 - point3) < 0.0f &&
+		(point1 - point4).dot(line.point1 - point4) > 0.0f && (point1 - point4).dot(line.point2 - point4) < 0.0f;
 }
 
 /**
@@ -144,7 +151,7 @@ bool Rect::lineCollision(Line line) const {
  * @param rect The rectangle to check collision for
  * @returns The points of collision on the colliding edges of the geometry
  */
-std::vector<Vector2f> Rect::rectCollisionPoints(RotatedRect rect) const {
+std::vector<Vector2f> RotatedRect::rectCollisionPoints(RotatedRect rect) const {
 	throw std::runtime_error("Unimplemented method");
 }
 
@@ -153,7 +160,7 @@ std::vector<Vector2f> Rect::rectCollisionPoints(RotatedRect rect) const {
  * @param rect The rectangle to check collision for
  * @returns The points of collision on the colliding edges of the geometry
  */
-std::vector<Vector2f> Rect::rectCollisionPoints(Rect rect) const {
+std::vector<Vector2f> RotatedRect::rectCollisionPoints(Rect rect) const {
 	throw std::runtime_error("Unimplemented method");
 }
 
@@ -162,7 +169,7 @@ std::vector<Vector2f> Rect::rectCollisionPoints(Rect rect) const {
  * @param circle The circle to check collision for
  * @returns The points of collision on the colliding edges of the geometry
  */
-std::vector<Vector2f> Rect::circleCollisionPoints(Circle circle) const {
+std::vector<Vector2f> RotatedRect::circleCollisionPoints(Circle circle) const {
 	throw std::runtime_error("Unimplemented method");
 }
 
@@ -171,7 +178,7 @@ std::vector<Vector2f> Rect::circleCollisionPoints(Circle circle) const {
  * @param ray The ray to check collision for
  * @returns The points of collision on the colliding edges of the geometry
  */
-std::vector<Vector2f> Rect::rayCollisionPoints(Ray ray) const {
+std::vector<Vector2f> RotatedRect::rayCollisionPoints(Ray ray) const {
 	throw std::runtime_error("Unimplemented method");
 }
 
@@ -180,7 +187,7 @@ std::vector<Vector2f> Rect::rayCollisionPoints(Ray ray) const {
  * @param path The path to check collision for
  * @returns The points of collision on the colliding edges of the geometry
  */
-std::vector<Vector2f> Rect::pathCollisionPoints(const Path& path) const {
+std::vector<Vector2f> RotatedRect::pathCollisionPoints(const Path& path) const {
 	throw std::runtime_error("Unimplemented method");
 }
 
@@ -189,6 +196,6 @@ std::vector<Vector2f> Rect::pathCollisionPoints(const Path& path) const {
  * @param line The line to check collision for
  * @returns The points of collision on the colliding edges of the geometry
  */
-std::vector<Vector2f> Rect::lineCollisionPoints(Line line) const {
+std::vector<Vector2f> RotatedRect::lineCollisionPoints(Line line) const {
 	throw std::runtime_error("Unimplemented method");
 }

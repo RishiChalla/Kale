@@ -17,11 +17,14 @@
 #pragma once
 
 #include <Kale/Math/Matrix/Matrix.hpp>
+#include <Kale/Math/RotatedRect/RotatedRect.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Ray/Ray.hpp>
 #include <Kale/Math/Line/Line.hpp>
 #include <Kale/Math/Path/Path.hpp>
 #include <Kale/Math/Circle/Circle.hpp>
+
+#include <type_traits>
 
 namespace Kale {
 
@@ -217,17 +220,32 @@ namespace Kale {
 		/**
 		 * Transforms a rect using this transformation matrix
 		 * @param rect The rect to transform
-		 * @returns The transformed rect
+		 * @returns The transformed rect as a path
 		 */
-		Rect transform(const Rect& rect) const;
+		Path transform(const RotatedRect& rect) const;
 		
 		/**
 		 * Inverse transforms a rect using this transformation matrix
 		 * (Returns a rect transformed by this matrix to its original)
 		 * @param rect The rect to transform
-		 * @returns The transformed rect
+		 * @returns The transformed rect as a path
 		 */
-		Rect inverseTransform(const Rect& rect) const;
+		Path inverseTransform(const RotatedRect& rect) const;
+
+		/**
+		 * Transforms a rect using this transformation matrix
+		 * @param rect The rect to transform
+		 * @returns The transformed rect as a path
+		 */
+		Path transform(const Rect& rect) const;
+
+		/**
+		 * Inverse transforms a rect using this transformation matrix
+		 * (Returns a rect transformed by this matrix to its original)
+		 * @param rect The rect to transform
+		 * @returns The transformed rect as a path
+		 */
+		Path inverseTransform(const Rect& rect) const;
 		
 		/**
 		 * Transforms a ray using this transformation matrix
@@ -303,6 +321,18 @@ namespace Kale {
 		 * @returns The transformed circle
 		 */
 		Circle inverseTransform(const Circle& circle) const;
+
+		/**
+		 * Checks whether or not a geometry is within the view of this camera/transform
+		 * @param geometry The geometry to check for
+		 * @param viewport The width/height of the unscaled camera
+		 * @returns Whether or not the geometry is within the view
+		 */
+		template <typename T> typename std::enable_if<std::is_base_of<Geometry, T>::value, bool>::type
+		isInView(const T& geometry, const Vector2f& viewport) {
+			return geometry.pathCollision(transform(Rect({0, 0}, viewport)));
+		}
+
 	};
 
 	/**

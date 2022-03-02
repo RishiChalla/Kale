@@ -27,7 +27,7 @@ Scene::Scene()  {
 	Vector2f size = mainApp->getWindow().getSizeF();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 
-	worldToScreen.scale(size / 1080.0f);
+	worldToScreen.scale(size / viewport);
 }
 
 /**
@@ -38,25 +38,28 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 
 	worldToScreen.setIdentity();
-	worldToScreen.scale(size / 1080.0f);
+	worldToScreen.scale(size / viewport);
 }
 
 /**
  * Adds a node to the scene to render/update
  * @param node The node to add
  */
-void Scene::addNode(std::shared_ptr<Node> node) {
+void Scene::addNode(Node* node) {
 	std::lock_guard<std::mutex> guard(mutex);
-	nodes.push_back(node);
+	renderables.push_back(static_cast<void*>(node));
 }
 
 /**
  * Removes a node from the scene
  * @param node The node to remove
  */
-void Scene::removeNode(std::shared_ptr<Node> node) {
+void Scene::removeNode(const Node* node) {
 	std::lock_guard<std::mutex> guard(mutex);
-	nodes.remove(node);
+	const void* voidNodePtr = static_cast<const void*>(node);
+	renderables.erase(std::remove_if(renderables.begin(), renderables.end(), [&](const void* item) -> bool {
+		return voidNodePtr == item;
+	}), renderables.end());
 }
 
 /**
@@ -70,9 +73,17 @@ void Scene::render() const {
 		mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(bgColor));
 	}
 
+	// Combine the camera transformation matrix with the world coordinates to Skia's coordinates matrix
 	Transform cameraToScreen(worldToScreen * camera);
-	for (std::shared_ptr<Node> node : nodes)
-		node->render(cameraToScreen);
+
+	// Go through each node and render it if its in the bounds of the view
+	for (const void* renderable : renderables) {
+
+		// RotatedRect boundingBox = node->getBoundingBox();
+		// if (!cameraToScreen.isInView(boundingBox, viewport)) continue;
+		// node->render(cameraToScreen, lights);
+	}
+
 }
 
 /**

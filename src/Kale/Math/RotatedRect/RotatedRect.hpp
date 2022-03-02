@@ -16,112 +16,152 @@
 
 #pragma once
 
-#include <Kale/Math/Vector/Vector.hpp>
-
-#include <vector>
+#include <Kale/Math/Geometry/Geometry.hpp>
 
 namespace Kale {
 
 	/**
-	 * Forward declarations of structs
+	 * Represents a rectangular structure of float vectors
 	 */
-	struct RotatedRect; struct Rect; struct Circle; struct Ray; struct Path; struct Line;
+	struct RotatedRect : public Geometry {
 
-	/**
-	 * All geometries (rect/path/line/etc) must inherit from this struct.
-	 * This struct contains function pointers to all collision methods
-	 */
-	struct Geometry {
+		/**
+		 * The first point in the rectangle
+		 */
+		Vector2f point1;
+
+		/**
+		 * The second point in the rectangle
+		 */
+		Vector2f point2;
+
+		/**
+		 * The third point in the rectangle
+		 */
+		Vector2f point3;
+
+		/**
+		 * The fourth point in the rectangle
+		 */
+		Vector2f point4;
+
+		/**
+		 * Creates a rectangle with all points at 0, 0
+		 */
+		RotatedRect();
+
+        /**
+         * Creates a new rectangle given four points. Points must be specified in clockwise order.
+         * @param point1 The first point
+         * @param point2 The second point
+         * @param point3 The third point
+         * @param point4 The fourth point
+         */
+        RotatedRect(const Vector2f& point1, const Vector2f& point2, const Vector2f& point3, const Vector2f& point4);
+
+        /**
+         * Creates a new rectangle from the topLeft and bottomRight points
+         * @param topLeft The top left point
+         * @param bottomRight The bottom right point
+         */
+        RotatedRect(const Vector2f& topLeft, const Vector2f& bottomRight);
+
+        /**
+         * Gets the center of the rectangle
+         * @returns the center of the rectangle
+         */
+		Vector2f center() const;
 
 		/**
 		 * Checks for collision with a point
 		 * @param point The point to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		virtual bool pointCollision(Vector2f point) const = 0;
+		bool pointCollision(Vector2f point) const override;
 
 		/**
 		 * Checks for collision with a rectangle
 		 * @param rect The rectangle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		virtual bool rectCollision(RotatedRect rect) const = 0;
+		bool rectCollision(RotatedRect rect) const override;
 
 		/**
 		 * Checks for collision with a rectangle
 		 * @param rect The rectangle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		virtual bool rectCollision(Rect rect) const = 0;
+		bool rectCollision(Rect rect) const override;
 
 		/**
 		 * Checks for collision with a circle
 		 * @param circle The circle to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		virtual bool circleCollision(Circle circle) const = 0;
+		bool circleCollision(Circle circle) const override;
 
 		/**
 		 * Checks for collision with a ray
 		 * @param ray The ray to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		virtual bool rayCollision(Ray ray) const = 0;
+		bool rayCollision(Ray ray) const override;
 
 		/**
 		 * Checks for collision with a path
 		 * @param path The path to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		virtual bool pathCollision(const Path& path) const = 0;
+		bool pathCollision(const Path& path) const override;
 
 		/**
 		 * Checks for collision with a line
 		 * @param line The line to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
-		virtual bool lineCollision(Line line) const = 0;
+		bool lineCollision(Line line) const override;
 
 		/**
 		 * Checks for collision with a rectangle
 		 * @param rect The rectangle to check collision for
 		 * @returns The points of collision on the colliding edges of the geometry
 		 */
-		virtual std::vector<Vector2f> rectCollisionPoints(RotatedRect rect) const = 0;
+		std::vector<Vector2f> rectCollisionPoints(RotatedRect rect) const override;
 
 		/**
 		 * Checks for collision with a rectangle
 		 * @param rect The rectangle to check collision for
 		 * @returns The points of collision on the colliding edges of the geometry
 		 */
-		virtual std::vector<Vector2f> rectCollisionPoints(Rect rect) const = 0;
+		std::vector<Vector2f> rectCollisionPoints(Rect rect) const override;
 
 		/**
 		 * Checks for collision with a circle
 		 * @param circle The circle to check collision for
 		 * @returns The points of collision on the colliding edges of the geometry
 		 */
-		virtual std::vector<Vector2f> circleCollisionPoints(Circle circle) const = 0;
+		std::vector<Vector2f> circleCollisionPoints(Circle circle) const override;
 
 		/**
 		 * Checks for collision with a ray
 		 * @param ray The ray to check collision for
 		 * @returns The points of collision on the colliding edges of the geometry
 		 */
-		virtual std::vector<Vector2f> rayCollisionPoints(Ray ray) const = 0;
+		std::vector<Vector2f> rayCollisionPoints(Ray ray) const override;
 
 		/**
 		 * Checks for collision with a path
 		 * @param path The path to check collision for
 		 * @returns The points of collision on the colliding edges of the geometry
 		 */
-		virtual std::vector<Vector2f> pathCollisionPoints(const Path& path) const = 0;
+		std::vector<Vector2f> pathCollisionPoints(const Path& path) const override;
 
 		/**
 		 * Checks for collision with a line
 		 * @param line The line to check collision for
 		 * @returns The points of collision on the colliding edges of the geometry
 		 */
-		virtual std::vector<Vector2f> lineCollisionPoints(Line line) const = 0;
+		std::vector<Vector2f> lineCollisionPoints(Line line) const override;
+
 	};
 }

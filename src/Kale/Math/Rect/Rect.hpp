@@ -16,30 +16,9 @@
 
 #pragma once
 
-#include <Kale/Math/Vector/Vector.hpp>
 #include <Kale/Math/Geometry/Geometry.hpp>
 
 namespace Kale {
-
-	/**
-	 * Forward declaration of Circle struct
-	 */
-	struct Circle;
-
-	/**
-	 * Forward declaration of Ray struct
-	 */
-	struct Ray;
-
-	/**
-	 * Forward declaration of Path struct
-	 */
-	struct Path;
-
-	/**
-	 * Forward declaration of Line struct
-	 */
-	struct Line;
 
 	/**
 	 * Represents a rectangular structure of float vectors
@@ -47,51 +26,44 @@ namespace Kale {
 	struct Rect : public Geometry {
 
 		/**
-		 * The first point in the rectangle
+		 * The top left point in the rectangle
 		 */
-		Vector2f point1;
+		Vector2f topLeft;
 
 		/**
-		 * The second point in the rectangle
+		 * The bottom right point in the rectangle
 		 */
-		Vector2f point2;
-
-		/**
-		 * The third point in the rectangle
-		 */
-		Vector2f point3;
-
-		/**
-		 * The fourth point in the rectangle
-		 */
-		Vector2f point4;
+		Vector2f bottomRight;
 
 		/**
 		 * Creates a rectangle with all points at 0, 0
 		 */
 		Rect();
 
-        /**
-         * Creates a new rectangle given four points
-         * @param point1 The first point
-         * @param point2 The second point
-         * @param point3 The third point
-         * @param point4 The fourth point
-         */
-        Rect(const Vector2f& point1, const Vector2f& point2, const Vector2f& point3, const Vector2f& point4);
+		/**
+		 * Creates a new rectangle from the topLeft and bottomRight points
+		 * @param topLeft The top left point
+		 * @param bottomRight The bottom right point
+		 */
+		Rect(const Vector2f& topLeft, const Vector2f& bottomRight);
 
-        /**
-         * Creates a new rectangle from the topLeft and bottomRight points
-         * @param topLeft The top left point
-         * @param bottomRight The bottom right point
-         */
-        Rect(const Vector2f& topLeft, const Vector2f& bottomRight);
-
-        /**
-         * Gets the center of the rectangle
-         * @returns the center of the rectangle
-         */
+		/**
+		 * Gets the center of the rectangle
+		 * @returns the center of the rectangle
+		 */
 		Vector2f center() const;
+
+		/**
+		 * Gets the top right point of the rectangle
+		 * @return the top right point of the rectangle
+		 */
+		Vector2f topRight() const;
+
+		/**
+		 * Gets the bottom left point of the rectangle
+		 * @return the bottom left point of the rectangle
+		 */
+		Vector2f bottomLeft() const;
 
 		/**
 		 * Checks for collision with a point
@@ -99,6 +71,13 @@ namespace Kale {
 		 * @returns True if there is a collision, false for no collision
 		 */
 		bool pointCollision(Vector2f point) const override;
+
+		/**
+		 * Checks for collision with a rectangle
+		 * @param rect The rectangle to check collision for
+		 * @returns True if there is a collision, false for no collision
+		 */
+		bool rectCollision(RotatedRect rect) const override;
 
 		/**
 		 * Checks for collision with a rectangle
@@ -134,6 +113,48 @@ namespace Kale {
 		 * @returns True if there is a collision, false for no collision
 		 */
 		bool lineCollision(Line line) const override;
+
+		/**
+		 * Checks for collision with a rectangle
+		 * @param rect The rectangle to check collision for
+		 * @returns The points of collision on the colliding edges of the geometry
+		 */
+		std::vector<Vector2f> rectCollisionPoints(RotatedRect rect) const override;
+
+		/**
+		 * Checks for collision with a rectangle
+		 * @param rect The rectangle to check collision for
+		 * @returns The points of collision on the colliding edges of the geometry
+		 */
+		std::vector<Vector2f> rectCollisionPoints(Rect rect) const override;
+
+		/**
+		 * Checks for collision with a circle
+		 * @param circle The circle to check collision for
+		 * @returns The points of collision on the colliding edges of the geometry
+		 */
+		std::vector<Vector2f> circleCollisionPoints(Circle circle) const override;
+
+		/**
+		 * Checks for collision with a ray
+		 * @param ray The ray to check collision for
+		 * @returns The points of collision on the colliding edges of the geometry
+		 */
+		std::vector<Vector2f> rayCollisionPoints(Ray ray) const override;
+
+		/**
+		 * Checks for collision with a path
+		 * @param path The path to check collision for
+		 * @returns The points of collision on the colliding edges of the geometry
+		 */
+		std::vector<Vector2f> pathCollisionPoints(const Path& path) const override;
+
+		/**
+		 * Checks for collision with a line
+		 * @param line The line to check collision for
+		 * @returns The points of collision on the colliding edges of the geometry
+		 */
+		std::vector<Vector2f> lineCollisionPoints(Line line) const override;
 
 	};
 }

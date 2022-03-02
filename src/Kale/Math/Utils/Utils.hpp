@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <limits>
+
 namespace Kale {
 
 	/**
@@ -31,5 +33,27 @@ namespace Kale {
 	 * @returns The angle in degrees
 	 */
 	float radToDeg(float rad);
+
+	/**
+	 * Checks if a number is extremely close to 0 to account for floating point error
+	 * @param num The number to check for
+	 * @param epsilon The epsilon (distance threshold) value to use. Default is std::numeric_limits<T>::epsilon()
+	 * @returns Whether or not the number is extremely close to 0
+	 */
+	template <typename T> bool isFloating0(T num, T epsilon = std::numeric_limits<T>::epsilon()) {
+		return num <= epsilon && num >= -epsilon;
+	}
+
+	/**
+	 * Checks if two numbers are roughly equivalent accounting for floating point error
+	 * @param num1 The first number to compare
+	 * @param num2 The second number to compare
+	 * @param epsilon The epsilon (distance threshold) value to use. Default is std::numeric_limits<T>::epsilon()
+	 * @returns Whether or not the two numbers are roughly equivalent
+	 */
+	template <typename T> bool isFloatingEqual(T num1, T num2, T epsilon = std::numeric_limits<T>::epsilon()) {
+		T tmp = num1 - num2;
+		return tmp <= epsilon && tmp >= -epsilon;
+	}
 
 }

@@ -22,7 +22,6 @@
 #include <Kale/Engine/Light/Light.hpp>
 
 #include <list>
-#include <memory>
 #include <mutex>
 
 namespace Kale {
@@ -35,14 +34,14 @@ namespace Kale {
 	private:
 
 		/**
-		 * A list of all the nodes to be presented in the current scene
+		 * A list of all the nodes/lights to be presented in the current scene
 		 */
-		std::list<std::shared_ptr<Node>> nodes;
+		std::list<void*> renderables;
 
 		/**
 		 * A list of the lights affecting the current scene
 		 */
-		std::list<std::shared_ptr<Light>> lights;
+		std::list<Light*> lights;
 
 		/**
 		 * The mutex used for node thread safety
@@ -94,13 +93,13 @@ namespace Kale {
 		 * Adds a node to the scene to render/update
 		 * @param node The node to add
 		 */
-		void addNode(std::shared_ptr<Node> node);
+		void addNode(Node* node);
 
 		/**
 		 * Removes a node from the scene
 		 * @param node The node to remove
 		 */
-		void removeNode(std::shared_ptr<Node> node);
+		void removeNode(const Node* node);
 
 		/**
 		 * Called when the current scene is presented

@@ -114,11 +114,11 @@ void Transform::setIdentity() {
  * @param vec The vector to scale by
  */
 void Transform::scale(const Vector2f& vec) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		vec.x, 0.0f, 0.0f,
 		0.0f, vec.y, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -127,11 +127,11 @@ void Transform::scale(const Vector2f& vec) {
  * @param y The y scale factor
  */
 void Transform::scale(float x, float y) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		x, 0.0f, 0.0f,
 		0.0f, y, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -139,11 +139,11 @@ void Transform::scale(float x, float y) {
  * @param factor The scale factor
  */
 void Transform::scale(float factor) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		factor, 0.0f, 0.0f,
 		0.0f, factor, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -151,11 +151,11 @@ void Transform::scale(float factor) {
  * @param vec The vector to translate by
  */
 void Transform::translate(const Vector2f& vec) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		1.0f, 0.0f, vec.x,
 		0.0f, 1.0f, vec.y,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -164,11 +164,11 @@ void Transform::translate(const Vector2f& vec) {
  * @param y The y displacement
  */
 void Transform::translate(float x, float y) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		1.0f, 0.0f, x,
 		0.0f, 1.0f, y,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -178,11 +178,11 @@ void Transform::translate(float x, float y) {
 void Transform::rotate(float angle) {
 	float c = cos(angle);
 	float s = sin(angle);
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		c, -s, 0.0f,
 		s, c, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -193,11 +193,11 @@ void Transform::rotateDeg(float angle) {
 	float rad = angle * PI / 180;
 	float c = cos(rad);
 	float s = sin(rad);
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		c, -s, 0.0f,
 		s, c, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -224,7 +224,7 @@ void Transform::setTranslation(const Vector2f& vec) {
  * @param The translation
  */
 Vector2f Transform::getTranslation() const {
-	return Vector2f(data[2], data[5]);
+	return {data[2], data[5]};
 }
 
 /**
@@ -285,10 +285,10 @@ void Transform::setScale(float scale) {
  * @returns the scale of the matrix
  */
 Vector2f Transform::getScale() const {
-	return Vector2f(
+	return {
 		sqrt(data[3] * data[3] + data[4] * data[4]),
 		sqrt(data[0] * data[0] + data[1] * data[1])
-	);
+	};
 }
 
 /**
@@ -297,7 +297,7 @@ Vector2f Transform::getScale() const {
  * @returns The transformed vector
  */
 Vector2f Transform::transform(const Vector2f& vec) const {
-	return Vector2f(vec.x * data[0] + vec.y * data[1] + data[2], vec.x * data[3] + vec.y * data[4] + data[5]);
+	return {vec.x * data[0] + vec.y * data[1] + data[2], vec.x * data[3] + vec.y * data[4] + data[5]};
 }
 
 /**
@@ -317,10 +317,10 @@ void Transform::transformInplace(Vector2f& vec) const {
  */
 Vector2f Transform::inverseTransform(const Vector2f& vec) const {
 	float den = data[0] * data[4] - data[1] * data[3];
-	return Vector2f(
+	return {
 		(data[1] * data[5] - data[1] * vec.y - data[2] * data[4] + data[4] * vec.x) / den,
 		(-data[0] * data[5] + data[0] * vec.y + data[2] * data[3] - data[3] * vec.x) / den
-	);
+	};
 	// Below system of equations represents transformation where k, j = vec.x, vec.y
 	// x * n0 + y * n1 + n2 = k
 	// x * n3 + y * n4 + n5 = j
@@ -345,8 +345,19 @@ void Transform::inverseTransformInplace(Vector2f& vec) const {
  * @param rect The rect to transform
  * @returns The transformed rect
  */
-Rect Transform::transform(const Rect& rect) const {
-	return Rect(transform(rect.point1), transform(rect.point2), transform(rect.point3), transform(rect.point4));
+Path Transform::transform(const RotatedRect& rect) const {
+	std::array<Vector2f, 4> points = {
+		transform(rect.point1),
+		transform(rect.point2),
+		transform(rect.point3),
+		transform(rect.point4)
+	};
+	Path p(points[0]);
+	p.cubicBezierTo(points[0], points[1], points[1]);
+	p.cubicBezierTo(points[1], points[2], points[2]);
+	p.cubicBezierTo(points[2], points[3], points[3]);
+	p.cubicBezierTo(points[3], points[0], points[0]);
+	return p;
 }
 
 /**
@@ -355,8 +366,60 @@ Rect Transform::transform(const Rect& rect) const {
  * @param rect The rect to transform
  * @returns The transformed rect
  */
-Rect Transform::inverseTransform(const Rect& rect) const {
-	return Rect(inverseTransform(rect.point1), inverseTransform(rect.point2), inverseTransform(rect.point3), inverseTransform(rect.point4));
+Path Transform::inverseTransform(const RotatedRect& rect) const {
+	std::array<Vector2f, 4> points = {
+		inverseTransform(rect.point1),
+		inverseTransform(rect.point2),
+		inverseTransform(rect.point3),
+		inverseTransform(rect.point4)
+	};
+	Path p(points[0]);
+	p.cubicBezierTo(points[0], points[1], points[1]);
+	p.cubicBezierTo(points[1], points[2], points[2]);
+	p.cubicBezierTo(points[2], points[3], points[3]);
+	p.cubicBezierTo(points[3], points[0], points[0]);
+	return p;
+}
+
+/**
+ * Transforms a rect using this transformation matrix
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+Path Transform::transform(const Rect& rect) const {
+	std::array<Vector2f, 4> points = {
+		transform(rect.topLeft),
+		transform(rect.topRight()),
+		transform(rect.bottomRight),
+		transform(rect.bottomLeft())
+	};
+	Path p(points[0]);
+	p.cubicBezierTo(points[0], points[1], points[1]);
+	p.cubicBezierTo(points[1], points[2], points[2]);
+	p.cubicBezierTo(points[2], points[3], points[3]);
+	p.cubicBezierTo(points[3], points[0], points[0]);
+	return p;
+}
+
+/**
+ * Inverse transforms a rect using this transformation matrix
+ * (Returns a rect transformed by this matrix to its original)
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+Path Transform::inverseTransform(const Rect& rect) const {
+	std::array<Vector2f, 4> points = {
+		inverseTransform(rect.topLeft),
+		inverseTransform(rect.topRight()),
+		inverseTransform(rect.bottomRight),
+		inverseTransform(rect.bottomLeft())
+	};
+	Path p(points[0]);
+	p.cubicBezierTo(points[0], points[1], points[1]);
+	p.cubicBezierTo(points[1], points[2], points[2]);
+	p.cubicBezierTo(points[2], points[3], points[3]);
+	p.cubicBezierTo(points[3], points[0], points[0]);
+	return p;
 }
 
 /**
@@ -392,7 +455,7 @@ Ray Transform::inverseTransform(const Ray& ray) const {
  * @returns The transformed line
  */
 Line Transform::transform(const Line& line) const {
-	return Line(transform(line.point1), transform(line.point2));
+	return {transform(line.point1), transform(line.point2)};
 }
 
 /**
@@ -402,7 +465,7 @@ Line Transform::transform(const Line& line) const {
  * @returns The transformed line
  */
 Line Transform::inverseTransform(const Line& line) const {
-	return Line(inverseTransform(line.point1), inverseTransform(line.point2));
+	return {inverseTransform(line.point1), inverseTransform(line.point2)};
 }
 
 /**
