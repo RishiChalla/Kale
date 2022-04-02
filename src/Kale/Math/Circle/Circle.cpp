@@ -43,6 +43,14 @@ Circle::Circle(const Vector2f& center, float radius) : center(center), radius(ra
 }
 
 /**
+ * Gets a bounding box for this geometry to check for quick and inaccurate collisions
+ * @return The bounding box
+ */
+Rect Circle::getBoundingBox() const {
+	return {center + Vector2f{-radius, radius}, center + Vector2f{radius, -radius}};
+}
+
+/**
  * Checks for collision with a point
  * @param point The point to check collision for
  * @returns True if there is a collision, false for no collision

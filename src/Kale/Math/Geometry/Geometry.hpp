@@ -34,6 +34,12 @@ namespace Kale {
 	struct Geometry {
 
 		/**
+		 * Gets a bounding box for this geometry to check for quick and inaccurate collisions
+		 * @return The bounding box
+		 */
+		virtual Rect getBoundingBox() const = 0;
+
+		/**
 		 * Checks for collision with a point
 		 * @param point The point to check collision for
 		 * @returns True if there is a collision, false for no collision

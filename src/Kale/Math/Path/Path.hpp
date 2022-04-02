@@ -76,6 +76,12 @@ namespace Kale {
 		void cubicBezierTo(Vector2f control1, Vector2f control2, Vector2f destination);
 
 		/**
+		 * Gets a bounding box for this geometry to check for quick and inaccurate collisions
+		 * @return The bounding box
+		 */
+		Rect getBoundingBox() const override;
+
+		/**
 		 * Checks for collision with a point
 		 * @param point The point to check collision for
 		 * @returns True if there is a collision, false for no collision
