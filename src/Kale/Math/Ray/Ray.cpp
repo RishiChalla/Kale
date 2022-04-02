@@ -68,7 +68,7 @@ Ray::Ray(const Vector2f& origin, float angle, bool deg) : origin(origin) {
  * @returns the angle of the direction in degrees
  */
 float Ray::getAngleDeg() const {
-    throw std::runtime_error("Unimplemented method");
+	return radToDeg(std::tan(direction.y / direction.x));
 }
 
 /**
@@ -76,7 +76,7 @@ float Ray::getAngleDeg() const {
  * @returns The angle of the direction in radians
  */
 float Ray::getAngleRad() const {
-    throw std::runtime_error("Unimplemented method");
+	return std::tan(direction.y / direction.x);
 }
 
 /**
@@ -85,7 +85,7 @@ float Ray::getAngleRad() const {
  * @returns Whether or not the ray is perpendicular with this ray
  */
 bool Ray::isPerpendicular(Ray ray) const {
-    throw std::runtime_error("Unimplemented method");
+	return isFloating0(ray.direction.dot(direction));
 }
 
 /**
@@ -94,7 +94,7 @@ bool Ray::isPerpendicular(Ray ray) const {
  * @returns Whether or not the line is perpendicular with this ray
  */
 bool Ray::isPerpendicular(Line line) const {
-    throw std::runtime_error("Unimplemented method");
+    return isFloating0(direction.dot(line.point2 - line.point1));
 }
 
 /**
@@ -103,7 +103,7 @@ bool Ray::isPerpendicular(Line line) const {
  * @returns Whether or not the ray is parallel with this ray
  */
 bool Ray::isParallel(Ray ray) const {
-    throw std::runtime_error("Unimplemented method");
+	return ray.direction == direction;
 }
 
 /**
@@ -112,7 +112,7 @@ bool Ray::isParallel(Ray ray) const {
  * @returns Whether or not the line is parallel with this ray
  */
 bool Ray::isParallel(Line line) const {
-    throw std::runtime_error("Unimplemented method");
+	return isFloating0(direction.cross(line.point1 - line.point2));
 }
 
 /**
@@ -121,7 +121,8 @@ bool Ray::isParallel(Line line) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Ray::pointCollision(Vector2f point) const {
-    throw std::runtime_error("Unimplemented method");
+	Vector2f po = point - origin;
+    return isFloating0(po.cross(direction)) && po.dot(direction) > 0.0f;
 }
 
 /**
@@ -130,7 +131,8 @@ bool Ray::pointCollision(Vector2f point) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Ray::rectCollision(RotatedRect rect) const {
-    throw std::runtime_error("Unimplemented method");
+	return lineCollision({rect.point1, rect.point2}) || lineCollision({rect.point2, rect.point3}) ||
+		lineCollision({rect.point3, rect.point4}) || lineCollision({rect.point4, rect.point1});
 }
 
 /**
@@ -139,7 +141,8 @@ bool Ray::rectCollision(RotatedRect rect) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Ray::rectCollision(Rect rect) const {
-	throw std::runtime_error("Unimplemented method");
+	return lineCollision({rect.topLeft, rect.topRight()}) || lineCollision({rect.topRight(), rect.bottomRight}) ||
+		lineCollision({rect.bottomRight, rect.bottomLeft()}) || lineCollision({rect.bottomLeft(), rect.topLeft});
 }
 
 /**
@@ -148,7 +151,7 @@ bool Ray::rectCollision(Rect rect) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Ray::circleCollision(Circle circle) const {
-    throw std::runtime_error("Unimplemented method");
+	return circle.rayCollision(*this);
 }
 
 /**
@@ -157,7 +160,24 @@ bool Ray::circleCollision(Circle circle) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Ray::rayCollision(Ray ray) const {
-    throw std::runtime_error("Unimplemented method");
+	// Rays are parallel in the same direction
+	if (ray.direction == direction) return isFloating0(direction.cross(ray.origin - origin));
+
+	// Rays are parallel in the opposite direction
+	if (-ray.direction == direction)
+		return isFloating0(direction.cross(ray.origin - origin)) && (direction.x > 0.0f ? ray.origin.x >= origin.x : ray.origin.x <= origin.x);
+
+	// Convert both rays to y = ax + b form
+	float a1 = direction.y / direction.x;
+	float a2 = ray.direction.y / ray.direction.x;
+	float b1 = origin.y - a1 * origin.x;
+	float b2 = ray.origin.y - a2 * ray.origin.x;
+
+	// Find collision x
+	float colX = (b2 - b1) / (a1 - a2);
+
+	// Ensure that the x faces in the ray's direction for both rays
+	return sign(colX - origin.x) == sign(direction.x) && sign(colX - ray.origin.x) == sign(ray.direction.x);
 }
 
 /**
@@ -175,7 +195,24 @@ bool Ray::pathCollision(const Path& path) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Ray::lineCollision(Line line) const {
-    throw std::runtime_error("Unimplemented method");
+	// Convert ray & line to y = ax + b form
+	float a1 = direction.y / direction.x;
+	float a2 = (line.point2.y - line.point1.y) / (line.point2.x - line.point2.x);
+
+	// Check for parallel lines
+	float den = a1 - a2;
+	if (isFloating0(den))
+		return isFloating0(direction.cross(line.point1 - origin)) &&
+			(sign(line.point1.x - origin.x) == sign(direction.x) || sign(line.point2.x - origin.x) == sign(direction.x));
+
+	float b1 = origin.y - a1 * origin.x;
+	float b2 = line.point1.y - a2 * line.point1.x;
+
+	// Find collision x
+	float colX = (b2 - b1) / den;
+
+	// Ensure that the collision x faces the ray's direction and is in line's bounds
+	return colX >= line.point1.x && colX <= line.point2.x && sign(colX - origin.x) == sign(direction.x);
 }
 
 /**

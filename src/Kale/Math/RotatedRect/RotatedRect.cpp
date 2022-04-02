@@ -16,7 +16,6 @@
 
 #include "RotatedRect.hpp"
 
-#include <Kale/Math/Utils/Utils.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Ray/Ray.hpp>
 #include <Kale/Math/Line/Line.hpp>
@@ -24,7 +23,6 @@
 #include <Kale/Math/Circle/Circle.hpp>
 
 #include <stdexcept>
-#include <array>
 
 using namespace Kale;
 
@@ -103,17 +101,7 @@ bool RotatedRect::rectCollision(Rect rect) const {
  * @returns True if there is a collision, false for no collision
  */
 bool RotatedRect::circleCollision(Circle circle) const {
-	Vector2f closest;
-	std::array<const Vector2f*, 4> points = {&point1, &point2, &point3, &point4};
-	for (size_t i = 0; i < points.size(); i++) {
-		closest = points[i]->perpendicular(circle.center);
-		size_t i2 = i < points.size() ? i + 1 : 0;
-		if (isFloating0((closest - *points[i]).cross(*points[i2] - *points[i]))) {
-			closest.clampTo(*points[i], *points[i2]);
-			break;
-		}
-	}
-	return (circle.center - closest).magnitude() < circle.radius;
+	return circle.rectCollision(*this);
 }
 
 /**
@@ -122,7 +110,7 @@ bool RotatedRect::circleCollision(Circle circle) const {
  * @returns True if there is a collision, false for no collision
  */
 bool RotatedRect::rayCollision(Ray ray) const {
-	throw std::runtime_error("Unimplemented method");
+	return ray.rectCollision(*this);
 }
 
 /**
@@ -131,7 +119,7 @@ bool RotatedRect::rayCollision(Ray ray) const {
  * @returns True if there is a collision, false for no collision
  */
 bool RotatedRect::pathCollision(const Path& path) const {
-    throw std::runtime_error("Unimplemented method");
+    return path.rectCollision(*this);
 }
 
 /**
@@ -140,10 +128,7 @@ bool RotatedRect::pathCollision(const Path& path) const {
  * @returns True if there is a collision, false for no collision
  */
 bool RotatedRect::lineCollision(Line line) const {
-	return (point2 - point1).dot(line.point1 - point1) > 0.0f && (point2 - point1).dot(line.point2 - point1) < 0.0f &&
-		(point3 - point2).dot(line.point1 - point2) > 0.0f && (point3 - point2).dot(line.point2 - point2) < 0.0f &&
-		(point4 - point3).dot(line.point1 - point3) > 0.0f && (point4 - point3).dot(line.point2 - point3) < 0.0f &&
-		(point1 - point4).dot(line.point1 - point4) > 0.0f && (point1 - point4).dot(line.point2 - point4) < 0.0f;
+	return line.rectCollision(*this);
 }
 
 /**

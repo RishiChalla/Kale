@@ -58,7 +58,9 @@ bool Circle::pointCollision(Vector2f point) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Circle::rectCollision(RotatedRect rect) const {
-	return rect.circleCollision(*this);
+	if (rect.pointCollision(center)) return true;
+	return lineCollision({rect.point1, rect.point2}) || lineCollision({rect.point2, rect.point3}) ||
+		lineCollision({rect.point3, rect.point4}) || lineCollision({rect.point4, rect.point1});
 }
 
 /**
@@ -86,7 +88,10 @@ bool Circle::circleCollision(Circle circle) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Circle::rayCollision(Ray ray) const {
-    throw std::runtime_error("Unimplemented method");
+	Vector2f proj = (center - ray.origin).project(ray.direction);
+	if (sign(proj.x) != sign(ray.direction.x)) proj = ray.origin;
+	else proj += ray.origin;
+	return pointCollision(proj);
 }
 
 /**
@@ -104,9 +109,10 @@ bool Circle::pathCollision(const Path& path) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Circle::lineCollision(Line line) const {
-	Vector2f closest = line.point1.perpendicular(center);
-	closest.clampTo(line.point1, line.point2);
-	return closest.dot(closest) <= radius * radius;
+	Vector2f proj = line.point1 + (center - line.point1).project(line.point2 - line.point1);
+	if (proj.x > line.point2.x) proj = line.point2;
+	else if (proj.x < line.point1.x) proj = line.point1;
+	return pointCollision(proj);
 }
 
 /**

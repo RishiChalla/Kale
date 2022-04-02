@@ -56,4 +56,13 @@ namespace Kale {
 		return tmp <= epsilon && tmp >= -epsilon;
 	}
 
+	/**
+	 * Returns the sign of the number, -1 for negatives, 0 for 0, 1 for positives
+	 * @param val The number to return the sign of
+	 * @return The sign of the number
+	 */
+	template <typename T> int sign(T val) {
+		return (T(0) < val) - (val < T(0));
+	}
+
 }

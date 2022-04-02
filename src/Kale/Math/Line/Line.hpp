@@ -47,18 +47,6 @@ namespace Kale {
          */
         Line(const Vector2f& point1, const Vector2f& point2);
 
-        /**
-         * Gets the angle of the direction in degrees
-         * @returns the angle of the direction in degrees
-         */
-		float getAngleDeg() const;
-
-		/**
-		 * Gets The angle of the direction in radians
-		 * @returns The angle of the direction in radians
-		 */
-		float getAngleRad() const;
-
 		/**
 		 * Returns the normal unit vector of the direction of this line
 		 * @returns The normal unit vector

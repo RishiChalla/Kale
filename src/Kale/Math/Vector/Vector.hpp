@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <Kale/Math/Utils/Utils.hpp>
+
 #include <cmath>
 #include <algorithm>
 #include <ostream>
@@ -80,6 +82,8 @@ namespace Kale {
 			y /= v;
 		}
 
+		Vector2<T> operator-() const { return {-x, -y}; };
+
 		Vector2<T> operator+(Vector2<T> o) const { return Vector2<T>(x + o.x, y + o.y); }
 		Vector2<T> operator-(Vector2<T> o) const { return Vector2<T>(x - o.x, y - o.y); }
 		Vector2<T> operator*(Vector2<T> o) const { return Vector2<T>(x * o.x, y * o.y); }
@@ -97,9 +101,14 @@ namespace Kale {
 
 		bool operator>(Vector2<T> o) const { return x > o.x && y > o.y; }
 		bool operator<(Vector2<T> o) const { return x < o.x && y < o.y; }
-		bool operator==(Vector2<T> o) const { return x == o.x && y == o.y; }
 		bool operator<=(Vector2<T> o) const { return x <= o.x && y <= o.y; }
 		bool operator>=(Vector2<T> o) const { return x >= o.x && y >= o.y; }
+		template <typename A = T> typename std::enable_if<not std::is_floating_point<A>::value, bool>::type operator==(Vector2<T> o) const {
+			return x == o.x && y == o.y;
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector2<T> o) const {
+			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y);
+		}
 
 		T dot(Vector2<T> o) const { return o.x * x + o.y * y; }
 		T cross(Vector2<T> o) const { return x * o.y - y * o.x; }
@@ -135,6 +144,18 @@ namespace Kale {
 		Vector2<T> perpendicular(Vector2<T> o) const {
 			return {x + o.y - y, y - o.x + x};
 		}
+		Vector2<T> project(Vector2<T> o) {
+			float k = dot(o) / o.dot(o);
+			return {k * o.x, k * o.y};
+		}
+
+		Vector2<T> xy() const { return {x, y}; }
+		Vector2<T> yx() const { return {y, x}; }
+
+		static Vector2<T> one() { return {1, 1}; };
+		static Vector2<T> zero() { return {0, 0}; };
+		static Vector2<T> right() { return {1, 0}; };
+		static Vector2<T> up() { return {0, 1}; };
 	};
 
 	/**
@@ -205,6 +226,8 @@ namespace Kale {
 			z /= v;
 		}
 
+		Vector3<T> operator-() const { return {-x, -y, -z}; };
+
 		Vector3<T> operator+(Vector3<T> o) const { return Vector3<T>(x + o.x, y + o.y, z + o.z); }
 		Vector3<T> operator-(Vector3<T> o) const { return Vector3<T>(x - o.x, y - o.y, z - o.z); }
 		Vector3<T> operator*(Vector3<T> o) const { return Vector3<T>(x * o.x, y * o.y, z * o.z); }
@@ -222,9 +245,14 @@ namespace Kale {
 
 		bool operator>(Vector3<T> o) const { return x > o.x && y > o.y && z > o.z; }
 		bool operator<(Vector3<T> o) const { return x < o.x && y < o.y && z < o.z; }
-		bool operator==(Vector3<T> o) const { return x == o.x && y == o.y && z == o.z; }
 		bool operator>=(Vector3<T> o) const { return x >= o.x && y >= o.y && z >= o.z; }
 		bool operator<=(Vector3<T> o) const { return x <= o.x && y <= o.y && z <= o.z; }
+		template <typename A = T> typename std::enable_if<not std::is_floating_point<A>::value, bool>::type operator==(Vector3<T> o) const {
+			return x == o.x && y == o.y && z == o.z;
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector3<T> o) const {
+			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y) && isFloatingEqual(z, o.z);
+		}
 
 		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
@@ -266,7 +294,27 @@ namespace Kale {
 			color.fA = 1.0f;
 			return color;
 		}
-	};
+
+		Vector2<T> xy() const { return {x, y}; }
+		Vector2<T> xz() const { return {x, z}; }
+		Vector2<T> yx() const { return {y, x}; }
+		Vector2<T> yz() const { return {y, z}; }
+		Vector2<T> zx() const { return {z, x}; }
+		Vector2<T> zy() const { return {z, y}; }
+
+		Vector3<T> xyz() const { return {x, y, z}; }
+		Vector3<T> xzy() const { return {x, z, y}; }
+		Vector3<T> yxz() const { return {y, x, z}; }
+		Vector3<T> yzx() const { return {y, z, x}; }
+		Vector3<T> zxy() const { return {z, x, y}; }
+		Vector3<T> zyx() const { return {z, y, x}; }
+
+		static Vector3<T> zero() { return {0, 0, 0}; }
+		static Vector3<T> one() { return {1, 1, 1}; }
+		static Vector3<T> right() { return {1, 0, 0}; }
+		static Vector3<T> up() { return {0, 1, 0}; }
+		static Vector3<T> front() { return {0, 0, 1}; }
+};
 
 	/**
 	 * Represents a vector in a 3 dimensional space
@@ -350,6 +398,8 @@ namespace Kale {
 			w /= v;
 		}
 
+		Vector4<T> operator-() const { return {-x, -y, -z, -w}; };
+
 		Vector4<T> operator+(Vector4<T> o) const { return Vector4<T>(x + o.x, y + o.y, z + o.z, w + o.w); }
 		Vector4<T> operator-(Vector4<T> o) const { return Vector4<T>(x - o.x, y - o.y, z - o.z, w - o.w); }
 		Vector4<T> operator*(Vector4<T> o) const { return Vector4<T>(x * o.x, y * o.y, z * o.z, w * o.w); }
@@ -367,9 +417,14 @@ namespace Kale {
 
 		bool operator>(Vector4<T> o) const { return x > o.x && y > o.y && z > o.z && w > o.w; }
 		bool operator<(Vector4<T> o) const { return x < o.x && y < o.y && z < o.z && w < o.w; }
-		bool operator==(Vector4<T> o) const { return x == o.x && y == o.y && z == o.z && w == o.w; }
 		bool operator>=(Vector4<T> o) const { return x >= o.x && y >= o.y && z >= o.z && w >= o.w; }
 		bool operator<=(Vector4<T> o) const { return x <= o.x && y <= o.y && z <= o.z && w <= o.w; }
+		template <typename A = T> typename std::enable_if<not std::is_floating_point<A>::value, bool>::type operator==(Vector4<T> o) const {
+			return x == o.x && y == o.y && z == o.z && w == o.w;
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector4<T> o) const {
+			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y) && isFloatingEqual(z, o.z) && isFloatingEqual(w, o.w);
+		}
 
 		T dot(Vector4<T> o) const { return o.x * x + o.y * y + o.z * z + o.w * w; }
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
@@ -415,6 +470,72 @@ namespace Kale {
 			color.fA = w;
 			return color;
 		}
+
+		Vector2<T> xy() const { return {x, y}; }
+		Vector2<T> xz() const { return {x, z}; }
+		Vector2<T> xw() const { return {x, w}; }
+		Vector2<T> yx() const { return {y, x}; }
+		Vector2<T> yz() const { return {y, z}; }
+		Vector2<T> yw() const { return {y, w}; }
+		Vector2<T> zx() const { return {z, x}; }
+		Vector2<T> zy() const { return {z, y}; }
+		Vector2<T> zw() const { return {z, w}; }
+		Vector2<T> wx() const { return {w, x}; }
+		Vector2<T> wy() const { return {w, y}; }
+		Vector2<T> wz() const { return {w, z}; }
+
+		Vector3<T> xyz() const { return {x, y, z}; }
+		Vector3<T> xyw() const { return {x, y, w}; }
+		Vector3<T> xzy() const { return {x, z, y}; }
+		Vector3<T> xzw() const { return {x, z, w}; }
+		Vector3<T> xwy() const { return {x, w, y}; }
+		Vector3<T> xwz() const { return {x, w, z}; }
+		Vector3<T> yxz() const { return {y, x, z}; }
+		Vector3<T> yxw() const { return {y, x, w}; }
+		Vector3<T> yzx() const { return {y, z, x}; }
+		Vector3<T> yzw() const { return {y, z, w}; }
+		Vector3<T> ywx() const { return {y, w, x}; }
+		Vector3<T> ywz() const { return {y, w, z}; }
+		Vector3<T> zxy() const { return {z, x, y}; }
+		Vector3<T> zxw() const { return {z, x, w}; }
+		Vector3<T> zyx() const { return {z, y, x}; }
+		Vector3<T> zyw() const { return {z, y, w}; }
+		Vector3<T> zwx() const { return {z, w, x}; }
+		Vector3<T> zwy() const { return {z, w, y}; }
+		Vector3<T> wxy() const { return {w, x, y}; }
+		Vector3<T> wxz() const { return {w, x, z}; }
+		Vector3<T> wyx() const { return {w, y, x}; }
+		Vector3<T> wyz() const { return {w, y, z}; }
+		Vector3<T> wzx() const { return {w, z, x}; }
+		Vector3<T> wzy() const { return {w, z, y}; }
+
+		Vector4<T> wzyx() const { return {w, z, y, x}; }
+		Vector4<T> zwyx() const { return {z, w, y, x}; }
+		Vector4<T> wyzx() const { return {w, y, z, x}; }
+		Vector4<T> ywzx() const { return {y, w, z, x}; }
+		Vector4<T> zywx() const { return {z, y, w, x}; }
+		Vector4<T> yzwx() const { return {y, z, w, x}; }
+		Vector4<T> wzxy() const { return {w, z, x, y}; }
+		Vector4<T> zwxy() const { return {z, w, x, y}; }
+		Vector4<T> wxzy() const { return {w, x, z, y}; }
+		Vector4<T> xwzy() const { return {x, w, z, y}; }
+		Vector4<T> zxwy() const { return {z, x, w, y}; }
+		Vector4<T> xzwy() const { return {x, z, w, y}; }
+		Vector4<T> wyxz() const { return {w, y, x, z}; }
+		Vector4<T> ywxz() const { return {y, w, x, z}; }
+		Vector4<T> wxyz() const { return {w, x, y, z}; }
+		Vector4<T> xwyz() const { return {x, w, y, z}; }
+		Vector4<T> yxwz() const { return {y, x, w, z}; }
+		Vector4<T> xywz() const { return {x, y, w, z}; }
+		Vector4<T> zyxw() const { return {z, y, x, w}; }
+		Vector4<T> yzxw() const { return {y, z, x, w}; }
+		Vector4<T> zxyw() const { return {z, x, y, w}; }
+		Vector4<T> xzyw() const { return {x, z, y, w}; }
+		Vector4<T> yxzw() const { return {y, x, z, w}; }
+		Vector4<T> xyzw() const { return {x, y, z, w}; }
+
+		static Vector4<T> zero() { return {0, 0, 0, 0}; }
+		static Vector4<T> one() { return {1, 1, 1, 1}; }
 	};
 
 	typedef Vector2<char> Vector2c;

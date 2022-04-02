@@ -44,27 +44,12 @@ Line::Line(const Vector2f &point1, const Vector2f &point2) : point1(point1), poi
 }
 
 /**
- * Gets the angle of the direction in degrees
- * @returns the angle of the direction in degrees
- */
-float Line::getAngleDeg() const {
-    throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Gets The angle of the direction in radians
- * @returns The angle of the direction in radians
- */
-float Line::getAngleRad() const {
-    throw std::runtime_error("Unimplemented method");
-}
-
-/**
  * Returns the normal unit vector of the direction of this line
  * @returns The normal unit vector
  */
 Vector2f Line::getNormal() const {
-    throw std::runtime_error("Unimplemented method");
+	Vector2f tmp = point2 - point1;
+	return tmp / tmp.magnitude();
 }
 
 /**
@@ -73,7 +58,7 @@ Vector2f Line::getNormal() const {
  * @returns Whether or not the ray is perpendicular with this line
  */
 bool Line::isPerpendicular(Ray ray) const {
-    throw std::runtime_error("Unimplemented method");
+	return ray.isPerpendicular(*this);
 }
 
 /**
@@ -82,7 +67,7 @@ bool Line::isPerpendicular(Ray ray) const {
  * @returns Whether or not the line is perpendicular with this line
  */
 bool Line::isPerpendicular(Line line) const {
-    throw std::runtime_error("Unimplemented method");
+	return isFloating0((point2 - point1).dot(line.point2 - line.point1));
 }
 
 /**
@@ -91,7 +76,7 @@ bool Line::isPerpendicular(Line line) const {
  * @returns Whether or not the ray is parallel with this line
  */
 bool Line::isParallel(Ray ray) const {
-    throw std::runtime_error("Unimplemented method");
+	return ray.isParallel(*this);
 }
 
 /**
@@ -100,7 +85,7 @@ bool Line::isParallel(Ray ray) const {
  * @returns Whether or not the line is parallel with this line
  */
 bool Line::isParallel(Line line) const {
-    throw std::runtime_error("Unimplemented method");
+	return isFloating0((point2 - point1).cross(line.point2 - line.point1));
 }
 
 /**
@@ -109,7 +94,9 @@ bool Line::isParallel(Line line) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Line::pointCollision(Vector2f point) const {
-	return isFloating0((point - point1).cross(point2 - point1)) && point.x >= point1.x && point.x <= point2.x;
+	Vector2f p = point - point1;
+	Vector2f p2 = point2 - point1;
+	return isFloating0(p.cross(p2)) && p.dot(p2) > 0.0f && (point - point2).dot(point1 - point2) > 0.0f;
 }
 
 /**
@@ -118,7 +105,9 @@ bool Line::pointCollision(Vector2f point) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Line::rectCollision(RotatedRect rect) const {
-	return rect.lineCollision(*this);
+	return pointCollision(rect.point1) || pointCollision(rect.point2) || pointCollision(rect.point3) || pointCollision(rect.point4) ||
+		lineCollision({rect.point1, rect.point2}) || lineCollision({rect.point2, rect.point3}) ||
+		lineCollision({rect.point3, rect.point4}) || lineCollision({rect.point4, rect.point1});
 }
 
 /**
@@ -127,7 +116,9 @@ bool Line::rectCollision(RotatedRect rect) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Line::rectCollision(Rect rect) const {
-	return rect.lineCollision(*this);
+	return pointCollision(rect.topLeft) || pointCollision(rect.topRight()) || pointCollision(rect.bottomLeft()) || pointCollision(rect.bottomRight) ||
+		lineCollision({rect.topLeft, rect.topRight()}) || lineCollision({rect.topRight(), rect.bottomRight}) ||
+		lineCollision({rect.bottomRight, rect.bottomLeft()}) || lineCollision({rect.bottomLeft(), rect.topLeft});
 }
 
 /**
@@ -145,7 +136,7 @@ bool Line::circleCollision(Circle circle) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Line::rayCollision(Ray ray) const {
-    throw std::runtime_error("Unimplemented method");
+	return ray.lineCollision(*this);
 }
 
 /**

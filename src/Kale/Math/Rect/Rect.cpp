@@ -99,8 +99,8 @@ bool Rect::rectCollision(Rect rect) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Rect::circleCollision(Circle circle) const {
-	Vector2f closest = circle.center.clamp(topLeft, bottomRight);
-	return (circle.center - closest).magnitude() <= circle.radius;
+	Vector2f closest = circle.center - circle.center.clamp(topLeft, bottomRight);
+	return closest.dot(closest) <= pow(circle.radius, 2.0f);
 }
 
 /**
@@ -109,7 +109,7 @@ bool Rect::circleCollision(Circle circle) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Rect::rayCollision(Ray ray) const {
-	throw std::runtime_error("Unimplemented method");
+	return ray.rectCollision(*this);
 }
 
 /**
@@ -118,7 +118,7 @@ bool Rect::rayCollision(Ray ray) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Rect::pathCollision(const Path& path) const {
-	throw std::runtime_error("Unimplemented method");
+	return path.rectCollision(*this);
 }
 
 /**
@@ -127,16 +127,7 @@ bool Rect::pathCollision(const Path& path) const {
  * @returns True if there is a collision, false for no collision
  */
 bool Rect::lineCollision(Line line) const {
-	// Check if line cap points are in rectangle
-	if (pointCollision(line.point1) || pointCollision(line.point2)) return true;
-
-	// Calculate x location of line at rectangle top y and bottom y
-	Vector2f dist = line.point1 - line.point2;
-	float col1x = dist.x * (topLeft.y - line.point1.y) / dist.y;
-	float col2x = dist.x * (bottomRight.y - line.point1.y) / dist.y;
-
-	// Check if the x location of the line at the top/bottom y of rect is within rect x bounds
-	return (topLeft.x >= col1x && col1x <= bottomRight.x) || (topLeft.x >= col2x && col2x <= bottomRight.x);
+	return line.rectCollision(*this);
 }
 
 /**
