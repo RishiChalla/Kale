@@ -47,16 +47,19 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 void Scene::updateThreadLayout() {
 	for (std::list<size_t>& nodeIndices : nodeThreads) nodeIndices.clear();
 
-	float totalUpdateTime = 0.0f;
-	float n = 0.0f;
-	for (const std::shared_ptr<Node>& node : nodes) {
-		if (node->updateTime == -1.0f) continue;
-		totalUpdateTime += node->updateTime;
-		n++;
-	}
+	for (size_t i = nodes.size() - 1; i >= 0; i--) {
+		std::vector<float> totalThreadTimes;
+		totalThreadTimes.reserve(nodeThreads.size());
 
-	float avgUpdateTime = totalUpdateTime / n;
-	float expectedThreadTime = avgUpdateTime * static_cast<float>(nodes.size()) / static_cast<float>(nodeThreads.size());
+		for (std::list<size_t>& nodeIndices : nodeThreads) {
+			float totalThreadTime = 0.0f;
+			for (size_t index : nodeIndices) totalThreadTime += nodes[index]->updateTime;
+			totalThreadTimes.push_back(totalThreadTime);
+		}
+
+		size_t minIndex = std::min_element(totalThreadTimes.begin(), totalThreadTimes.end()) - totalThreadTimes.begin();
+		nodeThreads[minIndex].push_back(i);
+	}
 }
 
 /**
