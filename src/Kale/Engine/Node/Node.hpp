@@ -19,8 +19,9 @@
 #include <Kale/Math/Transform/Transform.hpp>
 #include <Kale/Math/Geometry/Geometry.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
-#include <Kale/Math/Path/Path.hpp>
 #include <Kale/Engine/Light/Light.hpp>
+
+#include <unordered_set>
 
 namespace Kale {
 
@@ -45,15 +46,15 @@ namespace Kale {
 		/**
 		 * Renders the node, this method is guaranteed to be called from the main thread
 		 * @param camera The camera to render with
-		 * @param lights The lights currently affecting the scene
 		 */
-		virtual void render(const Camera& camera, const std::list<std::shared_ptr<Light>>& lights) const = 0;
+		virtual void render(const Camera& camera) const = 0;
 
 		/**
 		 * Updates the node, may be called from any thread. Is guaranteed to NOT call on the main thread.
 		 * @param ups The amount of updates the current thread is doing in a second
+		 * @param lights The lights to update
 		 */
-		virtual void update(float ups) = 0;
+		virtual void update(float ups, const std::unordered_set<std::shared_ptr<Light>>& lights) = 0;
 
 		/**
 		 * Gets the bounding box of the node
@@ -61,7 +62,7 @@ namespace Kale {
 		 * This method may be called from any thread
 		 * @returns The bounding box
 		 */
-		virtual const RotatedRect& getBoundingBox() const = 0;
+		virtual const Rect& getBoundingBox() const = 0;
 
 		/**
 		 * Creates the node parent
@@ -80,7 +81,7 @@ namespace Kale {
 	public:
 
 		/**
-		 * The amount of time this node takes to update on average
+		 * The amount of time in microseconds this node takes to update on average
 		 * 
 		 * You can gain this statistic using the Kale Editor calibration tools.
 		 * This measure is device specific, when developing on multiple devices it is recommended that you use

@@ -17,14 +17,3 @@
 #include "Light.hpp"
 
 using namespace Kale;
-
-/**
- * Creates a new light given its attributes
- * @param color The color of the light
- * @param shading The shading type of the light
- * @param emission The emission type of the light
- * @param bloom Whether or not to use bloom/blur effects in this light
- */
-Light::Light(Vector4f color, LightShading shading, LightEmission emission, bool bloom) : color(color), shading(shading), emission(emission), bloom(bloom) {
-	// Empty Body
-}

@@ -19,7 +19,6 @@
 #include <Kale/Math/RotatedRect/RotatedRect.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Line/Line.hpp>
-#include <Kale/Math/Path/Path.hpp>
 #include <Kale/Math/Circle/Circle.hpp>
 #include <Kale/Math/Utils/Utils.hpp>
 
@@ -193,15 +192,6 @@ bool Ray::rayCollision(Ray ray) const {
 }
 
 /**
- * Checks for collision with a path
- * @param path The path to check collision for
- * @returns True if there is a collision, false for no collision
- */
-bool Ray::pathCollision(const Path& path) const {
-    throw std::runtime_error("Unimplemented method");
-}
-
-/**
  * Checks for collision with a line
  * @param line The line to check collision for
  * @returns True if there is a collision, false for no collision
@@ -225,58 +215,4 @@ bool Ray::lineCollision(Line line) const {
 
 	// Ensure that the collision x faces the ray's direction and is in line's bounds
 	return colX >= line.point1.x && colX <= line.point2.x && sign(colX - origin.x) == sign(direction.x);
-}
-
-/**
- * Checks for collision with a rectangle
- * @param rect The rectangle to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> Ray::rectCollisionPoints(RotatedRect rect) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a rectangle
- * @param rect The rectangle to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> Ray::rectCollisionPoints(Rect rect) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a circle
- * @param circle The circle to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> Ray::circleCollisionPoints(Circle circle) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a ray
- * @param ray The ray to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> Ray::rayCollisionPoints(Ray ray) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a path
- * @param path The path to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> Ray::pathCollisionPoints(const Path& path) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a line
- * @param line The line to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> Ray::lineCollisionPoints(Line line) const {
-	throw std::runtime_error("Unimplemented method");
 }

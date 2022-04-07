@@ -126,16 +126,15 @@ void Application::run() noexcept {
 	// Creates the window
 	window.create(applicationName.c_str());
 
+	// Create update threads
+	for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; i++)
+		updateThreads.emplace_back(&Application::update, this, i);
+
 	try {
 		onBegin();
 	}
 	catch (const std::exception& e) {
 		console.error("Failed to call onBegin in application - "s + e.what());
-	}
-
-	// Create update threads
-	for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; i++) {
-		updateThreads.emplace_back(&Application::update, this, i);
 	}
 
 	// Render loop

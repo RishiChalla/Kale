@@ -16,11 +16,9 @@
 
 #pragma once
 
-#include <Kale/Math/Vector/Vector.hpp>
-#include <Kale/Math/Transform/Transform.hpp>
+#include <Kale/Math/Ray/Ray.hpp>
 
-#include <list>
-#include <memory>
+#include <utility>
 
 namespace Kale {
 
@@ -43,10 +41,7 @@ namespace Kale {
 	/**
 	 * The main Light class, all other light emitting entities are inherited from this class
 	 */
-	class Light {
-	private:
-
-	protected:
+	struct Light {
 
 		/**
 		 * The z position/depth of the node. Lower values are drawn first, higher values are placed above lower values.
@@ -56,56 +51,34 @@ namespace Kale {
 		/**
 		 * The type of light shading this uses
 		 */
-		LightShading shading;
+		LightShading shading = LightShading::Both;
 
 		/**
 		 * The type of light emission this uses
 		 */
-		LightEmission emission;
+		LightEmission emission = LightEmission::Gradient;
 
 		/**
 		 * Whether or not to use bloom effects for this light
 		 */
-		bool bloom;
+		bool bloom = true;
 
 		/**
 		 * The color of the light
 		 */
-		Vector4f color;
+		Vector4f color = {1.0f, 1.0f, 1.0f, 1.0f};
 
 		/**
-		 * Renders the light, will only be called from the main thread. This only renders the emission and bloom, shading must be called from nodes.
-		 * @param camera The camera to render with
+		 * Gets bounding rays of the light given the rect
+		 * @param boundingBox
+		 * @returns The rays which bound the light's path
 		 */
-		virtual void render(const Camera& camera) const = 0;
+		virtual std::pair<Ray, Ray> getBoundingRays(Rect boundingBox) const = 0;
 
 		/**
-		 * Checks whether the light affects the view within a camera
-		 * @param camera The camera to check within
-		 * @returns Whether or not the light affects the view within the camera
+		 * Renders the light
 		 */
-		virtual bool isInView(const Camera& camera) const = 0;
-
-		friend class Scene;
-
-	public:
-
-		/**
-		 * Creates a new light given its attributes
-		 * @param color The color of the light
-		 * @param shading The shading type of the light
-		 * @param emission The emission type of the light
-		 * @param bloom Whether or not to use bloom/blur effects in this light
-		 */
-		Light(Vector4f color = {1.0f, 1.0f, 1.0f, 1.0f}, LightShading shading = LightShading::Lightening, LightEmission emission = LightEmission::Gradient,
-				bool bloom = true);
-
-		/**
-		 * Draws the shading for a node given the camera and the node geometry. Must be called only from the main thread.
-		 * @param camera The camera object
-		 * @param geometry The geometry of the node
-		 */
-		virtual void shadeNode(const Camera& camera, const Geometry& geometry) = 0;
+		virtual void render() const = 0;
 
 	};
 }

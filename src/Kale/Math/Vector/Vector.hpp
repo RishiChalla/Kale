@@ -583,6 +583,8 @@ namespace Kale {
 	typedef Vector4<float> Vector4f;
 	typedef Vector4<double> Vector4d;
 
+	typedef Vector4f Color;
+
 	/**
 	 * Prints a vector to an output stream
 	 */

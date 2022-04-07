@@ -345,19 +345,13 @@ void Transform::inverseTransformInplace(Vector2f& vec) const {
  * @param rect The rect to transform
  * @returns The transformed rect
  */
-Path Transform::transform(const RotatedRect& rect) const {
-	std::array<Vector2f, 4> points = {
+RotatedRect Transform::transform(const RotatedRect& rect) const {
+	return {
 		transform(rect.point1),
 		transform(rect.point2),
 		transform(rect.point3),
 		transform(rect.point4)
 	};
-	Path p(points[0]);
-	p.cubicBezierTo(points[0], points[1], points[1]);
-	p.cubicBezierTo(points[1], points[2], points[2]);
-	p.cubicBezierTo(points[2], points[3], points[3]);
-	p.cubicBezierTo(points[3], points[0], points[0]);
-	return p;
 }
 
 /**
@@ -366,19 +360,13 @@ Path Transform::transform(const RotatedRect& rect) const {
  * @param rect The rect to transform
  * @returns The transformed rect
  */
-Path Transform::inverseTransform(const RotatedRect& rect) const {
-	std::array<Vector2f, 4> points = {
+RotatedRect Transform::inverseTransform(const RotatedRect& rect) const {
+	return {
 		inverseTransform(rect.point1),
 		inverseTransform(rect.point2),
 		inverseTransform(rect.point3),
 		inverseTransform(rect.point4)
 	};
-	Path p(points[0]);
-	p.cubicBezierTo(points[0], points[1], points[1]);
-	p.cubicBezierTo(points[1], points[2], points[2]);
-	p.cubicBezierTo(points[2], points[3], points[3]);
-	p.cubicBezierTo(points[3], points[0], points[0]);
-	return p;
 }
 
 /**
@@ -386,19 +374,13 @@ Path Transform::inverseTransform(const RotatedRect& rect) const {
  * @param rect The rect to transform
  * @returns The transformed rect
  */
-Path Transform::transform(const Rect& rect) const {
-	std::array<Vector2f, 4> points = {
+RotatedRect Transform::transform(const Rect& rect) const {
+	return {
 		transform(rect.topLeft),
 		transform(rect.topRight()),
 		transform(rect.bottomRight),
 		transform(rect.bottomLeft())
 	};
-	Path p(points[0]);
-	p.cubicBezierTo(points[0], points[1], points[1]);
-	p.cubicBezierTo(points[1], points[2], points[2]);
-	p.cubicBezierTo(points[2], points[3], points[3]);
-	p.cubicBezierTo(points[3], points[0], points[0]);
-	return p;
 }
 
 /**
@@ -407,19 +389,13 @@ Path Transform::transform(const Rect& rect) const {
  * @param rect The rect to transform
  * @returns The transformed rect
  */
-Path Transform::inverseTransform(const Rect& rect) const {
-	std::array<Vector2f, 4> points = {
+RotatedRect Transform::inverseTransform(const Rect& rect) const {
+	return {
 		inverseTransform(rect.topLeft),
 		inverseTransform(rect.topRight()),
 		inverseTransform(rect.bottomRight),
 		inverseTransform(rect.bottomLeft())
 	};
-	Path p(points[0]);
-	p.cubicBezierTo(points[0], points[1], points[1]);
-	p.cubicBezierTo(points[1], points[2], points[2]);
-	p.cubicBezierTo(points[2], points[3], points[3]);
-	p.cubicBezierTo(points[3], points[0], points[0]);
-	return p;
 }
 
 /**
@@ -466,66 +442,6 @@ Line Transform::transform(const Line& line) const {
  */
 Line Transform::inverseTransform(const Line& line) const {
 	return {inverseTransform(line.point1), inverseTransform(line.point2)};
-}
-
-/**
- * Transforms a path using this transformation matrix
- * @param path The path to transform
- * @returns The transformed path
- */
-Path Transform::transform(const Path& path) const {
-	Path newPath;
-	newPath.beziers.reserve(path.beziers.size());
-	newPath.origin = transform(path.origin);
-	for (const CubicBezier& bezier : path.beziers)
-		newPath.beziers.push_back(CubicBezier{transform(bezier.controlPoint1), transform(bezier.controlPoint2), transform(bezier.destination)});
-	return newPath;
-}
-
-/**
- * Transforms a path using this transformation matrix
- * @param path The path to transform
- * @returns The transformed path
- */
-Path Transform::transform(Path&& path) const {
-	path.origin = transform(path.origin);
-	for (CubicBezier& bezier : path.beziers) {
-		bezier.controlPoint1 = transform(bezier.controlPoint1);
-		bezier.controlPoint2 = transform(bezier.controlPoint2);
-		bezier.destination = transform(bezier.destination);
-	}
-	return std::move(path);
-}
-
-/**
- * Inverse transforms a path using this transformation matrix
- * (Returns a path transformed by this matrix to its original)
- * @param path The path to transform
- * @returns The transformed path
- */
-Path Transform::inverseTransform(const Path& path) const {
-	Path newPath;
-	newPath.beziers.reserve(path.beziers.size());
-	newPath.origin = inverseTransform(path.origin);
-	for (const CubicBezier& bezier : path.beziers)
-		newPath.beziers.push_back(CubicBezier{inverseTransform(bezier.controlPoint1), inverseTransform(bezier.controlPoint2), inverseTransform(bezier.destination)});
-	return newPath;
-}
-
-/**
- * Inverse transforms a path using this transformation matrix
- * (Returns a path transformed by this matrix to its original)
- * @param path The path to transform
- * @returns The transformed path
- */
-Path Transform::inverseTransform(Path&& path) const {
-	path.origin = inverseTransform(path.origin);
-	for (CubicBezier& bezier : path.beziers) {
-		bezier.controlPoint1 = inverseTransform(bezier.controlPoint1);
-		bezier.controlPoint2 = inverseTransform(bezier.controlPoint2);
-		bezier.destination = inverseTransform(bezier.destination);
-	}
-	return std::move(path);
 }
 
 /**

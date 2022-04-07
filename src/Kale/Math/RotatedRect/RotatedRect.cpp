@@ -19,7 +19,6 @@
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Ray/Ray.hpp>
 #include <Kale/Math/Line/Line.hpp>
-#include <Kale/Math/Path/Path.hpp>
 #include <Kale/Math/Circle/Circle.hpp>
 
 #include <stdexcept>
@@ -125,73 +124,10 @@ bool RotatedRect::rayCollision(Ray ray) const {
 }
 
 /**
- * Checks for collision with a path
- * @param path The path to check collision for
- * @returns True if there is a collision, false for no collision
- */
-bool RotatedRect::pathCollision(const Path& path) const {
-    return path.rectCollision(*this);
-}
-
-/**
  * Checks for collision with a line
  * @param line The line to check collision for
  * @returns True if there is a collision, false for no collision
  */
 bool RotatedRect::lineCollision(Line line) const {
 	return line.rectCollision(*this);
-}
-
-/**
- * Checks for collision with a rectangle
- * @param rect The rectangle to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> RotatedRect::rectCollisionPoints(RotatedRect rect) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a rectangle
- * @param rect The rectangle to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> RotatedRect::rectCollisionPoints(Rect rect) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a circle
- * @param circle The circle to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> RotatedRect::circleCollisionPoints(Circle circle) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a ray
- * @param ray The ray to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> RotatedRect::rayCollisionPoints(Ray ray) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a path
- * @param path The path to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> RotatedRect::pathCollisionPoints(const Path& path) const {
-	throw std::runtime_error("Unimplemented method");
-}
-
-/**
- * Checks for collision with a line
- * @param line The line to check collision for
- * @returns The points of collision on the colliding edges of the geometry
- */
-std::vector<Vector2f> RotatedRect::lineCollisionPoints(Line line) const {
-	throw std::runtime_error("Unimplemented method");
 }

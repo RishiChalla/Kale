@@ -144,60 +144,11 @@ namespace Kale {
 		bool rayCollision(Ray ray) const override;
 
 		/**
-		 * Checks for collision with a path
-		 * @param path The path to check collision for
-		 * @returns True if there is a collision, false for no collision
-		 */
-		bool pathCollision(const Path& path) const override;
-
-		/**
 		 * Checks for collision with a line
 		 * @param line The line to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
 		bool lineCollision(Line line) const override;
-
-		/**
-		 * Checks for collision with a rectangle
-		 * @param rect The rectangle to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		std::vector<Vector2f> rectCollisionPoints(RotatedRect rect) const override;
-
-		/**
-		 * Checks for collision with a rectangle
-		 * @param rect The rectangle to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		std::vector<Vector2f> rectCollisionPoints(Rect rect) const override;
-
-		/**
-		 * Checks for collision with a circle
-		 * @param circle The circle to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		std::vector<Vector2f> circleCollisionPoints(Circle circle) const override;
-
-		/**
-		 * Checks for collision with a ray
-		 * @param ray The ray to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		std::vector<Vector2f> rayCollisionPoints(Ray ray) const override;
-
-		/**
-		 * Checks for collision with a path
-		 * @param path The path to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		std::vector<Vector2f> pathCollisionPoints(const Path& path) const override;
-
-		/**
-		 * Checks for collision with a line
-		 * @param line The line to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		std::vector<Vector2f> lineCollisionPoints(Line line) const override;
 
 	};
 }

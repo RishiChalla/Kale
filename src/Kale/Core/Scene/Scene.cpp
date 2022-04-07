@@ -18,15 +18,16 @@
 
 #include <Kale/Core/Application/Application.hpp>
 
+#include <algorithm>
+
 using namespace Kale;
 
 /**
  * Constructs a new scene
  */
-Scene::Scene()  {
+Scene::Scene() : nodeThreads(mainApp->getNumUpdateThreads()) {
 	Vector2f size = mainApp->getWindow().getSizeF();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
-
 	worldToScreen.scale(size / viewport);
 }
 
@@ -36,54 +37,103 @@ Scene::Scene()  {
 void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 	Vector2f size = newSize.cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
-
 	worldToScreen.setIdentity();
 	worldToScreen.scale(size / viewport);
 }
 
 /**
+ * Updates the layouts of node rendering by thread
+ */
+void Scene::updateThreadLayout() {
+	for (std::list<size_t>& nodeIndices : nodeThreads) nodeIndices.clear();
+
+	float totalUpdateTime = 0.0f;
+	float n = 0.0f;
+	for (const std::shared_ptr<Node>& node : nodes) {
+		if (node->updateTime == -1.0f) continue;
+		totalUpdateTime += node->updateTime;
+		n++;
+	}
+
+	float avgUpdateTime = totalUpdateTime / n;
+	float expectedThreadTime = avgUpdateTime * static_cast<float>(nodes.size()) / static_cast<float>(nodeThreads.size());
+}
+
+/**
  * Adds a node to the scene to render/update
  * @param node The node to add
+ * @param updateThreadLayout Whether or not to update the layout of threads
  */
-void Scene::addNode(Node* node) {
+void Scene::addNode(std::shared_ptr<Node>& node, bool updateThreadLayout) {
 	std::lock_guard<std::mutex> guard(mutex);
-	renderables.push_back(static_cast<void*>(node));
+	if (updateThreadLayout) shouldUpdateThreadLayout = true;
+	nodesToAdd.push(node);
 }
 
 /**
  * Removes a node from the scene
  * @param node The node to remove
+ * @param updateThreadLayout Whether or not to update the layout of threads
  */
-void Scene::removeNode(const Node* node) {
+void Scene::removeNode(std::shared_ptr<Node>& node, bool updateThreadLayout) {
 	std::lock_guard<std::mutex> guard(mutex);
-	const void* voidNodePtr = static_cast<const void*>(node);
-	renderables.erase(std::remove_if(renderables.begin(), renderables.end(), [&](const void* item) -> bool {
-		return voidNodePtr == item;
-	}), renderables.end());
+	if (updateThreadLayout) shouldUpdateThreadLayout = true;
+	nodesToRemove.push_back(node);
+}
+
+/**
+ * Adds a light to the scene
+ * @param light The light to add to the scene
+ */
+void Scene::addLight(std::shared_ptr<Light>& light) {
+	std::lock_guard<std::mutex> guard(mutex);
+	lights.insert(light);
+}
+
+/**
+ * Removes a light from the scene
+ * @param light The light to remove from the scene
+ */
+void Scene::removeLight(std::shared_ptr<Light>& light) {
+	std::lock_guard<std::mutex> guard(mutex);
+	lights.erase(light);
 }
 
 /**
  * Renders the current scene
- * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */
-void Scene::render() const {
+void Scene::render() {
 	// Clear screen with background color
-	{
-		Vector2f size(mainApp->getWindow().getSizeF());
-		mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(bgColor));
+	Vector2f size(mainApp->getWindow().getSizeF());
+	mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(bgColor));
+
+	// Render is always called from main thread, update threads & add/remove nodes here
+	while (!nodesToAdd.empty()) {
+		nodes.insert(std::upper_bound(nodes.begin(), nodes.end(), nodesToAdd.front(), [](const auto& first, const auto& second) -> bool {
+			return first->updateTime < second->updateTime;
+		}), nodesToAdd.front());
+		nodesToAdd.pop();
 	}
+
+	if (!nodesToRemove.empty()) {
+		nodes.erase(std::remove_if(nodes.begin(), nodes.end(), [&](const std::shared_ptr<Node>& node) -> bool {
+			return std::find(nodesToRemove.begin(), nodesToRemove.end(), node) != nodesToRemove.end();
+		}), nodes.end());
+		nodesToRemove.clear();
+	}
+
+	if (shouldUpdateThreadLayout) updateThreadLayout();
 
 	// Combine the camera transformation matrix with the world coordinates to Skia's coordinates matrix
 	Transform cameraToScreen(worldToScreen * camera);
 
-	// Go through each node and render it if its in the bounds of the view
-	for (const void* renderable : renderables) {
-
-		// RotatedRect boundingBox = node->getBoundingBox();
-		// if (!cameraToScreen.isInView(boundingBox, viewport)) continue;
-		// node->render(cameraToScreen, lights);
+	// Go through each node and render it if it's in the bounds of the view
+	bool invalidPtr = false;
+	for (const std::shared_ptr<Node>& node : nodes) {
+		Rect boundingBox = node->getBoundingBox();
+		if (!cameraToScreen.isInView(boundingBox, viewport)) continue;
+		node->render(cameraToScreen);
 	}
-
 }
 
 /**
@@ -92,9 +142,8 @@ void Scene::render() const {
  * @param ups The number of updates per second
  */
 void Scene::update(size_t threadNum, float ups) {
-	// TODO - Delegate updating on separate threads per node to minimize render time
-	// for (Node* node : nodes)
-	// 	node->update(threadNum, ups);
+	for (size_t i : nodeThreads[threadNum])
+		nodes[i]->update(ups, lights);
 }
 
 /**

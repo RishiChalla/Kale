@@ -21,7 +21,6 @@
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Ray/Ray.hpp>
 #include <Kale/Math/Line/Line.hpp>
-#include <Kale/Math/Path/Path.hpp>
 #include <Kale/Math/Circle/Circle.hpp>
 
 #include <type_traits>
@@ -222,22 +221,22 @@ namespace Kale {
 		 * @param rect The rect to transform
 		 * @returns The transformed rect as a path
 		 */
-		Path transform(const RotatedRect& rect) const;
-		
+		RotatedRect transform(const RotatedRect& rect) const;
+
 		/**
 		 * Inverse transforms a rect using this transformation matrix
 		 * (Returns a rect transformed by this matrix to its original)
 		 * @param rect The rect to transform
 		 * @returns The transformed rect as a path
 		 */
-		Path inverseTransform(const RotatedRect& rect) const;
+		RotatedRect inverseTransform(const RotatedRect& rect) const;
 
 		/**
 		 * Transforms a rect using this transformation matrix
 		 * @param rect The rect to transform
 		 * @returns The transformed rect as a path
 		 */
-		Path transform(const Rect& rect) const;
+		RotatedRect transform(const Rect& rect) const;
 
 		/**
 		 * Inverse transforms a rect using this transformation matrix
@@ -245,7 +244,7 @@ namespace Kale {
 		 * @param rect The rect to transform
 		 * @returns The transformed rect as a path
 		 */
-		Path inverseTransform(const Rect& rect) const;
+		RotatedRect inverseTransform(const Rect& rect) const;
 		
 		/**
 		 * Transforms a ray using this transformation matrix
@@ -278,36 +277,6 @@ namespace Kale {
 		Line inverseTransform(const Line& line) const;
 		
 		/**
-		 * Transforms a path using this transformation matrix
-		 * @param path The path to transform
-		 * @returns The transformed path
-		 */
-		Path transform(const Path& path) const;
-		
-		/**
-		 * Transforms a path using this transformation matrix
-		 * @param path The path to transform
-		 * @returns The transformed path
-		 */
-		Path transform(Path&& path) const;
-		
-		/**
-		 * Inverse transforms a path using this transformation matrix
-		 * (Returns a path transformed by this matrix to its original)
-		 * @param path The path to transform
-		 * @returns The transformed path
-		 */
-		Path inverseTransform(const Path& path) const;
-		
-		/**
-		 * Inverse transforms a path using this transformation matrix
-		 * (Returns a path transformed by this matrix to its original)
-		 * @param path The path to transform
-		 * @returns The transformed path
-		 */
-		Path inverseTransform(Path&& path) const;
-		
-		/**
 		 * Transforms a circle using this transformation matrix
 		 * @param circle The circle to transform
 		 * @returns The transformed circle
@@ -330,7 +299,7 @@ namespace Kale {
 		 */
 		template <typename T> typename std::enable_if<std::is_base_of<Geometry, T>::value, bool>::type
 		isInView(const T& geometry, const Vector2f& viewport) {
-			return geometry.pathCollision(transform(Rect({0, 0}, viewport)));
+			return geometry.rectCollision(transform(Rect({0, 0}, viewport)));
 		}
 
 	};

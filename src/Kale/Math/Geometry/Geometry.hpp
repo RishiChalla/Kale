@@ -18,14 +18,12 @@
 
 #include <Kale/Math/Vector/Vector.hpp>
 
-#include <vector>
-
 namespace Kale {
 
 	/**
 	 * Forward declarations of structs
 	 */
-	struct RotatedRect; struct Rect; struct Circle; struct Ray; struct Path; struct Line;
+	struct RotatedRect; struct Rect; struct Circle; struct Ray; struct Line;
 
 	/**
 	 * All geometries (rect/path/line/etc) must inherit from this struct.
@@ -75,59 +73,10 @@ namespace Kale {
 		virtual bool rayCollision(Ray ray) const = 0;
 
 		/**
-		 * Checks for collision with a path
-		 * @param path The path to check collision for
-		 * @returns True if there is a collision, false for no collision
-		 */
-		virtual bool pathCollision(const Path& path) const = 0;
-
-		/**
 		 * Checks for collision with a line
 		 * @param line The line to check collision for
 		 * @returns True if there is a collision, false for no collision
 		 */
 		virtual bool lineCollision(Line line) const = 0;
-
-		/**
-		 * Checks for collision with a rectangle
-		 * @param rect The rectangle to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		virtual std::vector<Vector2f> rectCollisionPoints(RotatedRect rect) const = 0;
-
-		/**
-		 * Checks for collision with a rectangle
-		 * @param rect The rectangle to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		virtual std::vector<Vector2f> rectCollisionPoints(Rect rect) const = 0;
-
-		/**
-		 * Checks for collision with a circle
-		 * @param circle The circle to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		virtual std::vector<Vector2f> circleCollisionPoints(Circle circle) const = 0;
-
-		/**
-		 * Checks for collision with a ray
-		 * @param ray The ray to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		virtual std::vector<Vector2f> rayCollisionPoints(Ray ray) const = 0;
-
-		/**
-		 * Checks for collision with a path
-		 * @param path The path to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		virtual std::vector<Vector2f> pathCollisionPoints(const Path& path) const = 0;
-
-		/**
-		 * Checks for collision with a line
-		 * @param line The line to check collision for
-		 * @returns The points of collision on the colliding edges of the geometry
-		 */
-		virtual std::vector<Vector2f> lineCollisionPoints(Line line) const = 0;
 	};
 }
