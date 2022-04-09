@@ -25,7 +25,7 @@ using namespace Kale;
 /**
  * Constructs a new scene
  */
-Scene::Scene() : nodeThreads(mainApp->getNumUpdateThreads()) {
+Scene::Scene() {
 	Vector2f size = mainApp->getWindow().getSizeF();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 	worldToScreen.scale(size / viewport);
@@ -42,46 +42,21 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 }
 
 /**
- * Updates the layouts of node rendering by thread
- */
-void Scene::updateThreadLayout() {
-	for (std::list<size_t>& nodeIndices : nodeThreads) nodeIndices.clear();
-
-	for (size_t i = nodes.size() - 1; i >= 0; i--) {
-		std::vector<float> totalThreadTimes;
-		totalThreadTimes.reserve(nodeThreads.size());
-
-		for (std::list<size_t>& nodeIndices : nodeThreads) {
-			float totalThreadTime = 0.0f;
-			for (size_t index : nodeIndices) totalThreadTime += nodes[index]->updateTime;
-			totalThreadTimes.push_back(totalThreadTime);
-		}
-
-		size_t minIndex = std::min_element(totalThreadTimes.begin(), totalThreadTimes.end()) - totalThreadTimes.begin();
-		nodeThreads[minIndex].push_back(i);
-	}
-}
-
-/**
  * Adds a node to the scene to render/update
  * @param node The node to add
- * @param updateThreadLayout Whether or not to update the layout of threads
  */
-void Scene::addNode(std::shared_ptr<Node>& node, bool updateThreadLayout) {
-	std::lock_guard<std::mutex> guard(mutex);
-	if (updateThreadLayout) shouldUpdateThreadLayout = true;
-	nodesToAdd.push(node);
+void Scene::addNode(std::shared_ptr<Node>& node) {
+	nodes.insert(std::upper_bound(nodes.begin(), nodes.end(), node, [](const std::shared_ptr<Node>& first, const std::shared_ptr<Node>& second) -> bool {
+		return first->zPosition < second->zPosition;
+	}), node);
 }
 
 /**
  * Removes a node from the scene
  * @param node The node to remove
- * @param updateThreadLayout Whether or not to update the layout of threads
  */
-void Scene::removeNode(std::shared_ptr<Node>& node, bool updateThreadLayout) {
-	std::lock_guard<std::mutex> guard(mutex);
-	if (updateThreadLayout) shouldUpdateThreadLayout = true;
-	nodesToRemove.push_back(node);
+void Scene::removeNode(std::shared_ptr<Node>& node) {
+	nodes.erase(std::remove(nodes.begin(), nodes.end(), node), nodes.end());
 }
 
 /**
@@ -89,8 +64,11 @@ void Scene::removeNode(std::shared_ptr<Node>& node, bool updateThreadLayout) {
  * @param light The light to add to the scene
  */
 void Scene::addLight(std::shared_ptr<Light>& light) {
-	std::lock_guard<std::mutex> guard(mutex);
 	lights.insert(light);
+	std::shared_ptr<Node> node = std::dynamic_pointer_cast<Node>(light);
+	nodes.insert(std::upper_bound(nodes.begin(), nodes.end(), node, [](const std::shared_ptr<Node>& first, const std::shared_ptr<Node>& second) -> bool {
+		return first->zPosition < second->zPosition;
+	}), node);
 }
 
 /**
@@ -98,8 +76,8 @@ void Scene::addLight(std::shared_ptr<Light>& light) {
  * @param light The light to remove from the scene
  */
 void Scene::removeLight(std::shared_ptr<Light>& light) {
-	std::lock_guard<std::mutex> guard(mutex);
 	lights.erase(light);
+	nodes.erase(std::remove(nodes.begin(), nodes.end(), std::dynamic_pointer_cast<Node>(light)), nodes.end());
 }
 
 /**
@@ -110,28 +88,10 @@ void Scene::render() {
 	Vector2f size(mainApp->getWindow().getSizeF());
 	mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(bgColor));
 
-	// Render is always called from main thread, update threads & add/remove nodes here
-	while (!nodesToAdd.empty()) {
-		nodes.insert(std::upper_bound(nodes.begin(), nodes.end(), nodesToAdd.front(), [](const auto& first, const auto& second) -> bool {
-			return first->updateTime < second->updateTime;
-		}), nodesToAdd.front());
-		nodesToAdd.pop();
-	}
-
-	if (!nodesToRemove.empty()) {
-		nodes.erase(std::remove_if(nodes.begin(), nodes.end(), [&](const std::shared_ptr<Node>& node) -> bool {
-			return std::find(nodesToRemove.begin(), nodesToRemove.end(), node) != nodesToRemove.end();
-		}), nodes.end());
-		nodesToRemove.clear();
-	}
-
-	if (shouldUpdateThreadLayout) updateThreadLayout();
-
 	// Combine the camera transformation matrix with the world coordinates to Skia's coordinates matrix
 	Transform cameraToScreen(worldToScreen * camera);
 
 	// Go through each node and render it if it's in the bounds of the view
-	bool invalidPtr = false;
 	for (const std::shared_ptr<Node>& node : nodes) {
 		Rect boundingBox = node->getBoundingBox();
 		if (!cameraToScreen.isInView(boundingBox, viewport)) continue;
@@ -141,12 +101,11 @@ void Scene::render() {
 
 /**
  * Updates the current scene
- * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
- * @param ups The number of updates per second
+ * @param deltaTime The microseconds since the last update
  */
-void Scene::update(size_t threadNum, float ups) {
-	for (size_t i : nodeThreads[threadNum])
-		nodes[i]->update(ups, lights);
+void Scene::update(float deltaTime) {
+	for (std::shared_ptr<Node>& node : nodes)
+		node->update(deltaTime, lights);
 }
 
 /**

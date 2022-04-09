@@ -18,6 +18,7 @@
 
 #include <Kale/Math/Vector/Vector.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
+#include <Kale/Engine/Node/Node.hpp>
 
 #include "include/core/SkPath.h"
 
@@ -35,7 +36,7 @@ namespace Kale {
 	/**
 	 * Represents a single path of cubic bezier curves
 	 */
-	class PathNode {
+	class PathNode : public Node {
 	public:
 
 		/**
@@ -83,7 +84,7 @@ namespace Kale {
 		 * Gets a bounding box for this geometry to check for quick and inaccurate collisions
 		 * @return The bounding box
 		 */
-		Rect getBoundingBox() const;
+		Rect getBoundingBox() const override;
 
 	};
 }

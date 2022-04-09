@@ -17,6 +17,7 @@
 #pragma once
 
 #include <Kale/Math/Ray/Ray.hpp>
+#include <Kale/Engine/Node/Node.hpp>
 
 #include <utility>
 
@@ -41,7 +42,8 @@ namespace Kale {
 	/**
 	 * The main Light class, all other light emitting entities are inherited from this class
 	 */
-	struct Light {
+	class Light : public Node {
+	protected:
 
 		/**
 		 * The z position/depth of the node. Lower values are drawn first, higher values are placed above lower values.
@@ -67,18 +69,6 @@ namespace Kale {
 		 * The color of the light
 		 */
 		Vector4f color = {1.0f, 1.0f, 1.0f, 1.0f};
-
-		/**
-		 * Gets bounding rays of the light given the rect
-		 * @param boundingBox
-		 * @returns The rays which bound the light's path
-		 */
-		virtual std::pair<Ray, Ray> getBoundingRays(Rect boundingBox) const = 0;
-
-		/**
-		 * Renders the light
-		 */
-		virtual void render() const = 0;
 
 	};
 }

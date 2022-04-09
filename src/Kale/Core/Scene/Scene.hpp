@@ -22,9 +22,7 @@
 #include <Kale/Engine/Light/Light.hpp>
 
 #include <unordered_set>
-#include <vector>
 #include <list>
-#include <mutex>
 #include <memory>
 #include <queue>
 
@@ -40,32 +38,12 @@ namespace Kale {
 		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
-		std::vector<std::shared_ptr<Node>> nodes;
-
-		/**
-		 * A queue of the nodes to add after nodes updating has been completed
-		 */
-		std::queue<std::shared_ptr<Node>> nodesToAdd;
-
-		/**
-		 * A queue of the nodes to remove after nodes updating has been completed
-		 */
-		std::list<std::shared_ptr<Node>> nodesToRemove;
-
-		/**
-		 * A vector for each thread, within each thread a vector of indices to nodes to update
-		 */
-		std::vector<std::list<size_t>> nodeThreads;
+		std::list<std::shared_ptr<Node>> nodes;
 
 		/**
 		 * A list of the lights affecting the current scene
 		 */
 		std::unordered_set<std::shared_ptr<Light>> lights;
-
-		/**
-		 * The mutex used for node thread safety
-		 */
-		std::mutex mutex;
 
 		/**
 		 * The world to screen transformation matrix. Used internally for rendering and converting
@@ -74,26 +52,15 @@ namespace Kale {
 		Transform worldToScreen;
 
 		/**
-		 * Whether or not to update the thread layout when all threads are synchronized
-		 */
-		bool shouldUpdateThreadLayout = false;
-
-		/**
 		 * Renders the current scene
 		 */
 		void render();
 
 		/**
 		 * Updates the current scene
-		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
-		 * @param ups The number of updates per second
+		 * @param deltaTime The amount of microseconds since the last update
 		 */
-		void update(size_t threadNum, float ups);
-
-		/**
-		 * Updates the layouts of node rendering by thread
-		 */
-		void updateThreadLayout();
+		void update(float deltaTime);
 
 		friend class Application;
 		friend class Node;
@@ -121,16 +88,14 @@ namespace Kale {
 		/**
 		 * Adds a node to the scene to render/update
 		 * @param node The node to add
-		 * @param updateThreadLayout Whether or not to update the layout of threads
 		 */
-		void addNode(std::shared_ptr<Node>& node, bool updateThreadLayout = true);
+		void addNode(std::shared_ptr<Node>& node);
 
 		/**
 		 * Removes a node from the scene
 		 * @param node The node to remove
-		 * @param updateThreadLayout Whether or not to update the layout of threads
 		 */
-		void removeNode(std::shared_ptr<Node>& node, bool updateThreadLayout = true);
+		void removeNode(std::shared_ptr<Node>& node);
 
 		/**
 		 * Adds a light to the scene

@@ -19,16 +19,15 @@
 #include <Kale/Math/Transform/Transform.hpp>
 #include <Kale/Math/Geometry/Geometry.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
-#include <Kale/Engine/Light/Light.hpp>
 
 #include <unordered_set>
 
 namespace Kale {
 
 	/**
-	 * Forward declaration of scene class
+	 * Forward declaration of classes
 	 */
-	class Scene;
+	class Scene; class Light;
 	
 	/**
 	 * The main class for nodes, all nodes must inherit from this class
@@ -44,50 +43,26 @@ namespace Kale {
 		float zPosition = 0.0f;
 
 		/**
-		 * Renders the node, this method is guaranteed to be called from the main thread
+		 * Renders the node
 		 * @param camera The camera to render with
 		 */
 		virtual void render(const Camera& camera) const = 0;
 
 		/**
-		 * Updates the node, may be called from any thread. Is guaranteed to NOT call on the main thread.
-		 * @param ups The amount of updates the current thread is doing in a second
+		 * Updates the node
+		 * @param deltaTime The amount of microseconds since the last update
 		 * @param lights The lights to update
 		 */
-		virtual void update(float ups, const std::unordered_set<std::shared_ptr<Light>>& lights) = 0;
+		virtual void update(float deltaTime, const std::unordered_set<std::shared_ptr<Light>>& lights) = 0;
 
 		/**
 		 * Gets the bounding box of the node
-		 * The box returned will be used for collision detection with other nodes for functional gameplay, and for determining whether it needs to be rendered
-		 * This method may be called from any thread
+		 * The box returned will be used for collision detection with other nodes for functional gameplay,
+		 * and for determining whether it needs to be rendered
 		 * @returns The bounding box
 		 */
-		virtual const Rect& getBoundingBox() const = 0;
-
-		/**
-		 * Creates the node parent
-		 */
-		Node();
-
-		/**
-		 * Creates the node parent
-		 * @param updateTime The average update time, please see Node::updateTime for documentation
-		 */
-		Node(float updateTime);
+		virtual Rect getBoundingBox() const = 0;
 
 		friend class Scene;
-		friend class Light;
-
-	public:
-
-		/**
-		 * The amount of time in microseconds this node takes to update on average
-		 * 
-		 * You can gain this statistic using the Kale Editor calibration tools.
-		 * This measure is device specific, when developing on multiple devices it is recommended that you use
-		 * a low powered device for calibration, the same device must be used for calibrating all nodes
-		 * to avoid potential bias 
-		 */
-		const float updateTime = -1.0f;
 	};
 }

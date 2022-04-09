@@ -17,18 +17,3 @@
 #include "Node.hpp"
 
 using namespace Kale;
-
-/**
- * Creates the node parent
- */
-Node::Node() {
-	// Empty Body
-}
-
-/**
- * Creates the node parent
- * @param updateTime The average update time, please see Node::updateTime for documentation
- */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
-}

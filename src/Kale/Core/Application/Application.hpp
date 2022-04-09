@@ -22,7 +22,6 @@
 
 #include <string>
 #include <memory>
-#include <thread>
 #include <list>
 
 /**
@@ -38,17 +37,6 @@ namespace Kale {
 	class Application {
 
 	private:
-		
-		/**
-		 * A list of the update threads
-		 */
-		std::list<std::thread> updateThreads;
-
-		/**
-		 * Handles updating the application in a separate thread
-		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
-		 */
-		void update(size_t threadNum) noexcept;
 
 		/**
 		 * A pointer to the current scene to render
@@ -127,12 +115,6 @@ namespace Kale {
 		 * @param scene The scene to present
 		 */
 		void presentScene(const std::shared_ptr<Scene>& scene);
-
-		/**
-		 * Gets the number of threads currently being used to update
-		 * @returns The number of threads used for updating
-		 */
-		[[nodiscard]] size_t getNumUpdateThreads() const noexcept;
 	};
 
 	/**
