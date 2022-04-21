@@ -1,75 +1,95 @@
 /*
-   Copyright 2022 Rishi Challa
+	Copyright 2022 Rishi Challa
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
 
-	   http://www.apache.org/licenses/LICENSE-2.0
+		http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
 */
 
 #include "PathNode.hpp"
 
-#include <stdexcept>
-
 using namespace Kale;
 
 /**
- * Creates an empty path with origin 0 0
+ * Creates a new empty path
  */
-PathNode::PathNode() : origin(0, 0), beziers() {
+Path::Path() {
 	// Empty Body
 }
 
 /**
- * Creates an empty path given an origin
- * @param origin The origin of the path
+ * Creates a path with a size with all points at 0
+ * @param n The size
  */
-PathNode::PathNode(Vector2f origin) : origin(origin) {
+Path::Path(size_t n) : beziers(n) {
 	// Empty Body
 }
 
 /**
- * Converts the path to a skia path
- * @returns The skia path
+ * Adds another path to this
+ * @param other The path to add to this
  */
-PathNode::operator SkPath() const {
-	SkPath path;
-	path.moveTo(origin.x, origin.y);
-	for (const CubicBezier& bezier : beziers)
-		path.cubicTo(bezier.controlPoint1.x, bezier.controlPoint1.y, bezier.controlPoint2.x, bezier.controlPoint2.y, bezier.destination.x,
-			bezier.destination.y);
+void Path::operator+=(const Path& other) {
+	klAssert(other.beziers.size() == beziers.size());
+	for (size_t i = 0; i < beziers.size(); i++) {
+		beziers[i].start += other.beziers[i].start;
+		beziers[i].controlPoint1 += other.beziers[i].controlPoint1;
+		beziers[i].controlPoint2 += other.beziers[i].controlPoint2;
+		beziers[i].end += other.beziers[i].end;
+	}
+}
+
+/**
+ * Multiplies this path's points by a value
+ * @param value The scalar value
+ */
+Path Path::operator*(float value) const {
+	Path path(*this);
+	for (CubicBezier& bezier : path.beziers) {
+		bezier.start *= value;
+		bezier.controlPoint1 *= value;
+		bezier.controlPoint1 *= value;
+		bezier.end *= value;
+	}
 	return path;
 }
 
 /**
- * Adds a cubic bezier to the path
- * @param bezier The bezier curve to use
+ * Converts the path to a skia path
+ * @param camera The camera to transform with
+ * @returns The skia path
  */
-void PathNode::cubicBezierTo(CubicBezier bezier) {
-	beziers.push_back(bezier);
+SkPath Path::toSkia(const Camera& camera) const {
+	SkPath path;
+	if (beziers.size() == 0) return path;
+	path.moveTo(camera.transform(beziers[0].start));
+	for (const CubicBezier& bezier : beziers) {
+		path.cubicTo(
+			camera.transform(bezier.controlPoint1),
+			camera.transform(bezier.controlPoint2),
+			camera.transform(bezier.end)
+		);
+	}
+	return path;
 }
 
 /**
- * Adds a cubic bezier to the path
- * @param control1 The first control point
- * @param control2 The second control point
- * @param destination The destination
+ * Perform any initial setup before any scene loads or renders
  */
-void PathNode::cubicBezierTo(Vector2f control1, Vector2f control2, Vector2f destination) {
-	beziers.push_back({control1, control2, destination});
-}
-
-/**
- * Gets a bounding box for this geometry to check for quick and inaccurate collisions
- * @return The bounding box
- */
-Rect PathNode::getBoundingBox() const {
-	throw std::runtime_error("Unimplemented method");
+void Kale::pathNodeShaderSetup() {
+	std::ifstream shaderFile("." + mainApp->applicationName + "/assets/shaders/PathNode.sksl");
+	std::stringstream strStream;
+	strStream << shaderFile.rdbuf();
+	std::string sksl = strStream.str();
+	auto [effect, err] = SkRuntimeEffect::MakeForShader(SkString(sksl));
+	pathNodeShader = effect;
+	klAssertMsg(err.size() == 0, "Error in Compiling Shader:\n." + mainApp->applicationName + "/assets/shaders/PathNode.sksl - " + err.c_str());
 }

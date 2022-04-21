@@ -22,7 +22,6 @@
 
 #include <string>
 #include <memory>
-#include <list>
 
 /**
  * The entry point function/main function of the program

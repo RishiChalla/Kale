@@ -16,8 +16,9 @@
 
 #include "Application.hpp"
 
+#include <Kale/Engine/PathNode/PathNode.hpp>
+
 #include <exception>
-#include <string>
 #include <chrono>
 
 using namespace Kale;
@@ -94,6 +95,9 @@ void Application::run() noexcept {
 	
 	// Creates the window
 	window.create(applicationName.c_str());
+
+	// Setup nodes
+	pathNodeShaderSetup();
 
 	try {
 		onBegin();

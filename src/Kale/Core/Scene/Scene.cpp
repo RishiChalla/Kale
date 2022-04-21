@@ -29,6 +29,7 @@ Scene::Scene() {
 	Vector2f size = mainApp->getWindow().getSizeF();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 	worldToScreen.scale(size / viewport);
+	worldToScreen.translate((viewport.x - 1920.0f) / 2.0f, 0.0f);
 }
 
 /**
@@ -39,6 +40,7 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 	worldToScreen.setIdentity();
 	worldToScreen.scale(size / viewport);
+	worldToScreen.translate((viewport.x - 1920.0f) / 2.0f, 0.0f);
 }
 
 /**
@@ -85,16 +87,13 @@ void Scene::removeLight(std::shared_ptr<Light>& light) {
  */
 void Scene::render() {
 	// Clear screen with background color
-	Vector2f size(mainApp->getWindow().getSizeF());
-	mainApp->getWindow().getCanvas().drawRect({0.0f, 0.0f, size.x, size.y}, SkPaint(bgColor));
+	mainApp->getWindow().getCanvas().clear(bgColor);
 
 	// Combine the camera transformation matrix with the world coordinates to Skia's coordinates matrix
-	Transform cameraToScreen(worldToScreen * camera);
+	Camera cameraToScreen(camera * worldToScreen);
 
 	// Go through each node and render it if it's in the bounds of the view
 	for (const std::shared_ptr<Node>& node : nodes) {
-		Rect boundingBox = node->getBoundingBox();
-		if (!cameraToScreen.isInView(boundingBox, viewport)) continue;
 		node->render(cameraToScreen);
 	}
 }

@@ -70,7 +70,7 @@ namespace Kale {
 		/**
 		 * The background color of the scene to use for clearing the screen
 		 */
-		Color bgColor = {1.0f, 0.0f, 1.0f, 1.0f};
+		Color bgColor = {1.0f, 1.0f, 1.0f, 1.0f};
 
 		/**
 		 * The scene's camera for viewing
@@ -90,6 +90,15 @@ namespace Kale {
 		 * @param node The node to add
 		 */
 		void addNode(std::shared_ptr<Node>& node);
+
+		/**
+		 * Adds a node to the scene to render/update
+		 * @param node The node to add
+		 */
+		template <typename T> void addNode(std::shared_ptr<T>& node) {
+			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
+			addNode(nodePtr);
+		}
 
 		/**
 		 * Removes a node from the scene

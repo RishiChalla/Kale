@@ -24,6 +24,8 @@
 #include <type_traits>
 
 #include <core/SkColor.h>
+#include <core/SkPoint.h>
+#include <core/SkPoint3.h>
 
 namespace Kale {
 
@@ -147,6 +149,11 @@ namespace Kale {
 		Vector2<T> project(Vector2<T> o) {
 			float k = dot(o) / o.dot(o);
 			return {k * o.x, k * o.y};
+		}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		inline operator SkPoint() const {
+			return SkPoint::Make(x, y);
 		}
 
 		Vector2<T> xy() const { return {x, y}; }
@@ -293,6 +300,11 @@ namespace Kale {
 			color.fB = z;
 			color.fA = 1.0f;
 			return color;
+		}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		inline operator SkPoint3() const {
+			return SkPoint3::Make(x, y, z);
 		}
 
 		Vector2<T> xy() const { return {x, y}; }
