@@ -38,22 +38,39 @@ namespace Kale {
 	protected:
 
 		/**
-		 * The z position/depth of the node. Lower values are drawn first, higher values are placed above lower values.
+		 * The bounding box of the node.
 		 */
-		float zPosition = 0.0f;
+		Rect boundingBox;
 
 		/**
 		 * Renders the node
 		 * @param camera The camera to render with
+		 * @param scene The scene being rendered on
 		 */
-		virtual void render(const Camera& camera) const = 0;
+		virtual void render(const Camera& camera, const Scene& scene) const = 0;
+
+		/**
+		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
+		 * @param deltaTime The amount of microseconds since the last update
+		 * @param scene The scene being updated to
+		 */
+		virtual void preUpdate(float deltaTime, const Scene& scene) {}
 
 		/**
 		 * Updates the node
 		 * @param deltaTime The amount of microseconds since the last update
-		 * @param lights The lights to update
+		 * @param scene The scene being updated to
 		 */
-		virtual void update(float deltaTime, const std::unordered_set<std::shared_ptr<Light>>& lights) = 0;
+		virtual void update(float deltaTime, const Scene& scene) {}
+
+		friend class Scene;
+
+	public:
+
+		/**
+		 * The z position/depth of the node. Lower values are drawn first, higher values are placed above lower values.
+		 */
+		float zPosition = 0.0f;
 
 		/**
 		 * Gets the bounding box of the node
@@ -61,8 +78,18 @@ namespace Kale {
 		 * and for determining whether it needs to be rendered
 		 * @returns The bounding box
 		 */
-		virtual Rect getBoundingBox() const = 0;
+		virtual Rect getBoundingBox() const {
+			return boundingBox;
+		}
 
-		friend class Scene;
+		/**
+		 * Calculates lighting for specific coordinates given the 
+		 * @param pos The position of the colored entity
+		 * @param color The color of the entity
+		 * @param scene The scene being rendered to
+		 * @returns The shaded color
+		 */
+		Color calculateLighting(Vector2f pos, Color color, const Scene& scene) const;
+
 	};
 }

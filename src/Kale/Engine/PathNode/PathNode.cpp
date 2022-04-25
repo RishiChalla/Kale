@@ -80,16 +80,3 @@ SkPath Path::toSkia(const Camera& camera) const {
 	}
 	return path;
 }
-
-/**
- * Perform any initial setup before any scene loads or renders
- */
-void Kale::pathNodeShaderSetup() {
-	std::ifstream shaderFile("." + mainApp->applicationName + "/assets/shaders/PathNode.sksl");
-	std::stringstream strStream;
-	strStream << shaderFile.rdbuf();
-	std::string sksl = strStream.str();
-	auto [effect, err] = SkRuntimeEffect::MakeForShader(SkString(sksl));
-	pathNodeShader = effect;
-	klAssertMsg(err.size() == 0, "Error in Compiling Shader:\n." + mainApp->applicationName + "/assets/shaders/PathNode.sksl - " + err.c_str());
-}

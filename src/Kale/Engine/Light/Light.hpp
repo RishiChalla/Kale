@@ -43,7 +43,7 @@ namespace Kale {
 	 * The main Light class, all other light emitting entities are inherited from this class
 	 */
 	class Light : public Node {
-	protected:
+	public:
 
 		/**
 		 * The z position/depth of the node. Lower values are drawn first, higher values are placed above lower values.
@@ -66,9 +66,21 @@ namespace Kale {
 		bool bloom = true;
 
 		/**
-		 * The color of the light
+		 * The color of the light, alpha is color intensity
 		 */
-		Vector4f color = {1.0f, 1.0f, 1.0f, 1.0f};
+		Vector4f color = Color(0xffffff);
+
+		/**
+		 * The intensity of the light
+		 */
+		float intensity;
+
+		/**
+		 * Gets the intensity of the light at a certain position. Returns -1 if light does not affect the position
+		 * @param pos The position to get the intensity at
+		 * @returns The light intensity
+		 */
+		virtual float getIntensity(Vector2f pos) = 0;
 
 	};
 }

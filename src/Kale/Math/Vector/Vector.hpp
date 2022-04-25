@@ -336,6 +336,23 @@ namespace Kale {
 	public:
 		T x, y, z, w;
 
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		Vector4(float r, float g, float b) : x(r/255.0f), y(g/255.0f), z(b/255.0f), w(1.0f) {}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		Vector4(int hex) : w(1.0f) {
+			x = ((hex >> 16) & 0xFF) / 255.0f;
+			y = ((hex >> 8) & 0xFF) / 255.0f;
+			z = (hex & 0xFF) / 255.0f;
+		}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		Vector4(int hex, float alpha) : w(alpha) {
+			x = ((hex >> 16) & 0xFF) / 255.0f;
+			y = ((hex >> 8) & 0xFF) / 255.0f;
+			z = (hex & 0xFF) / 255.0f;
+		}
+
 		Vector4() : x(0), y(0), z(0), w(0) {}
 		Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 		Vector4(T v[4]) : x(v[0]), y(v[1]), z(v[2]), w(v[3]) {}
@@ -481,6 +498,12 @@ namespace Kale {
 			color.fB = z;
 			color.fA = w;
 			return color;
+		}
+
+		template <typename A = T> typename std::enable_if<std::is_same<A, float>::value, Vector4<T>>::type
+		blend(Vector4<T> fg) {
+			float alpha = 1.0f - (1.0f - fg.w) * (1.0f - w);
+			return Vector4f(fg.xyz() * fg.w / alpha + xyz() * w * (1.0f - fg.w) / alpha, alpha);
 		}
 
 		Vector2<T> xy() const { return {x, y}; }

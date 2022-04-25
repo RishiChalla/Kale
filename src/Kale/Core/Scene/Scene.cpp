@@ -93,9 +93,8 @@ void Scene::render() {
 	Camera cameraToScreen(camera * worldToScreen);
 
 	// Go through each node and render it if it's in the bounds of the view
-	for (const std::shared_ptr<Node>& node : nodes) {
-		node->render(cameraToScreen);
-	}
+	for (const std::shared_ptr<Node>& node : nodes)
+		node->render(cameraToScreen, *this);
 }
 
 /**
@@ -104,7 +103,10 @@ void Scene::render() {
  */
 void Scene::update(float deltaTime) {
 	for (std::shared_ptr<Node>& node : nodes)
-		node->update(deltaTime, lights);
+		node->preUpdate(deltaTime, *this);
+
+	for (std::shared_ptr<Node>& node : nodes)
+		node->update(deltaTime, *this);
 }
 
 /**
@@ -119,4 +121,52 @@ void Scene::onPresent() {
  */
 void Scene::onSceneChange() {
 	mainApp->getWindow().removeEvents(dynamic_cast<EventHandler*>(this));
+}
+
+/**
+ * Gets the ndoes within the scene
+ * @returns The nodes
+ */
+const std::list<std::shared_ptr<Node>>& Scene::getNodes() const {
+	return nodes;
+}
+
+/**
+ * Gets the lights within the scene
+ * @returns The lights
+ */
+const std::unordered_set<std::shared_ptr<Light>>& Scene::getLights() const {
+	return lights;
+}
+
+/**
+ * Gets the background color of the scene
+ * @returns The background color
+ */
+Color Scene::getBgColor() const {
+	return bgColor;
+}
+
+/**
+ * Gets the ambient color and intensity of the scene
+ * @returns a pair of the ambient color (where alpha is color intensity), and light intensity
+ */
+std::pair<Color, float> Scene::getAmbient() const {
+	return std::make_pair(ambient, ambientIntesity);
+}
+
+/**
+ * Gets the camera used to render this scene
+ * @returns The camera
+ */
+const Camera& Scene::getCamera() const {
+	return camera;
+}
+
+/**
+ * Gets the current viewport of the scene
+ * @returns The viewport
+ */
+const Vector2f Scene::getViewport() const {
+	return viewport;
 }

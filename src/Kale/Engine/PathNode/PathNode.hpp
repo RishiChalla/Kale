@@ -81,16 +81,6 @@ namespace Kale {
 	};
 
 	/**
-	 * The shader to use for drawing path nodes
-	 */
-	inline sk_sp<SkRuntimeEffect> pathNodeShader = nullptr;
-
-	/**
-	 * Perform any initial setup before any scene loads or renders
-	 */
-	void pathNodeShaderSetup();
-
-	/**
 	 * Represents a single path of cubic bezier curves
 	 * @tparam A enum class of animation states
 	 */
@@ -99,41 +89,55 @@ namespace Kale {
 	protected:
 
 		/**
-		 * Gets the current path based on the state composition for this frame
-		 * @returns The path
+		 * The current path of this node
 		 */
-		Path getCurrentPath() const {
-			std::vector<std::pair<T, float>> composition = AnimatableNode<T, Path>::getStateComposition();
-			Path path = Path(AnimatableNode<T, Path>::structures.at(composition[0].first).beziers.size());
-			for (const std::pair<T, float>& comp : composition) {
-				path += AnimatableNode<T, Path>::structures.at(comp.first) * comp.second;
-			}
-			return path;
-		}
+		Path currentPath;
 
 		/**
 		 * Renders the node
 		 * @param camera The camera to render with
+		 * @param scene The scene being rendered on
 		 */
-		void render(const Camera& camera) const override {
+		void render(const Camera& camera, const Scene& scene) const override {
 			SkCanvas& canvas = mainApp->getWindow().getCanvas();
-			SkPath path = getCurrentPath().toSkia(camera);
-
-			SkRuntimeShaderBuilder builder(pathNodeShader);
-			builder.uniform("color") = SkV4{color.x, color.y, color.z, color.w};
+			Path path = currentPath;
 			SkPaint paint;
-			paint.setShader(builder.makeShader());
-
-			canvas.drawPath(path, paint);
+			paint.setColor(Node::calculateLighting(transform.getTranslation(), color, scene));
+			canvas.drawPath(path.toSkia(camera), paint);
 		}
 
 		/**
-		 * Updates the node
+		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
 		 * @param deltaTime The amount of microseconds since the last update
-		 * @param lights The lights to update
+		 * @param scene The scene being updated to
 		 */
-		void update(float deltaTime, const std::unordered_set<std::shared_ptr<Light>>& lights) override {
-			AnimatableNode<T, Path>::update(deltaTime, lights);
+		void preUpdate(float deltaTime, const Scene& scene) override {
+
+			// Update Animatable Node
+			AnimatableNode<T, Path>::preUpdate(deltaTime, scene);
+
+			// Update Current Path
+			std::vector<std::pair<T, float>> composition = AnimatableNode<T, Path>::getStateComposition();
+			currentPath = Path(AnimatableNode<T, Path>::structures.at(composition[0].first).beziers.size());
+			for (const std::pair<T, float>& comp : composition) {
+				currentPath += AnimatableNode<T, Path>::structures.at(comp.first) * comp.second;
+			}
+
+			// Update bounding box
+			Vector2f topLeft(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+			Vector2f bottomRight(std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
+			
+			for (const CubicBezier& bezier : currentPath.beziers) {
+				std::array<Vector2f, 4> points = {bezier.start, bezier.controlPoint1, bezier.controlPoint2, bezier.end};
+				for (const Vector2f& point : points) {
+					if (point.x < topLeft.x) topLeft.x = point.x;
+					if (point.y < topLeft.y) topLeft.x = point.y;
+					if (point.x > bottomRight.x) bottomRight.x = point.x;
+					if (point.y > bottomRight.y) bottomRight.y = point.y;
+				}
+			}
+
+			Node::boundingBox = {topLeft, bottomRight};
 		}
 
 	public:
@@ -147,27 +151,6 @@ namespace Kale {
 		 * The color of the node
 		 */
 		Color color;
-
-		/**
-		 * Gets a bounding box for this geometry to check for quick and inaccurate collisions
-		 * @return The bounding box
-		 */
-		Rect getBoundingBox() const override {
-			Vector2f topLeft(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-			Vector2f bottomRight(std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
-			
-			for (const CubicBezier& bezier : getCurrentPath().beziers) {
-				std::array<Vector2f, 4> points = {bezier.start, bezier.controlPoint1, bezier.controlPoint2, bezier.end};
-				for (const Vector2f& point : points) {
-					if (point.x < topLeft.x) topLeft.x = point.x;
-					if (point.y < topLeft.y) topLeft.x = point.y;
-					if (point.x > bottomRight.x) bottomRight.x = point.x;
-					if (point.y > bottomRight.y) bottomRight.y = point.y;
-				}
-			}
-
-			return {topLeft, bottomRight};
-		}
 
 	};
 }

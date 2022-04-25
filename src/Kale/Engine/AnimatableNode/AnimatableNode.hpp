@@ -60,11 +60,11 @@ namespace Kale {
 		float transitionDuration;
 
 		/**
-		 * Updates the node
+		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
 		 * @param deltaTime The amount of microseconds since the last update
-		 * @param lights The lights to update
+		 * @param scene The scene being updated to
 		 */
-		virtual void update(float deltaTime, const std::unordered_set<std::shared_ptr<Light>>& lights) override {
+		virtual void preUpdate(float deltaTime, const Scene& scene) override {
 			if (!transitioning) return;
 			transitionTime += deltaTime / (1000000.0f * transitionDuration);
 

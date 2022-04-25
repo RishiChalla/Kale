@@ -96,9 +96,6 @@ void Application::run() noexcept {
 	// Creates the window
 	window.create(applicationName.c_str());
 
-	// Setup nodes
-	pathNodeShaderSetup();
-
 	try {
 		onBegin();
 	}

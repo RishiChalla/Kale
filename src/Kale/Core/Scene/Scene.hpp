@@ -23,8 +23,8 @@
 
 #include <unordered_set>
 #include <list>
+#include <utility>
 #include <memory>
-#include <queue>
 
 namespace Kale {
 	
@@ -63,14 +63,23 @@ namespace Kale {
 		void update(float deltaTime);
 
 		friend class Application;
-		friend class Node;
 
 	protected:
 
 		/**
 		 * The background color of the scene to use for clearing the screen
 		 */
-		Color bgColor = {1.0f, 1.0f, 1.0f, 1.0f};
+		Color bgColor = Color(0xFFFFFF);
+
+		/**
+		 * The ambient light color, alpha is color intensity
+		 */
+		Color ambient = Color(0xFFFFFF, 0.0f);
+
+		/**
+		 * The intensity of the ambient light
+		 */
+		float ambientIntesity = 1.0;
 
 		/**
 		 * The scene's camera for viewing
@@ -141,5 +150,41 @@ namespace Kale {
 		 * Constructs a new scene
 		 */
 		Scene();
+
+		/**
+		 * Gets the ndoes within the scene
+		 * @returns The nodes
+		 */
+		const std::list<std::shared_ptr<Node>>& getNodes() const;
+
+		/**
+		 * Gets the lights within the scene
+		 * @returns The lights
+		 */
+		const std::unordered_set<std::shared_ptr<Light>>& getLights() const;
+
+		/**
+		 * Gets the background color of the scene
+		 * @returns The background color
+		 */
+		Color getBgColor() const;
+
+		/**
+		 * Gets the ambient color and intensity of the scene
+		 * @returns a pair of the ambient color (where alpha is color intensity), and light intensity
+		 */
+		std::pair<Color, float> getAmbient() const;
+
+		/**
+		 * Gets the camera used to render this scene
+		 * @returns The camera
+		 */
+		const Camera& getCamera() const;
+
+		/**
+		 * Gets the current viewport of the scene
+		 * @returns The viewport
+		 */
+		const Vector2f getViewport() const;
 	};
 }
