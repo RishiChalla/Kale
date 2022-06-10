@@ -100,10 +100,8 @@ namespace Kale {
 		 */
 		void render(const Camera& camera, const Scene& scene) const override {
 			SkCanvas& canvas = mainApp->getWindow().getCanvas();
-			Path path = currentPath;
-			SkPaint paint;
-			paint.setColor(Node::calculateLighting(transform.getTranslation(), color, scene));
-			canvas.drawPath(path.toSkia(camera), paint);
+			Color bodyColor = Node::calculateLighting(transform.getTranslation(), color, scene);
+			canvas.drawPath(currentPath.toSkia(camera), SkPaint(bodyColor));
 		}
 
 		/**

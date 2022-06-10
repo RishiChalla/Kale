@@ -18,8 +18,6 @@
 
 /**
  * @mainpage Kale Documentation
- * > Full disclosure that this is a closed source project, this is only ever intended to be read by the author. If you are
- * > not the author of this software or do not have their permission please delete the software immediately.
  * 
  * @section s1 What is Kale?
  * Kale is a 2D Game Engine made with Skia with specialized "blobby" graphics. Kale supports Mac OSX, Windows, Linux,

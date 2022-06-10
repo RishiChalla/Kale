@@ -19,8 +19,6 @@
 #include <Kale/Math/Ray/Ray.hpp>
 #include <Kale/Engine/Node/Node.hpp>
 
-#include <utility>
-
 namespace Kale {
 
 	/**
@@ -44,11 +42,6 @@ namespace Kale {
 	 */
 	class Light : public Node {
 	public:
-
-		/**
-		 * The z position/depth of the node. Lower values are drawn first, higher values are placed above lower values.
-		 */
-		float zPosition = 0.0f;
 
 		/**
 		 * The type of light shading this uses
@@ -80,7 +73,7 @@ namespace Kale {
 		 * @param pos The position to get the intensity at
 		 * @returns The light intensity
 		 */
-		virtual float getIntensity(Vector2f pos) = 0;
+		virtual float getIntensity(Vector2f pos) const = 0;
 
 	};
 }

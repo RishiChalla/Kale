@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <Kale/Math/Constants/Constants.hpp>
+
 #include <limits>
 
 namespace Kale {
@@ -25,14 +27,18 @@ namespace Kale {
 	 * @param deg The angle in degrees
 	 * @returns The angle in radians
 	 */
-	float degToRad(float deg);
+	constexpr float degToRad(float deg) {
+		return deg / 180.0f * PI;
+	}
 
 	/**
 	 * Converts an angle in radians to degrees
 	 * @param rad The angle in radians
 	 * @returns The angle in degrees
 	 */
-	float radToDeg(float rad);
+	constexpr float radToDeg(float rad) {
+		return rad / PI * 180.0f;
+	}
 
 	/**
 	 * Checks if a number is extremely close to 0 to account for floating point error
