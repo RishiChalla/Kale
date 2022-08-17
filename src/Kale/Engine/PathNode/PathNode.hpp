@@ -18,6 +18,7 @@
 
 #include <Kale/Math/Vector/Vector.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
+#include <Kale/Math/Path/Path.hpp>
 #include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Engine/AnimatableNode/AnimatableNode.hpp>
 #include <Kale/Core/Application/Application.hpp>
@@ -31,54 +32,6 @@
 #include <fstream>
 
 namespace Kale {
-
-	/**
-	 * Represents a single cubic bezier
-	 */
-	struct CubicBezier {
-		Vector2f start, controlPoint1, controlPoint2, end;
-	};
-
-	/**
-	 * Represents a path of beziers
-	 */
-	struct Path {
-
-		/**
-		 * The beziers held in this path
-		 */
-		std::vector<CubicBezier> beziers;
-
-		/**
-		 * Creates a new empty path
-		 */
-		Path();
-
-		/**
-		 * Creates a path with a size with all points at 0
-		 * @param n The size
-		 */
-		Path(size_t n);
-
-		/**
-		 * Adds another path to this
-		 * @param other The path to add to this
-		 */
-		void operator+=(const Path& other);
-
-		/**
-		 * Multiplies this path's points by a value
-		 * @param value The scalar value
-		 */
-		Path operator*(float value) const;
-
-		/**
-		 * Converts the path to a skia path
-		 * @param camera The camera to transform with
-		 * @returns The skia path
-		 */
-		SkPath toSkia(const Camera& camera) const;
-	};
 
 	/**
 	 * Represents a single path of cubic bezier curves
@@ -98,20 +51,44 @@ namespace Kale {
 		 * @param scene The scene being rendered on
 		 */
 		void render(const Scene& scene) const override {
+			// Get canvas, convert path, & draw main path
 			SkCanvas& canvas = mainApp->getWindow().getCanvas();
 			SkPath path = currentPath.toSkia(transform);
 			SkPaint paint(color);
 			paint.setAntiAlias(true);
 			canvas.drawPath(path, paint);
-			if (!hasBorder) return;
 
+			// End if no border required
+			if (!hasBorder && !lightShading) return;
+
+			// Setup border paint
 			SkPaint borderPaint(borderColor);
 			borderPaint.setAntiAlias(true);
 			borderPaint.setStyle(SkPaint::Style::kStroke_Style);
 			borderPaint.setStrokeCap(SkPaint::Cap::kRound_Cap);
 			borderPaint.setStrokeJoin(SkPaint::Join::kRound_Join);
-			borderPaint.setStrokeWidth(borderSize);
-			canvas.drawPath(path, borderPaint);
+			borderPaint.setStrokeWidth(borderSize * 2.0f);
+
+			// Draw border if applicable
+			if (hasBorder) {
+				canvas.save();
+				canvas.clipPath(path);
+				canvas.drawPath(path, borderPaint);
+				canvas.restore();
+			}
+
+			// Draw light shading if applicable
+			if (lightShading) {
+				for (const std::shared_ptr<Light>& light : scene.getLights()) {
+					if (!light->applyShading) continue;
+					if (!light->getBoundingBox().rectCollision(Node::boundingBox)) continue;
+					canvas.save();
+					canvas.clipPath(light->getShadingMask());
+					borderPaint.setColor(borderColor * 0.8f + light->color * 0.2f);
+					canvas.drawPath(path, borderPaint);
+					canvas.restore();
+				}
+			}
 		}
 
 		/**
@@ -172,10 +149,10 @@ namespace Kale {
 		/**
 		 * The size of this path's border
 		 */
-		float borderSize = 2.0f;
+		float borderSize = 10.0f;
 
 		/**
-		 * Whether to apply light shading on this path's border **only applies if hasBorder is true**
+		 * Whether to apply light shading on this path's border, can be applied even if border is off
 		 */
 		bool lightShading = true;
 

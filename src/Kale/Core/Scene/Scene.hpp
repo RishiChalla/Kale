@@ -21,10 +21,10 @@
 #include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Engine/Light/Light.hpp>
 
-#include <unordered_set>
-#include <list>
+#include <set>
 #include <utility>
 #include <memory>
+#include <functional>
 
 namespace Kale {
 	
@@ -33,17 +33,28 @@ namespace Kale {
 	 * This class handles rendering and nodes management
 	 */
 	class Scene : public EventHandler {
+	public:
+		/**
+		 * Compares two nodes based on z position for set insertion
+		 */
+		template<typename T> static bool nodeCmp(std::shared_ptr<T> a, std::shared_ptr<T> b) {
+			return a->zPosition > b->zPosition;
+		};
+
+		typedef decltype(nodeCmp<Node>)* NodeCmp;
+		typedef decltype(nodeCmp<Light>)* LightCmp;
+		
 	private:
 
 		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
-		std::list<std::shared_ptr<Node>> nodes;
+		std::set<std::shared_ptr<Node>, NodeCmp> nodes;
 
 		/**
 		 * A list of the lights affecting the current scene
 		 */
-		std::unordered_set<std::shared_ptr<Light>> lights;
+		std::set<std::shared_ptr<Light>, LightCmp> lights;
 
 		/**
 		 * The world to screen transformation matrix. Used internally for rendering and converting
@@ -163,13 +174,13 @@ namespace Kale {
 		 * Gets the ndoes within the scene
 		 * @returns The nodes
 		 */
-		const std::list<std::shared_ptr<Node>>& getNodes() const;
+		const std::set<std::shared_ptr<Node>, NodeCmp>& getNodes() const;
 
 		/**
 		 * Gets the lights within the scene
 		 * @returns The lights
 		 */
-		const std::unordered_set<std::shared_ptr<Light>>& getLights() const;
+		const std::set<std::shared_ptr<Light>, LightCmp>& getLights() const;
 
 		/**
 		 * Gets the background color of the scene

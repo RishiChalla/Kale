@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <Kale/Math/Ray/Ray.hpp>
+#include <Kale/Math/Path/Path.hpp>
 #include <Kale/Engine/Node/Node.hpp>
 
 namespace Kale {
@@ -41,6 +41,12 @@ namespace Kale {
 		 * The color of the light, alpha is color intensity
 		 */
 		Vector4f color = Color(0xffffff);
+
+		/**
+		 * Gets the clipping mask to use when shading
+		 * @returns The clipping mask
+		 */
+		virtual SkPath getShadingMask() const = 0;
 
 	};
 }

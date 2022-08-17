@@ -25,7 +25,7 @@ using namespace Kale;
 /**
  * Constructs a new scene
  */
-Scene::Scene() {
+Scene::Scene() : nodes(nodeCmp<Node>), lights(nodeCmp<Light>) {
 	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 	worldToScreen.scale(size / viewport);
@@ -50,9 +50,7 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
  * @param node The node to add
  */
 void Scene::addNode(std::shared_ptr<Node>& node) {
-	nodes.insert(std::upper_bound(nodes.begin(), nodes.end(), node, [](const std::shared_ptr<Node>& first, const std::shared_ptr<Node>& second) -> bool {
-		return first->zPosition < second->zPosition;
-	}), node);
+	nodes.insert(node);
 }
 
 /**
@@ -60,7 +58,7 @@ void Scene::addNode(std::shared_ptr<Node>& node) {
  * @param node The node to remove
  */
 void Scene::removeNode(std::shared_ptr<Node>& node) {
-	nodes.erase(std::remove(nodes.begin(), nodes.end(), node), nodes.end());
+	nodes.erase(node);
 }
 
 /**
@@ -69,10 +67,7 @@ void Scene::removeNode(std::shared_ptr<Node>& node) {
  */
 void Scene::addLight(std::shared_ptr<Light>& light) {
 	lights.insert(light);
-	std::shared_ptr<Node> node = std::dynamic_pointer_cast<Node>(light);
-	nodes.insert(std::upper_bound(nodes.begin(), nodes.end(), node, [](const std::shared_ptr<Node>& first, const std::shared_ptr<Node>& second) -> bool {
-		return first->zPosition < second->zPosition;
-	}), node);
+	nodes.insert(std::dynamic_pointer_cast<Node>(light));
 }
 
 /**
@@ -81,7 +76,7 @@ void Scene::addLight(std::shared_ptr<Light>& light) {
  */
 void Scene::removeLight(std::shared_ptr<Light>& light) {
 	lights.erase(light);
-	nodes.erase(std::remove(nodes.begin(), nodes.end(), std::dynamic_pointer_cast<Node>(light)), nodes.end());
+	nodes.erase(std::dynamic_pointer_cast<Node>(light));
 }
 
 /**
@@ -116,12 +111,10 @@ void Scene::render() {
  */
 void Scene::update(float deltaTime) {
 	onPreUpdate(deltaTime);
-	for (std::shared_ptr<Node>& node : nodes)
-		node->preUpdate(deltaTime, *this);
+	for (std::shared_ptr<Node> node : nodes) node->preUpdate(deltaTime, *this);
 
 	onUpdate(deltaTime);
-	for (std::shared_ptr<Node>& node : nodes)
-		node->update(deltaTime, *this);
+	for (std::shared_ptr<Node> node : nodes) node->update(deltaTime, *this);
 }
 
 /**
@@ -158,7 +151,7 @@ void Scene::onSceneChange() {
  * Gets the ndoes within the scene
  * @returns The nodes
  */
-const std::list<std::shared_ptr<Node>>& Scene::getNodes() const {
+const std::set<std::shared_ptr<Node>, Scene::NodeCmp>& Scene::getNodes() const {
 	return nodes;
 }
 
@@ -166,7 +159,7 @@ const std::list<std::shared_ptr<Node>>& Scene::getNodes() const {
  * Gets the lights within the scene
  * @returns The lights
  */
-const std::unordered_set<std::shared_ptr<Light>>& Scene::getLights() const {
+const std::set<std::shared_ptr<Light>, Scene::LightCmp>& Scene::getLights() const {
 	return lights;
 }
 

@@ -16,11 +16,7 @@
 
 #pragma once
 
-#include <Kale/Math/Transform/Transform.hpp>
-#include <Kale/Math/Geometry/Geometry.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
-
-#include <unordered_set>
 
 namespace Kale {
 
