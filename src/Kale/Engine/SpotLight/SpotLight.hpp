@@ -27,13 +27,6 @@ namespace Kale {
 	protected:
 
 		/**
-		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
-		 * @param deltaTime The amount of microseconds since the last update
-		 * @param scene The scene being updated to
-		 */
-		void preUpdate(float deltaTime, const Scene& scene) override;
-
-		/**
 		 * Renders the node
 		 * @param camera The camera to render with
 		 * @param scene The scene being rendered on
@@ -41,13 +34,6 @@ namespace Kale {
 		void render(const Camera& camera, const Scene& scene) const override;
 
 	public:
-
-		/**
-		 * Gets the intensity of the light at a certain position. Returns -1 if light does not affect the position
-		 * @param pos The position to get the intensity at
-		 * @returns The light intensity
-		 */
-		float getIntensity(Vector2f pos) const override;
 
 	};
 }

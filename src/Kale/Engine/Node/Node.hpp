@@ -44,10 +44,9 @@ namespace Kale {
 
 		/**
 		 * Renders the node
-		 * @param camera The camera to render with
 		 * @param scene The scene being rendered on
 		 */
-		virtual void render(const Camera& camera, const Scene& scene) const = 0;
+		virtual void render(const Scene& scene) const = 0;
 
 		/**
 		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
@@ -81,15 +80,6 @@ namespace Kale {
 		virtual Rect getBoundingBox() const {
 			return boundingBox;
 		}
-
-		/**
-		 * Calculates lighting for specific coordinates given the 
-		 * @param pos The position of the colored entity
-		 * @param color The color of the entity
-		 * @param scene The scene being rendered to
-		 * @returns The shaded color
-		 */
-		Color calculateLighting(Vector2f pos, Color color, const Scene& scene) const;
 
 	};
 }

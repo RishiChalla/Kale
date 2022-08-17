@@ -26,21 +26,23 @@ using namespace Kale;
  * Constructs a new scene
  */
 Scene::Scene() {
-	Vector2f size = mainApp->getWindow().getSizeF();
+	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 	worldToScreen.scale(size / viewport);
 	worldToScreen.translate((viewport.x - 1920.0f) / 2.0f, 0.0f);
+	offsetX = (1920.0f - viewport.x) / 2.0f;
 }
 
 /**
  * Called when the event is fired
  */
 void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
-	Vector2f size = newSize.cast<float>();
+	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 	worldToScreen.setIdentity();
 	worldToScreen.scale(size / viewport);
 	worldToScreen.translate((viewport.x - 1920.0f) / 2.0f, 0.0f);
+	offsetX = (1920.0f - viewport.x) / 2.0f;
 }
 
 /**
@@ -87,14 +89,25 @@ void Scene::removeLight(std::shared_ptr<Light>& light) {
  */
 void Scene::render() {
 	// Clear screen with background color
-	mainApp->getWindow().getCanvas().clear(bgColor);
+	SkCanvas& canvas = mainApp->getWindow().getCanvas();
+	canvas.clear(bgColor);
 
 	// Combine the camera transformation matrix with the world coordinates to Skia's coordinates matrix
-	Camera cameraToScreen(camera * worldToScreen);
+	canvas.save();
+	{
+		Camera cameraToScreen(camera * worldToScreen);
+		Vector2f translation = cameraToScreen.getTranslation();
+		Vector2f scale = cameraToScreen.getScale();
+		canvas.translate(translation.x, translation.y);
+		canvas.rotate(cameraToScreen.getRotation());
+		canvas.scale(scale.x, scale.y);
+	}
 
 	// Go through each node and render it if it's in the bounds of the view
 	for (const std::shared_ptr<Node>& node : nodes)
-		node->render(cameraToScreen, *this);
+		node->render(*this);
+	
+	canvas.restore();
 }
 
 /**
@@ -102,11 +115,29 @@ void Scene::render() {
  * @param deltaTime The microseconds since the last update
  */
 void Scene::update(float deltaTime) {
+	onPreUpdate(deltaTime);
 	for (std::shared_ptr<Node>& node : nodes)
 		node->preUpdate(deltaTime, *this);
 
+	onUpdate(deltaTime);
 	for (std::shared_ptr<Node>& node : nodes)
 		node->update(deltaTime, *this);
+}
+
+/**
+ * Called before all nodes are updated
+ * @param deltaTime The microseconds since the last update
+ */
+void Scene::onUpdate(float deltaTime) {
+	// Empty Body
+}
+
+/**
+ * Called before all nodes are pre updated
+ * @param deltaTime The microseconds since the last update
+ */
+void Scene::onPreUpdate(float deltaTime) {
+	// Empty Body
 }
 
 /**
@@ -148,14 +179,6 @@ Color Scene::getBgColor() const {
 }
 
 /**
- * Gets the ambient color and intensity of the scene
- * @returns a pair of the ambient color (where alpha is color intensity), and light intensity
- */
-std::pair<Color, float> Scene::getAmbient() const {
-	return std::make_pair(ambient, ambientIntesity);
-}
-
-/**
  * Gets the camera used to render this scene
  * @returns The camera
  */
@@ -167,6 +190,15 @@ const Camera& Scene::getCamera() const {
  * Gets the current viewport of the scene
  * @returns The viewport
  */
-const Vector2f Scene::getViewport() const {
+Vector2f Scene::getViewport() const {
 	return viewport;
+}
+
+/**
+ * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
+ * or an unusually large number. This variable holds the starting x offset (offsetX is always the left most position of the window)
+ * @returns The window left position
+ */
+float Scene::getOffsetX() const {
+	return offsetX;
 }

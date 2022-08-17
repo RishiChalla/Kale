@@ -72,16 +72,6 @@ namespace Kale {
 		Color bgColor = Color(0xFFFFFF);
 
 		/**
-		 * The ambient light color, alpha is color intensity
-		 */
-		Color ambient = Color(0xFFFFFF, 0.0f);
-
-		/**
-		 * The intensity of the ambient light
-		 */
-		float ambientIntesity = 1.0;
-
-		/**
 		 * The scene's camera for viewing
 		 */
 		Camera camera;
@@ -93,6 +83,12 @@ namespace Kale {
 		 * It is recommended to code all nodes based off of the 1080p height and let the engine do the scaling
 		 */
 		Vector2f viewport;
+
+		/**
+		 * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
+		 * or an unusually large number. This variable holds the starting x offset (offsetX is always the left most position of the window)
+		 */
+		float offsetX;
 
 		/**
 		 * Adds a node to the scene to render/update
@@ -138,6 +134,18 @@ namespace Kale {
 		virtual void onSceneChange();
 
 		/**
+		 * Called before all nodes are updated
+		 * @param deltaTime The microseconds since the last update
+		 */
+		virtual void onUpdate(float deltaTime);
+
+		/**
+		 * Called before all nodes are pre updated
+		 * @param deltaTime The microseconds since the last update
+		 */
+		virtual void onPreUpdate(float deltaTime);
+
+		/**
 		 * Called when the event is fired
 		 */
 		void onWindowResize(Vector2ui oldSize, Vector2ui newSize) override;
@@ -170,12 +178,6 @@ namespace Kale {
 		Color getBgColor() const;
 
 		/**
-		 * Gets the ambient color and intensity of the scene
-		 * @returns a pair of the ambient color (where alpha is color intensity), and light intensity
-		 */
-		std::pair<Color, float> getAmbient() const;
-
-		/**
 		 * Gets the camera used to render this scene
 		 * @returns The camera
 		 */
@@ -185,6 +187,13 @@ namespace Kale {
 		 * Gets the current viewport of the scene
 		 * @returns The viewport
 		 */
-		const Vector2f getViewport() const;
+		Vector2f getViewport() const;
+
+		/**
+		 * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
+		 * or an unusually large number. This variable holds the starting x offset (offsetX is always the left most position of the window)
+		 * @returns The window left position
+		 */
+		float getOffsetX() const;
 	};
 }

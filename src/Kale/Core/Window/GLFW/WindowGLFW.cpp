@@ -63,6 +63,7 @@ Window::Window() {
 	glfwWindowHint(GLFW_DEPTH_BITS, 0);
 	
 	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 }
 
 /**
@@ -148,6 +149,10 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 static void cursorCallback(GLFWwindow* window, double x, double y) {
 	if (handlers == nullptr) return;
 	Vector2f pos = Vector2d(x, y).cast<float>();
+	Vector2f viewport;
+	if (mainApp->getPresentedScene() == nullptr) viewport = {static_cast<float>(oldWinSize.x) * 1080.0f / static_cast<float>(oldWinSize.y), 1080.0f};
+	else viewport = mainApp->getPresentedScene()->getViewport();
+	pos = pos / oldWinSize.cast<float>() * viewport;
 	for (auto handler : *handlers) handler->onMouseMove(pos);
 }
 
@@ -230,13 +235,18 @@ void Window::create(const char* title) {
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 	recreateSkiaSurface();
+
+	// Correct the oldWinSize static variable to the window size rather than framebuffer size
+	Vector2i winSize;
+	glfwGetWindowSize(window, &winSize.x, &winSize.y);
+	oldWinSize = winSize.cast<unsigned int>();
 	
 	handlers = &eventHandlers;
 	glfwSetKeyCallback(window, keyCallback);
 	glfwSetCursorPosCallback(window, cursorCallback);
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 	glfwSetScrollCallback(window, scrollCallback);
-	glfwSetFramebufferSizeCallback(window, resizeCallback);
+	glfwSetWindowSizeCallback(window, resizeCallback);
 	glfwSetWindowFocusCallback(window, focusCallback);
 	glfwSetJoystickCallback(joystickCallback);
 }
@@ -275,6 +285,15 @@ Vector2ui Window::getSize() const {
  */
 Vector2f Window::getSizeF() const {
 	return oldWinSize.cast<float>();
+}
+
+/**
+ * Gets the frame buffer size for canvas creation
+ */
+Vector2ui Window::getFramebufferSize() const {
+	Vector2i size;
+	glfwGetFramebufferSize(window, &size.x, &size.y);
+	return size.cast<unsigned int>();
 }
 
 /**

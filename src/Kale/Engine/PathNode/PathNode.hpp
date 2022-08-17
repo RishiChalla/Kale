@@ -95,13 +95,23 @@ namespace Kale {
 
 		/**
 		 * Renders the node
-		 * @param camera The camera to render with
 		 * @param scene The scene being rendered on
 		 */
-		void render(const Camera& camera, const Scene& scene) const override {
+		void render(const Scene& scene) const override {
 			SkCanvas& canvas = mainApp->getWindow().getCanvas();
-			Color bodyColor = Node::calculateLighting(transform.getTranslation(), color, scene);
-			canvas.drawPath(currentPath.toSkia(camera), SkPaint(bodyColor));
+			SkPath path = currentPath.toSkia(transform);
+			SkPaint paint(color);
+			paint.setAntiAlias(true);
+			canvas.drawPath(path, paint);
+			if (!hasBorder) return;
+
+			SkPaint borderPaint(borderColor);
+			borderPaint.setAntiAlias(true);
+			borderPaint.setStyle(SkPaint::Style::kStroke_Style);
+			borderPaint.setStrokeCap(SkPaint::Cap::kRound_Cap);
+			borderPaint.setStrokeJoin(SkPaint::Join::kRound_Join);
+			borderPaint.setStrokeWidth(borderSize);
+			canvas.drawPath(path, borderPaint);
 		}
 
 		/**
@@ -126,10 +136,9 @@ namespace Kale {
 			Vector2f bottomRight(std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
 			
 			for (const CubicBezier& bezier : currentPath.beziers) {
-				std::array<Vector2f, 4> points = {bezier.start, bezier.controlPoint1, bezier.controlPoint2, bezier.end};
-				for (const Vector2f& point : points) {
+				for (const Vector2f& point : {bezier.start, bezier.controlPoint1, bezier.controlPoint2, bezier.end}) {
 					if (point.x < topLeft.x) topLeft.x = point.x;
-					if (point.y < topLeft.y) topLeft.x = point.y;
+					if (point.y < topLeft.y) topLeft.y = point.y;
 					if (point.x > bottomRight.x) bottomRight.x = point.x;
 					if (point.y > bottomRight.y) bottomRight.y = point.y;
 				}
@@ -149,6 +158,26 @@ namespace Kale {
 		 * The color of the node
 		 */
 		Color color;
+		
+		/**
+		 * Whether or not to draw a border around this path
+		 */
+		bool hasBorder = false;
+
+		/**
+		 * The color of this path's border
+		 */
+		Color borderColor;
+
+		/**
+		 * The size of this path's border
+		 */
+		float borderSize = 2.0f;
+
+		/**
+		 * Whether to apply light shading on this path's border **only applies if hasBorder is true**
+		 */
+		bool lightShading = true;
 
 	};
 }

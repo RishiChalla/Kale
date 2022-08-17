@@ -117,6 +117,11 @@ namespace Kale {
 		 * @param filePath The window icon to set to
 		 */
 		void setIcon(const char* filePath);
+
+		/**
+		 * Gets the frame buffer size for canvas creation
+		 */
+		Vector2ui getFramebufferSize() const;
 		
 		/**
 		 * Gets the window size

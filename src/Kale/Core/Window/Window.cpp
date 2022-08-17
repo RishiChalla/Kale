@@ -48,7 +48,7 @@ void Window::removeEvents(EventHandler* handler) {
  * Recreates the skia surface (should be called on window resize)
  */
 void Window::recreateSkiaSurface() {
-	Vector2i size(getSize().cast<int>());
+	Vector2i size(getFramebufferSize().cast<int>());
 
 	auto interface = GrGLMakeNativeInterface();
 	skiaContext = GrDirectContext::MakeGL(interface).release();
