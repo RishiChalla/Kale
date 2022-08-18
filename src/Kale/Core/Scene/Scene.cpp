@@ -30,7 +30,7 @@ Scene::Scene() : nodes(nodeCmp<Node>), lights(nodeCmp<Light>) {
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 	worldToScreen.scale(size / viewport);
 	worldToScreen.translate((viewport.x - 1920.0f) / 2.0f, 0.0f);
-	offsetX = (1920.0f - viewport.x) / 2.0f;
+	sceneBounds = Rect{{(1920.0f - viewport.x) / 2.0f, 0.0f}, {(1920.0f + viewport.x) / 2.0f, 1080.0f}};
 }
 
 /**
@@ -42,7 +42,7 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 	worldToScreen.setIdentity();
 	worldToScreen.scale(size / viewport);
 	worldToScreen.translate((viewport.x - 1920.0f) / 2.0f, 0.0f);
-	offsetX = (1920.0f - viewport.x) / 2.0f;
+	sceneBounds = Rect{{(1920.0f - viewport.x) / 2.0f, 0.0f}, {(1920.0f + viewport.x) / 2.0f, 1080.0f}};
 }
 
 /**
@@ -189,9 +189,9 @@ Vector2f Scene::getViewport() const {
 
 /**
  * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
- * or an unusually large number. This variable holds the starting x offset (offsetX is always the left most position of the window)
- * @returns The window left position
+ * or an unusually large number. This function returns the scene bounds (the x coordinates of the left and right points on the scene display)
+ * @returns The window bounds in world coordinates
  */
-float Scene::getOffsetX() const {
-	return offsetX;
+Rect Scene::getSceneBounds() const {
+	return sceneBounds;
 }

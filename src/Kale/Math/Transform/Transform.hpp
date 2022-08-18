@@ -294,12 +294,12 @@ namespace Kale {
 		/**
 		 * Checks whether or not a geometry is within the view of this camera/transform
 		 * @param geometry The geometry to check for
-		 * @param viewport The width/height of the unscaled camera
+		 * @param sceneBounds The bounds of the scene
 		 * @returns Whether or not the geometry is within the view
 		 */
 		template <typename T> typename std::enable_if<std::is_base_of<Geometry, T>::value, bool>::type
-		isInView(const T& geometry, const Vector2f& viewport) {
-			return geometry.rectCollision(transform(Rect({0, 0}, viewport)));
+		isInView(const T& geometry, const Rect& sceneBounds) {
+			return geometry.rectCollision(transform(sceneBounds));
 		}
 
 	};

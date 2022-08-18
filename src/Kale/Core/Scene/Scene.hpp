@@ -97,9 +97,9 @@ namespace Kale {
 
 		/**
 		 * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
-		 * or an unusually large number. This variable holds the starting x offset (offsetX is always the left most position of the window)
+		 * or an unusually large number. This variable holds the scene bounds, (the x position of the left & right points on the window)
 		 */
-		float offsetX;
+		Rect sceneBounds;
 
 		/**
 		 * Adds a node to the scene to render/update
@@ -202,9 +202,9 @@ namespace Kale {
 
 		/**
 		 * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
-		 * or an unusually large number. This variable holds the starting x offset (offsetX is always the left most position of the window)
-		 * @returns The window left position
+		 * or an unusually large number. This function returns the scene bounds (the x coordinates of the left and right points on the scene display)
+		 * @returns The window bounds in world coordinates
 		 */
-		float getOffsetX() const;
+		Rect getSceneBounds() const;
 	};
 }
