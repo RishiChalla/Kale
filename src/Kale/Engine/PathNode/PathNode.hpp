@@ -98,7 +98,7 @@ namespace Kale {
 		 */
 		void preUpdate(float deltaTime, const Scene& scene) override {
 
-			if (!transitioning) return;
+			if (!AnimatableNode<T, Path>::transitioning) return;
 
 			// Update Animatable Node
 			AnimatableNode<T, Path>::preUpdate(deltaTime, scene);
