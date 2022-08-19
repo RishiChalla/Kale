@@ -17,6 +17,7 @@
 #pragma once
 
 #include <Kale/Engine/Light/Light.hpp>
+#include <Kale/Math/Transform/Transform.hpp>
 
 namespace Kale {
 
@@ -28,12 +29,54 @@ namespace Kale {
 
 		/**
 		 * Renders the node
-		 * @param camera The camera to render with
 		 * @param scene The scene being rendered on
 		 */
-		void render(const Camera& camera, const Scene& scene) const override;
+		void render(const Scene& scene) const override;
 
 	public:
+
+		/**
+		 * Gets the clipping mask to use when shading
+		 * @returns The clipping mask
+		 */
+		SkPath getShadingMask() const override;
+
+		/**
+		 * This light's position
+		 */
+		Vector2f position;
+
+		/**
+		 * The radius of the light
+		 */
+		float radius = 1.0f;
+
+		/**
+		 * The intensity of the light
+		 */
+		float intensity = 100.0f;
+
+		/**
+		 * Creates an empty point light object
+		 */
+		PointLight();
+
+		/**
+		 * Creates a white point light at a position given the radius
+		 * @param position The position of the light
+		 * @param radius The radius of the light
+		 * @param intensity The intensity of the light
+		 */
+		PointLight(Vector2f position, float radius, float intensity);
+
+		/**
+		 * Creates a point light
+		 * @param position The position of the light
+		 * @param radius The radius of the light
+		 * @param intensity The intensity of the light
+		 * @param color The color of the light
+		 */
+		PointLight(Vector2f position, float radius, float intensity, Color color);
 
 	};
 }

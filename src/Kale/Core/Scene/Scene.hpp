@@ -38,7 +38,7 @@ namespace Kale {
 		 * Compares two nodes based on z position for set insertion
 		 */
 		template<typename T> static bool nodeCmp(std::shared_ptr<T> a, std::shared_ptr<T> b) {
-			return a->zPosition > b->zPosition;
+			return (a->zPosition == b->zPosition) ? a < b : a->zPosition < b->zPosition;
 		};
 
 		typedef decltype(nodeCmp<Node>)* NodeCmp;
@@ -121,6 +121,15 @@ namespace Kale {
 		 * @param node The node to remove
 		 */
 		void removeNode(std::shared_ptr<Node>& node);
+
+		/**
+		 * Adds a light to the scene
+		 * @param light The light to add to the scene
+		 */
+		template <typename T> void addLight(std::shared_ptr<T>& light) {
+			std::shared_ptr<Kale::Light> lightPtr = std::dynamic_pointer_cast<Kale::Light>(light);
+			addLight(lightPtr);
+		}
 
 		/**
 		 * Adds a light to the scene

@@ -54,27 +54,25 @@ namespace Kale {
 			// Get canvas, convert path, & draw main path
 			SkCanvas& canvas = mainApp->getWindow().getCanvas();
 			SkPath path = currentPath.toSkia(transform);
-			SkPaint paint(color);
-			paint.setAntiAlias(true);
-			canvas.drawPath(path, paint);
+			canvas.drawPath(path, SkPaint(color));
 
 			// End if no border required
 			if (!hasBorder && !lightShading) return;
 
 			// Setup border paint
 			SkPaint borderPaint(borderColor);
-			borderPaint.setAntiAlias(true);
 			borderPaint.setStyle(SkPaint::Style::kStroke_Style);
 			borderPaint.setStrokeCap(SkPaint::Cap::kRound_Cap);
 			borderPaint.setStrokeJoin(SkPaint::Join::kRound_Join);
 			borderPaint.setStrokeWidth(borderSize * 2.0f);
 
+			// Add a clipping mask to the path to make the border not leak out of the path
+			canvas.save();
+			canvas.clipPath(path);
+
 			// Draw border if applicable
 			if (hasBorder) {
-				canvas.save();
-				canvas.clipPath(path);
 				canvas.drawPath(path, borderPaint);
-				canvas.restore();
 			}
 
 			// Draw light shading if applicable
@@ -84,11 +82,13 @@ namespace Kale {
 					if (!light->getBoundingBox().rectCollision(Node::boundingBox)) continue;
 					canvas.save();
 					canvas.clipPath(light->getShadingMask());
-					borderPaint.setColor(borderColor * 0.8f + light->color * 0.2f);
+					borderPaint.setColor(borderColor * 0.7f + light->color * 0.3f);
 					canvas.drawPath(path, borderPaint);
 					canvas.restore();
 				}
 			}
+
+			canvas.restore();
 		}
 
 		/**
@@ -98,7 +98,7 @@ namespace Kale {
 		 */
 		void preUpdate(float deltaTime, const Scene& scene) override {
 
-			if (!AnimatableNode<T, Path>::transitioning) return;
+			if (!AnimatableNode<T, Path>::transitioning && !currentPath.beziers.empty()) return;
 
 			// Update Animatable Node
 			AnimatableNode<T, Path>::preUpdate(deltaTime, scene);
