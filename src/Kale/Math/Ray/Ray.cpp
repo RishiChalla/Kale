@@ -20,7 +20,6 @@
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Line/Line.hpp>
 #include <Kale/Math/Circle/Circle.hpp>
-#include <Kale/Math/Utils/Utils.hpp>
 
 #include <stdexcept>
 #include <cmath>
@@ -55,27 +54,22 @@ Ray::Ray(const Line& line) : origin(line.point1), direction((line.point2 - line.
  * Creates a new ray given the origin and angle of casting
  * @param origin The origin of the ray
  * @param angle The angle of casting
- * @param deg Whether or not the angle is in degrees, true means it is in degrees, false means radians
+ * @param unit The type of angle unit given
  */
-Ray::Ray(const Vector2f& origin, float angle, bool deg) : origin(origin) {
-	direction.x = std::cos(deg ? degToRad(angle) : angle);
-	direction.y = std::sin(deg ? degToRad(angle) : angle);
+Ray::Ray(const Vector2f& origin, float angle, AngleUnit unit) : origin(origin) {
+	direction.x = std::cos(unit == AngleUnit::Degree ? degToRad(angle) : angle);
+	direction.y = std::sin(unit == AngleUnit::Degree ? degToRad(angle) : angle);
 }
 
 /**
- * Gets the angle of the direction in degrees
- * @returns the angle of the direction in degrees
+ * Gets the angle of the direction
+ * @param unit The type of unit to return the angle in
+ * @returns the angle of the direction
  */
-float Ray::getAngleDeg() const {
-	return radToDeg(std::tan(direction.y / direction.x));
-}
-
-/**
- * Gets The angle of the direction in radians
- * @returns The angle of the direction in radians
- */
-float Ray::getAngleRad() const {
-	return std::tan(direction.y / direction.x);
+float Ray::getAngle(AngleUnit unit) const {
+	float angle = std::tan(direction.y / direction.x);
+	if (unit == AngleUnit::Degree) angle = radToDeg(angle);
+	return angle;
 }
 
 /**

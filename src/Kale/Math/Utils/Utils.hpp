@@ -23,6 +23,14 @@
 namespace Kale {
 
 	/**
+	 * Specifies whether an angle is in radians or degrees. You will often see functions
+	 * taking this enum as an input to determine whether you're inputting radians/degrees.
+	 */
+	enum class AngleUnit : bool {
+		Degree, Radian
+	};
+
+	/**
 	 * Converts an angle in degrees to radians
 	 * @param deg The angle in degrees
 	 * @returns The angle in radians

@@ -22,6 +22,7 @@
 #include <Kale/Math/Ray/Ray.hpp>
 #include <Kale/Math/Line/Line.hpp>
 #include <Kale/Math/Circle/Circle.hpp>
+#include <Kale/Math/Utils/Utils.hpp>
 
 #include <type_traits>
 
@@ -67,9 +68,9 @@ namespace Kale {
 		 * @param translation The translation of the matrix
 		 * @param rotation The rotation of the matrix
 		 * @param scaleFactor The scale factor of the matrix
-		 * @param degrees Whether or not the rotation given is in degrees (false, default, means radians)
+		 * @param unit The unit of the rotation
 		 */
-		Transform(const Vector2f& translation, float rotation, const Vector2f& scaleFactor, bool degrees);
+		Transform(const Vector2f& translation, float rotation, const Vector2f& scaleFactor, AngleUnit unit);
 
 		/**
 		 * Creates a transformation matrix given the translation, rotation, and scale
@@ -78,9 +79,9 @@ namespace Kale {
 		 * @param rotation The rotation of the matrix
 		 * @param scaleX The x scale factor of the matrix
 		 * @param scaleY The x scale factor of the matrix
-		 * @param degrees Whether or not the rotation given is in degrees (false, default, means radians)
+		 * @param unit The unit of the rotation
 		 */
-		Transform(float translateX, float translateY, float rotation, float scaleX, float scaleY, bool degrees);
+		Transform(float translateX, float translateY, float rotation, float scaleX, float scaleY, AngleUnit unit);
 
 		/**
 		 * Sets this matrix to the identity matrix
@@ -120,16 +121,11 @@ namespace Kale {
 		void translate(float x, float y);
 
 		/**
-		 * Rotates the transformation matrix using RADIANS
-		 * @param angle The angle to rotate by in RADIANS
+		 * Rotates the transformation matrix
+		 * @param angle The angle to rotate by
+		 * @param unit The unit of the angle
 		 */
-		void rotate(float angle);
-
-		/**
-		 * Rotates the transformation matrix using DEGREES
-		 * @param angle The angle to rotate by in DEGREES
-		 */
-		void rotateDeg(float angle);
+		void rotate(float angle, AngleUnit unit);
 
 		/**
 		 * Sets the translation of the matrix
@@ -153,21 +149,16 @@ namespace Kale {
 		/**
 		 * Sets the rotation of the matrix
 		 * @param angle The angle of the rotation
-		 * @param degrees Whether the angle is in degrees or radians (true = degrees)
+		 * @param unit The unit of the angle
 		 */
-		void setRotation(float angle, bool degrees);
+		void setRotation(float angle, AngleUnit unit);
 
 		/**
-		 * Gets the rotation in RADIANS
-		 * @returns the rotation in RADIANS
+		 * Gets the rotation
+		 * @param unit The unit to return the rotation in
+		 * @returns the rotation
 		 */
-		float getRotation() const;
-		
-		/**
-		 * Gets the rotation in DEGREES
-		 * @returns the rotation in DEGREES
-		 */
-		float getRotationDeg() const;
+		float getRotation(AngleUnit unit) const;
 
 		/**
 		 * Sets the scale of the matrix

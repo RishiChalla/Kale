@@ -17,7 +17,6 @@
 #include "Transform.hpp"
 
 #include <Kale/Math/Constants/Constants.hpp>
-#include <Kale/Math/Utils/Utils.hpp>
 
 #include <cmath>
 
@@ -71,11 +70,11 @@ Transform::Transform(std::array<float, 9>&& arr) : Matrix3f(arr) {
  * @param translation The translation of the matrix
  * @param rotation The rotation of the matrix
  * @param scaleFactor The scale factor of the matrix
- * @param degrees Whether or not the rotation given is in degrees (false, default, means radians)
+ * @param unit The unit of the rotation
  */
-Transform::Transform(const Vector2f& translation, float rotation, const Vector2f& scaleFactor, bool degrees) : Matrix3f({
-	cos(degrees ? degToRad(rotation) : rotation) * scaleFactor.x, -sin(degrees ? degToRad(rotation) : rotation) * scaleFactor.y, translation.x,
-	sin(degrees ? degToRad(rotation) : rotation) * scaleFactor.x, cos(degrees ? degToRad(rotation) : rotation) * scaleFactor.y, translation.y,
+Transform::Transform(const Vector2f& translation, float rotation, const Vector2f& scaleFactor, AngleUnit unit) : Matrix3f({
+	cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.x, -sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.y, translation.x,
+	sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.x, cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.y, translation.y,
 	0.0f, 0.0f, 1.0f
 }) {
 	// Empty Body
@@ -88,11 +87,11 @@ Transform::Transform(const Vector2f& translation, float rotation, const Vector2f
  * @param rotation The rotation of the matrix
  * @param scaleX The x scale factor of the matrix
  * @param scaleY The x scale factor of the matrix
- * @param degrees Whether or not the rotation given is in degrees (false, default, means radians)
+ * @param unit The unit of the rotation
  */
-Transform::Transform(float translateX, float translateY, float rotation, float scaleX, float scaleY, bool degrees) : Matrix3f({
-	cos(degrees ? degToRad(rotation) : rotation) * scaleX, -sin(degrees ? degToRad(rotation) : rotation) * scaleY, translateX,
-	sin(degrees ? degToRad(rotation) : rotation) * scaleX, cos(degrees ? degToRad(rotation) : rotation) * scaleY, translateY,
+Transform::Transform(float translateX, float translateY, float rotation, float scaleX, float scaleY, AngleUnit unit) : Matrix3f({
+	cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleX, -sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleY, translateX,
+	sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleX, cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleY, translateY,
 	0.0f, 0.0f, 1.0f
 }) {
 	// Empty Body
@@ -172,27 +171,13 @@ void Transform::translate(float x, float y) {
 }
 
 /**
- * Rotates the transformation matrix using RADIANS
- * @param angle The angle to rotate by in RADIANS
+ * Rotates the transformation matrix
+ * @param angle The angle to rotate by
+ * @param unit The unit of the angle
  */
-void Transform::rotate(float angle) {
-	float c = cos(angle);
-	float s = sin(angle);
-	data = Matrix3f::operator*(Matrix3f({
-		c, -s, 0.0f,
-		s, c, 0.0f,
-		0.0f, 0.0f, 1.0f
-	})).data;
-}
-
-/**
- * Rotates the transformation matrix using DEGREES
- * @param angle The angle to rotate by in DEGREES
- */
-void Transform::rotateDeg(float angle) {
-	float rad = angle * PI / 180;
-	float c = cos(rad);
-	float s = sin(rad);
+void Transform::rotate(float angle, AngleUnit unit) {
+	float c = cos(unit == AngleUnit::Degree ? degToRad(angle) : angle);
+	float s = sin(unit == AngleUnit::Degree ? degToRad(angle) : angle);
 	data = Matrix3f::operator*(Matrix3f({
 		c, -s, 0.0f,
 		s, c, 0.0f,
@@ -230,10 +215,10 @@ Vector2f Transform::getTranslation() const {
 /**
  * Sets the rotation of the matrix
  * @param angle The angle of the rotation
- * @param degrees Whether the angle is in degrees or radians (true = degrees)
+ * @param unit The unit of the angle
  */
-void Transform::setRotation(float angle, bool degrees) {
-	if (degrees) angle = degToRad(angle);
+void Transform::setRotation(float angle, AngleUnit unit) {
+	if (unit == AngleUnit::Degree) angle = degToRad(angle);
 	Vector2f scale = getScale();
 	float c = cos(angle);
 	float s = sin(angle);
@@ -244,19 +229,12 @@ void Transform::setRotation(float angle, bool degrees) {
 }
 
 /**
- * Gets the rotation in RADIANS
- * @returns the rotation in RADIANS
+ * Gets the rotation
+ * @param unit The unit to return the rotation in
+ * @returns the rotation
  */
-float Transform::getRotation() const {
+float Transform::getRotation(AngleUnit unit) const {
 	return atan2(data[3], data[4]);
-}
-
-/**
- * Gets the rotation in DEGREES
- * @returns the rotation in DEGREES
- */
-float Transform::getRotationDeg() const {
-	return radToDeg(getRotation());
 }
 
 /**
@@ -265,7 +243,7 @@ float Transform::getRotationDeg() const {
  * @param scaleY The y component
  */
 void Transform::setScale(float scaleX, float scaleY) {
-	float c = cos(getRotation());
+	float c = cos(getRotation(AngleUnit::Radian));
 	data[0] = scaleX * c;
 	data[4] = scaleY * c;
 }
@@ -275,7 +253,7 @@ void Transform::setScale(float scaleX, float scaleY) {
  * @param scale The scale factor (applies for both horizontal/vertical scaling)
  */
 void Transform::setScale(float scale) {
-	float c = cos(getRotation());
+	float c = cos(getRotation(AngleUnit::Radian));
 	data[0] = scale * c;
 	data[4] = scale * c;
 }

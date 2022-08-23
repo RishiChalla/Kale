@@ -94,7 +94,7 @@ void Scene::render() {
 		Vector2f translation = cameraToScreen.getTranslation();
 		Vector2f scale = cameraToScreen.getScale();
 		canvas.translate(translation.x, translation.y);
-		canvas.rotate(cameraToScreen.getRotation());
+		canvas.rotate(cameraToScreen.getRotation(AngleUnit::Degree));
 		canvas.scale(scale.x, scale.y);
 	}
 

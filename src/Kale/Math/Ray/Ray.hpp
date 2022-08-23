@@ -18,6 +18,7 @@
 
 #include <Kale/Math/Vector/Vector.hpp>
 #include <Kale/Math/Geometry/Geometry.hpp>
+#include <Kale/Math/Utils/Utils.hpp>
 
 namespace Kale {
 
@@ -52,9 +53,9 @@ namespace Kale {
 		 * Creates a new ray given the origin and angle of casting
 		 * @param origin The origin of the ray
 		 * @param angle The angle of casting
-		 * @param deg Whether or not the angle is in degrees, true means it is in degrees, false means radians
+		 * @param unit The type of angle unit given
 		 */
-		Ray(const Vector2f& origin, float angle, bool deg = false);
+		Ray(const Vector2f& origin, float angle, AngleUnit unit);
 
 		/**
 		 * Creates a new ray from a line with the first point as the origin pointing towards the second point
@@ -63,16 +64,11 @@ namespace Kale {
 		Ray(const Line& line);
 
 		/**
-		 * Gets the angle of the direction in degrees
-		 * @returns the angle of the direction in degrees
+		 * Gets the angle of the direction
+		 * @param unit The type of unit to return the angle in
+		 * @returns the angle of the direction
 		 */
-		float getAngleDeg() const;
-
-		/**
-		 * Gets The angle of the direction in radians
-		 * @returns The angle of the direction in radians
-		 */
-		float getAngleRad() const;
+		float getAngle(AngleUnit unit) const;
 
 		/**
 		 * Checks whether or not the ray is perpendicular with this ray
