@@ -19,6 +19,7 @@
 #include <Kale/Math/Vector/Vector.hpp>
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Path/Path.hpp>
+#include <Kale/Math/DrawingContext/DrawingContext.hpp>
 #include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Engine/AnimatableNode/AnimatableNode.hpp>
 #include <Kale/Core/Application/Application.hpp>
@@ -82,7 +83,7 @@ namespace Kale {
 					if (!light->getBoundingBox().rectCollision(Node::boundingBox)) continue;
 					canvas.save();
 					canvas.clipPath(light->getShadingMask());
-					borderPaint.setColor(borderColor * 0.7f + light->color * 0.3f);
+					borderPaint.setColor(borderColor * light->color);
 					canvas.drawPath(path, borderPaint);
 					canvas.restore();
 				}
@@ -111,19 +112,7 @@ namespace Kale {
 			}
 
 			// Update bounding box
-			Vector2f topLeft(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-			Vector2f bottomRight(std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
-			
-			for (const CubicBezier& bezier : currentPath.beziers) {
-				for (const Vector2f& point : {bezier.start, bezier.controlPoint1, bezier.controlPoint2, bezier.end}) {
-					if (point.x < topLeft.x) topLeft.x = point.x;
-					if (point.y < topLeft.y) topLeft.y = point.y;
-					if (point.x > bottomRight.x) bottomRight.x = point.x;
-					if (point.y > bottomRight.y) bottomRight.y = point.y;
-				}
-			}
-
-			Node::boundingBox = {topLeft, bottomRight};
+			Node::boundingBox = currentPath.getBoundingBox();
 		}
 
 	public:

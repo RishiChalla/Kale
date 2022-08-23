@@ -17,6 +17,7 @@
 #pragma once
 
 #include <Kale/Math/Vector/Vector.hpp>
+#include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Transform/Transform.hpp>
 
 #include <include/core/SkPath.h>
@@ -54,6 +55,12 @@ namespace Kale {
 		Path(size_t n);
 
 		/**
+		 * Gets the bounding box for this path
+		 * @returns The bounding box
+		 */
+		Rect getBoundingBox() const;
+
+		/**
 		 * Adds another path to this
 		 * @param other The path to add to this
 		 */
@@ -71,6 +78,12 @@ namespace Kale {
 		 * @returns The skia path
 		 */
 		SkPath toSkia(const Camera& camera) const;
+
+		/**
+		 * Converts the path to a skia path
+		 * @returns The skia path
+		 */
+		SkPath toSkia() const;
 
 	};
 }

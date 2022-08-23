@@ -34,7 +34,8 @@ void PointLight::render(const Scene& scene) const {
 
 	SkCanvas& canvas = mainApp->getWindow().getCanvas();
 	SkPaint paint(Light::color);
-	paint.setAlphaf(0.4f);
+	paint.setBlendMode(SkBlendMode::kMultiply);
+	// paint.setAlphaf(0.4f);
 	paint.setMaskFilter(SkMaskFilter::MakeBlur(SkBlurStyle::kNormal_SkBlurStyle, intensity));
 	canvas.drawCircle(position, radius, paint);
 }

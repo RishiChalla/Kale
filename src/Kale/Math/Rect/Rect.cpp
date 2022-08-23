@@ -51,7 +51,7 @@ Vector2f Rect::center() const {
 
 /**
  * Gets the top right point of the rectangle
- * @return the top right point of the rectangle
+ * @returns the top right point of the rectangle
  */
 Vector2f Rect::topRight() const {
 	return {bottomRight.x, topLeft.y};
@@ -59,7 +59,7 @@ Vector2f Rect::topRight() const {
 
 /**
  * Gets the bottom left point of the rectangle
- * @return the bottom left point of the rectangle
+ * @returns the bottom left point of the rectangle
  */
 Vector2f Rect::bottomLeft() const {
 	return {topLeft.x, bottomRight.y};
@@ -67,7 +67,7 @@ Vector2f Rect::bottomLeft() const {
 
 /**
  * Gets a bounding box for this geometry to check for quick and inaccurate collisions
- * @return The bounding box
+ * @returns The bounding box
  */
 Rect Rect::getBoundingBox() const {
 	return *this;

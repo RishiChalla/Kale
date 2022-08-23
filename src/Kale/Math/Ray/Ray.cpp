@@ -110,7 +110,7 @@ bool Ray::isParallel(Line line) const {
 
 /**
  * Gets a bounding box for this geometry to check for quick and inaccurate collisions
- * @return The bounding box
+ * @returns The bounding box
  */
 Rect Ray::getBoundingBox() const {
 #ifdef KALE_DEBUG

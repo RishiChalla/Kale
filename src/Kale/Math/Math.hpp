@@ -18,6 +18,7 @@
 
 #include "Circle/Circle.hpp"
 #include "Constants/Constants.hpp"
+#include "DrawingContext/DrawingContext.hpp"
 #include "Geometry/Geometry.hpp"
 #include "Line/Line.hpp"
 #include "Matrix/Matrix.hpp"

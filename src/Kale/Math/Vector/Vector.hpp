@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <ostream>
 #include <type_traits>
+#include <limits>
 
 #include <core/SkColor.h>
 #include <core/SkPoint.h>
@@ -159,10 +160,12 @@ namespace Kale {
 		Vector2<T> xy() const { return {x, y}; }
 		Vector2<T> yx() const { return {y, x}; }
 
-		static Vector2<T> one() { return {1, 1}; };
-		static Vector2<T> zero() { return {0, 0}; };
-		static Vector2<T> right() { return {1, 0}; };
-		static Vector2<T> up() { return {0, 1}; };
+		static Vector2<T> one() { return {1, 1}; }
+		static Vector2<T> zero() { return {0, 0}; }
+		static Vector2<T> right() { return {1, 0}; }
+		static Vector2<T> up() { return {0, 1}; }
+		static Vector2<T> max() { return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max()}; }
+		static Vector2<T> min() { return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min()}; }
 	};
 
 	/**
@@ -326,6 +329,8 @@ namespace Kale {
 		static Vector3<T> right() { return {1, 0, 0}; }
 		static Vector3<T> up() { return {0, 1, 0}; }
 		static Vector3<T> front() { return {0, 0, 1}; }
+		static Vector3<T> max() { return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max()}; }
+		static Vector3<T> min() { return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min()}; }
 };
 
 	/**
@@ -571,6 +576,12 @@ namespace Kale {
 
 		static Vector4<T> zero() { return {0, 0, 0, 0}; }
 		static Vector4<T> one() { return {1, 1, 1, 1}; }
+		static Vector4<T> max() {
+			return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max()};
+		}
+		static Vector4<T> min() {
+			return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min()};
+		}
 	};
 
 	typedef Vector2<char> Vector2c;

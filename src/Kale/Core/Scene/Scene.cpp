@@ -17,6 +17,7 @@
 #include "Scene.hpp"
 
 #include <Kale/Core/Application/Application.hpp>
+#include <Kale/Math/DrawingContext/DrawingContext.hpp>
 
 #include <algorithm>
 
@@ -88,21 +89,11 @@ void Scene::render() {
 	canvas.clear(bgColor);
 
 	// Combine the camera transformation matrix with the world coordinates to Skia's coordinates matrix
-	canvas.save();
-	{
-		Camera cameraToScreen(camera * worldToScreen);
-		Vector2f translation = cameraToScreen.getTranslation();
-		Vector2f scale = cameraToScreen.getScale();
-		canvas.translate(translation.x, translation.y);
-		canvas.rotate(cameraToScreen.getRotation(AngleUnit::Degree));
-		canvas.scale(scale.x, scale.y);
-	}
+	Camera cameraToScreen(camera * worldToScreen);
+	DrawingContext ctx(cameraToScreen);
 
 	// Go through each node and render it if it's in the bounds of the view
-	for (const std::shared_ptr<Node>& node : nodes)
-		node->render(*this);
-	
-	canvas.restore();
+	for (const std::shared_ptr<Node>& node : nodes) node->render(*this);
 }
 
 /**

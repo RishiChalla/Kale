@@ -76,7 +76,7 @@ namespace Kale {
 
 		/**
 		 * Gets the state composition for this frame
-		 * @return The composition for this frame
+		 * @returns The composition for this frame
 		 */
 		std::vector<std::pair<T, float>> getStateComposition() const {
 			std::vector<std::pair<T, float>> composition;
@@ -120,7 +120,7 @@ namespace Kale {
 
 		/**
 		 * Gets the current state, if the node is currently animating between two states then the state closer to the current one is used
-		 * @return T The current state
+		 * @returns The current state
 		 */
 		T getCurrentState() const {
 			if (!transitioning) return state;

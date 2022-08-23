@@ -18,6 +18,8 @@
 
 #include <Kale/Core/Logger/Logger.hpp>
 
+#include <limits>
+
 using namespace Kale;
 
 /**
@@ -33,6 +35,26 @@ Path::Path() {
  */
 Path::Path(size_t n) : beziers(n) {
 	// Empty Body
+}
+
+/**
+ * Gets the bounding box for this path
+ * @returns The bounding box
+ */
+Rect Path::getBoundingBox() const {
+	Vector2f topLeft = Vector2f::max();
+	Vector2f bottomRight = Vector2f::min();
+	
+	for (const CubicBezier& bezier : beziers) {
+		for (const Vector2f& point : {bezier.start, bezier.controlPoint1, bezier.controlPoint2, bezier.end}) {
+			if (point.x < topLeft.x) topLeft.x = point.x;
+			if (point.y < topLeft.y) topLeft.y = point.y;
+			if (point.x > bottomRight.x) bottomRight.x = point.x;
+			if (point.y > bottomRight.y) bottomRight.y = point.y;
+		}
+	}
+
+	return {topLeft, bottomRight};
 }
 
 /**
@@ -80,5 +102,17 @@ SkPath Path::toSkia(const Camera& camera) const {
 			camera.transform(bezier.end)
 		);
 	}
+	return path;
+}
+
+/**
+ * Converts the path to a skia path
+ * @returns The skia path
+ */
+SkPath Path::toSkia() const {
+	SkPath path;
+	if (beziers.size() == 0) return path;
+	path.moveTo(beziers[0].start);
+	for (const CubicBezier& bezier : beziers) path.cubicTo(bezier.controlPoint1, bezier.controlPoint2, bezier.end);
 	return path;
 }

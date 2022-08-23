@@ -55,19 +55,19 @@ namespace Kale {
 
 		/**
 		 * Gets the top right point of the rectangle
-		 * @return the top right point of the rectangle
+		 * @returns the top right point of the rectangle
 		 */
 		Vector2f topRight() const;
 
 		/**
 		 * Gets the bottom left point of the rectangle
-		 * @return the bottom left point of the rectangle
+		 * @returns the bottom left point of the rectangle
 		 */
 		Vector2f bottomLeft() const;
 
 		/**
 		 * Gets a bounding box for this geometry to check for quick and inaccurate collisions
-		 * @return The bounding box
+		 * @returns The bounding box
 		 */
 		Rect getBoundingBox() const override;
 
