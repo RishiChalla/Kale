@@ -224,8 +224,8 @@ void Transform::setRotation(float angle, AngleUnit unit) {
 	float s = sin(angle);
 	data[0] = scale.x * c;
 	data[1] = scale.y * -s;
-	data[4] = scale.x * s;
-	data[5] = scale.y * c;
+	data[3] = scale.x * s;
+	data[4] = scale.y * c;
 }
 
 /**
@@ -234,7 +234,9 @@ void Transform::setRotation(float angle, AngleUnit unit) {
  * @returns the rotation
  */
 float Transform::getRotation(AngleUnit unit) const {
-	return atan2(data[3], data[4]);
+	float angle = atan2(data[3], data[4]);
+	if (unit == AngleUnit::Degree) angle = radToDeg(angle);
+	return angle;
 }
 
 /**

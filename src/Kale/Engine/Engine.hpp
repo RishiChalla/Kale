@@ -21,3 +21,4 @@
 #include "Node/Node.hpp"
 #include "PathNode/PathNode.hpp"
 #include "PointLight/PointLight.hpp"
+#include "SpotLight/SpotLight.hpp"
