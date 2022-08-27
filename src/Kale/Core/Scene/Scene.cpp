@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -59,16 +59,16 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
  * Adds a node to the scene to render/update
  * @param node The node to add
  */
-void Scene::addNode(Node& node) {
+void Scene::addNode(std::shared_ptr<Node>& node) {
 	std::lock_guard<std::mutex> guard(mutex);
-	nodes.push_back(&node);
+	nodes.push_back(node);
 }
 
 /**
  * Removes a node from the scene
  * @param node The node to remove
  */
-void Scene::removeNode(Node* node) {
+void Scene::removeNode(std::shared_ptr<Node>& node) {
 	std::lock_guard<std::mutex> guard(mutex);
 	nodes.remove(node);
 }
@@ -84,7 +84,7 @@ void Scene::render() const {
 #endif
 
 	Transform cameraToScreen(worldToScreen * camera);
-	for (Node* node : nodes)
+	for (const std::shared_ptr<Node>& node : nodes)
 		node->render(cameraToScreen);
 	
 	// Swaps the buffers/uses the swapchain to display output
@@ -109,6 +109,22 @@ void Scene::update(size_t threadNum, float ups) {
 }
 
 /**
+ * Called before all nodes are updated
+ * @param deltaTime The microseconds since the last update
+ */
+void Scene::onUpdate(float deltaTime) {
+	// Empty Body
+}
+
+/**
+ * Called before all nodes are pre updated
+ * @param deltaTime The microseconds since the last update
+ */
+void Scene::onPreUpdate(float deltaTime) {
+	// Empty Body
+}
+
+/**
  * Called when the current scene is presented
  */
 void Scene::onPresent() {
@@ -120,4 +136,45 @@ void Scene::onPresent() {
  */
 void Scene::onSceneChange() {
 	mainApp->getWindow().removeEvents(dynamic_cast<EventHandler*>(this));
+}
+
+/**
+ * Gets the ndoes within the scene
+ * @returns The nodes
+ */
+const std::list<std::shared_ptr<Node>>& Scene::getNodes() const {
+	return nodes;
+}
+
+/**
+ * Gets the background color of the scene
+ * @returns The background color
+ */
+Color Scene::getBgColor() const {
+	return bgColor;
+}
+
+/**
+ * Gets the camera used to render this scene
+ * @returns The camera
+ */
+const Camera& Scene::getCamera() const {
+	return camera;
+}
+
+/**
+ * Gets the current viewport of the scene
+ * @returns The viewport
+ */
+Vector2f Scene::getViewport() const {
+	return viewport;
+}
+
+/**
+ * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
+ * or an unusually large number. This function returns the scene bounds (the x coordinates of the left and right points on the scene display)
+ * @returns The window bounds in world coordinates
+ */
+Rect Scene::getSceneBounds() const {
+	return sceneBounds;
 }

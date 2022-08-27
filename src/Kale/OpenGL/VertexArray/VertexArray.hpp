@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -221,7 +221,7 @@ namespace Kale::OpenGL {
 			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
-				elements.reserve(indices.size());
+				elements.data.reserve(indices.size());
 				for (const size_t& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
 			}, usage);
 		}
@@ -264,7 +264,7 @@ namespace Kale::OpenGL {
 			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
-				elements.reserve(indices.size());
+				elements.data.reserve(indices.size());
 				for (const size_t& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
 			}, usage);
 		}

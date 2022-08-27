@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ using namespace Kale::OpenGL;
  * Called when the event is fired
  */
 void Core::ResizeHandler::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
-	glViewport(0, 0, newSize.x, newSize.y);
+	Vector2ui size = mainApp->getWindow().getFramebufferSize();
+	glViewport(0, 0, size.x, size.y);
 }
 
 /**
@@ -43,7 +44,8 @@ void Core::setupCore() noexcept {
 		mainApp->getWindow().setupGlad();
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
-		glViewport(0, 0, mainApp->getWindow().getSize().x, mainApp->getWindow().getSize().y);
+		Vector2ui size = mainApp->getWindow().getFramebufferSize();
+		glViewport(0, 0, size.x, size.y);
 		resizeHandler = new ResizeHandler();
 		mainApp->getWindow().registerEvents(dynamic_cast<EventHandler*>(resizeHandler));
 

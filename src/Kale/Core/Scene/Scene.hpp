@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@
 #include <Kale/Math/Transform/Transform.hpp>
 
 #include <list>
+#include <utility>
+#include <memory>
+#include <functional>
 #include <mutex>
 
 namespace Kale {
@@ -35,7 +38,7 @@ namespace Kale {
 		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
-		std::list<Node*> nodes;
+		std::list<std::shared_ptr<Node>> nodes;
 
 		/**
 		 * The mutex used for node thread safety
@@ -68,7 +71,7 @@ namespace Kale {
 		/**
 		 * The background color of the scene to use for clearing the screen
 		 */
-		Vector4f bgColor = {1.0f, 0.0f, 1.0f, 1.0f};
+		Vector4f bgColor = 0xFFFFFF;
 
 		/**
 		 * The scene's camera for viewing
@@ -84,16 +87,40 @@ namespace Kale {
 		Vector2f viewport;
 
 		/**
+		 * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
+		 * or an unusually large number. This variable holds the scene bounds, (the x position of the left & right points on the window)
+		 */
+		Rect sceneBounds;
+
+		/**
 		 * Adds a node to the scene to render/update
 		 * @param node The node to add
 		 */
-		void addNode(Node& node);
+		void addNode(std::shared_ptr<Node>& node);
+
+		/**
+		 * Adds a node to the scene to render/update
+		 * @param node The node to add
+		 */
+		template <typename T> void addNode(std::shared_ptr<T>& node) {
+			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
+			addNode(nodePtr);
+		}
 
 		/**
 		 * Removes a node from the scene
 		 * @param node The node to remove
 		 */
-		void removeNode(Node* node);
+		void removeNode(std::shared_ptr<Node>& node);
+
+		/**
+		 * Removes a node from the scene
+		 * @param node The node to remove
+		 */
+		template <typename T> void removeNode(std::shared_ptr<T>& node) {
+			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
+			removeNode(node);
+		}
 
 		/**
 		 * Called when the current scene is presented
@@ -104,6 +131,18 @@ namespace Kale {
 		 * Called when the scene is about to be changed
 		 */
 		virtual void onSceneChange();
+
+		/**
+		 * Called before all nodes are updated
+		 * @param deltaTime The microseconds since the last update
+		 */
+		virtual void onUpdate(float deltaTime);
+
+		/**
+		 * Called before all nodes are pre updated
+		 * @param deltaTime The microseconds since the last update
+		 */
+		virtual void onPreUpdate(float deltaTime);
 
 		/**
 		 * Called when the event is fired
@@ -118,5 +157,37 @@ namespace Kale {
 		 * Constructs a new scene
 		 */
 		Scene();
+
+		/**
+		 * Gets the ndoes within the scene
+		 * @returns The nodes
+		 */
+		const std::list<std::shared_ptr<Node>>& getNodes() const;
+
+		/**
+		 * Gets the background color of the scene
+		 * @returns The background color
+		 */
+		Color getBgColor() const;
+
+		/**
+		 * Gets the camera used to render this scene
+		 * @returns The camera
+		 */
+		const Camera& getCamera() const;
+
+		/**
+		 * Gets the current viewport of the scene
+		 * @returns The viewport
+		 */
+		Vector2f getViewport() const;
+
+		/**
+		 * Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number
+		 * or an unusually large number. This function returns the scene bounds (the x coordinates of the left and right points on the scene display)
+		 * @returns The window bounds in world coordinates
+		 */
+		Rect getSceneBounds() const;
+
 	};
 }

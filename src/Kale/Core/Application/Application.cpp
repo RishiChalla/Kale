@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #include "Application.hpp"
 
 #include <Kale/Core/Clock/Clock.hpp>
-#include <Kale/Core/Settings/Settings.hpp>
 
 #ifdef KALE_VULKAN
 #include <Kale/Vulkan/Core/Core.hpp>
@@ -39,7 +38,6 @@ using namespace Kale;
 Application::Application(const char* applicationName) noexcept : applicationName(applicationName) {
 	try {
 		console.load(this->applicationName);
-		settings.load(this->applicationName);
 	}
 	catch (const std::exception&) {
 		// We have no way of logging effectively, so we'll just have to exit
@@ -113,8 +111,8 @@ void Application::update(size_t threadNum) noexcept {
 	Clock clock;
 	while (window.isOpen()) {
 
-		// Limit UPS and retrieve it
-		float ups = clock.sleep(settings.getMinMSpU());
+		// Limit to 120 updates per second
+		float ups = clock.sleep(1000.0f / 120.0f);
 		
 		// Perform updating
 		if (presentedScene != nullptr) try {
@@ -163,14 +161,18 @@ void Application::run() noexcept {
 	Clock clock;
 	while (window.isOpen()) {
 
-		// Limit FPS and retrieve it
-		clock.sleep(settings.getMinMSpF());
+		// Limit FPS to 120
+		clock.sleep(1000.0f / 120.0f);
 		
 		// Update the window for event polling, etc
 		window.update();
 
-		if (presentedScene != nullptr)
+		if (presentedScene != nullptr) try {
 			presentedScene->render();
+		}
+		catch (const std::exception& e) {
+			console.error("Failed to render presented screen - "s + e.what());
+		}
 	}
 
 	onEnd();

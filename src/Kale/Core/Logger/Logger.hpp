@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -285,6 +285,30 @@ namespace Kale {
 
 			logFile << "[" << time << "] " << "[" << file << ":" << line << "] " << "[ERROR] " << msg << std::endl;
 		}
+
+		/**
+		 * Logs an assertion to the console
+		 * @param line The line number the log is being called from
+		 * @param file The name of the file the log is being called from
+		 * @param assertion The message to log
+		 */
+		template <typename T> void assertCheck(unsigned int line, const char* file, T assertion) {
+			if (assertion) return;
+			error(line, file, "Assertion Failed");
+		}
+
+		/**
+		 * Logs an assertion to the console
+		 * @param line The line number the log is being called from
+		 * @param file The name of the file the log is being called from
+		 * @param assertion The assertion to check
+		 * @param msg The message to log if the assertion fails
+		 */
+		template <typename T, typename STR> void assertCheck(unsigned int line, const char* file, T assertion, STR msg) {
+			using namespace std::string_literals;
+			if (assertion) return;
+			error(line, file, "Assertion Failed - "s + msg);
+		}
 	};
 
 	/**
@@ -321,3 +345,13 @@ namespace Kale {
  * Prints an error to the console/log file
  */
 #define klError(x) Kale::console.error(__LINE__, __FILENAME__, x)
+
+/**
+ * Prints an assertion to the console/log file if the assertion is false
+ */
+#define klAssert(x) Kale::console.assertCheck(__LINE__, __FILENAME__, x)
+
+/**
+ * Prints an assertion to the console/log file if the assertion is false
+ */
+#define klAssertMsg(x, y) Kale::console.assertCheck(__LINE__, __FILENAME__, x, y)

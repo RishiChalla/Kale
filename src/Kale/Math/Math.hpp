@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,8 +16,15 @@
 
 #pragma once
 
+#include "Circle/Circle.hpp"
 #include "Constants/Constants.hpp"
+#include "Geometry/Geometry.hpp"
+#include "Line/Line.hpp"
 #include "Matrix/Matrix.hpp"
+#include "Path/Path.hpp"
+#include "Ray/Ray.hpp"
+#include "Rect/Rect.hpp"
+#include "RotatedRect/RotatedRect.hpp"
 #include "Transform/Transform.hpp"
-#include "Vector/Vector.hpp"
 #include "Utils/Utils.hpp"
+#include "Vector/Vector.hpp"

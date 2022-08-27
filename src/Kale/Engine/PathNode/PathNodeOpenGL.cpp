@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ void PathNode::render(const Camera& camera) {
 	Transform local;
 	local.setTranslation(center);
 	local.scale(scale);
-	local.rotateDeg(rotation);
+	local.rotate(rotation, Kale::AngleUnit::Degree);
 	local.translate(center * -1.0f);
 
 	shader->uniform(localUniform, local);

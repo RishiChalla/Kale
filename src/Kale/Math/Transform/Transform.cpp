@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #include "Transform.hpp"
 
 #include <Kale/Math/Constants/Constants.hpp>
-#include <Kale/Math/Utils/Utils.hpp>
 
 #include <cmath>
 
@@ -71,11 +70,11 @@ Transform::Transform(std::array<float, 9>&& arr) : Matrix3f(arr) {
  * @param translation The translation of the matrix
  * @param rotation The rotation of the matrix
  * @param scaleFactor The scale factor of the matrix
- * @param degrees Whether or not the rotation given is in degrees (false, default, means radians)
+ * @param unit The unit of the rotation
  */
-Transform::Transform(const Vector2f& translation, float rotation, const Vector2f& scaleFactor, bool degrees) : Matrix3f({
-	cos(degrees ? degToRad(rotation) : rotation) * scaleFactor.x, -sin(degrees ? degToRad(rotation) : rotation) * scaleFactor.y, translation.x,
-	sin(degrees ? degToRad(rotation) : rotation) * scaleFactor.x, cos(degrees ? degToRad(rotation) : rotation) * scaleFactor.y, translation.y,
+Transform::Transform(const Vector2f& translation, float rotation, const Vector2f& scaleFactor, AngleUnit unit) : Matrix3f({
+	cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.x, -sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.y, translation.x,
+	sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.x, cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleFactor.y, translation.y,
 	0.0f, 0.0f, 1.0f
 }) {
 	// Empty Body
@@ -88,11 +87,11 @@ Transform::Transform(const Vector2f& translation, float rotation, const Vector2f
  * @param rotation The rotation of the matrix
  * @param scaleX The x scale factor of the matrix
  * @param scaleY The x scale factor of the matrix
- * @param degrees Whether or not the rotation given is in degrees (false, default, means radians)
+ * @param unit The unit of the rotation
  */
-Transform::Transform(float translateX, float translateY, float rotation, float scaleX, float scaleY, bool degrees) : Matrix3f({
-	cos(degrees ? degToRad(rotation) : rotation) * scaleX, -sin(degrees ? degToRad(rotation) : rotation) * scaleY, translateX,
-	sin(degrees ? degToRad(rotation) : rotation) * scaleX, cos(degrees ? degToRad(rotation) : rotation) * scaleY, translateY,
+Transform::Transform(float translateX, float translateY, float rotation, float scaleX, float scaleY, AngleUnit unit) : Matrix3f({
+	cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleX, -sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleY, translateX,
+	sin(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleX, cos(unit == AngleUnit::Degree ? degToRad(rotation) : rotation) * scaleY, translateY,
 	0.0f, 0.0f, 1.0f
 }) {
 	// Empty Body
@@ -114,11 +113,11 @@ void Transform::setIdentity() {
  * @param vec The vector to scale by
  */
 void Transform::scale(const Vector2f& vec) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		vec.x, 0.0f, 0.0f,
 		0.0f, vec.y, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -127,11 +126,11 @@ void Transform::scale(const Vector2f& vec) {
  * @param y The y scale factor
  */
 void Transform::scale(float x, float y) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		x, 0.0f, 0.0f,
 		0.0f, y, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -139,11 +138,11 @@ void Transform::scale(float x, float y) {
  * @param factor The scale factor
  */
 void Transform::scale(float factor) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		factor, 0.0f, 0.0f,
 		0.0f, factor, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -151,11 +150,11 @@ void Transform::scale(float factor) {
  * @param vec The vector to translate by
  */
 void Transform::translate(const Vector2f& vec) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		1.0f, 0.0f, vec.x,
 		0.0f, 1.0f, vec.y,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -164,40 +163,26 @@ void Transform::translate(const Vector2f& vec) {
  * @param y The y displacement
  */
 void Transform::translate(float x, float y) {
-	data = std::move(Matrix3f::operator*(Matrix3f({
+	data = Matrix3f::operator*(Matrix3f({
 		1.0f, 0.0f, x,
 		0.0f, 1.0f, y,
 		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
- * Rotates the transformation matrix using RADIANS
- * @param angle The angle to rotate by in RADIANS
+ * Rotates the transformation matrix
+ * @param angle The angle to rotate by
+ * @param unit The unit of the angle
  */
-void Transform::rotate(float angle) {
-	float c = cos(angle);
-	float s = sin(angle);
-	data = std::move(Matrix3f::operator*(Matrix3f({
+void Transform::rotate(float angle, AngleUnit unit) {
+	float c = cos(unit == AngleUnit::Degree ? degToRad(angle) : angle);
+	float s = sin(unit == AngleUnit::Degree ? degToRad(angle) : angle);
+	data = Matrix3f::operator*(Matrix3f({
 		c, -s, 0.0f,
 		s, c, 0.0f,
 		0.0f, 0.0f, 1.0f
-	})).data);
-}
-
-/**
- * Rotates the transformation matrix using DEGREES
- * @param angle The angle to rotate by in DEGREES
- */
-void Transform::rotateDeg(float angle) {
-	float rad = angle * PI / 180;
-	float c = cos(rad);
-	float s = sin(rad);
-	data = std::move(Matrix3f::operator*(Matrix3f({
-		c, -s, 0.0f,
-		s, c, 0.0f,
-		0.0f, 0.0f, 1.0f
-	})).data);
+	})).data;
 }
 
 /**
@@ -224,39 +209,34 @@ void Transform::setTranslation(const Vector2f& vec) {
  * @param The translation
  */
 Vector2f Transform::getTranslation() const {
-	return Vector2f(data[2], data[5]);
+	return {data[2], data[5]};
 }
 
 /**
  * Sets the rotation of the matrix
  * @param angle The angle of the rotation
- * @param degrees Whether the angle is in degrees or radians (true = degrees)
+ * @param unit The unit of the angle
  */
-void Transform::setRotation(float angle, bool degrees) {
-	if (degrees) angle = degToRad(angle);
+void Transform::setRotation(float angle, AngleUnit unit) {
+	if (unit == AngleUnit::Degree) angle = degToRad(angle);
 	Vector2f scale = getScale();
 	float c = cos(angle);
 	float s = sin(angle);
 	data[0] = scale.x * c;
 	data[1] = scale.y * -s;
-	data[4] = scale.x * s;
-	data[5] = scale.y * c;
+	data[3] = scale.x * s;
+	data[4] = scale.y * c;
 }
 
 /**
- * Gets the rotation in RADIANS
- * @returns the rotation in RADIANS
+ * Gets the rotation
+ * @param unit The unit to return the rotation in
+ * @returns the rotation
  */
-float Transform::getRotation() const {
-	return atan2(data[3], data[4]);
-}
-
-/**
- * Gets the rotation in DEGREES
- * @returns the rotation in DEGREES
- */
-float Transform::getRotationDeg() const {
-	return radToDeg(getRotation());
+float Transform::getRotation(AngleUnit unit) const {
+	float angle = atan2(data[3], data[4]);
+	if (unit == AngleUnit::Degree) angle = radToDeg(angle);
+	return angle;
 }
 
 /**
@@ -265,7 +245,7 @@ float Transform::getRotationDeg() const {
  * @param scaleY The y component
  */
 void Transform::setScale(float scaleX, float scaleY) {
-	float c = cos(getRotation());
+	float c = cos(getRotation(AngleUnit::Radian));
 	data[0] = scaleX * c;
 	data[4] = scaleY * c;
 }
@@ -275,7 +255,7 @@ void Transform::setScale(float scaleX, float scaleY) {
  * @param scale The scale factor (applies for both horizontal/vertical scaling)
  */
 void Transform::setScale(float scale) {
-	float c = cos(getRotation());
+	float c = cos(getRotation(AngleUnit::Radian));
 	data[0] = scale * c;
 	data[4] = scale * c;
 }
@@ -285,10 +265,10 @@ void Transform::setScale(float scale) {
  * @returns the scale of the matrix
  */
 Vector2f Transform::getScale() const {
-	return Vector2f(
+	return {
 		sqrt(data[3] * data[3] + data[4] * data[4]),
 		sqrt(data[0] * data[0] + data[1] * data[1])
-	);
+	};
 }
 
 /**
@@ -297,7 +277,7 @@ Vector2f Transform::getScale() const {
  * @returns The transformed vector
  */
 Vector2f Transform::transform(const Vector2f& vec) const {
-	return Vector2f(vec.x * data[0] + vec.y * data[1] + data[2], vec.x * data[3] + vec.y * data[4] + data[5]);
+	return {vec.x * data[0] + vec.y * data[1] + data[2], vec.x * data[3] + vec.y * data[4] + data[5]};
 }
 
 /**
@@ -317,10 +297,10 @@ void Transform::transformInplace(Vector2f& vec) const {
  */
 Vector2f Transform::inverseTransform(const Vector2f& vec) const {
 	float den = data[0] * data[4] - data[1] * data[3];
-	return Vector2f(
+	return {
 		(data[1] * data[5] - data[1] * vec.y - data[2] * data[4] + data[4] * vec.x) / den,
 		(-data[0] * data[5] + data[0] * vec.y + data[2] * data[3] - data[3] * vec.x) / den
-	);
+	};
 	// Below system of equations represents transformation where k, j = vec.x, vec.y
 	// x * n0 + y * n1 + n2 = k
 	// x * n3 + y * n4 + n5 = j
@@ -338,4 +318,133 @@ void Transform::inverseTransformInplace(Vector2f& vec) const {
 	float den = data[0] * data[4] - data[1] * data[3];
 	vec.x = (data[1] * data[5] - data[1] * vec.y - data[2] * data[4] + data[4] * vec.x) / den;
 	vec.y = (-data[0] * data[5] + data[0] * vec.y + data[2] * data[3] - data[3] * vec.x) / den;
+}
+
+/**
+ * Transforms a rect using this transformation matrix
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+RotatedRect Transform::transform(const RotatedRect& rect) const {
+	return {
+		transform(rect.point1),
+		transform(rect.point2),
+		transform(rect.point3),
+		transform(rect.point4)
+	};
+}
+
+/**
+ * Inverse transforms a rect using this transformation matrix
+ * (Returns a rect transformed by this matrix to its original)
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+RotatedRect Transform::inverseTransform(const RotatedRect& rect) const {
+	return {
+		inverseTransform(rect.point1),
+		inverseTransform(rect.point2),
+		inverseTransform(rect.point3),
+		inverseTransform(rect.point4)
+	};
+}
+
+/**
+ * Transforms a rect using this transformation matrix
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+RotatedRect Transform::transform(const Rect& rect) const {
+	return {
+		transform(rect.topLeft),
+		transform(rect.topRight()),
+		transform(rect.bottomRight),
+		transform(rect.bottomLeft())
+	};
+}
+
+/**
+ * Inverse transforms a rect using this transformation matrix
+ * (Returns a rect transformed by this matrix to its original)
+ * @param rect The rect to transform
+ * @returns The transformed rect
+ */
+RotatedRect Transform::inverseTransform(const Rect& rect) const {
+	return {
+		inverseTransform(rect.topLeft),
+		inverseTransform(rect.topRight()),
+		inverseTransform(rect.bottomRight),
+		inverseTransform(rect.bottomLeft())
+	};
+}
+
+/**
+ * Transforms a ray using this transformation matrix
+ * @param ray The ray to transform
+ * @returns The transformed ray
+ */
+Ray Transform::transform(const Ray& ray) const {
+	Ray newRay;
+	newRay.origin = transform(ray.origin);
+	newRay.direction = transform(ray.direction + ray.origin) - newRay.origin;
+	newRay.direction /= newRay.direction.magnitude();
+	return newRay;
+}
+
+/**
+ * Inverse transforms a ray using this transformation matrix
+ * (Returns a ray transformed by this matrix to its original)
+ * @param ray The ray to transform
+ * @returns The transformed ray
+ */
+Ray Transform::inverseTransform(const Ray& ray) const {
+	Ray newRay;
+	newRay.origin = inverseTransform(ray.origin);
+	newRay.direction = inverseTransform(ray.direction + ray.origin) - newRay.origin;
+	newRay.direction /= newRay.direction.magnitude();
+	return newRay;
+}
+
+/**
+ * Transforms a line using this transformation matrix
+ * @param line The line to transform
+ * @returns The transformed line
+ */
+Line Transform::transform(const Line& line) const {
+	return {transform(line.point1), transform(line.point2)};
+}
+
+/**
+ * Inverse transforms a line using this transformation matrix
+ * (Returns a line transformed by this matrix to its original)
+ * @param line The line to transform
+ * @returns The transformed line
+ */
+Line Transform::inverseTransform(const Line& line) const {
+	return {inverseTransform(line.point1), inverseTransform(line.point2)};
+}
+
+/**
+ * Transforms a circle using this transformation matrix
+ * @param circle The circle to transform
+ * @returns The transformed circle
+ */
+Circle Transform::transform(const Circle& circle) const {
+	Circle newCircle;
+	newCircle.center = transform(circle.center);
+	newCircle.radius = transform({circle.radius, 0.0f}).magnitude();
+	return newCircle;
+}
+
+/**
+ * Inverse transforms a circle using this transformation matrix
+ * (Returns a circle transformed by this matrix to its original)
+ * @param circle The circle to transform
+ * @returns The transformed circle
+ */
+Circle Transform::inverseTransform(const Circle& circle) const {
+	Circle newCircle;
+	newCircle.center = inverseTransform(circle.center);
+	newCircle.radius = inverseTransform({circle.radius, 0.0f}).magnitude();
+	return newCircle;
 }

@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,9 +16,13 @@
 
 #pragma once
 
+#include <Kale/Math/Utils/Utils.hpp>
+
 #include <cmath>
 #include <algorithm>
 #include <ostream>
+#include <type_traits>
+#include <limits>
 
 namespace Kale {
 
@@ -77,6 +81,8 @@ namespace Kale {
 			y /= v;
 		}
 
+		Vector2<T> operator-() const { return {-x, -y}; };
+
 		Vector2<T> operator+(Vector2<T> o) const { return Vector2<T>(x + o.x, y + o.y); }
 		Vector2<T> operator-(Vector2<T> o) const { return Vector2<T>(x - o.x, y - o.y); }
 		Vector2<T> operator*(Vector2<T> o) const { return Vector2<T>(x * o.x, y * o.y); }
@@ -92,32 +98,72 @@ namespace Kale {
 		friend Vector2<T> operator*(float n, Vector2<T> v) { return Vector2<T>(n * v.x, n * v.y); }
 		friend Vector2<T> operator/(float n, Vector2<T> v) { return Vector2<T>(n / v.x, n / v.y); }
 
-		bool operator==(Vector2<T> o) { return x == o.x && y == o.y; }
+		bool operator>(Vector2<T> o) const { return x > o.x && y > o.y; }
+		bool operator<(Vector2<T> o) const { return x < o.x && y < o.y; }
+		bool operator<=(Vector2<T> o) const { return x <= o.x && y <= o.y; }
+		bool operator>=(Vector2<T> o) const { return x >= o.x && y >= o.y; }
+		template <typename A = T> typename std::enable_if<not std::is_floating_point<A>::value, bool>::type operator==(Vector2<T> o) const {
+			return x == o.x && y == o.y;
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector2<T> o) const {
+			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y);
+		}
 
 		T dot(Vector2<T> o) const { return o.x * x + o.y * y; }
-		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y)); }
+		T cross(Vector2<T> o) const { return x * o.y - y * o.x; }
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
+			return sqrt(x * x + y * y);
+		}
 
 		Vector2<T> clamp(T minX, T maxX, T minY, T maxY) const {
 			return Vector2<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY));
+		}
+		Vector2<T> clamp(Vector2<T> min, Vector2<T> max) const {
+			return Vector2<T>(std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y));
 		}
 
 		void clampTo(T minX, T maxX, T minY, T maxY) {
 			x = std::clamp(x, minX, maxX);
 			y = std::clamp(y, minY, maxY);
 		}
+		void clampTo(Vector2<T> min, Vector2<T> max) {
+			x = std::clamp(x, min.x, max.x);
+			y = std::clamp(y, min.y, max.y);
+		}
 
 		template <typename A>
 		Vector2<A> cast() const {
 			return Vector2<A>(static_cast<A>(x), static_cast<A>(y));
 		}
+
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector2<T>>::type unit() const {
+			return *this / magnitude();
+		}
+
+		Vector2<T> perpendicular(Vector2<T> o) const {
+			return {x + o.y - y, y - o.x + x};
+		}
+		Vector2<T> project(Vector2<T> o) {
+			float k = dot(o) / o.dot(o);
+			return {k * o.x, k * o.y};
+		}
+
+		Vector2<T> xy() const { return {x, y}; }
+		Vector2<T> yx() const { return {y, x}; }
+
+		static Vector2<T> one() { return {1, 1}; }
+		static Vector2<T> zero() { return {0, 0}; }
+		static Vector2<T> right() { return {1, 0}; }
+		static Vector2<T> up() { return {0, 1}; }
+		static Vector2<T> max() { return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max()}; }
+		static Vector2<T> min() { return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min()}; }
 	};
 
 	/**
 	 * Represents a vector in a 3 dimensional space
 	 */
 	template <typename T>
-	class Vector3
-	{
+	class Vector3 {
 	public:
 		T x, y, z;
 
@@ -181,6 +227,8 @@ namespace Kale {
 			z /= v;
 		}
 
+		Vector3<T> operator-() const { return {-x, -y, -z}; };
+
 		Vector3<T> operator+(Vector3<T> o) const { return Vector3<T>(x + o.x, y + o.y, z + o.z); }
 		Vector3<T> operator-(Vector3<T> o) const { return Vector3<T>(x - o.x, y - o.y, z - o.z); }
 		Vector3<T> operator*(Vector3<T> o) const { return Vector3<T>(x * o.x, y * o.y, z * o.z); }
@@ -196,13 +244,27 @@ namespace Kale {
 		friend Vector3<T> operator*(float n, Vector3<T> v) { return Vector3<T>(n * v.x, n * v.y, n * v.z); }
 		friend Vector3<T> operator/(float n, Vector3<T> v) { return Vector3<T>(n / v.x, n / v.y, n / v.z); }
 
-		bool operator==(Vector3<T> o) { return x == o.x && y == o.y && z == o.z; }
+		bool operator>(Vector3<T> o) const { return x > o.x && y > o.y && z > o.z; }
+		bool operator<(Vector3<T> o) const { return x < o.x && y < o.y && z < o.z; }
+		bool operator>=(Vector3<T> o) const { return x >= o.x && y >= o.y && z >= o.z; }
+		bool operator<=(Vector3<T> o) const { return x <= o.x && y <= o.y && z <= o.z; }
+		template <typename A = T> typename std::enable_if<not std::is_floating_point<A>::value, bool>::type operator==(Vector3<T> o) const {
+			return x == o.x && y == o.y && z == o.z;
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector3<T> o) const {
+			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y) && isFloatingEqual(z, o.z);
+		}
 
 		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
-		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z)); }
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
+			return sqrt(x * x + y * y + z * z);
+		}
 
 		Vector3<T> clamp(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) const {
 			return Vector3<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY), std::clamp(z, minZ, maxZ));
+		}
+		Vector3<T> clamp(Vector3<T> min, Vector3<T> max) const {
+			return Vector3<T>(std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y), std::clamp(z, min.z, max.z));
 		}
 
 		void clampTo(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) {
@@ -210,21 +272,67 @@ namespace Kale {
 			y = std::clamp(y, minY, maxY);
 			z = std::clamp(z, minZ, maxZ);
 		}
+		void clampTo(Vector3<T> min, Vector3<T> max) {
+			x = std::clamp(x, min.x, max.x);
+			y = std::clamp(y, min.y, max.y);
+			z = std::clamp(z, min.z, max.z);
+		}
 
-		template <typename A>
-		Vector3<A> cast() const {
+		template <typename A> Vector3<A> cast() const {
 			return Vector3<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z));
 		}
-	};
+
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector3<T>>::type unit() const {
+			return *this / magnitude();
+		}
+
+		Vector2<T> xy() const { return {x, y}; }
+		Vector2<T> xz() const { return {x, z}; }
+		Vector2<T> yx() const { return {y, x}; }
+		Vector2<T> yz() const { return {y, z}; }
+		Vector2<T> zx() const { return {z, x}; }
+		Vector2<T> zy() const { return {z, y}; }
+
+		Vector3<T> xyz() const { return {x, y, z}; }
+		Vector3<T> xzy() const { return {x, z, y}; }
+		Vector3<T> yxz() const { return {y, x, z}; }
+		Vector3<T> yzx() const { return {y, z, x}; }
+		Vector3<T> zxy() const { return {z, x, y}; }
+		Vector3<T> zyx() const { return {z, y, x}; }
+
+		static Vector3<T> zero() { return {0, 0, 0}; }
+		static Vector3<T> one() { return {1, 1, 1}; }
+		static Vector3<T> right() { return {1, 0, 0}; }
+		static Vector3<T> up() { return {0, 1, 0}; }
+		static Vector3<T> front() { return {0, 0, 1}; }
+		static Vector3<T> max() { return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max()}; }
+		static Vector3<T> min() { return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min()}; }
+};
 
 	/**
 	 * Represents a vector in a 3 dimensional space
 	 */
 	template <typename T>
-	class Vector4
-	{
+	class Vector4 {
 	public:
 		T x, y, z, w;
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		Vector4(float r, float g, float b) : x(r/255.0f), y(g/255.0f), z(b/255.0f), w(1.0f) {}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		Vector4(int hex) : w(1.0f) {
+			x = ((hex >> 16) & 0xFF) / 255.0f;
+			y = ((hex >> 8) & 0xFF) / 255.0f;
+			z = (hex & 0xFF) / 255.0f;
+		}
+
+		template<typename U = T, typename = typename std::enable_if<std::is_same<U, float>::value>::type>
+		Vector4(int hex, float alpha) : w(alpha) {
+			x = ((hex >> 16) & 0xFF) / 255.0f;
+			y = ((hex >> 8) & 0xFF) / 255.0f;
+			z = (hex & 0xFF) / 255.0f;
+		}
 
 		Vector4() : x(0), y(0), z(0), w(0) {}
 		Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
@@ -300,6 +408,8 @@ namespace Kale {
 			w /= v;
 		}
 
+		Vector4<T> operator-() const { return {-x, -y, -z, -w}; };
+
 		Vector4<T> operator+(Vector4<T> o) const { return Vector4<T>(x + o.x, y + o.y, z + o.z, w + o.w); }
 		Vector4<T> operator-(Vector4<T> o) const { return Vector4<T>(x - o.x, y - o.y, z - o.z, w - o.w); }
 		Vector4<T> operator*(Vector4<T> o) const { return Vector4<T>(x * o.x, y * o.y, z * o.z, w * o.w); }
@@ -315,14 +425,29 @@ namespace Kale {
 		friend Vector4<T> operator*(float n, Vector4<T> v) { return Vector4<T>(n * v.x, n * v.y, n * v.z, n * v.w); }
 		friend Vector4<T> operator/(float n, Vector4<T> v) { return Vector4<T>(n / v.x, n / v.y, n / v.z, n / v.w); }
 
-		bool operator==(Vector4<T> o) { return x == o.x && y == o.y && z == o.z && w == o.w; }
+		bool operator>(Vector4<T> o) const { return x > o.x && y > o.y && z > o.z && w > o.w; }
+		bool operator<(Vector4<T> o) const { return x < o.x && y < o.y && z < o.z && w < o.w; }
+		bool operator>=(Vector4<T> o) const { return x >= o.x && y >= o.y && z >= o.z && w >= o.w; }
+		bool operator<=(Vector4<T> o) const { return x <= o.x && y <= o.y && z <= o.z && w <= o.w; }
+		template <typename A = T> typename std::enable_if<not std::is_floating_point<A>::value, bool>::type operator==(Vector4<T> o) const {
+			return x == o.x && y == o.y && z == o.z && w == o.w;
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector4<T> o) const {
+			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y) && isFloatingEqual(z, o.z) && isFloatingEqual(w, o.w);
+		}
 
 		T dot(Vector4<T> o) const { return o.x * x + o.y * y + o.z * z + o.w * w; }
-		double magnitude() const { return sqrt(static_cast<double>(x * x + y * y + z * z + w * w)); }
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
+			return sqrt(x * x + y * y + z * z + w * w);
+		}
 
 		Vector4<T> clamp(T minX, T maxX, T minY, T maxY, T minZ, T maxZ, T minW, T maxW) const {
 			return Vector4<T>(std::clamp(x, minX, maxX), std::clamp(y, minY, maxY),
 				std::clamp(z, minZ, maxZ), std::clamp(w, minW, maxW));
+		}
+		Vector4<T> clamp(Vector4<T> min, Vector4<T> max) const {
+			return Vector4<T>(std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y),
+				std::clamp(z, min.z, max.z), std::clamp(w, min.w, max.w));
 		}
 
 		void clampTo(T minX, T maxX, T minY, T maxY, T minZ, T maxZ, T minW, T maxW) {
@@ -331,9 +456,91 @@ namespace Kale {
 			z = std::clamp(z, minZ, maxZ);
 			w = std::clamp(w, minW, maxW);
 		}
+		void clampTo(Vector4<T> min, Vector4<T> max) {
+			x = std::clamp(x, min.x, max.x);
+			y = std::clamp(y, min.y, max.y);
+			z = std::clamp(z, min.z, max.z);
+			w = std::clamp(w, min.w, max.w);
+		}
 
 		template <typename A> Vector4<A> cast() const {
 			return Vector4<A>(static_cast<A>(x), static_cast<A>(y), static_cast<A>(z), static_cast<A>(w));
+		}
+
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector4<T>>::type unit() const {
+			return *this / magnitude();
+		}
+
+		Vector2<T> xy() const { return {x, y}; }
+		Vector2<T> xz() const { return {x, z}; }
+		Vector2<T> xw() const { return {x, w}; }
+		Vector2<T> yx() const { return {y, x}; }
+		Vector2<T> yz() const { return {y, z}; }
+		Vector2<T> yw() const { return {y, w}; }
+		Vector2<T> zx() const { return {z, x}; }
+		Vector2<T> zy() const { return {z, y}; }
+		Vector2<T> zw() const { return {z, w}; }
+		Vector2<T> wx() const { return {w, x}; }
+		Vector2<T> wy() const { return {w, y}; }
+		Vector2<T> wz() const { return {w, z}; }
+
+		Vector3<T> xyz() const { return {x, y, z}; }
+		Vector3<T> xyw() const { return {x, y, w}; }
+		Vector3<T> xzy() const { return {x, z, y}; }
+		Vector3<T> xzw() const { return {x, z, w}; }
+		Vector3<T> xwy() const { return {x, w, y}; }
+		Vector3<T> xwz() const { return {x, w, z}; }
+		Vector3<T> yxz() const { return {y, x, z}; }
+		Vector3<T> yxw() const { return {y, x, w}; }
+		Vector3<T> yzx() const { return {y, z, x}; }
+		Vector3<T> yzw() const { return {y, z, w}; }
+		Vector3<T> ywx() const { return {y, w, x}; }
+		Vector3<T> ywz() const { return {y, w, z}; }
+		Vector3<T> zxy() const { return {z, x, y}; }
+		Vector3<T> zxw() const { return {z, x, w}; }
+		Vector3<T> zyx() const { return {z, y, x}; }
+		Vector3<T> zyw() const { return {z, y, w}; }
+		Vector3<T> zwx() const { return {z, w, x}; }
+		Vector3<T> zwy() const { return {z, w, y}; }
+		Vector3<T> wxy() const { return {w, x, y}; }
+		Vector3<T> wxz() const { return {w, x, z}; }
+		Vector3<T> wyx() const { return {w, y, x}; }
+		Vector3<T> wyz() const { return {w, y, z}; }
+		Vector3<T> wzx() const { return {w, z, x}; }
+		Vector3<T> wzy() const { return {w, z, y}; }
+
+		Vector4<T> wzyx() const { return {w, z, y, x}; }
+		Vector4<T> zwyx() const { return {z, w, y, x}; }
+		Vector4<T> wyzx() const { return {w, y, z, x}; }
+		Vector4<T> ywzx() const { return {y, w, z, x}; }
+		Vector4<T> zywx() const { return {z, y, w, x}; }
+		Vector4<T> yzwx() const { return {y, z, w, x}; }
+		Vector4<T> wzxy() const { return {w, z, x, y}; }
+		Vector4<T> zwxy() const { return {z, w, x, y}; }
+		Vector4<T> wxzy() const { return {w, x, z, y}; }
+		Vector4<T> xwzy() const { return {x, w, z, y}; }
+		Vector4<T> zxwy() const { return {z, x, w, y}; }
+		Vector4<T> xzwy() const { return {x, z, w, y}; }
+		Vector4<T> wyxz() const { return {w, y, x, z}; }
+		Vector4<T> ywxz() const { return {y, w, x, z}; }
+		Vector4<T> wxyz() const { return {w, x, y, z}; }
+		Vector4<T> xwyz() const { return {x, w, y, z}; }
+		Vector4<T> yxwz() const { return {y, x, w, z}; }
+		Vector4<T> xywz() const { return {x, y, w, z}; }
+		Vector4<T> zyxw() const { return {z, y, x, w}; }
+		Vector4<T> yzxw() const { return {y, z, x, w}; }
+		Vector4<T> zxyw() const { return {z, x, y, w}; }
+		Vector4<T> xzyw() const { return {x, z, y, w}; }
+		Vector4<T> yxzw() const { return {y, x, z, w}; }
+		Vector4<T> xyzw() const { return {x, y, z, w}; }
+
+		static Vector4<T> zero() { return {0, 0, 0, 0}; }
+		static Vector4<T> one() { return {1, 1, 1, 1}; }
+		static Vector4<T> max() {
+			return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max()};
+		}
+		static Vector4<T> min() {
+			return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min()};
 		}
 	};
 
@@ -381,6 +588,8 @@ namespace Kale {
 	typedef Vector4<uint32_t> Vector4ui32;
 	typedef Vector4<float> Vector4f;
 	typedef Vector4<double> Vector4d;
+
+	typedef Vector4f Color;
 
 	/**
 	 * Prints a vector to an output stream

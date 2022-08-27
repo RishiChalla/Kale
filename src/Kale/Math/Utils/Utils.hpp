@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,20 +16,67 @@
 
 #pragma once
 
+#include <Kale/Math/Constants/Constants.hpp>
+
+#include <limits>
+
 namespace Kale {
+
+	/**
+	 * Specifies whether an angle is in radians or degrees. You will often see functions
+	 * taking this enum as an input to determine whether you're inputting radians/degrees.
+	 */
+	enum class AngleUnit : bool {
+		Degree, Radian
+	};
 
 	/**
 	 * Converts an angle in degrees to radians
 	 * @param deg The angle in degrees
 	 * @returns The angle in radians
 	 */
-	float degToRad(float deg);
+	constexpr float degToRad(float deg) {
+		return deg / 180.0f * PI;
+	}
 
 	/**
 	 * Converts an angle in radians to degrees
 	 * @param rad The angle in radians
 	 * @returns The angle in degrees
 	 */
-	float radToDeg(float rad);
+	constexpr float radToDeg(float rad) {
+		return rad / PI * 180.0f;
+	}
+
+	/**
+	 * Checks if a number is extremely close to 0 to account for floating point error
+	 * @param num The number to check for
+	 * @param epsilon The epsilon (distance threshold) value to use. Default is std::numeric_limits<T>::epsilon()
+	 * @returns Whether or not the number is extremely close to 0
+	 */
+	template <typename T> bool isFloating0(T num, T epsilon = std::numeric_limits<T>::epsilon()) {
+		return num <= epsilon && num >= -epsilon;
+	}
+
+	/**
+	 * Checks if two numbers are roughly equivalent accounting for floating point error
+	 * @param num1 The first number to compare
+	 * @param num2 The second number to compare
+	 * @param epsilon The epsilon (distance threshold) value to use. Default is std::numeric_limits<T>::epsilon()
+	 * @returns Whether or not the two numbers are roughly equivalent
+	 */
+	template <typename T> bool isFloatingEqual(T num1, T num2, T epsilon = std::numeric_limits<T>::epsilon()) {
+		T tmp = num1 - num2;
+		return tmp <= epsilon && tmp >= -epsilon;
+	}
+
+	/**
+	 * Returns the sign of the number, -1 for negatives, 0 for 0, 1 for positives
+	 * @param val The number to return the sign of
+	 * @returns The sign of the number
+	 */
+	template <typename T> int sign(T val) {
+		return (T(0) < val) - (val < T(0));
+	}
 
 }

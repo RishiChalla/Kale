@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -54,7 +54,9 @@ Window::Window() {
 #ifdef KALE_OPENGL
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 #ifdef KALE_DEBUG
@@ -66,6 +68,8 @@ Window::Window() {
 #ifdef KALE_VULKAN
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 #endif
+
+	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 }
 
 /**
@@ -179,10 +183,13 @@ static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 static void resizeCallback(GLFWwindow* window, int width, int height) {
-	if (handlers == nullptr) return;
+	Vector2ui tmp_oldWinSize(oldWinSize);
 	Vector2ui size = Vector2i(width, height).cast<unsigned int>();
-	for (auto handler : *handlers) handler->onWindowResize(oldWinSize, size);
+	// Set the oldWinSize static variable here to avoid client calling getSize() and retrieving incorrect size
 	oldWinSize = size;
+
+	if (handlers == nullptr) return;
+	for (auto handler : *handlers) handler->onWindowResize(tmp_oldWinSize, size);
 }
 
 static void focusCallback(GLFWwindow* window, int focused) {
@@ -216,18 +223,30 @@ static void joystickCallback(int jid, int action) {
  */
 void Window::create(const char* title) {
 	this->title = title;
-	window = glfwCreateWindow(800, 600, title, nullptr, nullptr);
+	window = glfwCreateWindow(oldWinSize.x, oldWinSize.y, title, nullptr, nullptr);
+
+	if (!window) {
+		glfwTerminate();
+		console.error("Unable to create GLFW window");
+		exit(0);
+	}
 
 #ifdef KALE_OPENGL
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 #endif
+
+	// Correct the oldWinSize static variable to the window size rather than framebuffer size
+	Vector2i winSize;
+	glfwGetWindowSize(window, &winSize.x, &winSize.y);
+	oldWinSize = winSize.cast<unsigned int>();
 	
 	handlers = &eventHandlers;
 	glfwSetKeyCallback(window, keyCallback);
 	glfwSetCursorPosCallback(window, cursorCallback);
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 	glfwSetScrollCallback(window, scrollCallback);
-	glfwSetFramebufferSizeCallback(window, resizeCallback);
+	glfwSetWindowSizeCallback(window, resizeCallback);
 	glfwSetWindowFocusCallback(window, focusCallback);
 	glfwSetJoystickCallback(joystickCallback);
 }
@@ -266,6 +285,15 @@ Vector2ui Window::getSize() const {
  */
 Vector2f Window::getSizeF() const {
 	return oldWinSize.cast<float>();
+}
+
+/**
+ * Gets the frame buffer size for canvas creation
+ */
+Vector2ui Window::getFramebufferSize() const {
+	Vector2i size;
+	glfwGetFramebufferSize(window, &size.x, &size.y);
+	return size.cast<unsigned int>();
 }
 
 /**

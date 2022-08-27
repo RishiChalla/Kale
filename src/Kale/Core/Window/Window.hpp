@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 Rishi Challa
+   Copyright 2022 Rishi Challa
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -186,6 +186,11 @@ namespace Kale {
 		 * @returns The window size as a float vector
 		 */
 		Vector2f getSizeF() const;
+
+		/**
+		 * Gets the frame buffer size for canvas creation
+		 */
+		Vector2ui getFramebufferSize() const;
 
 		/**
 		 * Gets the window title
