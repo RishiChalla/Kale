@@ -36,23 +36,25 @@ using namespace Kale;
  * Constructs a new scene
  */
 Scene::Scene()  {
-	Vector2f size = mainApp->getWindow().getSizeF();
+	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 
 	worldToScreen.scale(2.0f / viewport);
-	worldToScreen.translate(viewport / -2.0f);
+	worldToScreen.translate(Vector2f(1920.0f, 1080.0f) / -2.0f);
+	sceneBounds = Rect{{(1920.0f - viewport.x) / 2.0f, 1080.0f}, {(1920.0f + viewport.x) / 2.0f, 0.0f}};
 }
 
 /**
  * Called when the event is fired
  */
 void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
-	Vector2f size = newSize.cast<float>();
+	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 
 	worldToScreen.setIdentity();
 	worldToScreen.scale(2.0f / viewport);
-	worldToScreen.translate(viewport / -2.0f);
+	worldToScreen.translate(Vector2f(1920.0f, 1080.0f) / -2.0f);
+	sceneBounds = Rect{{(1920.0f - viewport.x) / 2.0f, 1080.0f}, {(1920.0f + viewport.x) / 2.0f, 0.0f}};
 }
 
 /**

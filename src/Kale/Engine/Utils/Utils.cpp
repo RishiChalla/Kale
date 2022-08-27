@@ -41,6 +41,7 @@ std::tuple<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePa
 	std::vector<Vector2f>& vertices = std::get<0>(output);
 	std::vector<unsigned int>& elements = std::get<1>(output);
 
+	elements.reserve(d.triangles.size());
 	std::transform(d.triangles.begin(), d.triangles.end(), std::back_inserter(elements), [](size_t index) {
 		return static_cast<unsigned int>(index);
 	});
@@ -76,7 +77,7 @@ std::tuple<std::vector<float>, std::vector<unsigned int>> Kale::triangulatePathF
 		return static_cast<unsigned int>(index);
 	});
 
-	vertices.reserve(d.coords.size() / 2);
+	vertices.reserve(d.coords.size());
 	std::transform(d.coords.begin(), d.coords.end(), std::back_inserter(vertices), [](double value) {
 		return static_cast<float>(value);
 	});

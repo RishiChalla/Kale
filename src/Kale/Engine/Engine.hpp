@@ -19,12 +19,7 @@
 #include <Kale/Core/Scene/Scene.hpp>
 #include <Kale/Core/Node/Node.hpp>
 
-#include "BlobNode/BlobNode.hpp"
-#include "CircleNode/CircleNode.hpp"
-#include "JointNode/JointNode.hpp"
 #include "ParticleSystemNode/ParticleSystemNode.hpp"
 #include "PathNode/PathNode.hpp"
-#include "PhysicsBody/PhysicsBody.hpp"
-#include "SpriteNode/SpriteNode.hpp"
 #include "UINode/UINode.hpp"
 #include "Utils/Utils.hpp"
