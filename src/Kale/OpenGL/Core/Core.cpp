@@ -67,18 +67,25 @@ void Core::setupCore() noexcept {
 #ifdef KALE_VERBOSE
 				case GL_DEBUG_SEVERITY_NOTIFICATION:
 					console.log(outMessage.str());
+					break;
 				case GL_DEBUG_SEVERITY_LOW:
 					console.info(outMessage.str());
+					break;
 #endif
 				case GL_DEBUG_SEVERITY_MEDIUM:
 					console.warn(outMessage.str());
+					break;
 				case GL_DEBUG_SEVERITY_HIGH:
 					console.error(outMessage.str());
+					break;
 				default:
 					return;
 			}
 			
 		}, nullptr);
+
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 
 #endif
 	}
