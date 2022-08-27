@@ -22,5 +22,4 @@
 #include "Logger/Logger.hpp"
 #include "Node/Node.hpp"
 #include "Scene/Scene.hpp"
-#include "Settings/Settings.hpp"
 #include "Window/Window.hpp"

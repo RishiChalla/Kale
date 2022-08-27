@@ -56,24 +56,6 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 }
 
 /**
- * Adds a node to the scene to render/update
- * @param node The node to add
- */
-void Scene::addNode(std::shared_ptr<Node>& node) {
-	std::lock_guard<std::mutex> guard(mutex);
-	nodes.push_back(node);
-}
-
-/**
- * Removes a node from the scene
- * @param node The node to remove
- */
-void Scene::removeNode(std::shared_ptr<Node>& node) {
-	std::lock_guard<std::mutex> guard(mutex);
-	nodes.remove(node);
-}
-
-/**
  * Renders the current scene
  * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
  */

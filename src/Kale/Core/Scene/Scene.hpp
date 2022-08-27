@@ -96,15 +96,10 @@ namespace Kale {
 		 * Adds a node to the scene to render/update
 		 * @param node The node to add
 		 */
-		void addNode(std::shared_ptr<Node>& node);
-
-		/**
-		 * Adds a node to the scene to render/update
-		 * @param node The node to add
-		 */
 		template <typename T> void addNode(std::shared_ptr<T>& node) {
 			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
-			addNode(nodePtr);
+			std::lock_guard<std::mutex> guard(mutex);
+			nodes.push_back(node);
 		}
 
 		/**
@@ -119,7 +114,8 @@ namespace Kale {
 		 */
 		template <typename T> void removeNode(std::shared_ptr<T>& node) {
 			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
-			removeNode(node);
+			std::lock_guard<std::mutex> guard(mutex);
+			nodes.remove(node);
 		}
 
 		/**
