@@ -24,6 +24,8 @@
 #include <memory>
 #include <thread>
 #include <list>
+#include <condition_variable>
+#include <mutex>
 
 /**
  * The entry point function/main function of the program
@@ -43,6 +45,41 @@ namespace Kale {
 		 * A list of the update threads
 		 */
 		std::list<std::thread> updateThreads;
+
+		/**
+		 * Array of booleans representing which threads have finished updating. Used to synchronize threads together.
+		 */
+		std::unique_ptr<bool> updatesFinished = nullptr;
+
+		/**
+		 * Changed to true to signal other threads to begin updating again, and is made false at the beginning of every frame render
+		 */
+		bool renderingFinished = false;
+
+		/**
+		 * The time taken to update and render each frame, set at the end of every render
+		 */
+		float deltaTime;
+
+		/**
+		 * Condition variable to check when updating is completely finished on all threads
+		 */
+		std::condition_variable updateFinishedCondVar;
+
+		/**
+		 * Mutex used to block execution while updating is occurring
+		 */
+		std::mutex updatingMutex;
+
+		/**
+		 * Condition variable to check when rendering is finished on the main thread
+		 */
+		std::condition_variable renderFinishedCondVar;
+
+		/**
+		 * Mutex used to block rendering while rendering is occuring.
+		 */
+		std::mutex renderingMutex;
 
 		/**
 		 * Handles updating the application in a separate thread

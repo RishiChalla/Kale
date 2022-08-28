@@ -16,8 +16,6 @@
 
 #include "Application.hpp"
 
-#include <Kale/Core/Clock/Clock.hpp>
-
 #ifdef KALE_VULKAN
 #include <Kale/Vulkan/Core/Core.hpp>
 #endif
@@ -27,6 +25,7 @@
 #endif
 
 #include <exception>
+#include <chrono>
 #include <string>
 
 using namespace Kale;
@@ -108,19 +107,23 @@ void Application::presentScene(const std::shared_ptr<Scene>& scene) {
  */
 void Application::update(size_t threadNum) noexcept {
 	// Update loop
-	Clock clock;
 	while (window.isOpen()) {
-
-		// Limit to 120 updates per second
-		float ups = clock.sleep(1000.0f / 120.0f);
 		
+		// Wait until the previous frame has rendered to begin the next frame
+		std::unique_lock lock(updatingMutex);
+		while (!renderingFinished) renderFinishedCondVar.wait(lock);
+
 		// Perform updating
 		if (presentedScene != nullptr) try {
-			presentedScene->update(threadNum, ups);
+			presentedScene->update(threadNum, deltaTime);
 		}
 		catch (const std::exception& e) {
 			console.error("Failed to update presented screen on update thread " + std::to_string(threadNum) + " - " + e.what());
 		}
+
+		// Signal to the main thread that our thread has finished updating
+		updatesFinished.get()[threadNum] = true;
+		updateFinishedCondVar.notify_one();
 	}
 }
 
@@ -153,22 +156,37 @@ void Application::run() noexcept {
 	}
 
 	// Create update threads
+	updatesFinished = std::make_unique<bool>(std::thread::hardware_concurrency());
+	renderingFinished = false;
 	for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; i++) {
 		updateThreads.emplace_back(&Application::update, this, i);
 	}
 
 	// Render loop
-	Clock clock;
+	auto previousTime = std::chrono::high_resolution_clock::now();
 	while (window.isOpen()) {
-
-		// Limit FPS to 120
-		clock.sleep(1000.0f / 120.0f);
 		
 		// Update the window for event polling, etc
 		window.update();
 
+		// Calculate FPS
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		deltaTime = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime).count());
+
+		// Mark rendering as finished and allow updating to begin
+		std::fill(updatesFinished.get(), updatesFinished.get() + updateThreads.size(), false);
+		renderingFinished = true;
+		renderFinishedCondVar.notify_all();
+
+		// Wait until updating is finished for rendering to begin
+		std::unique_lock lock(updatingMutex);
+		while (!std::all_of(updatesFinished.get(), updatesFinished.get() + updateThreads.size(), [](bool v) { return v; })) {
+			updateFinishedCondVar.wait(lock);
+		}
+
+		// Render scene
 		if (presentedScene != nullptr) try {
-			presentedScene->render();
+			presentedScene->render(deltaTime);
 		}
 		catch (const std::exception& e) {
 			console.error("Failed to render presented screen - "s + e.what());

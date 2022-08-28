@@ -59,9 +59,9 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 
 /**
  * Renders the current scene
- * @param threadNum The thread to render between 0 - std::thread::hardware_concurrency()
+ * @param deltaTime The time the last frame has taken to update and render
  */
-void Scene::render() const {
+void Scene::render(float deltaTime) const {
 
 #ifdef KALE_OPENGL
 	OpenGL::Core::clearScreen(bgColor);
@@ -69,7 +69,7 @@ void Scene::render() const {
 
 	Transform cameraToScreen(worldToScreen * camera);
 	for (const std::shared_ptr<Node>& node : nodes)
-		node->render(cameraToScreen);
+		node->render(cameraToScreen, deltaTime);
 	
 	// Swaps the buffers/uses the swapchain to display output
 #ifdef KALE_OPENGL
@@ -84,27 +84,37 @@ void Scene::render() const {
 /**
  * Updates the current scene
  * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
- * @param ups The number of updates per second
+ * @param deltaTime The time the last frame has taken to update and render
  */
-void Scene::update(size_t threadNum, float ups) {
-	// TODO - Delegate updating on separate threads per node to minimize render time
-	// for (Node* node : nodes)
-	// 	node->update(threadNum, ups);
+void Scene::update(size_t threadNum, float deltaTime) {
+	
+	// Pre updating
+	onPreUpdate(threadNum, deltaTime);
+	// TODO - Pre Update nodes
+
+	onUpdate(threadNum, deltaTime);
+	// TODO - Update nodes
 }
 
 /**
- * Called before all nodes are updated
+ * Called before all nodes are updated. Do NOT write code directly in here, this function is called once on each
+ * thread every frame. If you must run code every frame outside of a node, then make sure you're only running
+ * your required code on one thread by using an if statement on threadNum.
+ * @param threadNum The thread this function is being called on
  * @param deltaTime The microseconds since the last update
  */
-void Scene::onUpdate(float deltaTime) {
+void Scene::onUpdate(size_t threadNum, float deltaTime) {
 	// Empty Body
 }
 
 /**
- * Called before all nodes are pre updated
+ * Called before all nodes are pre updated. Do NOT write code directly in here, this function is called once on each
+ * thread every frame. If you must run code every frame outside of a node, then make sure you're only running
+ * your required code on one thread by using an if statement on threadNum.
+ * @param threadNum The thread this function is being called on
  * @param deltaTime The microseconds since the last update
  */
-void Scene::onPreUpdate(float deltaTime) {
+void Scene::onPreUpdate(size_t threadNum, float deltaTime) {
 	// Empty Body
 }
 

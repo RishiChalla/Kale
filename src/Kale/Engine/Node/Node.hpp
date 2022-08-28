@@ -37,14 +37,23 @@ namespace Kale {
 		 * Renders the node
 		 * @param camera The camera to render with
 		 */
-		virtual void render(const Camera& camera) = 0;
+		virtual void render(const Camera& camera, float deltaTime) const = 0;
 
 		/**
-		 * Updates the node
-		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
-		 * @param ups The amount of updates the current thread is doing in a second
+		 * Called on update, perfect place to do any physics updating, game logic, etc
+		 * @param threadNum the index of the thread this update is called on
+		 * @param scene The scene being updated to
+		 * @param deltaTime The duration of the last frame in microseconds
 		 */
-		virtual void update(size_t threadNum, float ups) = 0;
+		virtual void update(size_t threadNum, const Scene& scene, float deltaTime) = 0;
+
+		/**
+		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
+		 * @param threadNum the index of the thread this update is called on
+		 * @param scene The scene being updated to
+		 * @param deltaTime The duration of the last frame in microseconds
+		 */
+		virtual void preUpdate(size_t threadNum, const Scene& scene, float deltaTime) = 0;
 
 		/**
 		 * Creates the node parent
@@ -70,5 +79,10 @@ namespace Kale {
 		 * to avoid potential bias 
 		 */
 		const float updateTime = -1.0f;
+		
+		/**
+		 * The amount of time this node takes to pre-update on average, measured and used similarly to updateTime.
+		 */
+		const float preUpdateTime = -1.0f;
 	};
 }

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <Kale/Core/Node/Node.hpp>
+#include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Core/Events/Events.hpp>
 #include <Kale/Math/Transform/Transform.hpp>
 
@@ -53,15 +53,16 @@ namespace Kale {
 
 		/**
 		 * Renders the current scene
+		 * @param deltaTime The time the last frame has taken to update and render
 		 */
-		void render() const;
+		void render(float deltaTime) const;
 
 		/**
 		 * Updates the current scene
 		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
-		 * @param ups The number of updates per second
+		 * @param deltaTime The time the last frame has taken to update and render
 		 */
-		void update(size_t threadNum, float ups);
+		void update(size_t threadNum, float deltaTime);
 
 		friend class Application;
 		friend class Node;
@@ -129,16 +130,22 @@ namespace Kale {
 		virtual void onSceneChange();
 
 		/**
-		 * Called before all nodes are updated
+		 * Called before all nodes are updated. Do NOT write code directly in here, this function is called once on each
+		 * thread every frame. If you must run code every frame outside of a node, then make sure you're only running
+		 * your required code on one thread by using an if statement on threadNum.
+		 * @param threadNum The thread this function is being called on
 		 * @param deltaTime The microseconds since the last update
 		 */
-		virtual void onUpdate(float deltaTime);
+		virtual void onUpdate(size_t threadNum, float deltaTime);
 
 		/**
-		 * Called before all nodes are pre updated
+		 * Called before all nodes are pre updated. Do NOT write code directly in here, this function is called once on each
+		 * thread every frame. If you must run code every frame outside of a node, then make sure you're only running
+		 * your required code on one thread by using an if statement on threadNum.
+		 * @param threadNum The thread this function is being called on
 		 * @param deltaTime The microseconds since the last update
 		 */
-		virtual void onPreUpdate(float deltaTime);
+		virtual void onPreUpdate(size_t threadNum, float deltaTime);
 
 		/**
 		 * Called when the event is fired

@@ -17,9 +17,7 @@
 #pragma once
 
 #include "Application/Application.hpp"
-#include "Clock/Clock.hpp"
 #include "Events/Events.hpp"
 #include "Logger/Logger.hpp"
-#include "Node/Node.hpp"
 #include "Scene/Scene.hpp"
 #include "Window/Window.hpp"

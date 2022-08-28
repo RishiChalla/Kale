@@ -17,9 +17,6 @@
 #pragma once
 
 #include <Kale/Core/Scene/Scene.hpp>
-#include <Kale/Core/Node/Node.hpp>
 
-#include "ParticleSystemNode/ParticleSystemNode.hpp"
-#include "PathNode/PathNode.hpp"
-#include "UINode/UINode.hpp"
+#include "Node/Node.hpp"
 #include "Utils/Utils.hpp"
