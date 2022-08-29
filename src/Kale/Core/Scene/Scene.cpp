@@ -35,7 +35,9 @@ using namespace Kale;
 /**
  * Constructs a new scene
  */
-Scene::Scene()  {
+Scene::Scene() {
+	updateNodes.resize(mainApp->getNumUpdateThreads(), std::set<std::shared_ptr<Node>, decltype(nodeUpdateCmp)*>(nodeUpdateCmp));
+
 	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
 
@@ -55,6 +57,49 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 	worldToScreen.scale(2.0f / viewport);
 	worldToScreen.translate(Vector2f(1920.0f, 1080.0f) / -2.0f);
 	sceneBounds = Rect{{(1920.0f - viewport.x) / 2.0f, 1080.0f}, {(1920.0f + viewport.x) / 2.0f, 0.0f}};
+}
+
+/**
+ * Updates the data structures holding nodes based off of the queues, MUST be called on the main thread
+ * after the completion of all updates in the frame.
+ */
+void Scene::updateNodeStructures() {
+	if (nodesToAdd.empty() && nodesToRemove.empty()) return;
+
+	// Add all the nodes till there's none left to add
+	while (!nodesToAdd.empty()) {
+		// Get the node and add it to the main list
+		std::shared_ptr<Node> node = nodesToAdd.front();
+		nodesToAdd.pop();
+		nodes.push_back(node);
+
+		// Find the thread with the current smallest total update time
+		size_t threadIndex = std::distance(threadedNodePerformanceTimes.begin(),
+			std::min_element(threadedNodePerformanceTimes.begin(), threadedNodePerformanceTimes.end()));
+
+		// Add the node to the thread with the smallest update time and add it to the thread's total time
+		threadedNodePerformanceTimes[threadIndex] += node->updateTime;
+		updateNodes[threadIndex].insert(node);
+	}
+
+	while (!nodesToRemove.empty()) {
+		// Get the node and remove it from the main list
+		std::shared_ptr<Node> node = nodesToRemove.front();
+		nodesToRemove.pop();
+		nodes.remove(node);
+
+		// Loop through the threads till we find the thread holding the update
+		for (size_t threadIndex = 0; threadIndex < updateNodes.size(); threadIndex++) {
+
+			// Check if the node is updated in this thread
+			auto it = updateNodes[threadIndex].find(node);
+			if (it == updateNodes[threadIndex].end()) continue;
+
+			// Remove the node from updates & update the performance times
+			threadedNodePerformanceTimes[threadIndex] -= node->updateTime;
+			updateNodes[threadIndex].erase(it);
+		}
+	}
 }
 
 /**
@@ -90,10 +135,10 @@ void Scene::update(size_t threadNum, float deltaTime) {
 	
 	// Pre updating
 	onPreUpdate(threadNum, deltaTime);
-	// TODO - Pre Update nodes
+	for (std::shared_ptr<Node>& node : updateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
 
 	onUpdate(threadNum, deltaTime);
-	// TODO - Update nodes
+	for (std::shared_ptr<Node>& node : updateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
 }
 
 /**

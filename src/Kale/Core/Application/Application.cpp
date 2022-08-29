@@ -186,6 +186,7 @@ void Application::run() noexcept {
 
 		// Render scene
 		if (presentedScene != nullptr) try {
+			presentedScene->updateNodeStructures();
 			presentedScene->render(deltaTime);
 		}
 		catch (const std::exception& e) {

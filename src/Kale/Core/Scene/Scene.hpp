@@ -21,10 +21,14 @@
 #include <Kale/Math/Transform/Transform.hpp>
 
 #include <list>
+#include <vector>
+#include <set>
+#include <queue>
 #include <utility>
 #include <memory>
 #include <functional>
 #include <mutex>
+#include <algorithm>
 
 namespace Kale {
 	
@@ -36,9 +40,36 @@ namespace Kale {
 	private:
 
 		/**
+		 * Compares node update times for insertion into the threaded sets
+		 */
+		static inline bool nodeUpdateCmp(const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) {
+			return a->updateTime == b->updateTime ? a < b : a->updateTime < b->updateTime;
+		}
+
+		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
 		std::list<std::shared_ptr<Node>> nodes;
+
+		/**
+		 * Stores the nodes to be updated by their update thread
+		 */
+		std::vector<std::set<std::shared_ptr<Node>, decltype(nodeUpdateCmp)*>> updateNodes;
+
+		/**
+		 * Holds the sum of the update times and pre update times of each set per thread
+		 */
+		std::vector<float> threadedNodePerformanceTimes;
+
+		/**
+		 * A queue of nodes to add
+		 */
+		std::queue<std::shared_ptr<Node>> nodesToAdd;
+
+		/**
+		 * A queue of nodes to remove
+		 */
+		std::queue<std::shared_ptr<Node>> nodesToRemove;
 
 		/**
 		 * The mutex used for node thread safety
@@ -63,6 +94,12 @@ namespace Kale {
 		 * @param deltaTime The time the last frame has taken to update and render
 		 */
 		void update(size_t threadNum, float deltaTime);
+
+		/**
+		 * Updates the data structures holding nodes based off of the queues, MUST be called on the main thread
+		 * after the completion of all updates in the frame.
+		 */
+		void updateNodeStructures();
 
 		friend class Application;
 		friend class Node;
@@ -100,7 +137,7 @@ namespace Kale {
 		template <typename T> void addNode(std::shared_ptr<T>& node) {
 			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
 			std::lock_guard<std::mutex> guard(mutex);
-			nodes.push_back(node);
+			nodesToAdd.push(nodePtr);
 		}
 
 		/**
@@ -116,7 +153,7 @@ namespace Kale {
 		template <typename T> void removeNode(std::shared_ptr<T>& node) {
 			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
 			std::lock_guard<std::mutex> guard(mutex);
-			nodes.remove(node);
+			nodesToRemove.push(nodePtr);
 		}
 
 		/**
