@@ -25,7 +25,8 @@
 #include <thread>
 #include <list>
 #include <condition_variable>
-#include <mutex>
+#include <shared_mutex>
+#include <atomic>
 
 /**
  * The entry point function/main function of the program
@@ -54,7 +55,7 @@ namespace Kale {
 		/**
 		 * Changed to true to signal other threads to begin updating again, and is made false at the beginning of every frame render
 		 */
-		bool renderingFinished = false;
+		std::atomic<bool> renderingFinished = false;
 
 		/**
 		 * The time taken to update and render each frame, set at the end of every render
@@ -64,22 +65,22 @@ namespace Kale {
 		/**
 		 * Condition variable to check when updating is completely finished on all threads
 		 */
-		std::condition_variable updateFinishedCondVar;
+		std::condition_variable_any updateFinishedCondVar;
 
 		/**
 		 * Mutex used to block execution while updating is occurring
 		 */
-		std::mutex updatingMutex;
+		std::shared_mutex updatingMutex;
 
 		/**
 		 * Condition variable to check when rendering is finished on the main thread
 		 */
-		std::condition_variable renderFinishedCondVar;
+		std::condition_variable_any renderFinishedCondVar;
 
 		/**
 		 * Mutex used to block rendering while rendering is occuring.
 		 */
-		std::mutex renderingMutex;
+		std::shared_mutex renderingMutex;
 
 		/**
 		 * Handles updating the application in a separate thread

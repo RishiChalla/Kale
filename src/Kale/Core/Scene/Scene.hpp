@@ -22,12 +22,12 @@
 
 #include <list>
 #include <vector>
-#include <set>
 #include <queue>
 #include <utility>
 #include <memory>
 #include <functional>
-#include <mutex>
+#include <shared_mutex>
+#include <condition_variable>
 #include <algorithm>
 
 namespace Kale {
@@ -40,13 +40,6 @@ namespace Kale {
 	private:
 
 		/**
-		 * Compares node update times for insertion into the threaded sets
-		 */
-		static inline bool nodeUpdateCmp(const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) {
-			return a->updateTime == b->updateTime ? a < b : a->updateTime < b->updateTime;
-		}
-
-		/**
 		 * A list of all the nodes to be presented in the current scene
 		 */
 		std::list<std::shared_ptr<Node>> nodes;
@@ -54,12 +47,17 @@ namespace Kale {
 		/**
 		 * Stores the nodes to be updated by their update thread
 		 */
-		std::vector<std::set<std::shared_ptr<Node>, decltype(nodeUpdateCmp)*>> updateNodes;
+		std::vector<std::list<std::shared_ptr<Node>>> updateNodes;
+
+		/**
+		 * Stores the nodes to be pre updated by their pre update thread
+		 */
+		std::vector<std::list<std::shared_ptr<Node>>> preUpdateNodes;
 
 		/**
 		 * Holds the sum of the update times and pre update times of each set per thread
 		 */
-		std::vector<float> threadedNodePerformanceTimes;
+		std::vector<std::pair<float, float>> threadedNodePerformanceTimes;
 
 		/**
 		 * A queue of nodes to add
@@ -70,6 +68,21 @@ namespace Kale {
 		 * A queue of nodes to remove
 		 */
 		std::queue<std::shared_ptr<Node>> nodesToRemove;
+
+		/**
+		 * Mutex used for waiting til pre updating is completed
+		 */
+		std::shared_mutex nodePreUpdatingMutex;
+
+		/**
+		 * An array of booleans determining whether or not pre updating is completed
+		 */
+		std::unique_ptr<bool> threadPreUpdating;
+
+		/**
+		 * Condition variable for checking when nodes have been pre updated
+		 */
+		std::condition_variable_any nodePreUpdatingCondVar;
 
 		/**
 		 * The mutex used for node thread safety

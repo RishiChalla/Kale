@@ -36,7 +36,9 @@ using namespace Kale;
  * Constructs a new scene
  */
 Scene::Scene() {
-	updateNodes.resize(mainApp->getNumUpdateThreads(), std::set<std::shared_ptr<Node>, decltype(nodeUpdateCmp)*>(nodeUpdateCmp));
+	threadPreUpdating = std::make_unique<bool>(std::thread::hardware_concurrency());
+	updateNodes.resize(std::thread::hardware_concurrency());
+	preUpdateNodes.resize(std::thread::hardware_concurrency());
 
 	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
@@ -64,6 +66,10 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
  * after the completion of all updates in the frame.
  */
 void Scene::updateNodeStructures() {
+	// Set all the nodes to be pre updating in preparation for the next frame
+	std::fill(threadPreUpdating.get(), threadPreUpdating.get() + mainApp->getNumUpdateThreads(), true);
+
+	// Return if no nodes need to be added
 	if (nodesToAdd.empty() && nodesToRemove.empty()) return;
 
 	// Add all the nodes till there's none left to add
@@ -75,11 +81,29 @@ void Scene::updateNodeStructures() {
 
 		// Find the thread with the current smallest total update time
 		size_t threadIndex = std::distance(threadedNodePerformanceTimes.begin(),
-			std::min_element(threadedNodePerformanceTimes.begin(), threadedNodePerformanceTimes.end()));
+			std::min_element(threadedNodePerformanceTimes.begin(), threadedNodePerformanceTimes.end(),
+				[](const std::pair<float, float>& a, const std::pair<float, float>& b) -> bool {
+					return a.first > b.first;
+				}
+			)
+		);
 
 		// Add the node to the thread with the smallest update time and add it to the thread's total time
-		threadedNodePerformanceTimes[threadIndex] += node->updateTime;
-		updateNodes[threadIndex].insert(node);
+		threadedNodePerformanceTimes[threadIndex].first += node->updateTime;
+		updateNodes[threadIndex].push_back(node);
+
+		// Find the thread with the current smallest total pre update time
+		threadIndex = std::distance(threadedNodePerformanceTimes.begin(),
+			std::min_element(threadedNodePerformanceTimes.begin(), threadedNodePerformanceTimes.end(),
+				[](const std::pair<float, float>& a, const std::pair<float, float>& b) -> bool {
+					return a.second > b.second;
+				}
+			)
+		);
+
+		// Add the node to the thread with the smallest pre update time and add it to the thread's total time
+		threadedNodePerformanceTimes[threadIndex].second += node->preUpdateTime;
+		preUpdateNodes[threadIndex].push_back(node);
 	}
 
 	while (!nodesToRemove.empty()) {
@@ -88,16 +112,35 @@ void Scene::updateNodeStructures() {
 		nodesToRemove.pop();
 		nodes.remove(node);
 
+		bool updateFound = false;
+		bool preUpdateFound = false;
+
 		// Loop through the threads till we find the thread holding the update
 		for (size_t threadIndex = 0; threadIndex < updateNodes.size(); threadIndex++) {
 
-			// Check if the node is updated in this thread
-			auto it = updateNodes[threadIndex].find(node);
-			if (it == updateNodes[threadIndex].end()) continue;
+			if (updateFound && preUpdateFound) break;
 
-			// Remove the node from updates & update the performance times
-			threadedNodePerformanceTimes[threadIndex] -= node->updateTime;
-			updateNodes[threadIndex].erase(it);
+			if (!updateFound) {
+				// Check if the node is updated in this thread
+				auto it = std::find(updateNodes[threadIndex].begin(), updateNodes[threadIndex].end(), node);
+				if (it != updateNodes[threadIndex].end()) {
+					// Remove the node from updates & update the performance times
+					threadedNodePerformanceTimes[threadIndex].first -= node->updateTime;
+					updateNodes[threadIndex].erase(it);
+					updateFound = true;
+				}
+			}
+
+			if (!preUpdateFound) {
+				// Check if the node is pre updated in this thread
+				auto it = std::find(preUpdateNodes[threadIndex].begin(), preUpdateNodes[threadIndex].end(), node);
+				if (it != preUpdateNodes[threadIndex].end()) {
+					// Remove the node from updates & update the performance times
+					threadedNodePerformanceTimes[threadIndex].second -= node->preUpdateTime;
+					preUpdateNodes[threadIndex].erase(it);
+					preUpdateFound = true;
+				}
+			}
 		}
 	}
 }
@@ -135,8 +178,19 @@ void Scene::update(size_t threadNum, float deltaTime) {
 	
 	// Pre updating
 	onPreUpdate(threadNum, deltaTime);
-	for (std::shared_ptr<Node>& node : updateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
+	for (std::shared_ptr<Node>& node : preUpdateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
 
+	// Wait until all threads are finished pre updating
+	threadPreUpdating.get()[threadNum] = false;
+	nodePreUpdatingCondVar.notify_all();
+	std::shared_lock lock(nodePreUpdatingMutex);
+	nodePreUpdatingCondVar.wait(lock, [&]() {
+		return std::none_of(threadPreUpdating.get(), threadPreUpdating.get() + mainApp->getNumUpdateThreads(), [](bool v) -> bool {
+			return v;
+		});
+	});
+
+	// Updating
 	onUpdate(threadNum, deltaTime);
 	for (std::shared_ptr<Node>& node : updateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
 }

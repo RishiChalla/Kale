@@ -106,12 +106,13 @@ void Application::presentScene(const std::shared_ptr<Scene>& scene) {
  * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
  */
 void Application::update(size_t threadNum) noexcept {
+
 	// Update loop
 	while (window.isOpen()) {
 		
 		// Wait until the previous frame has rendered to begin the next frame
-		std::unique_lock lock(updatingMutex);
-		while (!renderingFinished) renderFinishedCondVar.wait(lock);
+		std::shared_lock lock(renderingMutex);
+		renderFinishedCondVar.wait(lock, [&]() -> bool { return renderingFinished; });
 
 		// Perform updating
 		if (presentedScene != nullptr) try {
@@ -124,6 +125,7 @@ void Application::update(size_t threadNum) noexcept {
 		// Signal to the main thread that our thread has finished updating
 		updatesFinished.get()[threadNum] = true;
 		updateFinishedCondVar.notify_one();
+		renderingFinished = false;
 	}
 }
 
@@ -133,6 +135,7 @@ void Application::update(size_t threadNum) noexcept {
 void Application::run() noexcept {
 	
 	using namespace std::string_literals;
+	using namespace std::chrono_literals;
 	
 	// Creates the window
 	window.create(applicationName.c_str());
@@ -158,7 +161,7 @@ void Application::run() noexcept {
 	// Create update threads
 	updatesFinished = std::make_unique<bool>(std::thread::hardware_concurrency());
 	renderingFinished = false;
-	for (size_t i = 0; i < std::thread::hardware_concurrency() - 1; i++) {
+	for (size_t i = 0; i < std::thread::hardware_concurrency(); i++) {
 		updateThreads.emplace_back(&Application::update, this, i);
 	}
 
@@ -172,6 +175,7 @@ void Application::run() noexcept {
 		// Calculate FPS
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		deltaTime = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime).count());
+		previousTime = std::chrono::high_resolution_clock::now();
 
 		// Mark rendering as finished and allow updating to begin
 		std::fill(updatesFinished.get(), updatesFinished.get() + updateThreads.size(), false);
@@ -179,10 +183,10 @@ void Application::run() noexcept {
 		renderFinishedCondVar.notify_all();
 
 		// Wait until updating is finished for rendering to begin
-		std::unique_lock lock(updatingMutex);
-		while (!std::all_of(updatesFinished.get(), updatesFinished.get() + updateThreads.size(), [](bool v) { return v; })) {
-			updateFinishedCondVar.wait(lock);
-		}
+		std::shared_lock lock(updatingMutex);
+		updateFinishedCondVar.wait(lock, [&]() -> bool {
+			return std::all_of(updatesFinished.get(), updatesFinished.get() + updateThreads.size(), [](bool v) { return v; });
+		});
 
 		// Render scene
 		if (presentedScene != nullptr) try {
@@ -194,10 +198,11 @@ void Application::run() noexcept {
 		}
 	}
 
-	onEnd();
-
 	// Wait for threads
+	renderingFinished = true;
 	for (std::thread& thread : updateThreads) thread.join();
+
+	onEnd();
 
 #ifdef KALE_VULKAN
 	// Cleanup vulkan now that execution is done

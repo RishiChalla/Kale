@@ -71,7 +71,7 @@ namespace Kale {
 	public:
 
 		/**
-		 * The amount of time (in microseconds) this node takes to update & pre update on average
+		 * The amount of time (in microseconds) this node takes to update on average
 		 * 
 		 * You can gain this statistic using the Kale Editor calibration tools.
 		 * This measure is device specific, when developing on multiple devices it is recommended that you use
@@ -79,5 +79,10 @@ namespace Kale {
 		 * to avoid potential bias 
 		 */
 		const float updateTime = 100.0f;
+		
+		/**
+		 * The amount of time this node takes to pre-update on average, measured and used similarly to updateTime.
+		 */
+		const float preUpdateTime = 100.0f;
 	};
 }
