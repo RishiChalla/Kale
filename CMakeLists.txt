@@ -84,7 +84,7 @@ endif()
 # Vulkan
 if (KALE_VULKAN)
 	target_compile_definitions(Kale PUBLIC KALE_VULKAN)
-	find_package(Vulkan REQUIRED FATAL_ERROR)
+	find_package(Vulkan REQUIRED)
 	target_link_libraries(Kale ${Vulkan_LIBRARIES})
 	target_include_directories(Kale PUBLIC ${Vulkan_INCLUDE_DIR})
 endif()
@@ -128,7 +128,7 @@ if (KALE_VULKAN)
 	find_package(Vulkan REQUIRED COMPONENTS glslc)
 	find_program(glslc_executable NAMES glslc HINTS Vulkan::glslc)
 
-	file(GLOB_RECURSE shaders CONFIGURE_DEPENDS shaders/*.vert shaders/*.frag)
+	file(GLOB_RECURSE shaders CONFIGURE_DEPENDS shaders/vulkan/*.vert shaders/vulkan/*.frag)
 	add_custom_command(
 		COMMAND
 			${CMAKE_COMMAND} -E make_directory ${SHADER_BINARY_DIR}
@@ -155,5 +155,5 @@ endif()
 if (KALE_OPENGL)
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		${CMAKE_CURRENT_SOURCE_DIR}/shaders/ ${SHADER_BINARY_DIR})
+		${CMAKE_CURRENT_SOURCE_DIR}/shaders/opengl/ ${SHADER_BINARY_DIR})
 endif()
