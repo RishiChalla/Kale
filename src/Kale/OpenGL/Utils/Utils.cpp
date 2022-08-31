@@ -14,9 +14,13 @@
    limitations under the License.
 */
 
+#ifdef KALE_OPENGL
+
 #include "Utils.hpp"
 
 using namespace Kale;
 using namespace Kale::OpenGL;
 
 
+
+#endif

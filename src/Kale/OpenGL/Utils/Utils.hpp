@@ -16,6 +16,8 @@
 
 #pragma once
 
+#ifdef KALE_OPENGL
+
 #include <map>
 
 #include <glad/glad.h>
@@ -59,3 +61,5 @@ namespace Kale::OpenGL {
 #endif
 
 }
+
+#endif
