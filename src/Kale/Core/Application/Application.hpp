@@ -24,9 +24,10 @@
 #include <memory>
 #include <thread>
 #include <list>
-#include <condition_variable>
+#include <vector>
 #include <shared_mutex>
-#include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 /**
  * The entry point function/main function of the program
@@ -46,41 +47,36 @@ namespace Kale {
 		 * A list of the update threads
 		 */
 		std::list<std::thread> updateThreads;
+		
+		/**
+		 * Used for synchronization between update threads & render thread
+		 */
+		std::vector<uint8_t> threadsShouldUpdate;
 
 		/**
-		 * Array of booleans representing which threads have finished updating. Used to synchronize threads together.
+		 * Used for waiting until threads should begin updating
 		 */
-		std::unique_ptr<bool> updatesFinished = nullptr;
+		std::shared_mutex threadUpdatingMutex;
 
 		/**
-		 * Changed to true to signal other threads to begin updating again, and is made false at the beginning of every frame render
+		 * Used for waiting until threads should begin updating
 		 */
-		std::atomic<bool> renderingFinished = false;
+		std::condition_variable_any threadUpdatingCondVar;
+
+		/**
+		 * Used for waiting until update threads are completed for rendering
+		 */
+		std::mutex threadRenderMutex;
+
+		/**
+		 * Used for waiting until update threads are completed for rendering
+		 */
+		std::condition_variable threadRenderCondVar;
 
 		/**
 		 * The time taken to update and render each frame, set at the end of every render
 		 */
 		float deltaTime;
-
-		/**
-		 * Condition variable to check when updating is completely finished on all threads
-		 */
-		std::condition_variable_any updateFinishedCondVar;
-
-		/**
-		 * Mutex used to block execution while updating is occurring
-		 */
-		std::shared_mutex updatingMutex;
-
-		/**
-		 * Condition variable to check when rendering is finished on the main thread
-		 */
-		std::condition_variable_any renderFinishedCondVar;
-
-		/**
-		 * Mutex used to block rendering while rendering is occuring.
-		 */
-		std::shared_mutex renderingMutex;
 
 		/**
 		 * Handles updating the application in a separate thread

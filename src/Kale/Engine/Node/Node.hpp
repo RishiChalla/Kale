@@ -34,6 +34,13 @@ namespace Kale {
 	protected:
 
 		/**
+		 * Called when the node is added to the scene, guaranteed to be called before any updates & renders
+		 * and from the main thread.
+		 * @param scene The scene the node has been added to
+		 */
+		virtual void begin(const Scene& scene) = 0;
+
+		/**
 		 * Renders the node
 		 * @param camera The camera to render with
 		 */
@@ -54,6 +61,11 @@ namespace Kale {
 		 * @param deltaTime The duration of the last frame in microseconds
 		 */
 		virtual void preUpdate(size_t threadNum, const Scene& scene, float deltaTime) = 0;
+
+		/**
+		 * Called when the node is removed from the scene, guaranteed to be called from the main thread
+		 */
+		virtual void end(const Scene& scene) = 0;
 
 		/**
 		 * Creates the node parent

@@ -30,15 +30,18 @@
 
 #endif
 
+#include <algorithm>
+#include <sstream>
+
 using namespace Kale;
 
 /**
  * Constructs a new scene
  */
 Scene::Scene() {
-	threadPreUpdating = std::make_unique<bool>(std::thread::hardware_concurrency());
 	updateNodes.resize(std::thread::hardware_concurrency());
 	preUpdateNodes.resize(std::thread::hardware_concurrency());
+	nodePreUpdated.resize(std::thread::hardware_concurrency());
 
 	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
@@ -66,8 +69,9 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
  * after the completion of all updates in the frame.
  */
 void Scene::updateNodeStructures() {
-	// Set all the nodes to be pre updating in preparation for the next frame
-	std::fill(threadPreUpdating.get(), threadPreUpdating.get() + mainApp->getNumUpdateThreads(), true);
+
+	// Prepare for next frame
+	std::fill(nodePreUpdated.begin(), nodePreUpdated.end(), false);
 
 	// Return if no nodes need to be added
 	if (nodesToAdd.empty() && nodesToRemove.empty()) return;
@@ -179,15 +183,19 @@ void Scene::update(size_t threadNum, float deltaTime) {
 	// Pre updating
 	onPreUpdate(threadNum, deltaTime);
 	for (std::shared_ptr<Node>& node : preUpdateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
+	
+	// mark pre updating as done
+	nodePreUpdated[threadNum] = true;
+
+	// notify other threads if applicable
+	if (std::all_of(nodePreUpdated.begin(), nodePreUpdated.end(), [](uint8_t b) -> bool { return b; })) {
+		nodePreUpdateCondVar.notify_all();
+	}
 
 	// Wait until all threads are finished pre updating
-	threadPreUpdating.get()[threadNum] = false;
-	nodePreUpdatingCondVar.notify_all();
-	std::shared_lock lock(nodePreUpdatingMutex);
-	nodePreUpdatingCondVar.wait(lock, [&]() {
-		return std::none_of(threadPreUpdating.get(), threadPreUpdating.get() + mainApp->getNumUpdateThreads(), [](bool v) -> bool {
-			return v;
-		});
+	std::shared_lock lock(nodePreUpdateMutex);
+	nodePreUpdateCondVar.wait(lock, [&]() -> bool {
+		return std::all_of(nodePreUpdated.begin(), nodePreUpdated.end(), [&](uint8_t b) -> bool { return b; });
 	});
 
 	// Updating

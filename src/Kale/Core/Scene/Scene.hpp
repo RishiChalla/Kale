@@ -25,10 +25,9 @@
 #include <queue>
 #include <utility>
 #include <memory>
-#include <functional>
+#include <mutex>
 #include <shared_mutex>
 #include <condition_variable>
-#include <algorithm>
 
 namespace Kale {
 	
@@ -70,24 +69,24 @@ namespace Kale {
 		std::queue<std::shared_ptr<Node>> nodesToRemove;
 
 		/**
-		 * Mutex used for waiting til pre updating is completed
+		 * The mutex used for adding/removing nodes safety
 		 */
-		std::shared_mutex nodePreUpdatingMutex;
+		std::mutex nodeQueueUpdateMutex;
 
 		/**
-		 * An array of booleans determining whether or not pre updating is completed
+		 * Mutex used for syncrhonizing pre updates
 		 */
-		std::unique_ptr<bool> threadPreUpdating;
+		std::shared_mutex nodePreUpdateMutex;
 
 		/**
-		 * Condition variable for checking when nodes have been pre updated
+		 * Condition variable to check if threads have completed pre updating
 		 */
-		std::condition_variable_any nodePreUpdatingCondVar;
+		std::condition_variable_any nodePreUpdateCondVar;
 
 		/**
-		 * The mutex used for node thread safety
+		 * A vector of whether or not each thread has finished pre updating
 		 */
-		std::mutex mutex;
+		std::vector<uint8_t> nodePreUpdated;
 
 		/**
 		 * The world to screen transformation matrix. Used internally for rendering and converting
@@ -149,7 +148,7 @@ namespace Kale {
 		 */
 		template <typename T> void addNode(std::shared_ptr<T>& node) {
 			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
-			std::lock_guard<std::mutex> guard(mutex);
+			std::lock_guard guard(nodeQueueUpdateMutex);
 			nodesToAdd.push(nodePtr);
 		}
 
@@ -165,7 +164,7 @@ namespace Kale {
 		 */
 		template <typename T> void removeNode(std::shared_ptr<T>& node) {
 			std::shared_ptr<Kale::Node> nodePtr = std::dynamic_pointer_cast<Kale::Node>(node);
-			std::lock_guard<std::mutex> guard(mutex);
+			std::lock_guard guard(nodeQueueUpdateMutex);
 			nodesToRemove.push(nodePtr);
 		}
 
