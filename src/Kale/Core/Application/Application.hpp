@@ -88,6 +88,11 @@ namespace Kale {
 		 * A pointer to the current scene to render
 		 */
 		std::shared_ptr<Scene> presentedScene;
+
+		/**
+		 * A pointer to the scene to be presented
+		 */
+		std::shared_ptr<Scene> sceneToPresent;
 	
 	protected:
 

@@ -88,18 +88,7 @@ size_t Application::getNumUpdateThreads() const noexcept {
  * @param scene The scene to present
  */
 void Application::presentScene(const std::shared_ptr<Scene>& scene) {
-	
-	using namespace std::string_literals;
-	
-	try {
-		scene->onPresent();
-		if (presentedScene != nullptr) presentedScene->onSceneChange();
-		presentedScene = scene;
-	}
-	catch (const std::exception& e) {
-		console.error("Failed to present scene - "s + e.what());
-		throw e;
-	}
+	sceneToPresent = scene;
 }
 
 /**
@@ -175,6 +164,19 @@ void Application::run() noexcept {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		deltaTime = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime).count());
 		previousTime = std::chrono::high_resolution_clock::now();
+
+		// Check if scene has changed prior to updating
+		if (sceneToPresent != nullptr) {
+			try {
+				sceneToPresent->onPresent();
+				if (presentedScene != nullptr) presentedScene->onSceneChange();
+				presentedScene = sceneToPresent;
+				sceneToPresent = nullptr;
+			}
+			catch (const std::exception& e) {
+				console.error("Failed to present scene - "s + e.what());
+			}
+		}
 
 		// Allow threads to begin updating
 		std::fill(threadsShouldUpdate.begin(), threadsShouldUpdate.end(), true);

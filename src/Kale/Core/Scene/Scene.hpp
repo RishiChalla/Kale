@@ -26,7 +26,6 @@
 #include <utility>
 #include <memory>
 #include <mutex>
-#include <shared_mutex>
 #include <condition_variable>
 
 namespace Kale {
@@ -76,17 +75,18 @@ namespace Kale {
 		/**
 		 * Mutex used for syncrhonizing pre updates
 		 */
-		std::shared_mutex nodePreUpdateMutex;
+		std::mutex nodePreUpdateMutex;
 
 		/**
 		 * Condition variable to check if threads have completed pre updating
 		 */
-		std::condition_variable_any nodePreUpdateCondVar;
+		std::condition_variable nodePreUpdateCondVar;
 
 		/**
-		 * A vector of whether or not each thread has finished pre updating
+		 * The count of nodes which have pre updated
 		 */
-		std::vector<uint8_t> nodePreUpdated;
+		size_t nodesPreUpdated;
+		size_t generation;
 
 		/**
 		 * The world to screen transformation matrix. Used internally for rendering and converting

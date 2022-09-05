@@ -41,7 +41,8 @@ using namespace Kale;
 Scene::Scene() {
 	updateNodes.resize(std::thread::hardware_concurrency());
 	preUpdateNodes.resize(std::thread::hardware_concurrency());
-	nodePreUpdated.resize(std::thread::hardware_concurrency());
+	nodesPreUpdated = std::thread::hardware_concurrency();
+	generation = 0;
 
 	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
 	viewport = {size.x * 1080.0f / size.y, 1080.0f};
@@ -69,9 +70,6 @@ void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
  * after the completion of all updates in the frame.
  */
 void Scene::updateNodeStructures() {
-
-	// Prepare for next frame
-	std::fill(nodePreUpdated.begin(), nodePreUpdated.end(), false);
 
 	// Return if no nodes need to be added
 	if (nodesToAdd.empty() && nodesToRemove.empty()) return;
@@ -184,19 +182,23 @@ void Scene::update(size_t threadNum, float deltaTime) {
 	onPreUpdate(threadNum, deltaTime);
 	for (std::shared_ptr<Node>& node : preUpdateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
 	
-	// mark pre updating as done
-	nodePreUpdated[threadNum] = true;
-
-	// notify other threads if applicable
-	if (std::all_of(nodePreUpdated.begin(), nodePreUpdated.end(), [](uint8_t b) -> bool { return b; })) {
-		nodePreUpdateCondVar.notify_all();
+	// mark pre updating as done & notify other threads if necessary
+	{
+		std::unique_lock lock(nodePreUpdateMutex);
+		nodesPreUpdated--;
+		size_t localGeneration = generation;
+		if (nodesPreUpdated == 0) {
+			generation++;
+			nodesPreUpdated = mainApp->getNumUpdateThreads();
+			nodePreUpdateCondVar.notify_all();
+		}
+		else {
+			nodePreUpdateCondVar.wait(lock, [&]() -> bool { return localGeneration != generation; });
+		}
 	}
 
-	// Wait until all threads are finished pre updating
-	std::shared_lock lock(nodePreUpdateMutex);
-	nodePreUpdateCondVar.wait(lock, [&]() -> bool {
-		return std::all_of(nodePreUpdated.begin(), nodePreUpdated.end(), [&](uint8_t b) -> bool { return b; });
-	});
+	// notify other threads if applicable
+	if (nodesPreUpdated == mainApp->getNumUpdateThreads()) nodePreUpdateCondVar.notify_all();
 
 	// Updating
 	onUpdate(threadNum, deltaTime);
