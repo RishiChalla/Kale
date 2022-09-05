@@ -51,6 +51,12 @@ void Core::setupCore() noexcept {
 
 #ifdef KALE_DEBUG
 
+#ifdef KALE_OSX
+
+		console.warn("OpenGL Debug Callback not available on OSX. Errors, warnings, and undefined behavior will not be reported.");
+
+#else
+
 		glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message,
             const void *userParam) -> void {
 
@@ -88,6 +94,9 @@ void Core::setupCore() noexcept {
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 
 #endif
+
+#endif
+
 	}
 	catch (const std::exception& e) {
 		console.error(std::string("Unable to setup OpenGL/Glad - ") + e.what());

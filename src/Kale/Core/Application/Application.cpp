@@ -34,8 +34,7 @@ using namespace Kale;
  * Creates a new application instance
  * @param applicationName The name of your application
  */
-Application::Application(const char* applicationName) noexcept : applicationName(applicationName),
-	threadsShouldUpdate(std::thread::hardware_concurrency()) {
+Application::Application(const char* applicationName) noexcept : applicationName(applicationName) {
 	try {
 		console.load(this->applicationName);
 	}
@@ -101,8 +100,19 @@ void Application::update(size_t threadNum) noexcept {
 	while (window.isOpen()) {
 
 		// Wait until we should update
-		std::shared_lock lock(threadUpdatingMutex);
-		threadUpdatingCondVar.wait(lock, [&]() -> bool { return threadsShouldUpdate[threadNum]; });
+		{
+			std::unique_lock lock(threadSyncMutex);
+			numThreadsUpdated--;
+			renderingFinished = false;
+
+			if (numThreadsUpdated == 0) {
+				updatingFinished = true;
+				numThreadsUpdated = getNumUpdateThreads();
+				renderSyncCondVar.notify_one();
+			}
+
+			threadSyncCondVar.wait(lock, [&]() -> bool { return renderingFinished; });
+		}
 
 		// Perform updating
 		if (presentedScene != nullptr) try {
@@ -111,11 +121,6 @@ void Application::update(size_t threadNum) noexcept {
 		catch (const std::exception& e) {
 			console.error("Failed to update presented screen on update thread " + std::to_string(threadNum) + " - " + e.what());
 		}
-
-		// Mark our thread as having finished updating
-		threadsShouldUpdate[threadNum] = false;
-		if (std::none_of(threadsShouldUpdate.begin(), threadsShouldUpdate.end(), [&](uint8_t v) -> bool { return v; }))
-			threadRenderCondVar.notify_one();
 	}
 }
 
@@ -149,7 +154,7 @@ void Application::run() noexcept {
 	}
 
 	// Create update threads
-	std::fill(threadsShouldUpdate.begin(), threadsShouldUpdate.end(), false);
+	numThreadsUpdated = std::thread::hardware_concurrency();
 	for (size_t i = 0; i < std::thread::hardware_concurrency(); i++)
 		updateThreads.emplace_back(&Application::update, this, i);
 
@@ -178,15 +183,14 @@ void Application::run() noexcept {
 			}
 		}
 
-		// Allow threads to begin updating
-		std::fill(threadsShouldUpdate.begin(), threadsShouldUpdate.end(), true);
-		threadUpdatingCondVar.notify_all();
-
-		// Wait until threads have finished updating
-		std::unique_lock lock(threadRenderMutex);
-		threadRenderCondVar.wait(lock, [&]() -> bool {
-			return std::none_of(threadsShouldUpdate.begin(), threadsShouldUpdate.end(), [&](uint8_t v) -> bool { return v; });
-		});
+		// Synchronize with the update threads
+		{
+			std::unique_lock lock(threadSyncMutex);
+			renderingFinished = true;
+			threadSyncCondVar.notify_all();
+			renderSyncCondVar.wait(lock, [&]() -> bool { return updatingFinished; });
+			updatingFinished = false;
+		}
 
 		// Render scene
 		if (presentedScene != nullptr) try {
@@ -199,6 +203,8 @@ void Application::run() noexcept {
 	}
 
 	// Wait for threads
+	renderingFinished = true;
+	threadSyncCondVar.notify_all();
 	for (std::thread& thread : updateThreads) thread.join();
 
 	onEnd();

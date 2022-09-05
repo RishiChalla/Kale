@@ -25,7 +25,6 @@
 #include <thread>
 #include <list>
 #include <vector>
-#include <shared_mutex>
 #include <mutex>
 #include <condition_variable>
 
@@ -47,31 +46,25 @@ namespace Kale {
 		 * A list of the update threads
 		 */
 		std::list<std::thread> updateThreads;
-		
-		/**
-		 * Used for synchronization between update threads & render thread
-		 */
-		std::vector<uint8_t> threadsShouldUpdate;
 
 		/**
-		 * Used for waiting until threads should begin updating
+		 * Used for thread synchronization
 		 */
-		std::shared_mutex threadUpdatingMutex;
+		std::mutex threadSyncMutex;
 
 		/**
-		 * Used for waiting until threads should begin updating
+		 * Used for thread synchronization
 		 */
-		std::condition_variable_any threadUpdatingCondVar;
+		std::condition_variable threadSyncCondVar;
+		std::condition_variable renderSyncCondVar;
 
 		/**
-		 * Used for waiting until update threads are completed for rendering
+		 * Used for thread synchronization
 		 */
-		std::mutex threadRenderMutex;
+		size_t numThreadsUpdated;
 
-		/**
-		 * Used for waiting until update threads are completed for rendering
-		 */
-		std::condition_variable threadRenderCondVar;
+		bool updatingFinished;
+		bool renderingFinished;
 
 		/**
 		 * The time taken to update and render each frame, set at the end of every render

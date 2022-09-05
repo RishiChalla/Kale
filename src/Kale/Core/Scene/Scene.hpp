@@ -86,6 +86,10 @@ namespace Kale {
 		 * The count of nodes which have pre updated
 		 */
 		size_t nodesPreUpdated;
+
+		/**
+		 * The count of frames used for thread synchronization
+		 */
 		size_t generation;
 
 		/**
