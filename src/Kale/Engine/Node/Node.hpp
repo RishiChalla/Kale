@@ -38,13 +38,13 @@ namespace Kale {
 		 * and from the main thread.
 		 * @param scene The scene the node has been added to
 		 */
-		virtual void begin(const Scene& scene) = 0;
+		virtual void begin(const Scene& scene);
 
 		/**
 		 * Renders the node
 		 * @param camera The camera to render with
 		 */
-		virtual void render(const Camera& camera, float deltaTime) const = 0;
+		virtual void render(const Camera& camera, float deltaTime) const;
 
 		/**
 		 * Called on update, perfect place to do any physics updating, game logic, etc
@@ -52,7 +52,7 @@ namespace Kale {
 		 * @param scene The scene being updated to
 		 * @param deltaTime The duration of the last frame in microseconds
 		 */
-		virtual void update(size_t threadNum, const Scene& scene, float deltaTime) = 0;
+		virtual void update(size_t threadNum, const Scene& scene, float deltaTime);
 
 		/**
 		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
@@ -60,12 +60,12 @@ namespace Kale {
 		 * @param scene The scene being updated to
 		 * @param deltaTime The duration of the last frame in microseconds
 		 */
-		virtual void preUpdate(size_t threadNum, const Scene& scene, float deltaTime) = 0;
+		virtual void preUpdate(size_t threadNum, const Scene& scene, float deltaTime);
 
 		/**
 		 * Called when the node is removed from the scene, guaranteed to be called from the main thread
 		 */
-		virtual void end(const Scene& scene) = 0;
+		virtual void end(const Scene& scene);
 
 		/**
 		 * Creates the node parent

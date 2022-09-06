@@ -56,6 +56,10 @@ namespace Kale {
 		 * Used for thread synchronization
 		 */
 		std::condition_variable threadSyncCondVar;
+
+		/**
+		 * Used for thread synchronization
+		 */
 		std::condition_variable renderSyncCondVar;
 
 		/**
@@ -63,7 +67,14 @@ namespace Kale {
 		 */
 		size_t numThreadsUpdated;
 
+		/**
+		 * Used for thread synchronization
+		 */
 		bool updatingFinished;
+
+		/**
+		 * Used for thread synchronization
+		 */
 		bool renderingFinished;
 
 		/**

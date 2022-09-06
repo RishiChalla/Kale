@@ -106,6 +106,8 @@ void Scene::updateNodeStructures() {
 		// Add the node to the thread with the smallest pre update time and add it to the thread's total time
 		threadedNodePerformanceTimes[threadIndex].second += node->preUpdateTime;
 		preUpdateNodes[threadIndex].push_back(node);
+
+		node->begin(*this);
 	}
 
 	while (!nodesToRemove.empty()) {
@@ -144,6 +146,8 @@ void Scene::updateNodeStructures() {
 				}
 			}
 		}
+
+		node->end(*this);
 	}
 }
 
