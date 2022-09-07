@@ -18,6 +18,8 @@
 
 #include <Kale/Math/Rect/Rect.hpp>
 
+#include <mutex>
+
 namespace Kale {
 	
 	/**
@@ -27,7 +29,8 @@ namespace Kale {
 	protected:
 
 		/**
-		 * The bounding box of the node
+		 * The bounding box of the node, bounding box should be updated in preUpdate where possible allowing other
+		 * nodes to use it during update. Thread syncrhonization to bounding box updating is expected by the inheriting node.
 		 */
 		Rect boundingBox;
 

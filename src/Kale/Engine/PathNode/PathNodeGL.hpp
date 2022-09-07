@@ -18,7 +18,7 @@
 
 #ifdef KALE_OPENGL
 
-#include <Kale/Engine/AnimatableNode/AnimatableNode.hpp>
+#include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Engine/Collidable/Collidable.hpp>
 #include <Kale/Math/Transform/Transform.hpp>
 #include <Kale/Math/Path/Path.hpp>
@@ -29,15 +29,11 @@
 
 namespace Kale {
 
-	struct PathNodeState {
-
-	};
-
 	/**
 	 * Used for rendering filled bezier paths
 	 * @tparam An enum class containing all the animation states
 	 */
-	template <typename T> class PathNode : public AnimatableNode<T, Path>, public Collidable {
+	class PathNode : public Node, public Collidable {
 	private:
 
 		struct Vertex {
@@ -59,8 +55,7 @@ namespace Kale {
 		 * @param scene The scene the node has been added to
 		 */
 		virtual void begin(const Scene& scene) override {
-			innerTriangles = std::make_unique<OpenGL::VertexArray<Vector2f, 2>>();
-			outerTriangles = std::make_unique<OpenGL::VertexArray<Vertex, 2, 2, 2, 2, 2>>();
+			
 		}
 
 		/**
@@ -70,20 +65,7 @@ namespace Kale {
 		 * @param deltaTime The duration of the last frame in microseconds
 		 */
 		virtual void preUpdate(size_t threadNum, const Scene& scene, float deltaTime) override {
-
-			if (!AnimatableNode<T, Path>::transitioning && !currentPath.beziers.empty()) return;
-
-			// Update Animatable Node
-			AnimatableNode<T, Path>::preUpdate(deltaTime, scene);
-
-			// Update Current Path
-			std::vector<std::pair<T, float>> composition = AnimatableNode<T, Path>::getStateComposition();
-			currentPath = Path(AnimatableNode<T, Path>::structures.at(composition[0].first).beziers.size());
-			for (const std::pair<T, float>& comp : composition)
-				currentPath += AnimatableNode<T, Path>::structures.at(comp.first) * comp.second;
-
-			// Update bounding box
-			Node::boundingBox = currentPath.getBoundingBox();
+			
 		}
 
 		/**
@@ -98,8 +80,7 @@ namespace Kale {
 		 * Called when the node is removed from the scene, guaranteed to be called from the main thread
 		 */
 		virtual void end(const Scene& scene) override {
-			innerTriangles.reset();
-			outerTriangles.reset();
+			
 		}
 
 	public:
@@ -109,7 +90,9 @@ namespace Kale {
 		 */
 		Transform transform;
 
-		PathNode(size_t pathSize) 
+		PathNode(size_t pathSize) {
+
+		}
 
 	};
 }
