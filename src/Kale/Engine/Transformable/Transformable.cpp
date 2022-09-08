@@ -14,16 +14,23 @@
    limitations under the License.
 */
 
-#pragma once
+#include "Transformable.hpp"
 
-#include <Kale/Core/Scene/Scene.hpp>
+using namespace Kale;
 
-#include "Collidable/Collidable.hpp"
-#include "Node/Node.hpp"
-#include "PathNode/PathNode.hpp"
-#include "SkeletalAnimatableNode/SkeletalAnimatableNode.hpp"
-// #include "SkeletonNode/SkeletonNode.hpp"
-#include "StateAnimatableNode/StateAnimatableNode.hpp"
-// #include "StrokeNode/StrokeNode.hpp"
-#include "Transformable/Transformable.hpp"
-#include "Utils/Utils.hpp"
+/**
+ * Thread safe method to get the transformation matrix
+ * @returns The transformation matrix of this object
+ */
+Transform Transformable::getTransform() const {
+	return transform;
+}
+
+/**
+ * Thread safe method to set the transformation matrix
+ * @param transform The transformation matrix to set the transform of this object to
+ */
+void Transformable::setTransform(const Transform& transform) {
+	std::lock_guard lock(mutex);
+	this->transform = transform;
+}

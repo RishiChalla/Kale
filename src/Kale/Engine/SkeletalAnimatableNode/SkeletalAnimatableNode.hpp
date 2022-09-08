@@ -100,6 +100,11 @@ namespace Kale {
 		Line baseBone;
 
 		/**
+		 * A vector of all the transformation matrices from the base transform to individual bones.
+		 */
+		std::vector<Transform> transforms;
+
+		/**
 		 * All bones with a joint on point1
 		 */
 		std::vector<std::shared_ptr<Bone>> leftJointBones;

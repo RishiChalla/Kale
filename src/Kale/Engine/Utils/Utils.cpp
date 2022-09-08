@@ -27,7 +27,7 @@ using namespace Kale;
  * @param path The path to triangulate
  * @returns A tuple of vectors for the vertices and indices
  */
-std::tuple<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePath(const std::vector<Vector2f>& path) {
+std::pair<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePath(const std::vector<Vector2f>& path) {
 	std::vector<double> coords;
 	coords.reserve(path.size() * 2);
 	for (const Vector2f& vec : path) {
@@ -37,9 +37,9 @@ std::tuple<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePa
 
 	delaunator::Delaunator d(coords);
 
-	std::tuple<std::vector<Vector2f>, std::vector<unsigned int>> output;
-	std::vector<Vector2f>& vertices = std::get<0>(output);
-	std::vector<unsigned int>& elements = std::get<1>(output);
+	std::pair<std::vector<Vector2f>, std::vector<unsigned int>> output;
+	std::vector<Vector2f>& vertices = output.first;
+	std::vector<unsigned int>& elements = output.second;
 
 	elements.reserve(d.triangles.size());
 	std::transform(d.triangles.begin(), d.triangles.end(), std::back_inserter(elements), [](size_t index) {
@@ -58,7 +58,7 @@ std::tuple<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePa
  * @param path The path to triangulate
  * @returns A tuple of vectors for the vertices and indices
  */
-std::tuple<std::vector<float>, std::vector<unsigned int>> Kale::triangulatePathFloat(const std::vector<Vector2f>& path) {
+std::pair<std::vector<float>, std::vector<unsigned int>> Kale::triangulatePathFloat(const std::vector<Vector2f>& path) {
 	std::vector<double> coords;
 	coords.reserve(path.size() * 2);
 	for (const Vector2f& vec : path) {
@@ -68,9 +68,9 @@ std::tuple<std::vector<float>, std::vector<unsigned int>> Kale::triangulatePathF
 
 	delaunator::Delaunator d(coords);
 
-	std::tuple<std::vector<float>, std::vector<unsigned int>> output;
-	std::vector<float>& vertices = std::get<0>(output);
-	std::vector<unsigned int>& elements = std::get<1>(output);
+	std::pair<std::vector<float>, std::vector<unsigned int>> output;
+	std::vector<float>& vertices = output.first;
+	std::vector<unsigned int>& elements = output.second;
 
 	elements.reserve(d.triangles.size());
 	std::transform(d.triangles.begin(), d.triangles.end(), std::back_inserter(elements), [](size_t index) {

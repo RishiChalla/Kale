@@ -18,7 +18,7 @@
 
 #include <Kale/Math/Vector/Vector.hpp>
 
-#include <tuple>
+#include <utility>
 #include <vector>
 
 namespace Kale {
@@ -28,12 +28,12 @@ namespace Kale {
 	 * @param path The path to triangulate
 	 * @returns A tuple of vectors for the vertices and indices
 	 */
-	std::tuple<std::vector<Vector2f>, std::vector<unsigned int>> triangulatePath(const std::vector<Vector2f>& path);
+	std::pair<std::vector<Vector2f>, std::vector<unsigned int>> triangulatePath(const std::vector<Vector2f>& path);
 
 	/**
 	 * Triangulates the given path and returns both the vertices as floats and indices
 	 * @param path The path to triangulate
 	 * @returns A tuple of vectors for the vertices and indices
 	 */
-	std::tuple<std::vector<float>, std::vector<unsigned int>> triangulatePathFloat(const std::vector<Vector2f>& path);
+	std::pair<std::vector<float>, std::vector<unsigned int>> triangulatePathFloat(const std::vector<Vector2f>& path);
 }

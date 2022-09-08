@@ -70,12 +70,20 @@ namespace Kale::OpenGL {
 		std::vector<T> data;
 
 		/**
-		 * Updates the buffer on the GPU to the data within the vector
+		 * Reallocates the buffer on the GPU to the data within the vector
 		 * @param usage The usage of the buffer
 		 */
-		void updateBuffer(BufferUsage usage) {
+		void allocBuffer(BufferUsage usage) {
 			bind();
 			glBufferData(getEnumValue(type), sizeof(T) * data.size(), data.data(), getEnumValue(usage));
+		}
+
+		/**
+		 * Updates the buffer on the GPU to the data within the vector, if the vector has been resized this will crash.
+		 */
+		void updateBuffer() {
+			bind();
+			glBufferSubData(getEnumValue<BufferType>(type), 0, sizeof(T) * data.size(), data.data());
 		}
 
 		/**
@@ -96,7 +104,7 @@ namespace Kale::OpenGL {
 		template <size_t N> Buffer(BufferType type, BufferUsage usage, const std::array<T, N>& data) : type(type),
 			data(data.begin(), data.end()) {
 			glGenBuffers(1, &buffer);
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -107,7 +115,7 @@ namespace Kale::OpenGL {
 		 */
 		Buffer(BufferType type, BufferUsage usage, const std::vector<T>& dat) : type(type), data(dat) {
 			glGenBuffers(1, &buffer);
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -118,7 +126,7 @@ namespace Kale::OpenGL {
 		 */
 		Buffer(BufferType type, BufferUsage usage, std::vector<T>&& dat) : type(type), data(std::move(dat)) {
 			glGenBuffers(1, &buffer);
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -130,7 +138,7 @@ namespace Kale::OpenGL {
 		 */
 		Buffer(BufferType type, BufferUsage usage, const T* arr, size_t n) : type(type), data(arr, arr + n) {
 			glGenBuffers(1, &buffer);
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -164,6 +172,43 @@ namespace Kale::OpenGL {
 		 */
 		[[nodiscard]] const T& operator[](size_t i) const {
 			return data[i];
+		}
+
+		/**
+		 * Retrieves the value in the buffer at a certain index
+		 * @param i The index
+		 * @returns The value within the buffer
+		 */
+		[[nodiscard]] T& operator[](size_t i) {
+			return data[i];
+		}
+
+		/**
+		 * Gets the beginning iterator of the data
+		 */
+		typename std::vector<T>::iterator begin() {
+			return data.begin();
+		}
+
+		/**
+		 * Gets the beginning iterator of the data
+		 */
+		typename std::vector<T>::iterator end() {
+			return data.end();
+		}
+
+		/**
+		 * Gets the beginning iterator of the data
+		 */
+		typename std::vector<T>::const_iterator cbegin() const {
+			return data.cbegin();
+		}
+
+		/**
+		 * Gets the beginning iterator of the data
+		 */
+		typename std::vector<T>::const_iterator cend() const {
+			return data.cend();
 		}
 
 		/**
@@ -225,7 +270,7 @@ namespace Kale::OpenGL {
 		 */
 		void resize(BufferUsage usage, size_t newSize) {
 			data.resize(newSize);
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -236,7 +281,7 @@ namespace Kale::OpenGL {
 		template <size_t N> void resize(BufferUsage usage, const std::array<T, N>& arr) {
 			data.resize(N);
 			std::copy(data.begin(), data.end(), arr.data());
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -246,7 +291,7 @@ namespace Kale::OpenGL {
 		 */
 		void resize(BufferUsage usage, const std::vector<T>& vec) {
 			data = vec;
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -256,7 +301,7 @@ namespace Kale::OpenGL {
 		 */
 		void resize(BufferUsage usage, std::vector<T>&& vec) {
 			data = std::move(vec);
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 		/**
@@ -268,7 +313,7 @@ namespace Kale::OpenGL {
 		void resize(BufferUsage usage, const T* arr, size_t n) {
 			data.clear();
 			data.insert(data.begin(), arr, arr + n);
-			updateBuffer(usage);
+			allocBuffer(usage);
 		}
 
 	};

@@ -14,8 +14,12 @@
    limitations under the License.
 */
 
+#ifdef KALE_VULKAN
+
 #include "PathNode.hpp"
 
 using namespace Kale;
 
 
+
+#endif

@@ -20,7 +20,7 @@
 
 #include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Engine/Collidable/Collidable.hpp>
-#include <Kale/Math/Transform/Transform.hpp>
+#include <Kale/Engine/Transformable/Transformable.hpp>
 #include <Kale/Math/Path/Path.hpp>
 #include <Kale/OpenGL/VertexArray/VertexArray.hpp>
 #include <Kale/OpenGL/Shader/Shader.hpp>
@@ -33,19 +33,28 @@ namespace Kale {
 	 * Used for rendering filled bezier paths
 	 * @tparam An enum class containing all the animation states
 	 */
-	class PathNode : public Node, public Collidable {
+	class PathNode : public Node, public Collidable, public Transformable {
 	private:
 
-		struct Vertex {
+		struct InnerVertex {
 			Vector2f pos;
-			CubicBezier bezier;
+			float skeletonTransformWeight;
+			float skeletonTransform1;
+			float skeletonTransform2;
 		};
 
-		std::unique_ptr<OpenGL::VertexArray<Vector2f, 2>> innerTriangles;
-		std::unique_ptr<OpenGL::VertexArray<Vertex, 2, 2, 2, 2, 2>> outerTriangles;
+		struct OuterVertex {
+			Vector2f pos;
+			CubicBezier bezier;
+			float skeletonTransformWeight;
+			float skeletonTransform1;
+			float skeletonTransform2;
+		};
 
-		Path currentPath;
-		size_t pathSize;
+		std::unique_ptr<OpenGL::VertexArray<InnerVertex, 2, 1, 1, 1>> innerTriangles;
+		std::unique_ptr<OpenGL::VertexArray<OuterVertex, 2, 2, 2, 2, 2, 1, 1, 1>> outerTriangles;
+
+		Path path;
 
 	protected:
 
@@ -54,45 +63,31 @@ namespace Kale {
 		 * and from the main thread.
 		 * @param scene The scene the node has been added to
 		 */
-		virtual void begin(const Scene& scene) override {
-			
-		}
-
-		/**
-		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
-		 * @param threadNum the index of the thread this update is called on
-		 * @param scene The scene being updated to
-		 * @param deltaTime The duration of the last frame in microseconds
-		 */
-		virtual void preUpdate(size_t threadNum, const Scene& scene, float deltaTime) override {
-			
-		}
+		virtual void begin(const Scene& scene) override;
 
 		/**
 		 * Renders the node
 		 * @param camera The camera to render with
 		 */
-		virtual void render(const Camera& camera, float deltaTime) const override {
-			
-		}
+		virtual void render(const Camera& camera, float deltaTime) const override;
 
 		/**
 		 * Called when the node is removed from the scene, guaranteed to be called from the main thread
 		 */
-		virtual void end(const Scene& scene) override {
-			
-		}
+		virtual void end(const Scene& scene) override;
 
 	public:
 
 		/**
-		 * The transform of this node
+		 * Creates a blank pathnode with nothing to render
 		 */
-		Transform transform;
+		PathNode();
 
-		PathNode(size_t pathSize) {
-
-		}
+		/**
+		 * Creates a path node given the path to use
+		 * @param path The path to use
+		 */
+		PathNode(const Path& path);
 
 	};
 }

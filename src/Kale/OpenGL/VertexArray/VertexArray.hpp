@@ -110,8 +110,8 @@ namespace Kale::OpenGL {
 				vertices.data.insert(vertices.data.end(), vertLoc, vertLoc + numFloatsInVert());
 			}
 
-			vertices.updateBuffer(usage);
-			elements.updateBuffer(usage);
+			vertices.allocBuffer(usage);
+			elements.allocBuffer(usage);
 			vertices.data.shrink_to_fit();
 			elements.data.shrink_to_fit();
 		}
@@ -130,8 +130,8 @@ namespace Kale::OpenGL {
 			vertices.data.insert(vertices.data.begin(), reinterpret_cast<const float*>(verts.data()),
 				reinterpret_cast<const float*>(verts.data() + verts.size()));
 			func();
-			vertices.updateBuffer(usage);
-			elements.updateBuffer(usage);
+			vertices.allocBuffer(usage);
+			elements.allocBuffer(usage);
 		}
 
 	public:
@@ -172,7 +172,7 @@ namespace Kale::OpenGL {
 				bind();
 				vertices.data.insert(vertices.data.begin(), reinterpret_cast<const float*>(verts.data()),
 					reinterpret_cast<const float*>(verts.data() + verts.size()));
-				vertices.updateBuffer(usage);
+				vertices.allocBuffer(usage);
 			}
 		}
 		
@@ -191,7 +191,7 @@ namespace Kale::OpenGL {
 				bind();
 				vertices.data.insert(vertices.data.begin(), reinterpret_cast<const float*>(verts.data()),
 					reinterpret_cast<const float*>(verts.data() + verts.size()));
-				vertices.updateBuffer(usage);
+				vertices.allocBuffer(usage);
 			}
 		}
 		
