@@ -41,6 +41,7 @@ using namespace Kale;
 Scene::Scene() {
 	updateNodes.resize(std::thread::hardware_concurrency());
 	preUpdateNodes.resize(std::thread::hardware_concurrency());
+	threadedNodePerformanceTimes.resize(std::thread::hardware_concurrency());
 	nodesPreUpdated = std::thread::hardware_concurrency();
 	generation = 0;
 

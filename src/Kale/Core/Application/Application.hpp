@@ -97,6 +97,11 @@ namespace Kale {
 		 * A pointer to the scene to be presented
 		 */
 		std::shared_ptr<Scene> sceneToPresent;
+
+		/**
+		 * Synchronizes udpates
+		 */
+		void synchronizeUpdate();
 	
 	protected:
 

@@ -307,4 +307,92 @@ void Shader::uniform(unsigned int location, const std::vector<float>& value) con
 	glUniform1fv(location, static_cast<GLsizei>(value.size()), value.data());
 }
 
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const Vector2f* ptr, size_t size) const {
+	useProgram();
+	glUniform2fv(location, static_cast<GLsizei>(size), reinterpret_cast<const float*>(ptr));
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const Vector3f* ptr, size_t size) const {
+	useProgram();
+	glUniform3fv(location, static_cast<GLsizei>(size), reinterpret_cast<const float*>(ptr));
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const Vector4f* ptr, size_t size) const {
+	useProgram();
+	glUniform4fv(location, static_cast<GLsizei>(size), reinterpret_cast<const float*>(ptr));
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const Matrix2f* ptr, size_t size) const {
+	useProgram();
+	glUniformMatrix2fv(location, static_cast<GLsizei>(size), GL_FALSE, ptr->data.data());
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const Matrix3f* ptr, size_t size) const {
+	useProgram();
+	glUniformMatrix3fv(location, static_cast<GLsizei>(size), GL_FALSE, ptr->data.data());
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const Matrix4f* ptr, size_t size) const {
+	useProgram();
+	glUniformMatrix4fv(location, static_cast<GLsizei>(size), GL_FALSE, ptr->data.data());
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const Transform* ptr, size_t size) const {
+	useProgram();
+	glUniformMatrix3fv(location, static_cast<GLsizei>(size), GL_FALSE, ptr->data.data());
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param ptr The beginning pointer of the uniform values
+ * @param size The count of uniform values
+ */
+void Shader::uniform(unsigned int location, const float* ptr, size_t size) const {
+	useProgram();
+	glUniform1fv(location, static_cast<GLsizei>(size), ptr);
+}
+
 #endif

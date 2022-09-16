@@ -25,15 +25,17 @@ namespace Kale {
 
 	/**
 	 * Triangulates the given path and returns both the vertices and indices
-	 * @param path The path to triangulate
+	 * @param begin The beginning of the path to triangulate
+	 * @param end The ending of the path to triangulate
 	 * @returns A tuple of vectors for the vertices and indices
 	 */
-	std::pair<std::vector<Vector2f>, std::vector<unsigned int>> triangulatePath(const std::vector<Vector2f>& path);
+	std::pair<std::vector<Vector2f>, std::vector<unsigned int>> triangulatePath(const Vector2f* begin, const Vector2f* end);
 
 	/**
 	 * Triangulates the given path and returns both the vertices as floats and indices
-	 * @param path The path to triangulate
+	 * @param begin The beginning of the path to triangulate
+	 * @param end The ending of the path to triangulate
 	 * @returns A tuple of vectors for the vertices and indices
 	 */
-	std::pair<std::vector<float>, std::vector<unsigned int>> triangulatePathFloat(const std::vector<Vector2f>& path);
+	std::pair<std::vector<float>, std::vector<unsigned int>> triangulatePathFloat(const Vector2f* begin, const Vector2f* end);
 }

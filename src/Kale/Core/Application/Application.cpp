@@ -24,6 +24,8 @@
 #include <Kale/OpenGL/Core/Core.hpp>
 #endif
 
+#include <Kale/Engine/Engine.hpp>
+
 #include <exception>
 #include <chrono>
 #include <string>
@@ -91,6 +93,23 @@ void Application::presentScene(const std::shared_ptr<Scene>& scene) {
 }
 
 /**
+ * Synchronizes udpates
+ */
+void Application::synchronizeUpdate() {
+	std::unique_lock lock(threadSyncMutex);
+	numThreadsUpdated--;
+	renderingFinished = false;
+
+	if (numThreadsUpdated == 0) {
+		updatingFinished = true;
+		numThreadsUpdated = getNumUpdateThreads();
+		renderSyncCondVar.notify_one();
+	}
+
+	threadSyncCondVar.wait(lock, [&]() -> bool { return renderingFinished; });
+}
+
+/**
  * Handles updating the application in a separate thread
  * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
  */
@@ -100,19 +119,7 @@ void Application::update(size_t threadNum) noexcept {
 	while (window.isOpen()) {
 
 		// Wait until we should update
-		{
-			std::unique_lock lock(threadSyncMutex);
-			numThreadsUpdated--;
-			renderingFinished = false;
-
-			if (numThreadsUpdated == 0) {
-				updatingFinished = true;
-				numThreadsUpdated = getNumUpdateThreads();
-				renderSyncCondVar.notify_one();
-			}
-
-			threadSyncCondVar.wait(lock, [&]() -> bool { return renderingFinished; });
-		}
+		synchronizeUpdate();
 
 		// Perform updating
 		if (presentedScene != nullptr) try {
@@ -122,6 +129,9 @@ void Application::update(size_t threadNum) noexcept {
 			console.error("Failed to update presented screen on update thread " + std::to_string(threadNum) + " - " + e.what());
 		}
 	}
+
+	// Avoid the main thread waiting for update threads which are already finished
+	synchronizeUpdate();
 }
 
 /**
@@ -152,6 +162,9 @@ void Application::run() noexcept {
 	catch (const std::exception& e) {
 		console.error("Failed to call onBegin in application - "s + e.what());
 	}
+
+	// Setup nodes
+	PathNode::setup();
 
 	// Create update threads
 	numThreadsUpdated = std::thread::hardware_concurrency();
@@ -198,7 +211,7 @@ void Application::run() noexcept {
 			presentedScene->render(deltaTime);
 		}
 		catch (const std::exception& e) {
-			console.error("Failed to render presented screen - "s + e.what());
+			console.error("Failed to render presented scene - "s + e.what());
 		}
 	}
 
@@ -208,6 +221,9 @@ void Application::run() noexcept {
 	for (std::thread& thread : updateThreads) thread.join();
 
 	onEnd();
+
+	// Cleanup nodes
+	PathNode::cleanup();
 
 #ifdef KALE_VULKAN
 	// Cleanup vulkan now that execution is done

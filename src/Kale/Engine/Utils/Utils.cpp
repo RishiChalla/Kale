@@ -16,23 +16,28 @@
 
 #include "Utils.hpp"
 
-#include <iterator>
-
 #include <delaunator.hpp>
+
+#include <iterator>
+#include <algorithm>
 
 using namespace Kale;
 
 /**
  * Triangulates the given path and returns both the vertices and indices
- * @param path The path to triangulate
+ * @param begin The beginning of the path to triangulate
+ * @param end The ending of the path to triangulate
  * @returns A tuple of vectors for the vertices and indices
  */
-std::pair<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePath(const std::vector<Vector2f>& path) {
+std::pair<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePath(const Vector2f* begin, const Vector2f* end) {
 	std::vector<double> coords;
-	coords.reserve(path.size() * 2);
-	for (const Vector2f& vec : path) {
+	coords.reserve(std::distance(begin, end) * 2);
+	
+	std::for_each(begin, end, [&](const Vector2f& vec) {
 		coords.push_back(static_cast<double>(vec.x));
 		coords.push_back(static_cast<double>(vec.y));
+	});
+	for (const Vector2f* it = begin; it != end; ++it) {
 	}
 
 	delaunator::Delaunator d(coords);
@@ -55,13 +60,16 @@ std::pair<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePat
 
 /**
  * Triangulates the given path and returns both the vertices as floats and indices
- * @param path The path to triangulate
+ * @param begin The beginning of the path to triangulate
+ * @param end The ending of the path to triangulate
  * @returns A tuple of vectors for the vertices and indices
  */
-std::pair<std::vector<float>, std::vector<unsigned int>> Kale::triangulatePathFloat(const std::vector<Vector2f>& path) {
+std::pair<std::vector<float>, std::vector<unsigned int>> Kale::triangulatePathFloat(const Vector2f* begin, const Vector2f* end) {
 	std::vector<double> coords;
-	coords.reserve(path.size() * 2);
-	for (const Vector2f& vec : path) {
+	coords.reserve(std::distance(begin, end) * 2);
+	
+	for (const Vector2f* it = begin; it != end; ++it) {
+		const Vector2f& vec = *it;
 		coords.push_back(static_cast<double>(vec.x));
 		coords.push_back(static_cast<double>(vec.y));
 	}

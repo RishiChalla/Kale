@@ -85,3 +85,21 @@ Path Path::operator*(float value) const {
 	}
 	return path;
 }
+
+/**
+ * Prints a bezier to an output stream
+ */
+std::ostream& Kale::operator<<(std::ostream& os, const CubicBezier& bezier) {
+	os << "CubicBezier(" << bezier.start << ", " << bezier.controlPoint1 << ", " << bezier.controlPoint2 << ", " << bezier.end << ")";
+	return os;
+}
+
+/**
+ * Prints a path to an output stream
+ */
+std::ostream& Kale::operator<<(std::ostream& os, const Path& path) {
+	os << "Path(\n";
+	for (const CubicBezier& bezier : path.beziers) os << bezier << "\n";
+	os << ")";
+	return os;
+}

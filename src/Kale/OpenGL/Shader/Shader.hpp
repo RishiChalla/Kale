@@ -198,6 +198,70 @@ namespace Kale::OpenGL {
 		 */
 		void uniform(unsigned int location, const std::vector<float>& value) const;
 
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const Vector2f* ptr, size_t size) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const Vector3f* ptr, size_t size) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const Vector4f* ptr, size_t size) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const Matrix2f* ptr, size_t size) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const Matrix3f* ptr, size_t size) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const Matrix4f* ptr, size_t size) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const Transform* ptr, size_t size) const;
+
+		/**
+		 * Passes a uniform at a certain location to the shader
+		 * @param location The location of the uniform
+		 * @param ptr The beginning pointer of the uniform values
+		 * @param size The count of uniform values
+		 */
+		void uniform(unsigned int location, const float* ptr, size_t size) const;
+
 	};
 }
 

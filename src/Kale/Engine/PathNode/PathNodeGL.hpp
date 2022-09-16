@@ -36,25 +36,79 @@ namespace Kale {
 	class PathNode : public Node, public Collidable, public Transformable {
 	private:
 
-		struct InnerVertex {
+		struct Vertex {
 			Vector2f pos;
+			float bezier;
 			float skeletonTransformWeight;
 			float skeletonTransform1;
 			float skeletonTransform2;
 		};
 
-		struct OuterVertex {
-			Vector2f pos;
-			CubicBezier bezier;
-			float skeletonTransformWeight;
-			float skeletonTransform1;
-			float skeletonTransform2;
-		};
-
-		std::unique_ptr<OpenGL::VertexArray<InnerVertex, 2, 1, 1, 1>> innerTriangles;
-		std::unique_ptr<OpenGL::VertexArray<OuterVertex, 2, 2, 2, 2, 2, 1, 1, 1>> outerTriangles;
-
+		std::unique_ptr<OpenGL::VertexArray<Vertex, 2, 1>> vertexArray;
 		Path path;
+		static inline std::unique_ptr<const OpenGL::Shader> shader = nullptr;
+
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int cameraUniform;
+		
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int localUniform;
+		
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int vertexColorUniform;
+		
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int zPositionUniform;
+
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int beziersUniform;
+		
+		/**
+		 * The location of the attribute within the shader for rendering this node
+		 */
+		inline static unsigned int posAttribute;
+		
+		/**
+		 * The location of the attribute within the shader for rendering this node
+		 */
+		inline static unsigned int bezierAttribute;
+		
+		/**
+		 * The location of the attribute within the shader for rendering this node
+		 */
+		inline static unsigned int skeletonTransformWeightAttribute;
+		
+		/**
+		 * The location of the attribute within the shader for rendering this node
+		 */
+		inline static unsigned int skeletonTransform1Attribute;
+		
+		/**
+		 * The location of the attribute within the shader for rendering this node
+		 */
+		inline static unsigned int skeletonTransform2Attribute;
+		
+		/**
+		 * Creates and compiles shaders
+		 */
+		static void setup();
+
+		/**
+		 * Deletes shaders/cleans up
+		 */
+		static void cleanup();
+
+		friend class Application;
 
 	protected:
 
@@ -77,6 +131,16 @@ namespace Kale {
 		virtual void end(const Scene& scene) override;
 
 	public:
+
+		/**
+		 * The z position of this node, setting this allows for rendering in front of or behind other nodes.
+		 */
+		float zPosition;
+
+		/**
+		 * The color of this path node
+		 */
+		Color color = Color(0x333333);
 
 		/**
 		 * Creates a blank pathnode with nothing to render

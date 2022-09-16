@@ -21,6 +21,7 @@
 #include <Kale/Math/Transform/Transform.hpp>
 
 #include <vector>
+#include <ostream>
 
 namespace Kale {
 
@@ -71,4 +72,15 @@ namespace Kale {
 		Path operator*(float value) const;
 
 	};
+
+	/**
+	 * Prints a bezier to an output stream
+	 */
+	std::ostream& operator<<(std::ostream& os, const CubicBezier& bezier);
+
+	/**
+	 * Prints a path to an output stream
+	 */
+	std::ostream& operator<<(std::ostream& os, const Path& path);
 }
+

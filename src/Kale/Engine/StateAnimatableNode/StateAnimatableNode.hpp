@@ -124,7 +124,7 @@ namespace Kale {
 			}
 
 			composition.push_back(std::make_pair(static_cast<T>(state), 1.0f - transitionTime));
-			composition.push_back(std::make_pair(staitc_cast<T>(transitionState), transitionTime));
+			composition.push_back(std::make_pair(static_cast<T>(transitionState), transitionTime));
 			return composition;
 		}
 
