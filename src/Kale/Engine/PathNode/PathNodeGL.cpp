@@ -96,7 +96,7 @@ void PathNode::render(const Camera& camera, float deltaTime) const {
  * Called when the node is removed from the scene, guaranteed to be called from the main thread
  */
 void PathNode::end(const Scene& scene) {
-	
+	vertexArray.reset();
 }
 
 /**
