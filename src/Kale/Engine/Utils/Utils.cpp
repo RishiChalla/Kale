@@ -37,8 +37,6 @@ std::pair<std::vector<Vector2f>, std::vector<unsigned int>> Kale::triangulatePat
 		coords.push_back(static_cast<double>(vec.x));
 		coords.push_back(static_cast<double>(vec.y));
 	});
-	for (const Vector2f* it = begin; it != end; ++it) {
-	}
 
 	delaunator::Delaunator d(coords);
 

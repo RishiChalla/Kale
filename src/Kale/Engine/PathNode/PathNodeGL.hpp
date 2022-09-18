@@ -36,15 +36,7 @@ namespace Kale {
 	class PathNode : public Node, public Collidable, public Transformable {
 	private:
 
-		struct Vertex {
-			Vector2f pos;
-			float bezier;
-			float skeletonTransformWeight;
-			float skeletonTransform1;
-			float skeletonTransform2;
-		};
-
-		std::unique_ptr<OpenGL::VertexArray<Vertex, 2, 1>> vertexArray;
+		std::unique_ptr<OpenGL::VertexArray<Vector2f, 2>> vertexArray;
 		Path path;
 		static inline std::unique_ptr<const OpenGL::Shader> shader = nullptr;
 
@@ -72,31 +64,16 @@ namespace Kale {
 		 * The location of the uniform within the shader for rendering this node
 		 */
 		inline static unsigned int beziersUniform;
+
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int numBeziersUniform;
 		
 		/**
 		 * The location of the attribute within the shader for rendering this node
 		 */
 		inline static unsigned int posAttribute;
-		
-		/**
-		 * The location of the attribute within the shader for rendering this node
-		 */
-		inline static unsigned int bezierAttribute;
-		
-		/**
-		 * The location of the attribute within the shader for rendering this node
-		 */
-		inline static unsigned int skeletonTransformWeightAttribute;
-		
-		/**
-		 * The location of the attribute within the shader for rendering this node
-		 */
-		inline static unsigned int skeletonTransform1Attribute;
-		
-		/**
-		 * The location of the attribute within the shader for rendering this node
-		 */
-		inline static unsigned int skeletonTransform2Attribute;
 		
 		/**
 		 * Creates and compiles shaders

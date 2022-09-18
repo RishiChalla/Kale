@@ -231,6 +231,16 @@ void Shader::uniform(unsigned int location, float value) const {
  * Passes a uniform at a certain location to the shader
  * @param location The location of the uniform
  * @param value The value of the uniform
+ */	
+void Shader::uniform(unsigned int location, int value) const {
+	useProgram();
+	glUniform1i(location, value);
+}
+
+/**
+ * Passes a uniform at a certain location to the shader
+ * @param location The location of the uniform
+ * @param value The value of the uniform
  */
 void Shader::uniform(unsigned int location, const std::vector<Vector2f>& value) const {
 	useProgram();

@@ -164,7 +164,13 @@ void Application::run() noexcept {
 	}
 
 	// Setup nodes
-	PathNode::setup();
+	try {
+		PathNode::setup();
+	}
+	catch (const std::exception& e) {
+		console.error("Terminating application due to failure to setup nodes - "s + e.what());
+		return;
+	}
 
 	// Create update threads
 	numThreadsUpdated = std::thread::hardware_concurrency();
@@ -223,7 +229,13 @@ void Application::run() noexcept {
 	onEnd();
 
 	// Cleanup nodes
-	PathNode::cleanup();
+	try {
+		PathNode::cleanup();
+	}
+	catch (const std::exception& e) {
+		console.error("Terminating application due to failure to cleanup nodes - "s + e.what());
+		return;
+	}
 
 #ifdef KALE_VULKAN
 	// Cleanup vulkan now that execution is done

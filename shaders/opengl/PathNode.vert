@@ -16,30 +16,17 @@
 
 #version 410
 
-#define MAX_BEZIERS 128
-// #define MAX_SKELETON_SIZE 128
-
 uniform mat3 camera;
 uniform mat3 local;
-uniform vec4 vertexColor;
 uniform float zPosition;
-uniform vec2[MAX_BEZIERS * 4] beziers;
-// uniform mat3[128] skeletonTransforms;
 
 in vec2 pos;
-in float bezier;
-// in float skeletonTransformWeight;
-// in float skeletonTransform1;
-// in float skeletonTransform2;
 
-out vec4 fragColor;
 out vec2 fragPos;
-out vec2 bezierStart;
-out vec2 bezierControlPoint1;
-out vec2 bezierControlPoint2;
-out vec2 bezierEnd;
-out float hasBezier;
 
+/**
+ * Helper function to transform a vector by a transformation matrix
+ */
 vec2 transform(mat3 mat, vec2 vert) {
 	return vec2(
 		mat[0][0] * vert.x + mat[0][1] * vert.y + mat[0][2],
@@ -47,24 +34,17 @@ vec2 transform(mat3 mat, vec2 vert) {
 	);
 }
 
+/**
+ * Transforms a position vector by the camera and local transforms
+ */
 vec2 transformPosition(vec2 pos) {
 	return transform(camera, transform(local, pos));
 }
 
+/**
+ * Entry point
+ */
 void main() {
-	// TODO - Skeletal based vertex animation
-    gl_Position = vec4(transformPosition(pos), zPosition, 1.0);
-	fragPos = gl_Position.xy;
-	fragColor = vertexColor;
-	int bezierIndex = int(bezier) * 4;
-	if (bezierIndex < 0) {
-		hasBezier = -1.0;
-	}
-	else {
-		hasBezier = 1.0;
-		bezierStart = transformPosition(beziers[bezierIndex]);
-		bezierControlPoint1 = transformPosition(beziers[bezierIndex + 1]);
-		bezierControlPoint2 = transformPosition(beziers[bezierIndex + 2]);
-		bezierEnd = transformPosition(beziers[bezierIndex + 3]);
-	}
+	gl_Position = vec4(transformPosition(pos), zPosition, 1.0);
+	fragPos = pos;
 }

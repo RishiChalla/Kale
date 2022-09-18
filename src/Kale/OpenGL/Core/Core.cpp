@@ -42,6 +42,8 @@ void Core::ResizeHandler::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {
 void Core::setupCore() noexcept {
 	try {
 		mainApp->getWindow().setupGlad();
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 		Vector2ui size = mainApp->getWindow().getFramebufferSize();
