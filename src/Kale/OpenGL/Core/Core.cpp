@@ -44,7 +44,6 @@ void Core::setupCore() noexcept {
 		mainApp->getWindow().setupGlad();
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
-		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 		Vector2ui size = mainApp->getWindow().getFramebufferSize();
 		glViewport(0, 0, size.x, size.y);

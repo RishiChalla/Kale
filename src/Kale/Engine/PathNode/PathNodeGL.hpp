@@ -31,49 +31,51 @@ namespace Kale {
 
 	/**
 	 * Used for rendering filled bezier paths
-	 * @tparam An enum class containing all the animation states
 	 */
 	class PathNode : public Node, public Collidable, public Transformable {
 	private:
 
+		/**
+		 * The vertex array used for rendering
+		 */
 		std::unique_ptr<OpenGL::VertexArray<Vector2f, 2>> vertexArray;
+
+		/**
+		 * The path being rendered
+		 */
 		Path path;
-		static inline std::unique_ptr<const OpenGL::Shader> shader = nullptr;
+
+		/**
+		 * The shader used for rendering
+		 */
+		static inline std::unique_ptr<const OpenGL::Shader> fillShader = nullptr;
+
+		/**
+		 * The shader used for stroking
+		 */
+		static inline std::unique_ptr<const OpenGL::Shader> strokeShader = nullptr;
 
 		/**
 		 * The location of the uniform within the shader for rendering this node
 		 */
-		inline static unsigned int cameraUniform;
-		
-		/**
-		 * The location of the uniform within the shader for rendering this node
-		 */
-		inline static unsigned int localUniform;
-		
-		/**
-		 * The location of the uniform within the shader for rendering this node
-		 */
-		inline static unsigned int vertexColorUniform;
-		
-		/**
-		 * The location of the uniform within the shader for rendering this node
-		 */
-		inline static unsigned int zPositionUniform;
-
-		/**
-		 * The location of the uniform within the shader for rendering this node
-		 */
-		inline static unsigned int beziersUniform;
-
-		/**
-		 * The location of the uniform within the shader for rendering this node
-		 */
-		inline static unsigned int numBeziersUniform;
+		inline static unsigned int fillCameraUniform, fillLocalUniform, fillVertexColorUniform, fillZPositionUniform,
+			fillBeziersUniform, fillNumBeziersUniform;
 		
 		/**
 		 * The location of the attribute within the shader for rendering this node
 		 */
-		inline static unsigned int posAttribute;
+		inline static unsigned int fillPosAttribute;
+
+		/**
+		 * The location of the uniform within the shader for rendering this node
+		 */
+		inline static unsigned int strokeCameraUniform, strokeLocalUniform, strokeVertexColorUniform, strokeZPositionUniform,
+			strokeBeziersUniform, strokeNumBeziersUniform, strokeRadiusUniform;
+		
+		/**
+		 * The location of the attribute within the shader for rendering this node
+		 */
+		inline static unsigned int strokePosAttribute;
 		
 		/**
 		 * Creates and compiles shaders
@@ -115,9 +117,29 @@ namespace Kale {
 		float zPosition;
 
 		/**
+		 * Whether or not to fill the path when rendering
+		 */
+		bool fill = true;
+
+		/**
+		 * Whether or not to stroke the path when rendering
+		 */
+		bool stroke = false;
+
+		/**
+		 * The radius of the stroke if stroke is true
+		 */
+		float strokeRadius = 20.0f;
+
+		/**
 		 * The color of this path node
 		 */
 		Color color = Color(0x333333);
+
+		/**
+		 * The color to stroke this path node with
+		 */
+		Color strokeColor = Color(0x555555);
 
 		/**
 		 * Creates a blank pathnode with nothing to render
@@ -127,8 +149,10 @@ namespace Kale {
 		/**
 		 * Creates a path node given the path to use
 		 * @param path The path to use
+		 * @param fill Whether or not to fill the node
+		 * @param stroke Whether or not to stroke the node
 		 */
-		PathNode(const Path& path);
+		PathNode(const Path& path, bool fill = true, bool stroke = false);
 
 	};
 }

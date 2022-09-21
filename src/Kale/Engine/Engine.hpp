@@ -24,6 +24,5 @@
 #include "SkeletalAnimatableNode/SkeletalAnimatableNode.hpp"
 // #include "SkeletonNode/SkeletonNode.hpp"
 #include "StateAnimatableNode/StateAnimatableNode.hpp"
-// #include "StrokeNode/StrokeNode.hpp"
 #include "Transformable/Transformable.hpp"
 #include "Utils/Utils.hpp"
