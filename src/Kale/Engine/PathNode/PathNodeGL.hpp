@@ -33,6 +33,16 @@ namespace Kale {
 	 * Used for rendering filled bezier paths
 	 */
 	class PathNode : public Node, public Collidable, public Transformable {
+	public:
+
+		/**
+		 * Styles of rendering strokes on a path
+		 * @note Inside and Outside only work when the path is closed. For an open path, this is undefined behavior.
+		 */
+		enum class StrokeStyle {
+			Neither = 0, Both = 1, Inside = 2, Outside = 3
+		};
+
 	private:
 
 		/**
@@ -48,34 +58,18 @@ namespace Kale {
 		/**
 		 * The shader used for rendering
 		 */
-		static inline std::unique_ptr<const OpenGL::Shader> fillShader = nullptr;
-
-		/**
-		 * The shader used for stroking
-		 */
-		static inline std::unique_ptr<const OpenGL::Shader> strokeShader = nullptr;
+		static inline std::unique_ptr<const OpenGL::Shader> shader = nullptr;
 
 		/**
 		 * The location of the uniform within the shader for rendering this node
 		 */
-		inline static unsigned int fillCameraUniform, fillLocalUniform, fillVertexColorUniform, fillZPositionUniform,
-			fillBeziersUniform, fillNumBeziersUniform;
+		inline static unsigned int cameraUniform, localUniform, vertexColorUniform, zPositionUniform,
+			beziersUniform, numBeziersUniform, strokeUniform, fillUniform, strokeRadiusUniform, strokeColorUniform;
 		
 		/**
 		 * The location of the attribute within the shader for rendering this node
 		 */
-		inline static unsigned int fillPosAttribute;
-
-		/**
-		 * The location of the uniform within the shader for rendering this node
-		 */
-		inline static unsigned int strokeCameraUniform, strokeLocalUniform, strokeVertexColorUniform, strokeZPositionUniform,
-			strokeBeziersUniform, strokeNumBeziersUniform, strokeRadiusUniform;
-		
-		/**
-		 * The location of the attribute within the shader for rendering this node
-		 */
-		inline static unsigned int strokePosAttribute;
+		inline static unsigned int posAttribute;
 		
 		/**
 		 * Creates and compiles shaders
@@ -118,13 +112,14 @@ namespace Kale {
 
 		/**
 		 * Whether or not to fill the path when rendering
+		 * @note This must be false if the path is open. Filling an open path results in undefined behavior
 		 */
 		bool fill = true;
 
 		/**
 		 * Whether or not to stroke the path when rendering
 		 */
-		bool stroke = false;
+		StrokeStyle stroke = StrokeStyle::Neither;
 
 		/**
 		 * The radius of the stroke if stroke is true
@@ -152,7 +147,7 @@ namespace Kale {
 		 * @param fill Whether or not to fill the node
 		 * @param stroke Whether or not to stroke the node
 		 */
-		PathNode(const Path& path, bool fill = true, bool stroke = false);
+		PathNode(const Path& path, bool fill = true, StrokeStyle stroke = StrokeStyle::Neither);
 
 	};
 }
