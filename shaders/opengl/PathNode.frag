@@ -54,7 +54,7 @@ float newtonApproximation(float x) {
 		h = d(x) / d2(x);
 		x = x - h;
 		count++;
-		if (count >= 10) return -1;
+		if (count >= 10) return -1000.0;
 	}
 
 	return x;
@@ -279,7 +279,8 @@ bool shouldStrokeBezier(vec2 p0, vec2 p1, vec2 p2, vec2 p3, vec2 p) {
 	o = -6*p0.x*p0.x + 6.0*p0.x*p1.x + 6.0*p0.x*p.x - 6.0*p0.y*p0.y + 6.0*p0.y*p1.y + 6.0*p0.y*p.y - 6.0*p1.x*p.x - 6.0*p1.y*p.y;
 
 	float root = newtonApproximation(0.5);
-	if (root > 1.0 || root < 0.0 || d2(root) < 0.0) return false; // No local minima found
+	if (root < -500.0) return false;
+	root = clamp(root, 0.0, 1.0);
 
 	vec2 d = calcBezier(root, p0, p1, p2, p3) - p;
 	if (dot(d, d) < strokeRadius * strokeRadius) return true;
@@ -332,7 +333,7 @@ void main() {
 	else if (shouldStroke) {
 		if (shouldFill && stroke != 3) outColor = strokeColor;
 		else if (shouldFill && stroke == 3) outColor = vertexColor;
-		else outColor = strokeColor;
+		else if (stroke != 2) outColor = strokeColor;
 	}
 	else outColor = vec4(0.0, 0.0, 0.0, 0.0);
 }
