@@ -25,7 +25,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        token: ${{ secrets.CI_TOKEN }}
+        token: ${{ secrets.MY_TOKEN || github.token }}
         submodules: true
         
     - name: Doxygen Action
