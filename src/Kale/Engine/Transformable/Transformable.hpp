@@ -17,8 +17,11 @@
 #pragma once
 
 #include <Kale/Math/Transform/Transform.hpp>
+#include <Kale/Engine/Node/Node.hpp>
+#include <Kale/Engine/StateAnimatable/StateAnimatable.hpp>
 
 #include <mutex>
+#include <optional>
 
 namespace Kale {
 
@@ -30,28 +33,34 @@ namespace Kale {
 	protected:
 
 		/**
+		 * Updates the transform depending on state node animations
+		 * @param deltaTime The duration of the last frame in microseconds
+		 */
+		void updateTransform(float deltaTime);
+
+		/**
+		 * The transform produced from the FSM
+		 */
+		std::optional<Transform> stateTransform;
+	
+	public:
+
+		/**
+		 * The FSM used for transform states. Transformables support FSM based animations, to use the FSM simply set the value of this optional and fill
+		 * the map. Access to the FSM must be externally synchronized if done from multiple threads.
+		 */
+		std::optional<StateAnimatable<Transform>> transformFSM;
+
+		/**
 		 * The transformation matrix of this object
 		 */
 		Transform transform;
 
 		/**
-		 * The mutex used for synchronized write access to the transform
+		 * Gets the full transform including FSM based transformations
+		 * @returns the full transform including FSM based transformations
 		 */
-		std::mutex mutex;
-	
-	public:
-
-		/**
-		 * Thread safe method to get the transformation matrix
-		 * @returns The transformation matrix of this object
-		 */
-		Transform getTransform() const;
-
-		/**
-		 * Thread safe method to set the transformation matrix
-		 * @param transform The transformation matrix to set the transform of this object to
-		 */
-		void setTransform(const Transform& transform);
+		Transform getFullTransform() const;
 
 	};
 }

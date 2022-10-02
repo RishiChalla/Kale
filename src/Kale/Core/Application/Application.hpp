@@ -26,6 +26,8 @@
 #include <list>
 #include <vector>
 #include <mutex>
+#include <queue>
+#include <functional>
 #include <condition_variable>
 
 /**
@@ -48,9 +50,19 @@ namespace Kale {
 		std::list<std::thread> updateThreads;
 
 		/**
+		 * Stores all tasks required to be run
+		 */
+		std::queue<std::function<void()>> tasks;
+
+		/**
 		 * Used for thread synchronization
 		 */
 		std::mutex threadSyncMutex;
+
+		/**
+		 * Used for synchronizing access to tasks across threads
+		 */
+		std::mutex taskManagerMutex;
 
 		/**
 		 * Used for thread synchronization
@@ -181,6 +193,13 @@ namespace Kale {
 		 * @returns The number of threads used for updating
 		 */
 		[[nodiscard]] size_t getNumUpdateThreads() const noexcept;
+
+		/**
+		 * Runs a given task on the main thread prior to rendering on any given frame, Can be called on any thread
+		 * @note Do not use reference based lambdas if anything referenced is at risk of being destroyed.
+		 * @param task A method which carries out any necessary task
+		 */
+		void runTaskOnMainThread(std::function<void()> task);
 	};
 
 	/**

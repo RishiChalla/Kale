@@ -54,6 +54,12 @@ namespace Kale {
 		Path(size_t n);
 
 		/**
+		 * Creates a path given beziers
+		 * @param beziers The beziers
+		 */
+		Path(const std::vector<CubicBezier>& beziers);
+
+		/**
 		 * Gets the bounding box for this path
 		 * @returns The bounding box
 		 */

@@ -18,6 +18,9 @@
 
 #include <Kale/Math/Transform/Transform.hpp>
 
+#include <mutex>
+#include <optional>
+
 namespace Kale {
 
 	/**
@@ -32,6 +35,12 @@ namespace Kale {
 	private:
 
 	protected:
+
+		/**
+		 * An optional mutex for nodes to use. It is up to the inherited node as to whether or not to use this. In some implementations
+		 * mutexes are heavy classes and using this can help avoid large amounts of dangling mutexes.
+		 */
+		std::optional<std::mutex> mutex;
 
 		/**
 		 * Called when the node is added to the scene, guaranteed to be called before any updates & renders

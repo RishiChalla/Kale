@@ -38,6 +38,14 @@ Path::Path(size_t n) : beziers(n) {
 }
 
 /**
+ * Creates a path given beziers
+ * @param beziers The beziers
+ */
+Path::Path(const std::vector<CubicBezier>& beziers) : beziers(beziers) {
+	// Empty Body
+}
+
+/**
  * Gets the bounding box for this path
  * @returns The bounding box
  */
@@ -80,7 +88,7 @@ Path Path::operator*(float value) const {
 	for (CubicBezier& bezier : path.beziers) {
 		bezier.start *= value;
 		bezier.controlPoint1 *= value;
-		bezier.controlPoint1 *= value;
+		bezier.controlPoint2 *= value;
 		bezier.end *= value;
 	}
 	return path;

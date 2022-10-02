@@ -93,6 +93,16 @@ void Application::presentScene(const std::shared_ptr<Scene>& scene) {
 }
 
 /**
+ * Runs a given task on the main thread prior to rendering on any given frame, Can be called on any thread
+ * @note Do not use reference based lambdas if anything referenced is at risk of being destroyed.
+ * @param task A method which carries out any necessary task
+ */
+void Application::runTaskOnMainThread(std::function<void()> task) {
+	std::lock_guard lock(taskManagerMutex);
+	tasks.push(task);
+}
+
+/**
  * Synchronizes udpates
  */
 void Application::synchronizeUpdate() {
@@ -205,15 +215,25 @@ void Application::run() noexcept {
 		// Synchronize with the update threads
 		{
 			std::unique_lock lock(threadSyncMutex);
+			updatingFinished = false;
 			renderingFinished = true;
 			threadSyncCondVar.notify_all();
 			renderSyncCondVar.wait(lock, [&]() -> bool { return updatingFinished; });
-			updatingFinished = false;
 		}
 
-		// Render scene
+		// Run all tasks required
+		while (!tasks.empty()) try {
+			tasks.front()();
+			tasks.pop();
+		}
+		catch (const std::exception& e) {
+			console.error("Failed to execute task on main thread - "s + e.what());
+		}
+
 		if (presentedScene != nullptr) try {
+			// Update node structures
 			presentedScene->updateNodeStructures();
+			// Render scene
 			presentedScene->render(deltaTime);
 		}
 		catch (const std::exception& e) {

@@ -19,18 +19,33 @@
 using namespace Kale;
 
 /**
- * Thread safe method to get the transformation matrix
- * @returns The transformation matrix of this object
+ * Updates the transform depending on state node animations
+ * @param deltaTime The duration of the last frame in microseconds
  */
-Transform Transformable::getTransform() const {
-	return transform;
+void Transformable::updateTransform(float deltaTime) {
+	// Update the Transform based on the FSM if applicable
+	if (!transformFSM.has_value()) return;
+
+	// Update the state
+	transformFSM->updateState(deltaTime);
+
+	// Clear the transform
+	stateTransform = Transform({
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f
+	});
+
+	// Loop through the composition & lerp between states as applicable
+	for (std::pair<int, float> composition : transformFSM->getStateComposition<int>())
+		*stateTransform += transformFSM->getStructure<int>(composition.first) * composition.second;
 }
 
 /**
- * Thread safe method to set the transformation matrix
- * @param transform The transformation matrix to set the transform of this object to
+ * Gets the full transform including FSM based transformations
+ * @returns the full transform including FSM based transformations
  */
-void Transformable::setTransform(const Transform& transform) {
-	std::lock_guard lock(mutex);
-	this->transform = transform;
+Transform Transformable::getFullTransform() const {
+	if (!transformFSM.has_value()) return transform;
+	return transform * (*stateTransform);
 }

@@ -64,22 +64,83 @@ void PathNode::cleanup() {
 }
 
 /**
+ * Updates the bounding box accounting for stroke
+ */
+void PathNode::updateBoundingBox() {
+	Collidable::boundingBox = path.getBoundingBox();
+	
+	if (stroke == StrokeStyle::Outside || stroke == StrokeStyle::Both) {
+		Collidable::boundingBox.topLeft -= strokeRadius;
+		Collidable::boundingBox.bottomRight += strokeRadius;
+	}
+
+	const std::array<Vector2f, 4> verts = {
+		Collidable::boundingBox.bottomLeft(),
+		Collidable::boundingBox.topLeft,
+		Collidable::boundingBox.bottomRight,
+		Collidable::boundingBox.topRight()
+	};
+
+	std::copy(reinterpret_cast<const float*>(verts.cbegin()), reinterpret_cast<const float*>(verts.end()), vertexArray->vertices.data.begin());
+	
+	// OpenGL commands must be run on the main thread - add a task for it. 
+	mainApp->runTaskOnMainThread([&]() { vertexArray->vertices.updateBuffer(); });
+}
+
+/**
  * Called when the node is added to the scene, guaranteed to be called before any updates & renders
  * and from the main thread.
  * @param scene The scene the node has been added to
  */
 void PathNode::begin(const Scene& scene) {
-	Rect boundingBox = path.getBoundingBox();
-	if (stroke != StrokeStyle::Neither) {
-		boundingBox.topLeft -= strokeRadius;
-		boundingBox.bottomRight += strokeRadius;
+	Collidable::boundingBox = path.getBoundingBox();
+	
+	if (stroke == StrokeStyle::Outside || stroke == StrokeStyle::Both) {
+		Collidable::boundingBox.topLeft -= strokeRadius;
+		Collidable::boundingBox.bottomRight += strokeRadius;
 	}
 
-	const std::array<Vector2f, 4> verts = {boundingBox.bottomLeft(), boundingBox.topLeft, boundingBox.bottomRight, boundingBox.topRight()};
+	const std::array<Vector2f, 4> verts = {
+		Collidable::boundingBox.bottomLeft(),
+		Collidable::boundingBox.topLeft,
+		Collidable::boundingBox.bottomRight,
+		Collidable::boundingBox.topRight()
+	};
+
 	const std::array<unsigned int, 6> indices = {0, 1, 2, 1, 3, 2};
 
-	vertexArray = std::make_unique<OpenGL::VertexArray<Vector2f, 2>>(verts, indices, OpenGL::BufferUsage::Static);
+	OpenGL::BufferUsage usage = pathFSM.has_value() ? OpenGL::BufferUsage::Dynamic : OpenGL::BufferUsage::Static;
+	vertexArray = std::make_unique<OpenGL::VertexArray<Vector2f, 2>>(verts, indices, usage);
 	vertexArray->enableAttributePointer({posAttribute});
+}
+
+/**
+ * Called prior to update, perfect place to do things such as updating the bounding box, etc
+ * @param threadNum the index of the thread this update is called on
+ * @param scene The scene being updated to
+ * @param deltaTime The duration of the last frame in microseconds
+ */
+void PathNode::preUpdate(size_t threadNum, const Scene& scene, float deltaTime) {
+	// Call transformable update
+	Transformable::updateTransform(deltaTime);
+
+	// Update the Path based on the FSM if applicable
+	if (pathFSM.has_value()) {
+		
+		// Update the state
+		pathFSM->updateState(deltaTime);
+
+		// Clear the path
+		std::fill(path.beziers.begin(), path.beziers.end(), CubicBezier{Vector2f::zero(), Vector2f::zero(), Vector2f::zero(), Vector2f::zero()});
+
+		// Loop through the composition & lerp between states as applicable
+		for (std::pair<int, float> composition : pathFSM->getStateComposition<int>()) {
+			path += pathFSM->getStructure<int>(composition.first) * composition.second;
+		}
+
+		// Update the bounding box
+		updateBoundingBox();
+	}
 }
 
 /**
@@ -87,20 +148,24 @@ void PathNode::begin(const Scene& scene) {
  * @param camera The camera to render with
  */
 void PathNode::render(const Camera& camera, float deltaTime) const {
+	// There is no vertex array setup - nothing to render
 	if (vertexArray == nullptr) return;
+
+	// Use the shader & provide uniforms
 	shader->useProgram();
 	shader->uniform(cameraUniform, camera);
-	shader->uniform(localUniform, transform);
+	shader->uniform(localUniform, getFullTransform()); 
 	shader->uniform(vertexColorUniform, color);
 	shader->uniform(strokeColorUniform, strokeColor);
 	shader->uniform(zPosition, zPosition);
 	shader->uniform(fillUniform, fill ? 1 : 0);
-	shader->uniform(strokeUniform, static_cast<int>(stroke)); 
+	shader->uniform(strokeUniform, static_cast<int>(stroke));
 	shader->uniform(strokeRadiusUniform, strokeRadius);
 
 	shader->uniform(beziersUniform, reinterpret_cast<const Vector2f*>(path.beziers.data()), path.beziers.size() * 4); 
 	shader->uniform(numBeziersUniform, static_cast<int>(path.beziers.size()));
 
+	// Draw, fragment shaders will do the rest of the work for us
 	vertexArray->draw();
 }
 

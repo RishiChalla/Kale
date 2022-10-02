@@ -17,7 +17,7 @@
 #pragma once
 
 #include <Kale/Engine/Node/Node.hpp>
-#include <Kale/Engine/StateAnimatableNode/StateAnimatableNode.hpp>
+#include <Kale/Engine/StateAnimatable/StateAnimatable.hpp>
 #include <Kale/Math/Transform/Transform.hpp>
 #include <Kale/Math/Line/Line.hpp>
 #include <Kale/Math/Utils/Utils.hpp>
@@ -194,7 +194,7 @@ namespace Kale {
 	 * 
 	 * Please see the SkeletonNode if you are looking for a skeletal system capable of connecting several node's transforms.
 	 */
-	class SkeletalAnimatableNode : public Node, public FiniteStateAnimatable<Skeleton> {
+	class SkeletalAnimatableNode : public Node {
 	private:
 
 		/**

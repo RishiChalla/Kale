@@ -242,6 +242,12 @@ float min4(float a, float b, float c, float d) {
  * @returns Whether or not this fragment should be stroked relative to the bezier
  */
 bool shouldStrokeBezier(vec2 p0, vec2 p1, vec2 p2, vec2 p3, vec2 p) {
+	// Check if the fragment is close enough to the start/end first
+	vec2 p0d = p0 - p;
+	vec2 p3d = p3 - p;
+	float strokeRadiusSquared = strokeRadius * strokeRadius;
+	if (dot(p0d, p0d) < strokeRadiusSquared || dot(p3d, p3d) < strokeRadiusSquared) return true;
+
 	// B(t) = (1-t)^3*p0 + 3t(1-t)^2*p1 + 3t^2(1-t)*p2 + t^3*p3 // Bezier formula
 	// B'(t) = 3(1-t)^2(p1 - p0) + 6(1-t)t(p2 - p1) + 3t^2(p3 - p2) // Bezier derivative
 	
@@ -279,11 +285,10 @@ bool shouldStrokeBezier(vec2 p0, vec2 p1, vec2 p2, vec2 p3, vec2 p) {
 	o = -6*p0.x*p0.x + 6.0*p0.x*p1.x + 6.0*p0.x*p.x - 6.0*p0.y*p0.y + 6.0*p0.y*p1.y + 6.0*p0.y*p.y - 6.0*p1.x*p.x - 6.0*p1.y*p.y;
 
 	float root = newtonApproximation(0.5);
-	if (root < -500.0) return false;
-	root = clamp(root, 0.0, 1.0);
+	if (root < 0.0 || root > 1.0) return false;
 
 	vec2 d = calcBezier(root, p0, p1, p2, p3) - p;
-	if (dot(d, d) < strokeRadius * strokeRadius) return true;
+	if (dot(d, d) < strokeRadiusSquared) return true;
 
 	return false;
 }

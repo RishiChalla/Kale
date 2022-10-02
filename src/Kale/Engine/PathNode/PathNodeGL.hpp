@@ -19,6 +19,7 @@
 #ifdef KALE_OPENGL
 
 #include <Kale/Engine/Node/Node.hpp>
+#include <Kale/Engine/StateAnimatable/StateAnimatable.hpp>
 #include <Kale/Engine/Collidable/Collidable.hpp>
 #include <Kale/Engine/Transformable/Transformable.hpp>
 #include <Kale/Math/Path/Path.hpp>
@@ -26,13 +27,14 @@
 #include <Kale/OpenGL/Shader/Shader.hpp>
 
 #include <memory>
+#include <optional>
 
 namespace Kale {
 
 	/**
 	 * Used for rendering filled bezier paths
 	 */
-	class PathNode : public Node, public Collidable, public Transformable {
+	class PathNode : public Node, public Transformable, public Collidable {
 	public:
 
 		/**
@@ -81,6 +83,11 @@ namespace Kale {
 		 */
 		static void cleanup();
 
+		/**
+		 * Updates the bounding box accounting for stroke
+		 */
+		void updateBoundingBox();
+
 		friend class Application;
 
 	protected:
@@ -91,6 +98,14 @@ namespace Kale {
 		 * @param scene The scene the node has been added to
 		 */
 		virtual void begin(const Scene& scene) override;
+
+		/**
+		 * Called prior to update, perfect place to do things such as updating the bounding box, etc
+		 * @param threadNum the index of the thread this update is called on
+		 * @param scene The scene being updated to
+		 * @param deltaTime The duration of the last frame in microseconds
+		 */
+		virtual void preUpdate(size_t threadNum, const Scene& scene, float deltaTime) override;
 
 		/**
 		 * Renders the node
@@ -104,6 +119,12 @@ namespace Kale {
 		virtual void end(const Scene& scene) override;
 
 	public:
+
+		/**
+		 * The FSM used for path states. Path nodes support FSM based animations, to use the FSM simply set the value of this optional and fill
+		 * the map. Access to the FSM must be externally synchronized if done from multiple threads.
+		 */
+		std::optional<StateAnimatable<Path>> pathFSM;
 
 		/**
 		 * The z position of this node, setting this allows for rendering in front of or behind other nodes.
