@@ -17,7 +17,7 @@ var searchData=
   ['registerevents_14',['registerEvents',['../class_kale_1_1_window.html#a6c2373ce13ebe814f0aef6d8cbfae7b3',1,'Kale::Window']]],
   ['removeevents_15',['removeEvents',['../class_kale_1_1_window.html#a0456ab09152b59c650f05538e4460523',1,'Kale::Window']]],
   ['removenode_16',['removeNode',['../class_kale_1_1_scene.html#a5b991efe6f5915441f06d63a47acad07',1,'Kale::Scene::removeNode(std::shared_ptr&lt; Node &gt; &amp;node)'],['../class_kale_1_1_scene.html#a73a5edadee66e9afa38394bce459fc5d',1,'Kale::Scene::removeNode(std::shared_ptr&lt; T &gt; &amp;node)']]],
-  ['removestructure_17',['removeStructure',['../class_kale_1_1_finite_state_animatable.html#a00b458f25c57f52154dd886b0cb603cc',1,'Kale::FiniteStateAnimatable']]],
+  ['removestructure_17',['removeStructure',['../class_kale_1_1_state_animatable.html#a4a068c59c09973087bc0df139d43b01e',1,'Kale::StateAnimatable']]],
   ['render_18',['render',['../class_kale_1_1_scene.html#a8b981778c44ce4ca5f957294b2d25ce9',1,'Kale::Scene::render()'],['../class_kale_1_1_node.html#a2484cf082877f0ef92b79f9d9e966300',1,'Kale::Node::render()'],['../class_kale_1_1_path_node.html#a451ea83e568d517f1abb593a567af937',1,'Kale::PathNode::render(const Camera &amp;camera, float deltaTime) const override'],['../class_kale_1_1_path_node.html#ad8ddf5f815ac0e3139fce998bacf5a2f',1,'Kale::PathNode::render(const Camera &amp;camera, float deltaTime) const override']]],
   ['renderer_19',['Renderer',['../class_kale_1_1_vulkan_1_1_renderer.html',1,'Kale::Vulkan::Renderer'],['../class_kale_1_1_vulkan_1_1_renderer.html#a7ebf46f54dab9905f79b80f7fddb76a6',1,'Kale::Vulkan::Renderer::Renderer()']]],
   ['renderer_2ecpp_20',['Renderer.cpp',['../_renderer_8cpp.html',1,'']]],
@@ -44,5 +44,6 @@ var searchData=
   ['rotatedrect_41',['RotatedRect',['../struct_kale_1_1_rotated_rect.html',1,'Kale::RotatedRect'],['../struct_kale_1_1_rotated_rect.html#a6c7961fb8b2e49a30e20a290eeae0a5b',1,'Kale::RotatedRect::RotatedRect(const Vector2f &amp;topLeft, const Vector2f &amp;bottomRight)'],['../struct_kale_1_1_rotated_rect.html#ab4c2902dbdcedfa2549720e55bc0a495',1,'Kale::RotatedRect::RotatedRect(const Vector2f &amp;point1, const Vector2f &amp;point2, const Vector2f &amp;point3, const Vector2f &amp;point4)'],['../struct_kale_1_1_rotated_rect.html#a1ca9cf642476864a2a82c44c0d42b068',1,'Kale::RotatedRect::RotatedRect()']]],
   ['rotatedrect_2ecpp_42',['RotatedRect.cpp',['../_rotated_rect_8cpp.html',1,'']]],
   ['rotatedrect_2ehpp_43',['RotatedRect.hpp',['../_rotated_rect_8hpp.html',1,'']]],
-  ['run_44',['run',['../class_kale_1_1_application.html#ab12f3b8446c1d545893c4bd4992493cb',1,'Kale::Application']]]
+  ['run_44',['run',['../class_kale_1_1_application.html#ab12f3b8446c1d545893c4bd4992493cb',1,'Kale::Application']]],
+  ['runtaskonmainthread_45',['runTaskOnMainThread',['../class_kale_1_1_application.html#a402a90ec738005fb27a1dba00a5a9b5a',1,'Kale::Application']]]
 ];

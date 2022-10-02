@@ -111,6 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa7d4a9595755900b519c7851b0dba64e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabdb95b80efe86eeea3781e2aa481deb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#aabdb95b80efe86eeea3781e2aa481deb">getNumUpdateThreads</a> () const noexcept</td></tr>
 <tr class="separator:aabdb95b80efe86eeea3781e2aa481deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a402a90ec738005fb27a1dba00a5a9b5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#a402a90ec738005fb27a1dba00a5a9b5a">runTaskOnMainThread</a> (std::function&lt; void()&gt; task)</td></tr>
+<tr class="separator:a402a90ec738005fb27a1dba00a5a9b5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -146,8 +148,12 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a90640625adbd90e9c0eac4a4a8e8f437"><td class="memItemLeft" align="right" valign="top">std::list&lt; std::thread &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#a90640625adbd90e9c0eac4a4a8e8f437">updateThreads</a></td></tr>
 <tr class="separator:a90640625adbd90e9c0eac4a4a8e8f437"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfc716521289336c9df3ab799f40ed74"><td class="memItemLeft" align="right" valign="top">std::queue&lt; std::function&lt; void()&gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#acfc716521289336c9df3ab799f40ed74">tasks</a></td></tr>
+<tr class="separator:acfc716521289336c9df3ab799f40ed74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95d7d06f5bc1ffdd6c304de05b4c4192"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#a95d7d06f5bc1ffdd6c304de05b4c4192">threadSyncMutex</a></td></tr>
 <tr class="separator:a95d7d06f5bc1ffdd6c304de05b4c4192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a858a4130676c5da780778ad663542a27"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#a858a4130676c5da780778ad663542a27">taskManagerMutex</a></td></tr>
+<tr class="separator:a858a4130676c5da780778ad663542a27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a332f88ae86f51d5dcb256cf111e2b587"><td class="memItemLeft" align="right" valign="top">std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#a332f88ae86f51d5dcb256cf111e2b587">threadSyncCondVar</a></td></tr>
 <tr class="separator:a332f88ae86f51d5dcb256cf111e2b587"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3abab394861dea62e3a0f64f763e4982"><td class="memItemLeft" align="right" valign="top">std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_application.html#a3abab394861dea62e3a0f64f763e4982">renderSyncCondVar</a></td></tr>
@@ -168,7 +174,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The main <a class="el" href="class_kale_1_1_application.html">Application</a> class </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00041">41</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00043">43</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aacbd61f80b7f13f5b0f67309db8e6352" name="aacbd61f80b7f13f5b0f67309db8e6352"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aacbd61f80b7f13f5b0f67309db8e6352">&#9670;&#160;</a></span>Application() <span class="overload">[1/3]</span></h2>
@@ -448,7 +454,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Called when the application begins, just before the window is run. </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00116">116</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00128">128</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -476,7 +482,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Called just before the application is ended </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00121">121</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00133">133</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -582,7 +588,34 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Runs the application </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8cpp_source.html#l00140">140</a> of file <a class="el" href="_application_8cpp_source.html">Application.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8cpp_source.html#l00150">150</a> of file <a class="el" href="_application_8cpp_source.html">Application.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a402a90ec738005fb27a1dba00a5a9b5a" name="a402a90ec738005fb27a1dba00a5a9b5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a402a90ec738005fb27a1dba00a5a9b5a">&#9670;&#160;</a></span>runTaskOnMainThread()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Application::runTaskOnMainThread </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
+          <td class="paramname"><em>task</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Runs a given task on the main thread prior to rendering on any given frame, Can be called on any thread </p><dl class="section note"><dt>Note</dt><dd>Do not use reference based lambdas if anything referenced is at risk of being destroyed. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">task</td><td>A method which carries out any necessary task </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_application_8cpp_source.html#l00100">100</a> of file <a class="el" href="_application_8cpp_source.html">Application.cpp</a>.</p>
 
 </div>
 </div>
@@ -610,7 +643,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Synchronizes udpates </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8cpp_source.html#l00098">98</a> of file <a class="el" href="_application_8cpp_source.html">Application.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8cpp_source.html#l00108">108</a> of file <a class="el" href="_application_8cpp_source.html">Application.cpp</a>.</p>
 
 </div>
 </div>
@@ -644,7 +677,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_application_8cpp_source.html#l00116">116</a> of file <a class="el" href="_application_8cpp_source.html">Application.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8cpp_source.html#l00126">126</a> of file <a class="el" href="_application_8cpp_source.html">Application.cpp</a>.</p>
 
 </div>
 </div>
@@ -662,7 +695,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >The name of the application the engine is being used for </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00141">141</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00153">153</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -687,7 +720,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >The time taken to update and render each frame, set at the end of every render </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00083">83</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00095">95</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -712,7 +745,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Used for thread synchronization </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00068">68</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00080">80</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -737,7 +770,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >A pointer to the current scene to render </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00094">94</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00106">106</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -762,7 +795,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Used for thread synchronization </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00078">78</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00090">90</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -787,7 +820,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Used for thread synchronization </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00063">63</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00075">75</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -812,7 +845,57 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >A pointer to the scene to be presented </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00099">99</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00111">111</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a858a4130676c5da780778ad663542a27" name="a858a4130676c5da780778ad663542a27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a858a4130676c5da780778ad663542a27">&#9670;&#160;</a></span>taskManagerMutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex Kale::Application::taskManagerMutex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Used for synchronizing access to tasks across threads </p>
+
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00065">65</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acfc716521289336c9df3ab799f40ed74" name="acfc716521289336c9df3ab799f40ed74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfc716521289336c9df3ab799f40ed74">&#9670;&#160;</a></span>tasks</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::queue&lt;std::function&lt;void()&gt; &gt; Kale::Application::tasks</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Stores all tasks required to be run </p>
+
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00055">55</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -837,7 +920,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Used for thread synchronization </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00058">58</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00070">70</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -862,7 +945,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Used for thread synchronization </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00053">53</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00060">60</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -887,7 +970,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >A list of the update threads </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00048">48</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00050">50</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -912,7 +995,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Used for thread synchronization </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00073">73</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00085">85</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -937,7 +1020,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >The main window used for rendering for this application instance </p>
 
-<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00111">111</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_application_8hpp_source.html#l00123">123</a> of file <a class="el" href="_application_8hpp_source.html">Application.hpp</a>.</p>
 
 </div>
 </div>
@@ -948,7 +1031,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 25 2022 04:37:18 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Sun Oct 2 2022 02:29:53 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

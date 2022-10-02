@@ -10,6 +10,6 @@ var searchData=
   ['isopen_7',['isOpen',['../class_kale_1_1_window.html#a73e4f420343b7115012312e00eb4c691',1,'Kale::Window']]],
   ['isparallel_8',['isParallel',['../struct_kale_1_1_line.html#a8cc16831b98ac24658887d9ef775c8c2',1,'Kale::Line::isParallel(Ray ray) const'],['../struct_kale_1_1_line.html#a35352350077be31f848723681cb0cbb8',1,'Kale::Line::isParallel(Line line) const'],['../struct_kale_1_1_ray.html#a5469d32dfb66c0be294d65840bf15959',1,'Kale::Ray::isParallel(Ray ray) const'],['../struct_kale_1_1_ray.html#a15ef7fb9a8cb9e430af09dc117836c5e',1,'Kale::Ray::isParallel(Line line) const']]],
   ['isperpendicular_9',['isPerpendicular',['../struct_kale_1_1_line.html#acb3077470bc632089573fdc6182b52a3',1,'Kale::Line::isPerpendicular(Ray ray) const'],['../struct_kale_1_1_line.html#abfa00b93feee8b60d8b14f9fda01629e',1,'Kale::Line::isPerpendicular(Line line) const'],['../struct_kale_1_1_ray.html#a4ee3dcbfb60eaea171c1f7bb29841125',1,'Kale::Ray::isPerpendicular(Ray ray) const'],['../struct_kale_1_1_ray.html#a4787c5111cb0f1588f5d297535a46a7d',1,'Kale::Ray::isPerpendicular(Line line) const']]],
-  ['istransitioning_10',['isTransitioning',['../class_kale_1_1_state_animatable_node.html#a4e39dcfed8c68dc3a99c36545526b5ca',1,'Kale::StateAnimatableNode']]],
+  ['istransitioning_10',['isTransitioning',['../class_kale_1_1_state_animatable.html#ae5fb2932879afa9060b5d8b533c324af',1,'Kale::StateAnimatable']]],
   ['main_11',['main',['../class_kale_1_1_application.html#abaffadc0b7f3225ca0d49bb37799ded3',1,'Kale::Application']]]
 ];

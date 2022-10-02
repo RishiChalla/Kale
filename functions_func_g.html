@@ -84,14 +84,15 @@ $(function() {
 <li>getBoundingBox()&#160;:&#160;<a class="el" href="struct_kale_1_1_circle.html#a3623294dfe7d4bdb6c32e08247e29d6f">Kale::Circle</a>, <a class="el" href="class_kale_1_1_collidable.html#a5286f2a65b0e5f1f2fd46ea0b456b247">Kale::Collidable</a>, <a class="el" href="struct_kale_1_1_geometry.html#aaf2811533b1ce8d4ab34f631898d2977">Kale::Geometry</a>, <a class="el" href="struct_kale_1_1_line.html#a775a7b559b4992e2a596124af6edb8de">Kale::Line</a>, <a class="el" href="struct_kale_1_1_path.html#afc2fbb616ca2c4c24982fb23115c719d">Kale::Path</a>, <a class="el" href="struct_kale_1_1_ray.html#a0f73f716d2f55ef5675b11e6862a2c68">Kale::Ray</a>, <a class="el" href="struct_kale_1_1_rect.html#aad689f45695563d37683a60c0fd29380">Kale::Rect</a>, <a class="el" href="struct_kale_1_1_rotated_rect.html#a824028b861f135b3b8aea9e8f3c49a97">Kale::RotatedRect</a></li>
 <li>getCamera()&#160;:&#160;<a class="el" href="class_kale_1_1_scene.html#af5fad93140e7e6fba2cccd83985d15da">Kale::Scene</a></li>
 <li>getConnectedBones()&#160;:&#160;<a class="el" href="struct_kale_1_1_bone.html#a147414b4afae8c1098ffa0b6745a171a">Kale::Bone</a></li>
-<li>getCurrentState()&#160;:&#160;<a class="el" href="class_kale_1_1_state_animatable_node.html#a6341b51ec4d08509494cce1ee00aab04">Kale::StateAnimatableNode</a></li>
+<li>getCurrentState()&#160;:&#160;<a class="el" href="class_kale_1_1_state_animatable.html#a54e8067d93da3ca330c5872c81d5aae5">Kale::StateAnimatable&lt; S &gt;</a></li>
 <li>getFramebufferSize()&#160;:&#160;<a class="el" href="class_kale_1_1_window.html#a30b02a09dcb0c177e096fdc0e0ef0f36">Kale::Window</a></li>
+<li>getFullTransform()&#160;:&#160;<a class="el" href="class_kale_1_1_transformable.html#a3b81393960126d497659d53b8b5385c9">Kale::Transformable</a></li>
 <li>getInstanceExtensions()&#160;:&#160;<a class="el" href="class_kale_1_1_window.html#a8b3b1796ec7533067299d32b3c737bdc">Kale::Window</a></li>
 <li>getLeftJointBones()&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton.html#a8e2559925ce42c77990c0874b0c79143">Kale::Skeleton</a></li>
 <li>getNodes()&#160;:&#160;<a class="el" href="class_kale_1_1_scene.html#a661070e9780d0bf23f85f6dd918b525c">Kale::Scene</a></li>
 <li>getNormal()&#160;:&#160;<a class="el" href="struct_kale_1_1_line.html#ae11012de2cfc26e32e177a41f48f854c">Kale::Line</a></li>
 <li>getNumUpdateThreads()&#160;:&#160;<a class="el" href="class_kale_1_1_application.html#aabdb95b80efe86eeea3781e2aa481deb">Kale::Application</a></li>
-<li>getPresentedScene()&#160;:&#160;<a class="el" href="class_kale_1_1_application.html#ac2a75327e1f09312db17382e9da510d0">Kale::Application</a></li>
+<li>getPresentedScene()&#160;:&#160;<a class="el" href="class_kale_1_1_application.html#ad5fd8c64a4fe5ff0a45afba292145266">Kale::Application</a></li>
 <li>getPreviousToBone()&#160;:&#160;<a class="el" href="struct_kale_1_1_bone.html#ae6e47441b7b481580a78ba94badb2250">Kale::Bone</a></li>
 <li>getQueues()&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_device.html#a523c1755274c27070a0cdcca60cad06d">Kale::Vulkan::Device</a></li>
 <li>getRightJointBones()&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton.html#ac70f866e037d9bedac23a69bc3f8b6cb">Kale::Skeleton</a></li>
@@ -103,11 +104,10 @@ $(function() {
 <li>getSize()&#160;:&#160;<a class="el" href="class_kale_1_1_window.html#a868a9da14ab55f2dd0f6d8b7dcae56ce">Kale::Window</a></li>
 <li>getSizeF()&#160;:&#160;<a class="el" href="class_kale_1_1_window.html#acfc6e14b435d66a59605ab060095cf18">Kale::Window</a></li>
 <li>getSkeleton()&#160;:&#160;<a class="el" href="class_kale_1_1_skeletal_animatable_node.html#a04d73b20969316535dfda44d718ea33e">Kale::SkeletalAnimatableNode</a></li>
-<li>getStateComposition()&#160;:&#160;<a class="el" href="class_kale_1_1_state_animatable_node.html#a99202bca89189bb7be60b78c1fe64c76">Kale::StateAnimatableNode</a></li>
-<li>getStructure()&#160;:&#160;<a class="el" href="class_kale_1_1_finite_state_animatable.html#a385e8c12530ccabd15c353443d8ea3ee">Kale::FiniteStateAnimatable&lt; S &gt;</a></li>
+<li>getStateComposition()&#160;:&#160;<a class="el" href="class_kale_1_1_state_animatable.html#a3a7fbd98433dd824fad15aa82f9f0c7f">Kale::StateAnimatable&lt; S &gt;</a></li>
+<li>getStructure()&#160;:&#160;<a class="el" href="class_kale_1_1_state_animatable.html#ac76c66fbe99e7821421aca1a066cfff1">Kale::StateAnimatable&lt; S &gt;</a></li>
 <li>getTimePrefix()&#160;:&#160;<a class="el" href="class_kale_1_1_logger.html#a3966139ff452ac12b8be0f8975e9d42a">Kale::Logger</a></li>
 <li>getTitle()&#160;:&#160;<a class="el" href="class_kale_1_1_window.html#abdcbc753493a2481717b2c8d846c0c02">Kale::Window</a></li>
-<li>getTransform()&#160;:&#160;<a class="el" href="class_kale_1_1_transformable.html#a2f10221ad19d5cc1602da03443d438e9">Kale::Transformable</a></li>
 <li>getTranslation()&#160;:&#160;<a class="el" href="class_kale_1_1_transform.html#aecae4407032134174e661b4f38810a13">Kale::Transform</a></li>
 <li>getUniformLocation()&#160;:&#160;<a class="el" href="class_kale_1_1_open_g_l_1_1_shader.html#ae42ef5734471e2cdf1e5045c8883961d">Kale::OpenGL::Shader</a></li>
 <li>getUniqueIndices()&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_queue_family_indices.html#a4c41cab1dd81262aab1e9bcee89e3217">Kale::Vulkan::QueueFamilyIndices</a></li>
@@ -118,7 +118,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 25 2022 04:37:19 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Sun Oct 2 2022 02:29:53 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

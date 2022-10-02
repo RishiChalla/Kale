@@ -77,6 +77,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_kale_1_1_transformable-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Kale::Transformable Class Reference</div></div>
@@ -98,72 +100,53 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2f10221ad19d5cc1602da03443d438e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_kale_1_1_transform.html">Transform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#a2f10221ad19d5cc1602da03443d438e9">getTransform</a> () const</td></tr>
-<tr class="separator:a2f10221ad19d5cc1602da03443d438e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5916e2d4ea25eeaab36cc9aba8db441f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#a5916e2d4ea25eeaab36cc9aba8db441f">setTransform</a> (const <a class="el" href="class_kale_1_1_transform.html">Transform</a> &amp;<a class="el" href="class_kale_1_1_transformable.html#ac2d50431077293d504025ca462cde3fb">transform</a>)</td></tr>
-<tr class="separator:a5916e2d4ea25eeaab36cc9aba8db441f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b81393960126d497659d53b8b5385c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_kale_1_1_transform.html">Transform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#a3b81393960126d497659d53b8b5385c9">getFullTransform</a> () const</td></tr>
+<tr class="separator:a3b81393960126d497659d53b8b5385c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ab14cdbd1012284fc597c23e7cec4c5d3"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="class_kale_1_1_state_animatable.html">StateAnimatable</a>&lt; <a class="el" href="class_kale_1_1_transform.html">Transform</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#ab14cdbd1012284fc597c23e7cec4c5d3">transformFSM</a></td></tr>
+<tr class="separator:ab14cdbd1012284fc597c23e7cec4c5d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2d50431077293d504025ca462cde3fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_kale_1_1_transform.html">Transform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#ac2d50431077293d504025ca462cde3fb">transform</a></td></tr>
+<tr class="separator:ac2d50431077293d504025ca462cde3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a3e712ebbf56bcf9a272fffef483e3dea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#a3e712ebbf56bcf9a272fffef483e3dea">updateTransform</a> (float deltaTime)</td></tr>
+<tr class="separator:a3e712ebbf56bcf9a272fffef483e3dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ac2d50431077293d504025ca462cde3fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_kale_1_1_transform.html">Transform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#ac2d50431077293d504025ca462cde3fb">transform</a></td></tr>
-<tr class="separator:ac2d50431077293d504025ca462cde3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaf9f85b1dbb8563a9e7f49dfdd94cb6"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#abaf9f85b1dbb8563a9e7f49dfdd94cb6">mutex</a></td></tr>
-<tr class="separator:abaf9f85b1dbb8563a9e7f49dfdd94cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a810e75f38ee3c208a98e345a4a4e0c8a"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="class_kale_1_1_transform.html">Transform</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_transformable.html#a810e75f38ee3c208a98e345a4a4e0c8a">stateTransform</a></td></tr>
+<tr class="separator:a810e75f38ee3c208a98e345a4a4e0c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >All transformable nodes must inherit from this class. Inheritance from this class is required for synchronized access to transformation matrices across threads &amp; for usage from the animation system. </p>
 
-<p class="definition">Definition at line <a class="el" href="_transformable_8hpp_source.html#l00029">29</a> of file <a class="el" href="_transformable_8hpp_source.html">Transformable.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_transformable_8hpp_source.html#l00032">32</a> of file <a class="el" href="_transformable_8hpp_source.html">Transformable.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2f10221ad19d5cc1602da03443d438e9" name="a2f10221ad19d5cc1602da03443d438e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f10221ad19d5cc1602da03443d438e9">&#9670;&#160;</a></span>getTransform()</h2>
+<a id="a3b81393960126d497659d53b8b5385c9" name="a3b81393960126d497659d53b8b5385c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b81393960126d497659d53b8b5385c9">&#9670;&#160;</a></span>getFullTransform()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_kale_1_1_transform.html">Transform</a> Transformable::getTransform </td>
+          <td class="memname"><a class="el" href="class_kale_1_1_transform.html">Transform</a> Transformable::getFullTransform </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Thread safe method to get the transformation matrix </p><dl class="section return"><dt>Returns</dt><dd>The transformation matrix of this object </dd></dl>
+<p >Gets the full transform including FSM based transformations </p><dl class="section return"><dt>Returns</dt><dd>the full transform including FSM based transformations </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_transformable_8cpp_source.html#l00025">25</a> of file <a class="el" href="_transformable_8cpp_source.html">Transformable.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a5916e2d4ea25eeaab36cc9aba8db441f" name="a5916e2d4ea25eeaab36cc9aba8db441f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5916e2d4ea25eeaab36cc9aba8db441f">&#9670;&#160;</a></span>setTransform()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Transformable::setTransform </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_kale_1_1_transform.html">Transform</a> &amp;&#160;</td>
-          <td class="paramname"><em>transform</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Thread safe method to set the transformation matrix </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">transform</td><td>The transformation matrix to set the transform of this object to </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="_transformable_8cpp_source.html#l00033">33</a> of file <a class="el" href="_transformable_8cpp_source.html">Transformable.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_transformable_8cpp_source.html#l00048">48</a> of file <a class="el" href="_transformable_8cpp_source.html">Transformable.cpp</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="abaf9f85b1dbb8563a9e7f49dfdd94cb6" name="abaf9f85b1dbb8563a9e7f49dfdd94cb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abaf9f85b1dbb8563a9e7f49dfdd94cb6">&#9670;&#160;</a></span>mutex</h2>
+<a id="a3e712ebbf56bcf9a272fffef483e3dea" name="a3e712ebbf56bcf9a272fffef483e3dea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e712ebbf56bcf9a272fffef483e3dea">&#9670;&#160;</a></span>updateTransform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -172,7 +155,11 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::mutex Kale::Transformable::mutex</td>
+          <td class="memname">void Transformable::updateTransform </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>deltaTime</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -181,9 +168,40 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p >The mutex used for synchronized write access to the transform </p>
+<p >Updates the transform depending on state node animations </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">deltaTime</td><td>The duration of the last frame in microseconds </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="_transformable_8hpp_source.html#l00040">40</a> of file <a class="el" href="_transformable_8hpp_source.html">Transformable.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_transformable_8cpp_source.html#l00025">25</a> of file <a class="el" href="_transformable_8cpp_source.html">Transformable.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a810e75f38ee3c208a98e345a4a4e0c8a" name="a810e75f38ee3c208a98e345a4a4e0c8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a810e75f38ee3c208a98e345a4a4e0c8a">&#9670;&#160;</a></span>stateTransform</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="class_kale_1_1_transform.html">Transform</a>&gt; Kale::Transformable::stateTransform</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >The transform produced from the FSM </p>
+
+<p class="definition">Definition at line <a class="el" href="_transformable_8hpp_source.html#l00044">44</a> of file <a class="el" href="_transformable_8hpp_source.html">Transformable.hpp</a>.</p>
 
 </div>
 </div>
@@ -192,23 +210,32 @@ Protected Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class_kale_1_1_transform.html">Transform</a> Kale::Transformable::transform</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >The transformation matrix of this object </p>
 
-<p class="definition">Definition at line <a class="el" href="_transformable_8hpp_source.html#l00035">35</a> of file <a class="el" href="_transformable_8hpp_source.html">Transformable.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_transformable_8hpp_source.html#l00057">57</a> of file <a class="el" href="_transformable_8hpp_source.html">Transformable.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ab14cdbd1012284fc597c23e7cec4c5d3" name="ab14cdbd1012284fc597c23e7cec4c5d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab14cdbd1012284fc597c23e7cec4c5d3">&#9670;&#160;</a></span>transformFSM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="class_kale_1_1_state_animatable.html">StateAnimatable</a>&lt;<a class="el" href="class_kale_1_1_transform.html">Transform</a>&gt; &gt; Kale::Transformable::transformFSM</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The FSM used for transform states. Transformables support FSM based animations, to use the FSM simply set the value of this optional and fill the map. Access to the FSM must be externally synchronized if done from multiple threads. </p>
+
+<p class="definition">Definition at line <a class="el" href="_transformable_8hpp_source.html#l00052">52</a> of file <a class="el" href="_transformable_8hpp_source.html">Transformable.hpp</a>.</p>
 
 </div>
 </div>
@@ -219,7 +246,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 25 2022 04:37:19 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Sun Oct 2 2022 02:29:53 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>
