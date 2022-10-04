@@ -3,7 +3,7 @@ var searchData=
   ['scale_0',['scale',['../class_kale_1_1_transform.html#aebe6c5b6e30d94040702b9f8e624b650',1,'Kale::Transform::scale(float x, float y)'],['../class_kale_1_1_transform.html#a0218513cc9feb7206c90deb07cc14ab3',1,'Kale::Transform::scale(float factor)'],['../class_kale_1_1_transform.html#a246fbf58910a44c0a00d0cf27060265b',1,'Kale::Transform::scale(const Vector2f &amp;vec)']]],
   ['scalerow_1',['scaleRow',['../class_kale_1_1_matrix.html#a5899c01c044cc698ecdfaa2616fe3289',1,'Kale::Matrix']]],
   ['scene_2',['Scene',['../class_kale_1_1_scene.html#ad10176d75a9cc0da56626f682d083507',1,'Kale::Scene']]],
-  ['seticon_3',['setIcon',['../class_kale_1_1_window.html#a744c943f57837a6a43bea6073a23fda1',1,'Kale::Window']]],
+  ['seticon_3',['setIcon',['../class_kale_1_1_window.html#ae3439e308cf467d27ac1515b10bbd0de',1,'Kale::Window']]],
   ['setidentity_4',['setIdentity',['../class_kale_1_1_transform.html#ae629833596d63ea55a4d25ae8e50dbe6',1,'Kale::Transform']]],
   ['setrotation_5',['setRotation',['../struct_kale_1_1_bone.html#a4de37ad78d20ad92957164d9de55bbd4',1,'Kale::Bone::setRotation()'],['../class_kale_1_1_transform.html#a5e976b730a2e2e9b299cae65d8bf545f',1,'Kale::Transform::setRotation(float angle, AngleUnit unit)']]],
   ['setscale_6',['setScale',['../class_kale_1_1_transform.html#a65adcbb49fc1c7869d2e298cb149d0eb',1,'Kale::Transform::setScale(float scaleX, float scaleY)'],['../class_kale_1_1_transform.html#a498d685b66e2f73b88d3583ce55461c8',1,'Kale::Transform::setScale(float scale)']]],

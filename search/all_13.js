@@ -10,7 +10,7 @@ var searchData=
   ['scenesetup_2emd_7',['SceneSetup.md',['../_scene_setup_8md.html',1,'']]],
   ['scenetopresent_8',['sceneToPresent',['../class_kale_1_1_application.html#a7b73a79c00f8cb1ec02ff268abc503aa',1,'Kale::Application']]],
   ['semicolon_9',['Semicolon',['../namespace_kale.html#a02de55a0f503908e04653511e666e796a9806fa37a3ecd39bf637c203aa011ed0',1,'Kale']]],
-  ['seticon_10',['setIcon',['../class_kale_1_1_window.html#a744c943f57837a6a43bea6073a23fda1',1,'Kale::Window']]],
+  ['seticon_10',['setIcon',['../class_kale_1_1_window.html#ae3439e308cf467d27ac1515b10bbd0de',1,'Kale::Window']]],
   ['setidentity_11',['setIdentity',['../class_kale_1_1_transform.html#ae629833596d63ea55a4d25ae8e50dbe6',1,'Kale::Transform']]],
   ['setrotation_12',['setRotation',['../class_kale_1_1_transform.html#a5e976b730a2e2e9b299cae65d8bf545f',1,'Kale::Transform::setRotation()'],['../struct_kale_1_1_bone.html#a4de37ad78d20ad92957164d9de55bbd4',1,'Kale::Bone::setRotation()']]],
   ['setscale_13',['setScale',['../class_kale_1_1_transform.html#a498d685b66e2f73b88d3583ce55461c8',1,'Kale::Transform::setScale(float scale)'],['../class_kale_1_1_transform.html#a65adcbb49fc1c7869d2e298cb149d0eb',1,'Kale::Transform::setScale(float scaleX, float scaleY)']]],
