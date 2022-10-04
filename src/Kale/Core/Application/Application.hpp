@@ -200,6 +200,12 @@ namespace Kale {
 		 * @param task A method which carries out any necessary task
 		 */
 		void runTaskOnMainThread(std::function<void()> task);
+
+		/**
+		 * Gets the path to the assets folder
+		 * @returns The path to the assets folder
+		 */
+		std::string getAssetFolderPath() const;
 	};
 
 	/**

@@ -26,6 +26,7 @@
 
 #include <list>
 #include <vector>
+#include <string>
 
 #ifdef KALE_VULKAN
 	#include <vulkan/vulkan.hpp>
@@ -173,7 +174,7 @@ namespace Kale {
 		 * Sets the window icon to the given image
 		 * @param filePath The window icon to set to
 		 */
-		void setIcon(const char* filePath);
+		void setIcon(const std::string& filePath);
 		
 		/**
 		 * Gets the window size

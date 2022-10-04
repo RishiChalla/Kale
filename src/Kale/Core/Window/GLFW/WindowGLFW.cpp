@@ -22,6 +22,9 @@
 
 #include <stdexcept>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image/stb_image.h>
+
 using namespace Kale;
 
 static std::list<EventHandler*>* handlers = nullptr;
@@ -236,6 +239,9 @@ void Window::create(const char* title) {
 		console.error("Unable to create GLFW window");
 		exit(0);
 	}
+
+	// Set the default window icon to the Kale icon
+	setIcon(mainApp->getAssetFolderPath() + "textures/kale.png");
 
 #ifdef KALE_OPENGL
 	glfwMakeContextCurrent(window);
@@ -521,9 +527,17 @@ const char* Window::getTitle() const {
  * Sets the window icon to the given image
  * @param filePath The window icon to set to
  */
-void Window::setIcon(const char* filePath) {
-	// TODO - Implement this
-	throw std::runtime_error("Unimplemented Function Called");
+void Window::setIcon(const std::string& filePath) {
+
+#ifndef KALE_OSX
+	GLFWimage image;
+	image.pixels = stbi_load(filePath.c_str(), &image.width, &image.height, nullptr, STBI_rgb_alpha);
+	glfwSetWindowIcon(window, 1, &image);
+	stbi_image_free(image.pixels);
+#else
+	console.warn("Cannot set icon to " + filePath + " - OSX does not support glfwSetWindowIcon");
+#endif
+
 }
 
 #endif

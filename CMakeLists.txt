@@ -64,6 +64,9 @@ add_subdirectory(dependencies/date)
 target_link_libraries(Kale date)
 target_link_libraries(Kale date-tz)
 
+# Stb Image
+target_include_directories(Kale PUBLIC dependencies/stb_image/)
+
 # FastNoise
 target_include_directories(Kale PUBLIC dependencies/FastNoiseLite/Cpp/)
 

@@ -103,6 +103,14 @@ void Application::runTaskOnMainThread(std::function<void()> task) {
 }
 
 /**
+ * Gets the path to the assets folder
+ * @returns The path to the assets folder
+ */
+std::string Application::getAssetFolderPath() const {
+	return "." + applicationName + "/assets/";
+}
+
+/**
  * Synchronizes udpates
  */
 void Application::synchronizeUpdate() {

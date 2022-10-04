@@ -67,7 +67,7 @@ void Shader::init(const std::string& filename, ShaderType type, Device& device) 
  * @throws If unable to open the file
  */
 std::vector<char> Shader::readFile(const std::string& filename) const {
-	std::ifstream file("." + mainApp->applicationName + "/assets/shaders/" + filename, std::ios::ate | std::ios::binary);
+	std::ifstream file(mainApp->getAssetFolderPath() + "shaders/" + filename, std::ios::ate | std::ios::binary);
 	if (!file.is_open()) throw std::runtime_error("Unable to open the file "+filename);
 	size_t fileSize = static_cast<size_t>(file.tellg());
 	std::vector<char> code(fileSize);

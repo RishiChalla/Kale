@@ -33,9 +33,8 @@ void PathNode::setup() {
 	if (shader != nullptr) return;
 
 	// Get shader paths
-	const std::string folder = "." + mainApp->applicationName;
-	const std::string vertShaderPath = folder + "/assets/shaders/PathNode.vert";
-	const std::string fragShaderPath = folder + "/assets/shaders/PathNode.frag";
+	const std::string vertShaderPath = mainApp->getAssetFolderPath() + "shaders/PathNode.vert";
+	const std::string fragShaderPath = mainApp->getAssetFolderPath() + "shaders/PathNode.frag";
 
 	// Load the shaders
 	shader = std::make_unique<const OpenGL::Shader>(vertShaderPath.c_str(), fragShaderPath.c_str());
