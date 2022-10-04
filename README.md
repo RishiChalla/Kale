@@ -1,5 +1,7 @@
 # Kale
 
+![Kale Logo](assets/textures/kale.png)
+
 You can find the full doxygen documentation with examples and tutorials at [https://rishichalla.github.io/Kale/index.html](https://rishichalla.github.io/Kale/index.html).
 
 ## What is Kale?
