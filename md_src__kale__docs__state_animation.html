@@ -75,12 +75,56 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="stateAnimation"></a></p>
-<p >@TODO - Finish This </p>
+<p ><a class="el" href="namespace_kale.html">Kale</a> has a Finite State Machine based animation system coded in. This basically means you can create your own enum containing a value for every "state" you want. A state is basically a representation of what you want your node to look like. Once you have provided <a class="el" href="namespace_kale.html">Kale</a> with your states and the values for every state, you will be able to animate between them easily. For example, look at the below <a class="el" href="class_kale_1_1_transform.html">Transform</a> based state animation.</p>
+<p >In the case of animating between states defined by transforms, you'll want to animate on a class which inherits from the <a class="el" href="class_kale_1_1_transformable.html">Transformable</a> class. One example of this is a path node. A simple example has been provided below:</p>
+<div class="fragment"><div class="line"><span class="comment">// Somewhere in your header file:</span></div>
+<div class="line"><span class="comment">// This is just an example enum, but the point is you should be representing each state of your node with an enum value</span></div>
+<div class="line"><span class="comment">// for example, you could have a jump state, several run states, etc</span></div>
+<div class="line"><span class="keyword">enum class</span> NodeState {</div>
+<div class="line">    First, Second</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// All the following code should be placed in your onPresent scene event:</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Create a shared pointer to a pathnode which has no fill and a stroke. It also only has one bezier</span></div>
+<div class="line"><a class="code hl_struct" href="struct_kale_1_1_path.html">Kale::Path</a> path({<a class="code hl_struct" href="struct_kale_1_1_cubic_bezier.html">Kale::CubicBezier</a>{{0.0f, 0.0f}, {0.0f, 200.0f}, {500.0f, 200.0f}, {500.0f, 0.0f}}});</div>
+<div class="line">std::shared_ptr&lt;Kale::PathNode&gt; node = std::make_shared&lt;Kale::PathNode&gt;(path, <span class="keyword">false</span>, <a class="code hl_enumvalue" href="class_kale_1_1_path_node.html#a1d7bbc43d2f4dea172ed54675d7027c9a130c5b3473c57faa76e2a1c54e26f88e">Kale::PathNode::StrokeStyle::Both</a>);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Bring the node to the center to start</span></div>
+<div class="line">node-&gt;transform.translate(sceneBounds.center());</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Add the node to the scene</span></div>
+<div class="line">addNode(node);</div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// transformFSM is a std::optional which needs to be set to tell Kale you&#39;re using the state animation system.</span></div>
+<div class="line">node-&gt;transformFSM = std::make_optional&lt;Kale::StateAnimatable&lt;Kale::Transform&gt;&gt;();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Then we add the data for two states, this simply uses two transforms one with a scale of 0 and the other with a scale of 1.</span></div>
+<div class="line">node-&gt;transformFSM-&gt;addStructure(NodeState::First, <a class="code hl_class" href="class_kale_1_1_transform.html">Kale::Transform</a>({0.0f, 0.0f}, 0.0f, {0.0f, 0.0f}, <a class="code hl_enumvalue" href="namespace_kale.html#a51f33177de76821438f5ceb299a98077a50c62e3ca8d8ec8732a7f968a3bf2c7c">Kale::AngleUnit::Radian</a>));</div>
+<div class="line">node-&gt;transformFSM-&gt;addStructure(NodeState::Second, <a class="code hl_class" href="class_kale_1_1_transform.html">Kale::Transform</a>({0.0f, 0.0f}, 0.0f, {1.0f, 1.0f}, <a class="code hl_enumvalue" href="namespace_kale.html#a51f33177de76821438f5ceb299a98077a50c62e3ca8d8ec8732a7f968a3bf2c7c">Kale::AngleUnit::Radian</a>));</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Now we can set the state to the second (scale of 1), this is done immediately</span></div>
+<div class="line">node-&gt;transformFSM-&gt;setState(NodeState::Second);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// And then animate infinitely in a loop between the first and second states with 4 seconds to each state</span></div>
+<div class="line"><span class="comment">// What this achieves is an infinite animation of the object increasing and decreasing in scale</span></div>
+<div class="line">node-&gt;transformFSM-&gt;animateLoop&lt;NodeState&gt;({</div>
+<div class="line">    std::make_pair(NodeState::First, 4.0f),</div>
+<div class="line">    std::make_pair(NodeState::Second, 4.0f)</div>
+<div class="line">});</div>
+<div class="ttc" id="aclass_kale_1_1_path_node_html_a1d7bbc43d2f4dea172ed54675d7027c9a130c5b3473c57faa76e2a1c54e26f88e"><div class="ttname"><a href="class_kale_1_1_path_node.html#a1d7bbc43d2f4dea172ed54675d7027c9a130c5b3473c57faa76e2a1c54e26f88e">Kale::PathNode::StrokeStyle::Both</a></div><div class="ttdeci">@ Both</div></div>
+<div class="ttc" id="aclass_kale_1_1_transform_html"><div class="ttname"><a href="class_kale_1_1_transform.html">Kale::Transform</a></div><div class="ttdef"><b>Definition:</b> <a href="_transform_8hpp_source.html#l00034">Transform.hpp:34</a></div></div>
+<div class="ttc" id="anamespace_kale_html_a51f33177de76821438f5ceb299a98077a50c62e3ca8d8ec8732a7f968a3bf2c7c"><div class="ttname"><a href="namespace_kale.html#a51f33177de76821438f5ceb299a98077a50c62e3ca8d8ec8732a7f968a3bf2c7c">Kale::AngleUnit::Radian</a></div><div class="ttdeci">@ Radian</div></div>
+<div class="ttc" id="astruct_kale_1_1_cubic_bezier_html"><div class="ttname"><a href="struct_kale_1_1_cubic_bezier.html">Kale::CubicBezier</a></div><div class="ttdef"><b>Definition:</b> <a href="_path_8hpp_source.html#l00031">Path.hpp:31</a></div></div>
+<div class="ttc" id="astruct_kale_1_1_path_html"><div class="ttname"><a href="struct_kale_1_1_path.html">Kale::Path</a></div><div class="ttdef"><b>Definition:</b> <a href="_path_8hpp_source.html#l00038">Path.hpp:38</a></div></div>
+</div><!-- fragment --><p >Transform is just one example of a structure capable of using state based animations. Other examples include paths themselves, and skeletons. You can also extend the system yourself with your own class. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 2 2022 02:29:53 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Oct 4 2022 19:12:08 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>
