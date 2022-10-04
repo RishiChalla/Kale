@@ -25,7 +25,7 @@
 using namespace Kale;
 
 static std::list<EventHandler*>* handlers = nullptr;
-static Vector2ui oldWinSize(800, 600);
+static Vector2ui oldWinSize(800, 450);
 
 /**
  * A struct for internal usage
