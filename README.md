@@ -1,11 +1,9 @@
 # Kale
 
-![Kale Logo](assets/textures/kale.png)
-
-You can find the full doxygen documentation with examples and tutorials at [https://rishichalla.github.io/Kale/index.html](https://rishichalla.github.io/Kale/index.html).
+<p align="center"><img src="assets/textures/kale.png"></p>
 
 ## What is Kale?
-Kale is a 2D Game Engine made with OpenGL/Vulkan with specialized vector/"blobby" graphics. Kale supports Mac OSX, Windows, and Linux.
+Kale is a 2D Game Engine made with OpenGL/Vulkan with specialized vector/"blobby" graphics. Kale supports Mac OSX, Windows, and Linux. You can find the full doxygen documentation with examples and tutorials at [https://rishichalla.github.io/Kale/index.html](https://rishichalla.github.io/Kale/index.html).
 
 ## Getting Started - Code/CMake
 Create a new directory for your project and create a new file called `CMakeLists.txt` and a new directory for your source code.
