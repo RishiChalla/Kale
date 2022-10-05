@@ -146,6 +146,29 @@ void Transform::scale(float factor) {
 }
 
 /**
+ * Scales the transformation matrix about an origin
+ * @param factor The scale factor
+ * @param origin The origin to scale from
+ */
+void Transform::scale(float factor, const Vector2f& origin) {
+	translate(origin);
+	scale(factor);
+	translate(-origin);
+}
+
+/**
+ * Scales the transformation matrix about an origin
+ * @param x The x scale factor
+ * @param y The y scale factor
+ * @param origin The origin to scale from
+ */
+void Transform::scale(float x, float y, const Vector2f& origin) {
+	translate(origin);
+	scale(x, y);
+	translate(-origin);
+}
+
+/**
  * Translates the transformation matrix
  * @param vec The vector to translate by
  */
@@ -183,6 +206,18 @@ void Transform::rotate(float angle, AngleUnit unit) {
 		s, c, 0.0f,
 		0.0f, 0.0f, 1.0f
 	})).data;
+}
+
+/**
+ * Rotates the transformation matrix about an origin
+ * @param angle The angle to rotate by
+ * @param unit The unit of the angle
+ * @param origin The origin to rotate about
+ */
+void Transform::rotate(float angle, AngleUnit unit, const Vector2f& origin) {
+	translate(origin);
+	rotate(angle, unit);
+	translate(-origin);
 }
 
 /**

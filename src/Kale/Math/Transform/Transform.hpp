@@ -108,6 +108,21 @@ namespace Kale {
 		void scale(float factor);
 
 		/**
+		 * Scales the transformation matrix about an origin
+		 * @param factor The scale factor
+		 * @param origin The origin to scale from
+		 */
+		void scale(float factor, const Vector2f& origin);
+
+		/**
+		 * Scales the transformation matrix about an origin
+		 * @param x The x scale factor
+		 * @param y The y scale factor
+		 * @param origin The origin to scale from
+		 */
+		void scale(float x, float y, const Vector2f& origin);
+
+		/**
 		 * Translates the transformation matrix
 		 * @param vec The vector to translate by
 		 */
@@ -126,6 +141,14 @@ namespace Kale {
 		 * @param unit The unit of the angle
 		 */
 		void rotate(float angle, AngleUnit unit);
+
+		/**
+		 * Rotates the transformation matrix about an origin
+		 * @param angle The angle to rotate by
+		 * @param unit The unit of the angle
+		 * @param origin The origin to rotate about
+		 */
+		void rotate(float angle, AngleUnit unit, const Vector2f& origin);
 
 		/**
 		 * Sets the translation of the matrix
