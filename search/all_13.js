@@ -1,7 +1,7 @@
 var searchData=
 [
   ['s_0',['S',['../namespace_kale.html#a02de55a0f503908e04653511e666e796a5dbc98dcc983a70728bd082d1a47546e',1,'Kale']]],
-  ['scale_1',['scale',['../class_kale_1_1_transform.html#a0218513cc9feb7206c90deb07cc14ab3',1,'Kale::Transform::scale(float factor)'],['../class_kale_1_1_transform.html#aebe6c5b6e30d94040702b9f8e624b650',1,'Kale::Transform::scale(float x, float y)'],['../class_kale_1_1_transform.html#a246fbf58910a44c0a00d0cf27060265b',1,'Kale::Transform::scale(const Vector2f &amp;vec)']]],
+  ['scale_1',['scale',['../class_kale_1_1_transform.html#aef1b2b2369a48eab58244647ac064995',1,'Kale::Transform::scale(float x, float y, const Vector2f &amp;origin)'],['../class_kale_1_1_transform.html#a85275731d69961284f798083fc72d3a2',1,'Kale::Transform::scale(float factor, const Vector2f &amp;origin)'],['../class_kale_1_1_transform.html#a0218513cc9feb7206c90deb07cc14ab3',1,'Kale::Transform::scale(float factor)'],['../class_kale_1_1_transform.html#aebe6c5b6e30d94040702b9f8e624b650',1,'Kale::Transform::scale(float x, float y)'],['../class_kale_1_1_transform.html#a246fbf58910a44c0a00d0cf27060265b',1,'Kale::Transform::scale(const Vector2f &amp;vec)']]],
   ['scalerow_2',['scaleRow',['../class_kale_1_1_matrix.html#a5899c01c044cc698ecdfaa2616fe3289',1,'Kale::Matrix']]],
   ['scene_3',['Scene',['../class_kale_1_1_scene.html',1,'Kale::Scene'],['../class_kale_1_1_node.html#a032858ae1fe02d2d1170981c2af2d67c',1,'Kale::Node::Scene()'],['../class_kale_1_1_scene.html#ad10176d75a9cc0da56626f682d083507',1,'Kale::Scene::Scene()']]],
   ['scene_2ecpp_4',['Scene.cpp',['../_scene_8cpp.html',1,'']]],
@@ -12,8 +12,8 @@ var searchData=
   ['semicolon_9',['Semicolon',['../namespace_kale.html#a02de55a0f503908e04653511e666e796a9806fa37a3ecd39bf637c203aa011ed0',1,'Kale']]],
   ['seticon_10',['setIcon',['../class_kale_1_1_window.html#ae3439e308cf467d27ac1515b10bbd0de',1,'Kale::Window']]],
   ['setidentity_11',['setIdentity',['../class_kale_1_1_transform.html#ae629833596d63ea55a4d25ae8e50dbe6',1,'Kale::Transform']]],
-  ['setrotation_12',['setRotation',['../class_kale_1_1_transform.html#a5e976b730a2e2e9b299cae65d8bf545f',1,'Kale::Transform::setRotation()'],['../struct_kale_1_1_bone.html#a4de37ad78d20ad92957164d9de55bbd4',1,'Kale::Bone::setRotation()']]],
-  ['setscale_13',['setScale',['../class_kale_1_1_transform.html#a498d685b66e2f73b88d3583ce55461c8',1,'Kale::Transform::setScale(float scale)'],['../class_kale_1_1_transform.html#a65adcbb49fc1c7869d2e298cb149d0eb',1,'Kale::Transform::setScale(float scaleX, float scaleY)']]],
+  ['setrotation_12',['setRotation',['../struct_kale_1_1_bone.html#a4de37ad78d20ad92957164d9de55bbd4',1,'Kale::Bone::setRotation()'],['../class_kale_1_1_transform.html#a5e976b730a2e2e9b299cae65d8bf545f',1,'Kale::Transform::setRotation(float angle, AngleUnit unit)']]],
+  ['setscale_13',['setScale',['../class_kale_1_1_transform.html#a65adcbb49fc1c7869d2e298cb149d0eb',1,'Kale::Transform::setScale(float scaleX, float scaleY)'],['../class_kale_1_1_transform.html#a498d685b66e2f73b88d3583ce55461c8',1,'Kale::Transform::setScale(float scale)']]],
   ['setstate_14',['setState',['../class_kale_1_1_state_animatable.html#a9141c1cd0dcc2501d7d8346e7d4bab04',1,'Kale::StateAnimatable']]],
   ['settranslation_15',['setTranslation',['../class_kale_1_1_transform.html#ab0a1eb45734fa2bf4d24fa3b90b25d09',1,'Kale::Transform::setTranslation(float x, float y)'],['../class_kale_1_1_transform.html#aed9aa56bd3cd756c2dcca57f932c07ca',1,'Kale::Transform::setTranslation(const Vector2f &amp;vec)']]],
   ['setup_16',['setup',['../class_kale_1_1_path_node.html#a119edc38edc424cb62f226fcce7bb1f9',1,'Kale::PathNode']]],
