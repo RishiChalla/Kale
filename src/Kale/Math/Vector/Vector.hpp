@@ -108,6 +108,7 @@ namespace Kale {
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector2<T> o) const {
 			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y);
 		}
+		bool operator!=(Vector2<T> o) const { return !operator==(o); }
 
 		T dot(Vector2<T> o) const { return o.x * x + o.y * y; }
 		T cross(Vector2<T> o) const { return x * o.y - y * o.x; }
@@ -254,6 +255,7 @@ namespace Kale {
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector3<T> o) const {
 			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y) && isFloatingEqual(z, o.z);
 		}
+		bool operator!=(Vector3<T> o) const { return !operator==(o); }
 
 		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
@@ -435,6 +437,7 @@ namespace Kale {
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, bool>::type operator==(Vector4<T> o) const {
 			return isFloatingEqual(x, o.x) && isFloatingEqual(y, o.y) && isFloatingEqual(z, o.z) && isFloatingEqual(w, o.w);
 		}
+		bool operator!=(Vector4<T> o) const { return !operator==(o); }
 
 		T dot(Vector4<T> o) const { return o.x * x + o.y * y + o.z * z + o.w * w; }
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {

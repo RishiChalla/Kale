@@ -16,9 +16,8 @@
 
 #pragma once
 
-#include "Application/Application.hpp"
-#include "Events/Events.hpp"
-#include "Logger/Logger.hpp"
-#include "Scene/Scene.hpp"
-#include "Tree/Tree.hpp"
-#include "Window/Window.hpp"
+namespace Kale {
+
+	
+
+}

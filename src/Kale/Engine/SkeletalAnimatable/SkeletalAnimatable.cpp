@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "SkeletalAnimatableNode.hpp"
+#include "SkeletalAnimatable.hpp"
 
 using namespace Kale;
 

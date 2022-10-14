@@ -14,11 +14,8 @@
    limitations under the License.
 */
 
-#pragma once
+#include "Tree.hpp"
 
-#include "Application/Application.hpp"
-#include "Events/Events.hpp"
-#include "Logger/Logger.hpp"
-#include "Scene/Scene.hpp"
-#include "Tree/Tree.hpp"
-#include "Window/Window.hpp"
+using namespace Kale;
+
+
