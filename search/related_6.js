@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['scene_0',['Scene',['../class_kale_1_1_node.html#a032858ae1fe02d2d1170981c2af2d67c',1,'Kale::Node']]]
+  ['rawiterator_3c_20child_20_3e_0',['RawIterator&lt; Child &gt;',['../class_kale_1_1_tree.html#aec0dbce68bb94a9c13365bb74b76621c',1,'Kale::Tree']]],
+  ['rawiterator_3c_20const_20child_20_3e_1',['RawIterator&lt; const Child &gt;',['../class_kale_1_1_tree.html#aa0a2d51a6eaff7c2fd144566cad5069e',1,'Kale::Tree']]]
 ];

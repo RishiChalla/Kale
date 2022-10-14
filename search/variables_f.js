@@ -1,20 +1,14 @@
 var searchData=
 [
-  ['scenebounds_0',['sceneBounds',['../class_kale_1_1_scene.html#a0660e8b42c5dfe9b4a76b7020259cdf3',1,'Kale::Scene']]],
-  ['scenetopresent_1',['sceneToPresent',['../class_kale_1_1_application.html#a7b73a79c00f8cb1ec02ff268abc503aa',1,'Kale::Application']]],
-  ['shader_2',['shader',['../class_kale_1_1_path_node.html#aa178fd3fc94beefda0a26658711ee4e2',1,'Kale::PathNode::shader()'],['../class_kale_1_1_vulkan_1_1_shader.html#a347d819709bece563cd850e071028171',1,'Kale::Vulkan::Shader::shader()']]],
-  ['skeletontransform_3',['skeletonTransform',['../struct_kale_1_1_skeleton.html#a39f5e7edc827a45a504560c4d451d721',1,'Kale::Skeleton']]],
-  ['start_4',['start',['../struct_kale_1_1_cubic_bezier.html#a411231ea53d4ae0e9564be90e9128032',1,'Kale::CubicBezier']]],
-  ['state_5',['state',['../class_kale_1_1_state_animatable.html#a6f0e1ce97f9d53ded494ba5c86f925d9',1,'Kale::StateAnimatable']]],
-  ['statetransform_6',['stateTransform',['../class_kale_1_1_transformable.html#a810e75f38ee3c208a98e345a4a4e0c8a',1,'Kale::Transformable']]],
-  ['stroke_7',['stroke',['../class_kale_1_1_path_node.html#af76885efd3990173433cc2721dbb349d',1,'Kale::PathNode']]],
-  ['strokecolor_8',['strokeColor',['../class_kale_1_1_path_node.html#a64bb62ed5800a618144f0be7c88df11a',1,'Kale::PathNode']]],
-  ['strokecoloruniform_9',['strokeColorUniform',['../class_kale_1_1_path_node.html#af19d8fd0de8e107354e59a2c2d7047a5',1,'Kale::PathNode']]],
-  ['strokeradius_10',['strokeRadius',['../class_kale_1_1_path_node.html#aa945fff42cb0be754b8e5f169a79753f',1,'Kale::PathNode']]],
-  ['strokeradiusuniform_11',['strokeRadiusUniform',['../class_kale_1_1_path_node.html#aaed4c34c300ae9b54d36d8a74cff2613',1,'Kale::PathNode']]],
-  ['strokeuniform_12',['strokeUniform',['../class_kale_1_1_path_node.html#a428950c8ec2782cdb8a02850c2d3ae37',1,'Kale::PathNode']]],
-  ['structures_13',['structures',['../class_kale_1_1_state_animatable.html#abd2c85455e9f05a696893e038a47e951',1,'Kale::StateAnimatable']]],
-  ['support_14',['support',['../class_kale_1_1_vulkan_1_1_swap_chain.html#a43fa7e308822669d958fd14b86ec4863',1,'Kale::Vulkan::SwapChain']]],
-  ['surface_15',['surface',['../class_kale_1_1_vulkan_1_1_core.html#a42c34a832851ed4ae63f9a4fab2f60e6',1,'Kale::Vulkan::Core']]],
-  ['swapchain_16',['swapchain',['../class_kale_1_1_vulkan_1_1_core.html#ac3d319d4aa38b9cb4651e7a87ccc6e87',1,'Kale::Vulkan::Core::swapchain()'],['../class_kale_1_1_vulkan_1_1_swap_chain.html#a29b5c3b713ecdfa942ff70ce1b6b4a1b',1,'Kale::Vulkan::SwapChain::swapchain()']]]
+  ['radius_0',['radius',['../struct_kale_1_1_circle.html#afb067b5375af06182447400386ab4811',1,'Kale::Circle']]],
+  ['renderingfinished_1',['renderingFinished',['../class_kale_1_1_application.html#ab4b5b4d8ac50f14fbe7f36ef916e1dd8',1,'Kale::Application']]],
+  ['renderpass_2',['renderPass',['../class_kale_1_1_vulkan_1_1_renderer.html#a2b843c1b791ff895ffead9c5a24768bb',1,'Kale::Vulkan::Renderer']]],
+  ['rendersynccondvar_3',['renderSyncCondVar',['../class_kale_1_1_application.html#a3abab394861dea62e3a0f64f763e4982',1,'Kale::Application']]],
+  ['requesteddeviceextensions_4',['requestedDeviceExtensions',['../namespace_kale_1_1_vulkan.html#aadb6604b9341478569b3e3dcb66ace57',1,'Kale::Vulkan']]],
+  ['requestedinstanceextensions_5',['requestedInstanceExtensions',['../namespace_kale_1_1_vulkan.html#a0fe6c91e3e8add6b43bc7a5bd2a0af45',1,'Kale::Vulkan']]],
+  ['requireddeviceextensions_6',['requiredDeviceExtensions',['../namespace_kale_1_1_vulkan.html#ab306aa5b4cc83e19c63a23ab3fdfd2c9',1,'Kale::Vulkan']]],
+  ['requiredinstanceextensions_7',['requiredInstanceExtensions',['../namespace_kale_1_1_vulkan.html#aad692a034f42cb808bde453bdf41a687',1,'Kale::Vulkan']]],
+  ['resizehandler_8',['resizeHandler',['../class_kale_1_1_open_g_l_1_1_core.html#af2e668cd2962e6f02c1bb6bf71bcc037',1,'Kale::OpenGL::Core']]],
+  ['resources_9',['resources',['../class_kale_1_1_vulkan_1_1_parent_resource.html#ab6e2aa3622065bf043965dbd4a7fc2ee',1,'Kale::Vulkan::ParentResource']]],
+  ['root_10',['root',['../class_kale_1_1_tree.html#adf46fbc852aafc3435466f687c20378e',1,'Kale::Tree']]]
 ];

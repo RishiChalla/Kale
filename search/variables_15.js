@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y_0',['y',['../class_kale_1_1_vector2.html#aaad04879105017af0107d47ef3f05a1d',1,'Kale::Vector2::y()'],['../class_kale_1_1_vector3.html#a69860dac7d304b32c6a61a05328ca762',1,'Kale::Vector3::y()'],['../class_kale_1_1_vector4.html#a2e5cdf3b0b8e0554891fd1fda55f939d',1,'Kale::Vector4::y()']]]
+  ['x_0',['x',['../class_kale_1_1_vector2.html#af5408e4b4ab3c5602abe6124c9ced88d',1,'Kale::Vector2::x()'],['../class_kale_1_1_vector3.html#a0c4efb83bd621449aa6b432db26325bf',1,'Kale::Vector3::x()'],['../class_kale_1_1_vector4.html#acd12ae427d0ec08407a814e53d5b4f15',1,'Kale::Vector4::x()']]]
 ];

@@ -1,17 +1,19 @@
 var searchData=
 [
-  ['taskmanagermutex_0',['taskManagerMutex',['../class_kale_1_1_application.html#a858a4130676c5da780778ad663542a27',1,'Kale::Application']]],
-  ['tasks_1',['tasks',['../class_kale_1_1_application.html#acfc716521289336c9df3ab799f40ed74',1,'Kale::Application']]],
-  ['threadednodeperformancetimes_2',['threadedNodePerformanceTimes',['../class_kale_1_1_scene.html#ae2828f231a4f121d4f4e796072bd7e5f',1,'Kale::Scene']]],
-  ['threadsynccondvar_3',['threadSyncCondVar',['../class_kale_1_1_application.html#a332f88ae86f51d5dcb256cf111e2b587',1,'Kale::Application']]],
-  ['threadsyncmutex_4',['threadSyncMutex',['../class_kale_1_1_application.html#a95d7d06f5bc1ffdd6c304de05b4c4192',1,'Kale::Application']]],
-  ['topleft_5',['topLeft',['../struct_kale_1_1_rect.html#ae1d78ac258bedf00943ac761ea81395c',1,'Kale::Rect']]],
-  ['transform_6',['transform',['../class_kale_1_1_transformable.html#ac2d50431077293d504025ca462cde3fb',1,'Kale::Transformable']]],
-  ['transformfsm_7',['transformFSM',['../class_kale_1_1_transformable.html#ab14cdbd1012284fc597c23e7cec4c5d3',1,'Kale::Transformable']]],
-  ['transforms_8',['transforms',['../struct_kale_1_1_skeleton.html#a04ea10f4cd9bdc8a776c05f162348417',1,'Kale::Skeleton']]],
-  ['transitionduration_9',['transitionDuration',['../class_kale_1_1_state_animatable.html#a42c77b07617059db7e5bad45d7ea5a40',1,'Kale::StateAnimatable']]],
-  ['transitioning_10',['transitioning',['../class_kale_1_1_state_animatable.html#a86f24185c36b87bea4bfe69a525cd59f',1,'Kale::StateAnimatable']]],
-  ['transitionstate_11',['transitionState',['../class_kale_1_1_state_animatable.html#ac7e5f841b7dee5254df69ceb87623c5b',1,'Kale::StateAnimatable']]],
-  ['transitiontime_12',['transitionTime',['../class_kale_1_1_state_animatable.html#aa76b470c43a2058750fdacd2f8221403',1,'Kale::StateAnimatable']]],
-  ['type_13',['type',['../class_kale_1_1_open_g_l_1_1_buffer.html#af9a32418f135aabd71c873775edff0b9',1,'Kale::OpenGL::Buffer::type()'],['../class_kale_1_1_vulkan_1_1_shader.html#a217666e2a7f5ec8c826fd9d5bea0bfea',1,'Kale::Vulkan::Shader::type()']]]
+  ['scenebounds_0',['sceneBounds',['../class_kale_1_1_scene.html#a0660e8b42c5dfe9b4a76b7020259cdf3',1,'Kale::Scene']]],
+  ['scenetopresent_1',['sceneToPresent',['../class_kale_1_1_application.html#a7b73a79c00f8cb1ec02ff268abc503aa',1,'Kale::Application']]],
+  ['shader_2',['shader',['../class_kale_1_1_path_node.html#aa178fd3fc94beefda0a26658711ee4e2',1,'Kale::PathNode::shader()'],['../class_kale_1_1_vulkan_1_1_shader.html#a347d819709bece563cd850e071028171',1,'Kale::Vulkan::Shader::shader()']]],
+  ['start_3',['start',['../struct_kale_1_1_cubic_bezier.html#a411231ea53d4ae0e9564be90e9128032',1,'Kale::CubicBezier']]],
+  ['state_4',['state',['../class_kale_1_1_state_animatable.html#a6f0e1ce97f9d53ded494ba5c86f925d9',1,'Kale::StateAnimatable']]],
+  ['statetransform_5',['stateTransform',['../class_kale_1_1_transformable.html#a810e75f38ee3c208a98e345a4a4e0c8a',1,'Kale::Transformable']]],
+  ['stroke_6',['stroke',['../class_kale_1_1_path_node.html#af76885efd3990173433cc2721dbb349d',1,'Kale::PathNode']]],
+  ['strokecolor_7',['strokeColor',['../class_kale_1_1_path_node.html#a64bb62ed5800a618144f0be7c88df11a',1,'Kale::PathNode']]],
+  ['strokecoloruniform_8',['strokeColorUniform',['../class_kale_1_1_path_node.html#af19d8fd0de8e107354e59a2c2d7047a5',1,'Kale::PathNode']]],
+  ['strokeradius_9',['strokeRadius',['../class_kale_1_1_path_node.html#aa945fff42cb0be754b8e5f169a79753f',1,'Kale::PathNode']]],
+  ['strokeradiusuniform_10',['strokeRadiusUniform',['../class_kale_1_1_path_node.html#aaed4c34c300ae9b54d36d8a74cff2613',1,'Kale::PathNode']]],
+  ['strokeuniform_11',['strokeUniform',['../class_kale_1_1_path_node.html#a428950c8ec2782cdb8a02850c2d3ae37',1,'Kale::PathNode']]],
+  ['structures_12',['structures',['../class_kale_1_1_state_animatable.html#abd2c85455e9f05a696893e038a47e951',1,'Kale::StateAnimatable']]],
+  ['support_13',['support',['../class_kale_1_1_vulkan_1_1_swap_chain.html#a43fa7e308822669d958fd14b86ec4863',1,'Kale::Vulkan::SwapChain']]],
+  ['surface_14',['surface',['../class_kale_1_1_vulkan_1_1_core.html#a42c34a832851ed4ae63f9a4fab2f60e6',1,'Kale::Vulkan::Core']]],
+  ['swapchain_15',['swapchain',['../class_kale_1_1_vulkan_1_1_core.html#ac3d319d4aa38b9cb4651e7a87ccc6e87',1,'Kale::Vulkan::Core::swapchain()'],['../class_kale_1_1_vulkan_1_1_swap_chain.html#a29b5c3b713ecdfa942ff70ce1b6b4a1b',1,'Kale::Vulkan::SwapChain::swapchain()']]]
 ];

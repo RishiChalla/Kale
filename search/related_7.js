@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['core_0',['Core',['../class_kale_1_1_window.html#a1e458cb4ef746de1175a2144676c6c45',1,'Kale::Window']]]
+  ['scene_0',['Scene',['../class_kale_1_1_node.html#a032858ae1fe02d2d1170981c2af2d67c',1,'Kale::Node']]]
 ];
