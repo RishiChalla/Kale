@@ -10,5 +10,7 @@ var searchData=
   ['commandpool_7',['commandPool',['../class_kale_1_1_vulkan_1_1_core.html#a65429b060d065bf1d5b684fe89f21357',1,'Kale::Vulkan::Core']]],
   ['console_8',['console',['../namespace_kale.html#aad005b59809f7117608c425172ccb01c',1,'Kale']]],
   ['controlpoint1_9',['controlPoint1',['../struct_kale_1_1_cubic_bezier.html#a5fee58c75b5142381aa6aeb5148d86d2',1,'Kale::CubicBezier']]],
-  ['controlpoint2_10',['controlPoint2',['../struct_kale_1_1_cubic_bezier.html#ae4c2ee6a46610b003e7a882d64b6d36e',1,'Kale::CubicBezier']]]
+  ['controlpoint1weight_10',['controlPoint1Weight',['../struct_kale_1_1_path_node_1_1_bezier_weights.html#a2ad7109ad52e43b41ddf664684a4db3e',1,'Kale::PathNode::BezierWeights']]],
+  ['controlpoint2_11',['controlPoint2',['../struct_kale_1_1_cubic_bezier.html#ae4c2ee6a46610b003e7a882d64b6d36e',1,'Kale::CubicBezier']]],
+  ['controlpoint2weight_12',['controlPoint2Weight',['../struct_kale_1_1_path_node_1_1_bezier_weights.html#a654e9d628dc14170b18823dade45e8d6',1,'Kale::PathNode::BezierWeights']]]
 ];

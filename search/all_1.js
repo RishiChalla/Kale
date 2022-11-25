@@ -20,6 +20,7 @@ var searchData=
   ['application_2ecpp_17',['Application.cpp',['../_application_8cpp.html',1,'']]],
   ['application_2ehpp_18',['Application.hpp',['../_application_8hpp.html',1,'']]],
   ['applicationname_19',['applicationName',['../class_kale_1_1_application.html#a6ae98a44fe9aedd30828fde6a53a45ad',1,'Kale::Application']]],
-  ['assertcheck_20',['assertCheck',['../class_kale_1_1_logger.html#ab680a7ba67af2c6b29e51b844b703568',1,'Kale::Logger::assertCheck(unsigned int line, const char *file, T assertion)'],['../class_kale_1_1_logger.html#ac7533cd4484d59f83638d31dd155fd84',1,'Kale::Logger::assertCheck(unsigned int line, const char *file, T assertion, STR msg)']]],
-  ['availabledevices_21',['availableDevices',['../class_kale_1_1_vulkan_1_1_device.html#ad8e1124757dd7ffaab66af2812a90684',1,'Kale::Vulkan::Device']]]
+  ['arcto_20',['arcTo',['../class_kale_1_1_path.html#aaa4519da9c39324dea4233bc79f68d8d',1,'Kale::Path']]],
+  ['assertcheck_21',['assertCheck',['../class_kale_1_1_logger.html#ab680a7ba67af2c6b29e51b844b703568',1,'Kale::Logger::assertCheck(unsigned int line, const char *file, T assertion)'],['../class_kale_1_1_logger.html#ac7533cd4484d59f83638d31dd155fd84',1,'Kale::Logger::assertCheck(unsigned int line, const char *file, T assertion, STR msg)']]],
+  ['availabledevices_22',['availableDevices',['../class_kale_1_1_vulkan_1_1_device.html#ad8e1124757dd7ffaab66af2812a90684',1,'Kale::Vulkan::Device']]]
 ];

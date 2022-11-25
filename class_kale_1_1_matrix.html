@@ -178,6 +178,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a70770e918eeea821a06c9a0d20a5819a"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ae1e1d3d40573127e9ee0480caf1283d6">R</a> , size_t W = w, size_t H = h&gt; </td></tr>
 <tr class="memitem:a70770e918eeea821a06c9a0d20a5819a"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>==<a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a> &amp;&amp;(<a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a> &gt;3)&amp;&amp;std::is_signed&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ae1e1d3d40573127e9ee0480caf1283d6">R</a> &gt;::value, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ae1e1d3d40573127e9ee0480caf1283d6">R</a> &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_kale_1_1_matrix.html#a70770e918eeea821a06c9a0d20a5819a">det</a> () const</td></tr>
 <tr class="separator:a70770e918eeea821a06c9a0d20a5819a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a988bfea3585d464cb735d2b30a26924c"><td class="memTemplParams" colspan="2">template&lt;size_t W = w, size_t H = h&gt; </td></tr>
+<tr class="memitem:a988bfea3585d464cb735d2b30a26924c"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>==2 &amp;&amp;<a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>==2, <a class="el" href="class_kale_1_1_matrix.html">Matrix</a>&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt; &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_kale_1_1_matrix.html#a988bfea3585d464cb735d2b30a26924c">inverse</a> ()</td></tr>
+<tr class="separator:a988bfea3585d464cb735d2b30a26924c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9e898560b96419f7d01acea224e8f34"><td class="memTemplParams" colspan="2">template&lt;size_t W = w, size_t H = h&gt; </td></tr>
+<tr class="memitem:ae9e898560b96419f7d01acea224e8f34"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>==3 &amp;&amp;<a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>==3, <a class="el" href="class_kale_1_1_matrix.html">Matrix</a>&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt; &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_kale_1_1_matrix.html#ae9e898560b96419f7d01acea224e8f34">inverse</a> ()</td></tr>
+<tr class="separator:ae9e898560b96419f7d01acea224e8f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -673,6 +679,70 @@ template&lt;size_t w, size_t h, typename <a class="el" href="namespace_kale.html
 <p >Returns the height of the matrix </p><dl class="section return"><dt>Returns</dt><dd>the height of the matrix </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="_matrix_8hpp_source.html#l00096">96</a> of file <a class="el" href="_matrix_8hpp_source.html">Matrix.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a988bfea3585d464cb735d2b30a26924c" name="a988bfea3585d464cb735d2b30a26924c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a988bfea3585d464cb735d2b30a26924c">&#9670;&#160;</a></span>inverse() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t w, size_t h, typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt; </div>
+<div class="memtemplate">
+template&lt;size_t W = w, size_t H = h&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>==2 &amp;&amp;<a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>==2, <a class="el" href="class_kale_1_1_matrix.html">Matrix</a>&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt; &gt;::type <a class="el" href="class_kale_1_1_matrix.html">Kale::Matrix</a>&lt; w, h, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt;::inverse </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Calculates the inverse of the matrix for a square matrix </p><dl class="section return"><dt>Returns</dt><dd>The inverted matrix </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_matrix_8hpp_source.html#l00468">468</a> of file <a class="el" href="_matrix_8hpp_source.html">Matrix.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ae9e898560b96419f7d01acea224e8f34" name="ae9e898560b96419f7d01acea224e8f34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9e898560b96419f7d01acea224e8f34">&#9670;&#160;</a></span>inverse() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t w, size_t h, typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt; </div>
+<div class="memtemplate">
+template&lt;size_t W = w, size_t H = h&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>==3 &amp;&amp;<a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>==3, <a class="el" href="class_kale_1_1_matrix.html">Matrix</a>&lt; <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796a61e9c06ea9a85a5088a499df6458d276">W</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ac1d9f50f86825a1a2302ec2449c17196">H</a>, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt; &gt;::type <a class="el" href="class_kale_1_1_matrix.html">Kale::Matrix</a>&lt; w, h, <a class="el" href="namespace_kale.html#a02de55a0f503908e04653511e666e796ab9ece18c950afbfa6b0fdbfa4ff731d3">T</a> &gt;::inverse </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Calculates the inverse of the matrix for a square matrix </p><dl class="section return"><dt>Returns</dt><dd>The inverted matrix </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_matrix_8hpp_source.html#l00480">480</a> of file <a class="el" href="_matrix_8hpp_source.html">Matrix.hpp</a>.</p>
 
 </div>
 </div>
@@ -1628,7 +1698,7 @@ template&lt;size_t w, size_t h, typename <a class="el" href="namespace_kale.html
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2022 05:01:24 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Fri Nov 25 2022 20:08:28 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

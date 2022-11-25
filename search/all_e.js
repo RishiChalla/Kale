@@ -14,7 +14,8 @@ var searchData=
   ['nodespreupdated_11',['nodesPreUpdated',['../class_kale_1_1_scene.html#aec69095e7718196fc17752ffe9df8342',1,'Kale::Scene']]],
   ['nodestoadd_12',['nodesToAdd',['../class_kale_1_1_scene.html#ac551da821cb65b293571bbbed5ab2842',1,'Kale::Scene']]],
   ['nodestoremove_13',['nodesToRemove',['../class_kale_1_1_scene.html#a4e95c735ac9964e8f22ce925381078fd',1,'Kale::Scene']]],
-  ['numbeziersuniform_14',['numBeziersUniform',['../class_kale_1_1_path_node.html#a24ecbd9ece6490c098938350cb6dff7b',1,'Kale::PathNode']]],
-  ['numfloatsinvert_15',['numFloatsInVert',['../class_kale_1_1_open_g_l_1_1_vertex_array.html#afb7833c56734e152e05d96e13a89cdac',1,'Kale::OpenGL::VertexArray']]],
-  ['numthreadsupdated_16',['numThreadsUpdated',['../class_kale_1_1_application.html#af6ebbbe4302cd76fe0a1a9c55e685a8e',1,'Kale::Application']]]
+  ['normalized_14',['normalized',['../class_kale_1_1_vector2.html#a61b4aaaed2ef947a21f0bbf6ff0ac94c',1,'Kale::Vector2']]],
+  ['numbeziersuniform_15',['numBeziersUniform',['../class_kale_1_1_path_node.html#a24ecbd9ece6490c098938350cb6dff7b',1,'Kale::PathNode']]],
+  ['numfloatsinvert_16',['numFloatsInVert',['../class_kale_1_1_open_g_l_1_1_vertex_array.html#afb7833c56734e152e05d96e13a89cdac',1,'Kale::OpenGL::VertexArray']]],
+  ['numthreadsupdated_17',['numThreadsUpdated',['../class_kale_1_1_application.html#af6ebbbe4302cd76fe0a1a9c55e685a8e',1,'Kale::Application']]]
 ];

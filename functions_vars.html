@@ -83,9 +83,12 @@ $(function() {
 
 <h3><a id="index_b" name="index_b"></a>- b -</h3><ul>
 <li>backPtr&#160;:&#160;<a class="el" href="class_kale_1_1_tree.html#a93b243ff34d705fb713c73e2a3f32a7d">Kale::Tree&lt; T &gt;</a></li>
-<li>beziers&#160;:&#160;<a class="el" href="struct_kale_1_1_path.html#af26c5c2235ec4edca5497600a1e26dd8">Kale::Path</a></li>
+<li>base&#160;:&#160;<a class="el" href="class_kale_1_1_skeletal_animatable.html#ae1b39437355dca3d4ed74eb15b3b09f0">Kale::SkeletalAnimatable</a></li>
+<li>basePath&#160;:&#160;<a class="el" href="class_kale_1_1_path_node.html#ab672d42c12f451443a4272f2b16d065a">Kale::PathNode&lt; T &gt;</a></li>
+<li>beziers&#160;:&#160;<a class="el" href="class_kale_1_1_path.html#af26c5c2235ec4edca5497600a1e26dd8">Kale::Path</a></li>
 <li>beziersUniform&#160;:&#160;<a class="el" href="class_kale_1_1_path_node.html#afa61d673bd9d0b0955caae6413e91dba">Kale::PathNode&lt; T &gt;</a></li>
 <li>bgColor&#160;:&#160;<a class="el" href="class_kale_1_1_scene.html#a5653a631424fb2dc364d26ad63d0380f">Kale::Scene</a></li>
+<li>bones&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton.html#a7f95be1ca70fdcdba6e47c4499ea330b">Kale::Skeleton</a></li>
 <li>bottomRight&#160;:&#160;<a class="el" href="struct_kale_1_1_rect.html#a4f6acf6cac84e117520711ee75916d35">Kale::Rect</a></li>
 <li>boundingBox&#160;:&#160;<a class="el" href="class_kale_1_1_collidable.html#adb686ca01e08cffadedabc1f6ad04036">Kale::Collidable</a></li>
 <li>buffer&#160;:&#160;<a class="el" href="class_kale_1_1_open_g_l_1_1_buffer.html#acdf69e79ec5011e22a11d9ff36b83167">Kale::OpenGL::Buffer&lt; T &gt;</a></li>
@@ -102,7 +105,9 @@ $(function() {
 <li>commandBuffer&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_command_buffer.html#a421a03678ee26a63a419646e9a7f852b">Kale::Vulkan::CommandBuffer</a></li>
 <li>commandPool&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_core.html#a65429b060d065bf1d5b684fe89f21357">Kale::Vulkan::Core</a></li>
 <li>controlPoint1&#160;:&#160;<a class="el" href="struct_kale_1_1_cubic_bezier.html#a5fee58c75b5142381aa6aeb5148d86d2">Kale::CubicBezier</a></li>
+<li>controlPoint1Weight&#160;:&#160;<a class="el" href="struct_kale_1_1_path_node_1_1_bezier_weights.html#a2ad7109ad52e43b41ddf664684a4db3e">Kale::PathNode&lt; T &gt;::BezierWeights</a></li>
 <li>controlPoint2&#160;:&#160;<a class="el" href="struct_kale_1_1_cubic_bezier.html#ae4c2ee6a46610b003e7a882d64b6d36e">Kale::CubicBezier</a></li>
+<li>controlPoint2Weight&#160;:&#160;<a class="el" href="struct_kale_1_1_path_node_1_1_bezier_weights.html#a654e9d628dc14170b18823dade45e8d6">Kale::PathNode&lt; T &gt;::BezierWeights</a></li>
 </ul>
 
 
@@ -118,6 +123,7 @@ $(function() {
 <h3><a id="index_e" name="index_e"></a>- e -</h3><ul>
 <li>elements&#160;:&#160;<a class="el" href="class_kale_1_1_open_g_l_1_1_vertex_array.html#a421804ed2a612eded175137d7e42e8e0">Kale::OpenGL::VertexArray&lt; T, NFloats &gt;</a></li>
 <li>end&#160;:&#160;<a class="el" href="struct_kale_1_1_cubic_bezier.html#a8e971369e07f6b3561ef33625b8cfddb">Kale::CubicBezier</a></li>
+<li>endWeight&#160;:&#160;<a class="el" href="struct_kale_1_1_path_node_1_1_bezier_weights.html#a04668a68610caefe0ae2275ba84f9543">Kale::PathNode&lt; T &gt;::BezierWeights</a></li>
 <li>eventHandlers&#160;:&#160;<a class="el" href="class_kale_1_1_window.html#aaca5de8c2838f1160471fd1ccedd192d">Kale::Window</a></li>
 <li>extent&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_swap_chain.html#ac62661e34fd7138b375a89ebd25fa7f7">Kale::Vulkan::SwapChain</a></li>
 </ul>
@@ -151,11 +157,13 @@ $(function() {
 <li>imageView&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_frame_buffer.html#ab16f123435007901633b4b84e32cecbf">Kale::Vulkan::FrameBuffer</a></li>
 <li>imageViews&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_swap_chain.html#a07c1736b103d282b8f73fd6fa711c235">Kale::Vulkan::SwapChain</a></li>
 <li>instance&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_core.html#a3b2a6bbdb94b0bda8b9d4b36118b9ac5">Kale::Vulkan::Core</a></li>
+<li>inverseWorldToBone&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton_1_1_bone.html#a3186e7c876d022a5c6e827c8db5e7f58">Kale::Skeleton::Bone</a></li>
 </ul>
 
 
 <h3><a id="index_l" name="index_l"></a>- l -</h3><ul>
 <li>layout&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_graphics_pipeline.html#acb1d01f1acaeec667072c0f7bfe95604">Kale::Vulkan::GraphicsPipeline</a></li>
+<li>length&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton_1_1_bone.html#ae087687d80bc43adddaa0d43da52479b">Kale::Skeleton::Bone</a></li>
 <li>localUniform&#160;:&#160;<a class="el" href="class_kale_1_1_path_node.html#a1844e7f9e1ca0205eaeb92b2bf0e1fd5">Kale::PathNode&lt; T &gt;</a></li>
 <li>logFile&#160;:&#160;<a class="el" href="class_kale_1_1_logger.html#a1d5b14f0ac0127fe9396ec851565644c">Kale::Logger</a></li>
 <li>logicalDevice&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_device.html#a8d8436f9d499883a36b250a773f43a7a">Kale::Vulkan::Device</a></li>
@@ -165,7 +173,7 @@ $(function() {
 <h3><a id="index_m" name="index_m"></a>- m -</h3><ul>
 <li>memoryInfo&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_device_memory.html#a660644a31ae32c00ac599fcfef3c6402">Kale::Vulkan::DeviceMemory</a></li>
 <li>memoryProperties&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_device.html#ad2960dbc095e11999e1fad5a63be523d">Kale::Vulkan::Device</a>, <a class="el" href="class_kale_1_1_vulkan_1_1_device_memory.html#a1d44948dc9ba38ca4ed19d87bb257805">Kale::Vulkan::DeviceMemory</a></li>
-<li>mutex&#160;:&#160;<a class="el" href="class_kale_1_1_logger.html#af95b632b1b980f8b69dc461480da8394">Kale::Logger</a>, <a class="el" href="class_kale_1_1_node.html#a446d99ba558539f0ec2b7bcfde4365e5">Kale::Node</a></li>
+<li>mutex&#160;:&#160;<a class="el" href="class_kale_1_1_logger.html#af95b632b1b980f8b69dc461480da8394">Kale::Logger</a>, <a class="el" href="class_kale_1_1_node.html#a446d99ba558539f0ec2b7bcfde4365e5">Kale::Node</a>, <a class="el" href="class_kale_1_1_skeletal_animatable.html#a1273af26c6f708972008003abdaec622">Kale::SkeletalAnimatable</a></li>
 </ul>
 
 
@@ -207,6 +215,8 @@ $(function() {
 <li>preUpdateNodes&#160;:&#160;<a class="el" href="class_kale_1_1_scene.html#af375b6e31e8183e5be69b97d78787405">Kale::Scene</a></li>
 <li>preUpdateTime&#160;:&#160;<a class="el" href="class_kale_1_1_node.html#adc9bfb90371aa88d21ddea6cb6a52006">Kale::Node</a></li>
 <li>previous&#160;:&#160;<a class="el" href="struct_kale_1_1_tree_1_1_child.html#a2f57d9092a2fc238d3661b0df234b987">Kale::Tree&lt; T &gt;::Child</a></li>
+<li>previousBone&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton_1_1_bone.html#a3c8081fe444ce67fd7844380ee56e1ce">Kale::Skeleton::Bone</a></li>
+<li>previousToBone&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton_1_1_bone.html#a04d1624cb382efc8a4817b14f1761c83">Kale::Skeleton::Bone</a></li>
 <li>program&#160;:&#160;<a class="el" href="class_kale_1_1_open_g_l_1_1_shader.html#a619514d6325c3167e196aa64d98e76bf">Kale::OpenGL::Shader</a></li>
 <li>ptr&#160;:&#160;<a class="el" href="struct_kale_1_1_tree_1_1_raw_iterator.html#ade77eeb94e3eb42c1cded34757cbc573">Kale::Tree&lt; T &gt;::RawIterator&lt; S &gt;</a></li>
 </ul>
@@ -225,7 +235,8 @@ $(function() {
 <li>renderSyncCondVar&#160;:&#160;<a class="el" href="class_kale_1_1_application.html#a3abab394861dea62e3a0f64f763e4982">Kale::Application</a></li>
 <li>resizeHandler&#160;:&#160;<a class="el" href="class_kale_1_1_open_g_l_1_1_core.html#af2e668cd2962e6f02c1bb6bf71bcc037">Kale::OpenGL::Core</a></li>
 <li>resources&#160;:&#160;<a class="el" href="class_kale_1_1_vulkan_1_1_parent_resource.html#ab6e2aa3622065bf043965dbd4a7fc2ee">Kale::Vulkan::ParentResource&lt; Parent &gt;</a></li>
-<li>root&#160;:&#160;<a class="el" href="class_kale_1_1_tree.html#adf46fbc852aafc3435466f687c20378e">Kale::Tree&lt; T &gt;</a></li>
+<li>root&#160;:&#160;<a class="el" href="class_kale_1_1_tree.html#aaf9fa520892a6182417ae38fa72c8310">Kale::Tree&lt; T &gt;</a></li>
+<li>rotation&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton_1_1_bone.html#ad56173b186b382e492d6e2e9c0c915a6">Kale::Skeleton::Bone</a></li>
 </ul>
 
 
@@ -233,7 +244,12 @@ $(function() {
 <li>sceneBounds&#160;:&#160;<a class="el" href="class_kale_1_1_scene.html#a0660e8b42c5dfe9b4a76b7020259cdf3">Kale::Scene</a></li>
 <li>sceneToPresent&#160;:&#160;<a class="el" href="class_kale_1_1_application.html#a7b73a79c00f8cb1ec02ff268abc503aa">Kale::Application</a></li>
 <li>shader&#160;:&#160;<a class="el" href="class_kale_1_1_path_node.html#aa178fd3fc94beefda0a26658711ee4e2">Kale::PathNode&lt; T &gt;</a>, <a class="el" href="class_kale_1_1_vulkan_1_1_shader.html#a347d819709bece563cd850e071028171">Kale::Vulkan::Shader</a></li>
+<li>skeletalAnimatable&#160;:&#160;<a class="el" href="class_kale_1_1_path_node.html#a2e80f7506d0e6a549e3525161192349c">Kale::PathNode&lt; T &gt;</a></li>
+<li>skeletalWeights&#160;:&#160;<a class="el" href="class_kale_1_1_path_node.html#a8b7067e340ca587d39cf308dd06a0698">Kale::PathNode&lt; T &gt;</a></li>
+<li>skeleton&#160;:&#160;<a class="el" href="class_kale_1_1_skeletal_animatable.html#a687d524792830c5f5eca99adafbf7a34">Kale::SkeletalAnimatable</a></li>
+<li>skeletonRecalculated&#160;:&#160;<a class="el" href="class_kale_1_1_skeletal_animatable.html#ad0a7d41db358acb0b3027070ef713c0b">Kale::SkeletalAnimatable</a></li>
 <li>start&#160;:&#160;<a class="el" href="struct_kale_1_1_cubic_bezier.html#a411231ea53d4ae0e9564be90e9128032">Kale::CubicBezier</a></li>
+<li>startWeight&#160;:&#160;<a class="el" href="struct_kale_1_1_path_node_1_1_bezier_weights.html#a000b7215159ef5b5e53d84b3dc9b0dc5">Kale::PathNode&lt; T &gt;::BezierWeights</a></li>
 <li>state&#160;:&#160;<a class="el" href="class_kale_1_1_state_animatable.html#a6f0e1ce97f9d53ded494ba5c86f925d9">Kale::StateAnimatable&lt; S &gt;</a></li>
 <li>stateTransform&#160;:&#160;<a class="el" href="class_kale_1_1_transformable.html#a810e75f38ee3c208a98e345a4a4e0c8a">Kale::Transformable</a></li>
 <li>stroke&#160;:&#160;<a class="el" href="class_kale_1_1_path_node.html#af76885efd3990173433cc2721dbb349d">Kale::PathNode&lt; T &gt;</a></li>
@@ -288,6 +304,7 @@ $(function() {
 <h3><a id="index_w" name="index_w"></a>- w -</h3><ul>
 <li>w&#160;:&#160;<a class="el" href="class_kale_1_1_vector4.html#a949750d54ebc2a4bd28ccc61e361c6af">Kale::Vector4&lt; T &gt;</a></li>
 <li>window&#160;:&#160;<a class="el" href="class_kale_1_1_application.html#a3fb0496a8b3e77ac337ae9ff61f2715c">Kale::Application</a></li>
+<li>worldToBone&#160;:&#160;<a class="el" href="struct_kale_1_1_skeleton_1_1_bone.html#ad49945c739fdf0628cf27e9f29554b47">Kale::Skeleton::Bone</a></li>
 <li>worldToScreen&#160;:&#160;<a class="el" href="class_kale_1_1_scene.html#a9054b96b400a8ec9dfc3c4999fea89e1">Kale::Scene</a></li>
 </ul>
 
@@ -310,7 +327,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2022 05:01:25 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Fri Nov 25 2022 20:08:28 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

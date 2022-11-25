@@ -8,7 +8,7 @@ var searchData=
   ['physicaldeviceproperties_5',['physicalDeviceProperties',['../class_kale_1_1_vulkan_1_1_device.html#ad287ca8d879ea657e1df9ccfdc7f50ff',1,'Kale::Vulkan::Device']]],
   ['pi_6',['PI',['../namespace_kale.html#aaa8add3bb3e6ca72cd2f17179582186f',1,'Kale']]],
   ['pipeline_7',['pipeline',['../class_kale_1_1_vulkan_1_1_graphics_pipeline.html#a74cb2411a63572dfbe514586160fde02',1,'Kale::Vulkan::GraphicsPipeline']]],
-  ['point1_8',['point1',['../struct_kale_1_1_line.html#aa33e0c0575bf04b896484a8c70c6c810',1,'Kale::Line::point1()'],['../struct_kale_1_1_rotated_rect.html#a68b85919baf0f042ea8c3547042ed1b7',1,'Kale::RotatedRect::point1()']]],
+  ['point1_8',['point1',['../struct_kale_1_1_rotated_rect.html#a68b85919baf0f042ea8c3547042ed1b7',1,'Kale::RotatedRect::point1()'],['../struct_kale_1_1_line.html#aa33e0c0575bf04b896484a8c70c6c810',1,'Kale::Line::point1()']]],
   ['point2_9',['point2',['../struct_kale_1_1_line.html#aa2712f085d07a53dbc33176369ffc20a',1,'Kale::Line::point2()'],['../struct_kale_1_1_rotated_rect.html#ac630b8922c32dd1664beb70f31e2948b',1,'Kale::RotatedRect::point2()']]],
   ['point3_10',['point3',['../struct_kale_1_1_rotated_rect.html#ad64a00ec2b53d71187ec6cd89c98609a',1,'Kale::RotatedRect']]],
   ['point4_11',['point4',['../struct_kale_1_1_rotated_rect.html#ae2e68931478aec90ffb6d7af0d8cd281',1,'Kale::RotatedRect']]],
@@ -19,6 +19,8 @@ var searchData=
   ['preupdatenodes_16',['preUpdateNodes',['../class_kale_1_1_scene.html#af375b6e31e8183e5be69b97d78787405',1,'Kale::Scene']]],
   ['preupdatetime_17',['preUpdateTime',['../class_kale_1_1_node.html#adc9bfb90371aa88d21ddea6cb6a52006',1,'Kale::Node']]],
   ['previous_18',['previous',['../struct_kale_1_1_tree_1_1_child.html#a2f57d9092a2fc238d3661b0df234b987',1,'Kale::Tree::Child']]],
-  ['program_19',['program',['../class_kale_1_1_open_g_l_1_1_shader.html#a619514d6325c3167e196aa64d98e76bf',1,'Kale::OpenGL::Shader']]],
-  ['ptr_20',['ptr',['../struct_kale_1_1_tree_1_1_raw_iterator.html#ade77eeb94e3eb42c1cded34757cbc573',1,'Kale::Tree::RawIterator']]]
+  ['previousbone_19',['previousBone',['../struct_kale_1_1_skeleton_1_1_bone.html#a3c8081fe444ce67fd7844380ee56e1ce',1,'Kale::Skeleton::Bone']]],
+  ['previoustobone_20',['previousToBone',['../struct_kale_1_1_skeleton_1_1_bone.html#a04d1624cb382efc8a4817b14f1761c83',1,'Kale::Skeleton::Bone']]],
+  ['program_21',['program',['../class_kale_1_1_open_g_l_1_1_shader.html#a619514d6325c3167e196aa64d98e76bf',1,'Kale::OpenGL::Shader']]],
+  ['ptr_22',['ptr',['../struct_kale_1_1_tree_1_1_raw_iterator.html#ade77eeb94e3eb42c1cded34757cbc573',1,'Kale::Tree::RawIterator']]]
 ];

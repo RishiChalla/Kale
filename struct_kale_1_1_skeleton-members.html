@@ -71,27 +71,26 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespace_kale.html">Kale</a></li><li class="navelem"><a class="el" href="struct_kale_1_1_path.html">Path</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespace_kale.html">Kale</a></li><li class="navelem"><a class="el" href="struct_kale_1_1_skeleton.html">Skeleton</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">Kale::Path Member List</div></div>
+  <div class="headertitle"><div class="title">Kale::Skeleton Member List</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="struct_kale_1_1_path.html">Kale::Path</a>, including all inherited members.</p>
+<p>This is the complete list of members for <a class="el" href="struct_kale_1_1_skeleton.html">Kale::Skeleton</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="struct_kale_1_1_path.html#af26c5c2235ec4edca5497600a1e26dd8">beziers</a></td><td class="entry"><a class="el" href="struct_kale_1_1_path.html">Kale::Path</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="struct_kale_1_1_path.html#afc2fbb616ca2c4c24982fb23115c719d">getBoundingBox</a>() const</td><td class="entry"><a class="el" href="struct_kale_1_1_path.html">Kale::Path</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="struct_kale_1_1_path.html#adadf68529ad0ff3f1ac8a58111e1acb9">operator*</a>(float value) const</td><td class="entry"><a class="el" href="struct_kale_1_1_path.html">Kale::Path</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="struct_kale_1_1_path.html#a8c530a2c624b6ea03398d075f7d1d1a2">operator+=</a>(const Path &amp;other)</td><td class="entry"><a class="el" href="struct_kale_1_1_path.html">Kale::Path</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="struct_kale_1_1_path.html#af26cfab021ddf49af73da3b2beca85ac">Path</a>()</td><td class="entry"><a class="el" href="struct_kale_1_1_path.html">Kale::Path</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="struct_kale_1_1_path.html#aa031c6ca94b336d124427653227d4bf6">Path</a>(size_t n)</td><td class="entry"><a class="el" href="struct_kale_1_1_path.html">Kale::Path</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="struct_kale_1_1_path.html#a0037b632a54ea1b122c89cf9072d99a3">Path</a>(const std::vector&lt; CubicBezier &gt; &amp;beziers)</td><td class="entry"><a class="el" href="struct_kale_1_1_path.html">Kale::Path</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html#a7f95be1ca70fdcdba6e47c4499ea330b">bones</a></td><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html">Kale::Skeleton</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html#ab23d1cfc18b0705c3083e83781007505">calculateBone</a>(const std::vector&lt; Bone &gt; &amp;bones, int previousBone, float length, float rotation, AngleUnit unit)</td><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html">Kale::Skeleton</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html#af01a02f1ce9ae4c801cd6e66ccf7407f">Skeleton</a>()</td><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html">Kale::Skeleton</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html#a6985864a05b33cf2f7055263f063d294">Skeleton</a>(const std::vector&lt; std::tuple&lt; int, float, float &gt; &gt; &amp;bones, AngleUnit unit)</td><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html">Kale::Skeleton</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html#a780aacaf5fc65bc4f047675ff2dbd009">Skeleton</a>(const std::vector&lt; Bone &gt; &amp;bones)</td><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html">Kale::Skeleton</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html#a72019a0c7f171704d14e42621cdaf2f1">transform</a>(const std::vector&lt; Transform &gt; &amp;offsets, Vector2f vert, const std::array&lt; std::pair&lt; int, float &gt;, 4 &gt; &amp;weights)</td><td class="entry"><a class="el" href="struct_kale_1_1_skeleton.html">Kale::Skeleton</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2022 05:01:25 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Fri Nov 25 2022 20:08:28 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

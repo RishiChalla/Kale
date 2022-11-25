@@ -268,7 +268,7 @@ $(function() {
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="comment">// Updating</span></div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <a class="code hl_function" href="class_kale_1_1_scene.html#adf7f1c5309f921c648f6f258195a0e2f">onUpdate</a>(threadNum, deltaTime);</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordflow">for</span> (std::shared_ptr&lt;Node&gt;&amp; node : <a class="code hl_variable" href="class_kale_1_1_scene.html#ae162feb565059983a1cbc4b715ede726">updateNodes</a>[threadNum]) node-&gt;preUpdate(threadNum, *<span class="keyword">this</span>, deltaTime);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordflow">for</span> (std::shared_ptr&lt;Node&gt;&amp; node : <a class="code hl_variable" href="class_kale_1_1_scene.html#ae162feb565059983a1cbc4b715ede726">updateNodes</a>[threadNum]) node-&gt;update(threadNum, *<span class="keyword">this</span>, deltaTime);</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>}</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="class_kale_1_1_scene.html#adf7f1c5309f921c648f6f258195a0e2f">  220</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_kale_1_1_scene.html#adf7f1c5309f921c648f6f258195a0e2f">Scene::onUpdate</a>(<span class="keywordtype">size_t</span> threadNum, <span class="keywordtype">float</span> deltaTime) {</div>
@@ -358,12 +358,12 @@ $(function() {
 <div class="ttc" id="aclass_kale_1_1_window_html_a6c2373ce13ebe814f0aef6d8cbfae7b3"><div class="ttname"><a href="class_kale_1_1_window.html#a6c2373ce13ebe814f0aef6d8cbfae7b3">Kale::Window::registerEvents</a></div><div class="ttdeci">void registerEvents(EventHandler *handler)</div><div class="ttdef"><b>Definition:</b> <a href="_window_8cpp_source.html#l00024">Window.cpp:24</a></div></div>
 <div class="ttc" id="anamespace_kale_html"><div class="ttname"><a href="namespace_kale.html">Kale</a></div><div class="ttdef"><b>Definition:</b> <a href="_application_8hpp_source.html#l00038">Application.hpp:38</a></div></div>
 <div class="ttc" id="anamespace_kale_html_a82561018f0560fa7e995333bb9ed53b1"><div class="ttname"><a href="namespace_kale.html#a82561018f0560fa7e995333bb9ed53b1">Kale::mainApp</a></div><div class="ttdeci">Application * mainApp</div><div class="ttdef"><b>Definition:</b> <a href="_application_8hpp_source.html#l00214">Application.hpp:214</a></div></div>
-<div class="ttc" id="anamespace_kale_html_afd974f1112d9647c3af6669c2c8ae6fa"><div class="ttname"><a href="namespace_kale.html#afd974f1112d9647c3af6669c2c8ae6fa">Kale::Vector2f</a></div><div class="ttdeci">Vector2&lt; float &gt; Vector2f</div><div class="ttdef"><b>Definition:</b> <a href="_vector_8hpp_source.html#l00562">Vector.hpp:562</a></div></div>
+<div class="ttc" id="anamespace_kale_html_afd974f1112d9647c3af6669c2c8ae6fa"><div class="ttname"><a href="namespace_kale.html#afd974f1112d9647c3af6669c2c8ae6fa">Kale::Vector2f</a></div><div class="ttdeci">Vector2&lt; float &gt; Vector2f</div><div class="ttdef"><b>Definition:</b> <a href="_vector_8hpp_source.html#l00567">Vector.hpp:567</a></div></div>
 <div class="ttc" id="astruct_kale_1_1_rect_html"><div class="ttname"><a href="struct_kale_1_1_rect.html">Kale::Rect</a></div><div class="ttdef"><b>Definition:</b> <a href="_rect_8hpp_source.html#l00026">Rect.hpp:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2022 05:01:24 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Fri Nov 25 2022 20:08:27 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>
