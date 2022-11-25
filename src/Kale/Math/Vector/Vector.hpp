@@ -149,6 +149,11 @@ namespace Kale {
 			return {k * o.x, k * o.y};
 		}
 
+		float signedAngle(Vector2<T> to) const { return atan2(x * to.y - y * to.x, x * to.x + y * to.y); }
+		Vector2<T> rotateClockwise() const { return Vector2<T>{y, -x}; }
+		Vector2<T> rotateCounterClockwise() const { return Vector2<T>{-y, x}; }
+		Vector2<T> normalized() const { float m = magnitude(); return Vector2<T>{x / m, y / m}; }
+
 		Vector2<T> xy() const { return {x, y}; }
 		Vector2<T> yx() const { return {y, x}; }
 

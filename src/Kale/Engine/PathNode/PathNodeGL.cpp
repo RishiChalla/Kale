@@ -22,7 +22,6 @@
 #include <Kale/Core/Application/Application.hpp>
 
 #include <algorithm>
-#include <array>
 
 using namespace Kale;
 
@@ -108,7 +107,7 @@ void PathNode::begin(const Scene& scene) {
 
 	const std::array<unsigned int, 6> indices = {0, 1, 2, 1, 3, 2};
 
-	OpenGL::BufferUsage usage = pathFSM.has_value() ? OpenGL::BufferUsage::Dynamic : OpenGL::BufferUsage::Static;
+	OpenGL::BufferUsage usage = (pathFSM.has_value() || skeletalAnimatable != nullptr) ? OpenGL::BufferUsage::Dynamic : OpenGL::BufferUsage::Static;
 	vertexArray = std::make_unique<OpenGL::VertexArray<Vector2f, 2>>(verts, indices, usage);
 	vertexArray->enableAttributePointer({posAttribute});
 }
@@ -135,6 +134,25 @@ void PathNode::preUpdate(size_t threadNum, const Scene& scene, float deltaTime) 
 		// Loop through the composition & lerp between states as applicable
 		for (std::pair<int, float> composition : pathFSM->getStateComposition<int>()) {
 			path += pathFSM->getStructure<int>(composition.first) * composition.second;
+		}
+
+		// Update the bounding box
+		updateBoundingBox();
+	}
+
+	// Update the Path based on skeletal rig if applicable
+	if (skeletalAnimatable != nullptr) {
+		// Resize the path if it is not at the correct size
+		if (path.beziers.size() != basePath.value().beziers.size()) path.beziers.resize(basePath.value().beziers.size());
+		
+		// Loop through the beziers and transform the beziers into the path
+		for (size_t i = 0; i < path.beziers.size(); i++) {
+			path.beziers[i] = CubicBezier{
+				skeletalAnimatable->transform(basePath.value().beziers[i].start, skeletalWeights.value().at(i).startWeight, deltaTime),
+				skeletalAnimatable->transform(basePath.value().beziers[i].controlPoint1, skeletalWeights.value().at(i).controlPoint1Weight, deltaTime),
+				skeletalAnimatable->transform(basePath.value().beziers[i].controlPoint2, skeletalWeights.value().at(i).controlPoint2Weight, deltaTime),
+				skeletalAnimatable->transform(basePath.value().beziers[i].end, skeletalWeights.value().at(i).endWeight, deltaTime)
+			};
 		}
 
 		// Update the bounding box

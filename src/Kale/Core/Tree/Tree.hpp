@@ -18,6 +18,8 @@
 
 #include <list>
 #include <iterator>
+#include <algorithm>
+#include <memory>
 
 namespace Kale {
 
@@ -175,6 +177,12 @@ namespace Kale {
 					it = it->next;
 				}
 			}
+
+			// Deleting moving/copying
+			Child(const Child& other) = delete;
+			Child(Child&& other) = delete;
+			void operator=(const Child& other) = delete;
+			void operator=(Child&& other) = delete;
 
 			/**
 			 * Adds a child node under this child node using the value's default constructor
@@ -518,18 +526,25 @@ namespace Kale {
 		/**
 		 * The root child of the tree, all other children stem from this one
 		 */
-		Child root;
+		std::unique_ptr<Child> root;
 
 		/**
 		 * Creates a new tree with a root using the default constructor of the held object
 		 */
-		Tree() : root(*this), backPtr(&root) {}
+		Tree() : root(std::make_unique(*this)), backPtr(&root) {}
 
 		/**
 		 * Creates a new tree with a root with an initialized value
 		 * @param value The value to initialize the root with
 		 */
-		Tree(const T& value) : root(*this, value), backPtr(&root) {}
+		Tree(const T& value) : root(std::make_unique(*this, value)), backPtr(&root) {}
+
+		// Tree(const Tree& other);
+		// void operator=(const Tree& other);
+
+		// Trees don't support moving
+		Tree(Tree&& other) = delete;
+		void operator=(Tree&& other) = delete;
 
 		/**
 		 * Gets the root as an iterator to allow for traversal of the tree
@@ -569,7 +584,7 @@ namespace Kale {
 		 * @returns The root of the tree
 		 */
 		Child& front() {
-			return root;
+			return *root;
 		}
 		
 		/**
@@ -577,7 +592,7 @@ namespace Kale {
 		 * @returns The root of the tree
 		 */
 		const Child& front() const {
-			return root;
+			return *root;
 		}
 		
 		/**

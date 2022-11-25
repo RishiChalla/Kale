@@ -31,35 +31,6 @@ in vec2 fragPos;
 
 out vec4 outColor;
 
-float j, k, l, m, n, o;
-
-float d(float x) {
-	return 6.0*j*(x*x*x*x*x) + 5.0*k*(x*x*x*x) + 4.0*l*(x*x*x) + 3.0*m*(x*x) + 2.0*n*(x) + o;
-}
-
-float d2(float x) {
-	return 30.0*j*(x*x*x*x) + 20.0*k*(x*x*x) + 12.0*l*(x*x) + 6.0*m*(x) + 2.0*n;
-}
-
-/**
- * Uses the newton raphson method to find an approximation for the roots of function f with derivative d
- * @param x The initial guess of the root
- * @returns The root or -1 if a root is not found in 10 iterations
- */
-float newtonApproximation(float x) {
-	const float EPSILON = 0.001;
-	float h = d(x) / d2(x);
-	int count = 0;
-	while (abs(h) >= EPSILON) {
-		h = d(x) / d2(x);
-		x = x - h;
-		count++;
-		if (count >= 10) return -1000.0;
-	}
-
-	return x;
-}
-
 /**
  * Calculates the bezier output at a given position
  * @param t The time at the bezier
@@ -112,40 +83,51 @@ vec3 cubicRoots(vec4 coefficients) {
 	float b = coefficients.y;
 	float c = coefficients.z;
 	float d = coefficients.w;
-	
-	float A = b / a;
-	float B = c / a;
-	float C = d / a;
-
-	float Q = (3.0 * B - A * A) / 9.0;
-	float R = (9.0 * A * B - 27.0 * C - 2.0 * A * A * A) / 54.0;
-	float D = Q * Q * Q + R * R;
 
 	vec3 t;
-	
-	// complex or duplicate roots
-	if (D >= 0) {
-		float S = sign(R + sqrt(D)) * pow(abs(R + sqrt(D)), (1.0 / 3.0));
-		float T = sign(R - sqrt(D)) * pow(abs(R - sqrt(D)), (1.0 / 3.0));
 
-		t.x = -A / 3.0 + (S + T); // real root
-		t.y = -A / 3.0 - (S + T) / 2.0; // real part of complex root
-		t.z = -A / 3.0 - (S + T) / 2.0; // real part of complex root
-		float Im = abs(sqrt(3.0) * (S - T) / 2.0); // complex part of root pair
-		
-		// discard complex roots
-		if (Im != 0) {
-			t.y = -1;
-			t.z = -1;
-		}
+	// Quadratic case
+	if (abs(a) < 0.00001) {
+		float root = sqrt(c * c - 4.0 * b * d);
+		t.x = (-c + root) / (2.0 * b);
+		t.y = (-c - root) / (2.0 * b);
+		t.z = -1.0;
 	}
-	// distinct real roots 
+	
+	// Cubic case
 	else {
-		float th = acos(R / sqrt(-Q*Q*Q));
-		t.x = 2.0 * sqrt(-Q) * cos(th / 3.0) - A / 3.0;
-		t.y = 2.0 * sqrt(-Q) * cos((th + 2.0 * PI) / 3.0) - A / 3.0;
-		t.z = 2.0 * sqrt(-Q) * cos((th + 4.0 * PI) / 3.0) - A / 3.0;
-		float Im = 0.0;
+		float A = b / a;
+		float B = c / a;
+		float C = d / a;
+
+		float Q = (3.0 * B - A * A) / 9.0;
+		float R = (9.0 * A * B - 27.0 * C - 2.0 * A * A * A) / 54.0;
+		float D = Q * Q * Q + R * R;
+		
+		// complex or duplicate roots
+		if (D >= 0) {
+			float S = sign(R + sqrt(D)) * pow(abs(R + sqrt(D)), (1.0 / 3.0));
+			float T = sign(R - sqrt(D)) * pow(abs(R - sqrt(D)), (1.0 / 3.0));
+
+			t.x = -A / 3.0 + (S + T); // real root
+			t.y = -A / 3.0 - (S + T) / 2.0; // real part of complex root
+			t.z = -A / 3.0 - (S + T) / 2.0; // real part of complex root
+			float Im = abs(sqrt(3.0) * (S - T) / 2.0); // complex part of root pair
+			
+			// discard complex roots
+			if (Im != 0) {
+				t.y = -1;
+				t.z = -1;
+			}
+		}
+		// distinct real roots 
+		else {
+			float th = acos(R / sqrt(-Q*Q*Q));
+			t.x = 2.0 * sqrt(-Q) * cos(th / 3.0) - A / 3.0;
+			t.y = 2.0 * sqrt(-Q) * cos((th + 2.0 * PI) / 3.0) - A / 3.0;
+			t.z = 2.0 * sqrt(-Q) * cos((th + 4.0 * PI) / 3.0) - A / 3.0;
+			float Im = 0.0;
+		}
 	}
 	
 	// discard out of spec roots
@@ -156,6 +138,18 @@ vec3 cubicRoots(vec4 coefficients) {
 	// sort but place -1 at the end
 	t = sortSpecial(t);
 	return t;
+}
+
+/**
+ * When dealing with a larger coordinate system such as 1080p in a fragment shader, there is a larger epsilon. When multiplying by
+ * extremely large values, this epsilon may cause visual errors, this function rounds off a vector2 to zero if it is within a certain
+ * threshold.
+ * @param input The input vector
+ * @returns The rounded vector
+ */
+vec2 removeEpsilon(vec2 vec) {
+	const float EPSILON = 0.0001;
+	return vec2(abs(vec.x) < EPSILON ? 0.0 : vec.x, abs(vec.y) < EPSILON ? 0.0 : vec.y);
 }
 
 /**
@@ -175,13 +169,13 @@ int computeNumIntersections(vec2 bezierStart, vec2 bezierControlPoint1, vec2 bez
 	// B = x1 - x2
 	float B = lineStart.x - lineEnd.x;
 	// C = x1 * (y1 - y2) + y1 * (x2 - x1)
-	float C = lineStart.x * (lineStart.y - lineEnd.y) +  lineStart.y * (lineEnd.x - lineStart.x);
+	float C = lineStart.x * (lineStart.y - lineEnd.y) + lineStart.y * (lineEnd.x - lineStart.x);
 
 	vec2 bezierCoefficients[4];
-	bezierCoefficients[0] = -bezierStart + 3.0 * bezierControlPoint1 + -3.0 * bezierControlPoint2 + bezierEnd; 
-	bezierCoefficients[1] = 3.0 * bezierStart - 6.0 * bezierControlPoint1 + 3.0 * bezierControlPoint2;
-	bezierCoefficients[2] = -3.0 * bezierStart + 3.0 * bezierControlPoint1;
-	bezierCoefficients[3] = bezierStart;
+	bezierCoefficients[0] = removeEpsilon(-bezierStart + 3.0 * bezierControlPoint1 + -3.0 * bezierControlPoint2 + bezierEnd);
+	bezierCoefficients[1] = removeEpsilon(3.0 * bezierStart - 6.0 * bezierControlPoint1 + 3.0 * bezierControlPoint2);
+	bezierCoefficients[2] = removeEpsilon(-3.0 * bezierStart + 3.0 * bezierControlPoint1);
+	bezierCoefficients[3] = removeEpsilon(bezierStart);
 
 	vec4 CubicCoefficients;
 	CubicCoefficients.x = A * bezierCoefficients[0].x + B * bezierCoefficients[0].y;     // t^3
@@ -233,6 +227,13 @@ float min4(float a, float b, float c, float d) {
 }
 
 /**
+ * Helper function to find the squared length between two vectors
+ */
+float squaredLength(vec2 a, vec2 b) {
+	return dot(a - b, a - b);
+}
+
+/**
  * Checks whether or not this fragment should be stroked relative to a certain bezier
  * @param p0 The bezier start
  * @param p1 The bezier control point 1
@@ -242,54 +243,26 @@ float min4(float a, float b, float c, float d) {
  * @returns Whether or not this fragment should be stroked relative to the bezier
  */
 bool shouldStrokeBezier(vec2 p0, vec2 p1, vec2 p2, vec2 p3, vec2 p) {
-	// Check if the fragment is close enough to the start/end first
-	vec2 p0d = p0 - p;
-	vec2 p3d = p3 - p;
-	float strokeRadiusSquared = strokeRadius * strokeRadius;
-	if (dot(p0d, p0d) < strokeRadiusSquared || dot(p3d, p3d) < strokeRadiusSquared) return true;
+	// Create a bezier with n segments and check if the distance to any of those segments are less than radius
+	const int numIterations = 50;
+	vec2 lineStart = p0, lineEnd;
+	float squaredRadius = strokeRadius * strokeRadius;
 
-	// B(t) = (1-t)^3*p0 + 3t(1-t)^2*p1 + 3t^2(1-t)*p2 + t^3*p3 // Bezier formula
-	// B'(t) = 3(1-t)^2(p1 - p0) + 6(1-t)t(p2 - p1) + 3t^2(p3 - p2) // Bezier derivative
-	
-	// D(t) = (x - B(t)x)^2 + (y - B(t)y)^2 // Squared distance between position and B(t)
+	for (int i = 1; i <= numIterations; i++) {
+		lineEnd = calcBezier(float(i) / float(numIterations), p0, p1, p2, p3);
 
-	// Substitute
-	// (x - ((1-t)^3*p0x + 3t(1-t)^2*p1x + 3t^2(1-t)*p2x + t^3*p3x))^2 + (y - ((1-t)^3*p0y + 3t(1-t)^2*p1y + 3t^2(1-t)*p2y + t^3*p3y))^2
+		float squaredDist;
+		if (dot(lineStart - lineEnd, p - lineEnd) < 0.0) squaredDist = squaredLength(lineEnd, p);
+		else if (dot(lineEnd - lineStart, p - lineStart) < 0.0) squaredDist = squaredLength(lineStart, p);
+		else {
+			vec2 a = p - lineEnd;
+			vec2 b = lineStart - lineEnd;
+			squaredDist = squaredLength(lineEnd + b * dot(a, b) / dot(b, b), p);
+		}
 
-	// Map p0x = a, p0y = b, p1x = c, p1y = d, p2x = f, p2y = g, p3x = h, p3y = i ->
-	// (x - ((1-t)^3*a + 3t(1-t)^2*c + 3t^2(1-t)*f + t^3*h))^2 + (y - ((1-t)^3*b + 3t(1-t)^2*d + 3t^2(1-t)*g + t^3*i))^2
-
-	// Simplify ->
-	// jt^6 + kt^5 + lt^4 + mt^3 + nt^2 + ot + q = 0
-	// j = a^2 - 6ac + 6af - 2ah + b^2 - 6bd + 6bg - 2bi + 9c^2 - 18cf + 6ch + 9d^2 - 18dg + 6di + 9f^2 - 6fh + 9g^2 - 6gi + h^2 + i^2
-	// k = -6a^2 + 30ac - 24af + 6ah - 6b^2 + 30bd - 24bg + 6bi - 36c^2 + 54cf - 12ch - 36d^2 + 54dg - 12di - 18f^2 + 6fh - 18g^2 + 6gi
-	// l = 15a^2 - 60ac + 36af - 6ah + 15b^2 - 60bd + 36bg - 6bi + 54c^2 - 54cf + 6ch + 54d^2 - 54dg + 6di + 9f^2 + 9g^2
-	// m = -20a^2 + 60ac - 24af + 2ah + 2ax - 20b^2 + 60bd - 24bg + 2bi + 2by - 36c^2 + 18cf - 6cx - 36d^2 + 18dg - 6dy + 6fx + 6gy - 2hx - 2iy
-	// n = 15a^2 - 30ac + 6af - 6ax + 15b^2 - 30bd + 6bg - 6by + 9c^2 + 12cx + 9d^2 + 12dy - 6fx - 6gy
-	// o = -6a^2 + 6ac + 6ax - 6b^2 + 6bd + 6by - 6cx - 6dy
-	// p = a^2 - 2ax + b^2 - 2by + x^2 + y^2
-
-	j = p0.x*p0.x - 6.0*p0.x*p1.x + 6.0*p0.x*p2.x - 2.0*p0.x*p3.x + p0.y*p0.y - 6.0*p0.y*p1.y + 6.0*p0.y*p2.y - 2.0*p0.y*p3.y +
-		9*p1.x*p1.x - 18.0*p1.x*p2.x + 6.0*p1.x*p3.x + 9.0*p1.y*p1.y - 18.0*p1.y*p2.y + 6.0*p1.y*p3.y + 9.0*p2.x*p2.x -
-		6*p2.x*p3.x + 9.0*p2.y*p2.y - 6.0*p2.y*p3.y + p3.x*p3.x + p3.y*p3.y;
-	k = -6*p0.x*p0.x + 30.0*p0.x*p1.x - 24.0*p0.x*p2.x + 6.0*p0.x*p3.x - 6.0*p0.y*p0.y + 30.0*p0.y*p1.y - 24.0*p0.y*p2.y + 6.0*p0.y*p3.y -
-		36*p1.x*p1.x + 54.0*p1.x*p2.x - 12.0*p1.x*p3.x - 36.0*p1.y*p1.y + 54.0*p1.y*p2.y - 12.0*p1.y*p3.y - 18.0*p2.x*p2.x +
-		6*p2.x*p3.x - 18.0*p2.y*p2.y + 6.0*p2.y*p3.y;
-	l = 15.0*p0.x*p0.x - 60.0*p0.x*p1.x + 36.0*p0.x*p2.x - 6.0*p0.x*p3.x + 15.0*p0.y*p0.y - 60.0*p0.y*p1.y + 36.0*p0.y*p2.y - 6.0*p0.y*p3.y +
-		54*p1.x*p1.x - 54.0*p1.x*p2.x + 6.0*p1.x*p3.x + 54.0*p1.y*p1.y - 54.0*p1.y*p2.y + 6.0*p1.y*p3.y + 9.0*p2.x*p2.x + 9.0*p2.y*p2.y;
-	m = -20*p0.x*p0.x + 60.0*p0.x*p1.x - 24.0*p0.x*p2.x + 2.0*p0.x*p3.x + 2.0*p0.x*p.x - 20.0*p0.y*p0.y + 60.0*p0.y*p1.y - 24.0*p0.y*p2.y +
-		2*p0.y*p3.y + 2.0*p0.y*p.y - 36.0*p1.x*p1.x + 18.0*p1.x*p2.x - 6.0*p1.x*p.x - 36.0*p1.y*p1.y + 18.0*p1.y*p2.y - 6.0*p1.y*p.y + 6.0*p2.x*p.x +
-		6*p2.y*p.y - 2.0*p3.x*p.x - 2.0*p3.y*p.y;
-	n = 15.0*p0.x*p0.x - 30.0*p0.x*p1.x + 6.0*p0.x*p2.x - 6.0*p0.x*p.x + 15.0*p0.y*p0.y - 30.0*p0.y*p1.y + 6.0*p0.y*p2.y - 6.0*p0.y*p.y +
-		9*p1.x*p1.x + 12.0*p1.x*p.x + 9.0*p1.y*p1.y + 12.0*p1.y*p.y - 6.0*p2.x*p.x - 6.0*p2.y*p.y;
-	o = -6*p0.x*p0.x + 6.0*p0.x*p1.x + 6.0*p0.x*p.x - 6.0*p0.y*p0.y + 6.0*p0.y*p1.y + 6.0*p0.y*p.y - 6.0*p1.x*p.x - 6.0*p1.y*p.y;
-
-	float root = newtonApproximation(0.5);
-	if (root < 0.0 || root > 1.0) return false;
-
-	vec2 d = calcBezier(root, p0, p1, p2, p3) - p;
-	if (dot(d, d) < strokeRadiusSquared) return true;
-
+		if (squaredDist < squaredRadius) return true;
+		lineStart = lineEnd;
+	}
 	return false;
 }
 

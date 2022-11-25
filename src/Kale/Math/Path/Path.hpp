@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <ostream>
+#include <utility>
 
 namespace Kale {
 
@@ -35,7 +36,16 @@ namespace Kale {
 	/**
 	 * Represents a path of beziers
 	 */
-	struct Path {
+	class Path {
+	private:
+
+		/**
+		 * Creates a path with rounded corners
+		 * @param lines The lines to create the path from
+		 */
+		void roundCorners(const std::vector<std::pair<Vector2f, float>>& lines);
+
+	public:
 
 		/**
 		 * The beziers held in this path
@@ -58,6 +68,21 @@ namespace Kale {
 		 * @param beziers The beziers
 		 */
 		Path(const std::vector<CubicBezier>& beziers);
+		
+		/**
+		 * Creates a path given a closed shape made of lines and a corner radius to use to round each corner of the shape
+		 * @param lines A vector of the lines, each element has a line drawn to the next and the last element has a line drawn to the first
+		 * @param cornerRadius The corner radius to use to round the corners of the shape
+		 */
+		Path(const std::vector<Vector2f>& lines, float cornerRadius);
+		
+		/**
+		 * Creates a path given a closed shape of lines, and a corner radius to use to round each corner of the shape
+		 * @param lines A vector of the lines, each element has a line drawn to the next and the last element has a line drawn to the first.
+		 * The second item in the pair is the corner radius to the corner created by the specific point, you can use a negative number or 0 to
+		 * denote no corner rounding.
+		 */
+		Path(const std::vector<std::pair<Vector2f, float>>& lines);
 
 		/**
 		 * Gets the bounding box for this path
@@ -76,6 +101,45 @@ namespace Kale {
 		 * @param value The scalar value
 		 */
 		Path operator*(float value) const;
+
+		/**
+		 * Moves the starting point of the path to a certain point.
+		 * @note This function must be used when there are no beziers in the path,
+		 * and other path modification methods must be used directly after.
+		 * @param pos The position to move to
+		 */
+		void moveTo(Vector2f pos);
+
+		/**
+		 * Moves the path to a new position while drawing a line to the new position.
+		 * @note Do not add beziers manually when using path modification methods
+		 * @param pos The position to draw a line to
+		 */
+		void lineTo(Vector2f pos);
+
+		/**
+		 * Moves the path to a new position while drawing a cubic bezier curve to the new position.
+		 * @note Do not add beziers manually when using path modification methods
+		 * @param controlPoint1 The first control point of the bezier
+		 * @param controlPoint2 The second control point of the bezier
+		 * @param end The ending point of the bezier
+		 */
+		void bezierTo(Vector2f controlPoint1, Vector2f controlPoint2, Vector2f end);
+
+		/**
+		 * Creates an arc (a segment of a circle's circumference) to a point given a center
+		 * @note Do not add beziers manually when using path modification methods
+		 * @param end The ending point where the arc ends
+		 * @param center The center of the circle of which the arc is drawn to
+		 * @param clockwise Whether or not to draw the arc clockwise or counter clockwise to the ending position
+		 */
+		void arcTo(Vector2f end, Vector2f center, bool clockwise);
+
+		/**
+		 * Closes the path allowing for rendering
+		 * @note Do not add beziers manually when using path modification methods, this method closes off the path making it suitable for rendering
+		 */
+		void closePath();
 
 	};
 

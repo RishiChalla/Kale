@@ -20,6 +20,7 @@
 
 #include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Engine/StateAnimatable/StateAnimatable.hpp>
+#include <Kale/Engine/SkeletalAnimatable/SkeletalAnimatable.hpp>
 #include <Kale/Engine/Collidable/Collidable.hpp>
 #include <Kale/Engine/Transformable/Transformable.hpp>
 #include <Kale/Math/Path/Path.hpp>
@@ -28,6 +29,9 @@
 
 #include <memory>
 #include <optional>
+#include <vector>
+#include <array>
+#include <utility>
 
 namespace Kale {
 
@@ -43,6 +47,32 @@ namespace Kale {
 		 */
 		enum class StrokeStyle {
 			Neither = 0, Both = 1, Inside = 2, Outside = 3
+		};
+
+		/**
+		 * Contains the weights required for skinning/skeletal rigging a single cubic bezier curve
+		 */
+		struct BezierWeights {
+			
+			/**
+			 * An array of pairs with the bone index (-1 if none) and the significance of the bone. All weights must add up to 1.
+			 */
+			std::array<std::pair<int, float>, 4> startWeight;
+			
+			/**
+			 * An array of pairs with the bone index (-1 if none) and the significance of the bone. All weights must add up to 1.
+			 */
+			std::array<std::pair<int, float>, 4> controlPoint1Weight;
+			
+			/**
+			 * An array of pairs with the bone index (-1 if none) and the significance of the bone. All weights must add up to 1.
+			 */
+			std::array<std::pair<int, float>, 4> controlPoint2Weight;
+			
+			/**
+			 * An array of pairs with the bone index (-1 if none) and the significance of the bone. All weights must add up to 1.
+			 */
+			std::array<std::pair<int, float>, 4> endWeight;
 		};
 
 	private:
@@ -125,6 +155,23 @@ namespace Kale {
 		 * the map. Access to the FSM must be externally synchronized if done from multiple threads.
 		 */
 		std::optional<StateAnimatable<Path>> pathFSM;
+
+		/**
+		 * A skeletal animatable to use for animating this path node. Both pathFSM and skeletalAnimatable cannot be set at the same time.
+		 */
+		std::shared_ptr<SkeletalAnimatable> skeletalAnimatable;
+
+		/**
+		 * A vector of the skeletal weights for skeletal animations. This must be the same length as the number of beziers in the path, and it must be
+		 * set if skeletalAnimatable isn't nullptr.
+		 */
+		std::optional<std::vector<BezierWeights>> skeletalWeights;
+
+		/**
+		 * An optional path to be used for skeletal rigging. If a skeletal rig is provided, then this base path must be the path where
+		 * all vertices are aligned with the skeleton's base form
+		 */
+		std::optional<Path> basePath;
 
 		/**
 		 * The z position of this node, setting this allows for rendering in front of or behind other nodes.

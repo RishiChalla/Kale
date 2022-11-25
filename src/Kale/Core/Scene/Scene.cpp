@@ -207,7 +207,7 @@ void Scene::update(size_t threadNum, float deltaTime) {
 
 	// Updating
 	onUpdate(threadNum, deltaTime);
-	for (std::shared_ptr<Node>& node : updateNodes[threadNum]) node->preUpdate(threadNum, *this, deltaTime);
+	for (std::shared_ptr<Node>& node : updateNodes[threadNum]) node->update(threadNum, *this, deltaTime);
 }
 
 /**
