@@ -313,5 +313,5 @@ void main() {
 		else if (shouldFill && stroke == 3) outColor = vertexColor;
 		else if (stroke != 2) outColor = strokeColor;
 	}
-	else outColor = vec4(0.0, 0.0, 0.0, 0.0);
+	else discard;
 }

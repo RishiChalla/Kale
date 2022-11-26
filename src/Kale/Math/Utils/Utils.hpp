@@ -19,6 +19,7 @@
 #include <Kale/Math/Constants/Constants.hpp>
 
 #include <limits>
+#include <random>
 
 namespace Kale {
 
@@ -77,6 +78,20 @@ namespace Kale {
 	 */
 	template <typename T> int sign(T val) {
 		return (T(0) < val) - (val < T(0));
+	}
+
+	template <typename T> typename std::enable_if<std::is_floating_point<T>::value, T>::type randomRange(T min, T max) {
+		static thread_local std::random_device randomDevice;
+		static thread_local std::mt19937 generator(randomDevice());
+		std::uniform_real_distribution<T> distribution(min,max);
+		return distribution(generator);
+	}
+
+	template <typename T> typename std::enable_if<std::is_integral<T>::value, T>::type randomRange(T min, T max) {
+		static thread_local std::random_device randomDevice;
+		static thread_local std::mt19937 generator(randomDevice());
+		std::uniform_int_distribution<T> distribution(min,max);
+		return distribution(generator);
 	}
 
 }

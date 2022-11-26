@@ -163,6 +163,9 @@ namespace Kale {
 		static Vector2<T> up() { return {0, 1}; }
 		static Vector2<T> max() { return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max()}; }
 		static Vector2<T> min() { return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min()}; }
+
+		static Vector2<T> random(T min, T max) { return {randomRange<T>(min, max), randomRange<T>(min, max)}; }
+		static Vector2<T> random(T minX, T maxX, T minY, T maxY) { return {randomRange<T>(minX, maxX), randomRange<T>(minY, maxY)}; }
 	};
 
 	/**
@@ -314,6 +317,11 @@ namespace Kale {
 		static Vector3<T> front() { return {0, 0, 1}; }
 		static Vector3<T> max() { return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max()}; }
 		static Vector3<T> min() { return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min()}; }
+
+		static Vector3<T> random(T min, T max) { return {randomRange<T>(min, max), randomRange<T>(min, max), randomRange<T>(min, max)}; }
+		static Vector3<T> random(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) {
+			return {randomRange<T>(minX, maxX), randomRange<T>(minY, maxY), randomRange<T>(minZ, maxZ)};
+		}
 };
 
 	/**
@@ -549,6 +557,12 @@ namespace Kale {
 		}
 		static Vector4<T> min() {
 			return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min()};
+		}
+		static Vector4<T> random(T min, T max) {
+			return {randomRange<T>(min, max), randomRange<T>(min, max), randomRange<T>(min, max), randomRange<T>(min, max)};
+		}
+		static Vector4<T> random(T minX, T maxX, T minY, T maxY, T minZ, T maxZ, T minW, T maxW) {
+			return {randomRange<T>(minX, maxX), randomRange<T>(minY, maxY), randomRange<T>(minZ, maxZ), randomRange<T>(minW, maxW)};
 		}
 	};
 
