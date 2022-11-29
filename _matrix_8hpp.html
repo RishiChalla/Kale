@@ -90,6 +90,7 @@ $(function() {
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
+<code>#include &lt;nlohmann/json.hpp&gt;</code><br />
 </div>
 <p><a href="_matrix_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -147,11 +148,17 @@ Functions</h2></td></tr>
 <tr class="memitem:ae30d94c5b67c13529ba2df9c2444a2d8"><td class="memTemplParams" colspan="2">template&lt;size_t w, size_t h, typename T &gt; </td></tr>
 <tr class="memitem:ae30d94c5b67c13529ba2df9c2444a2d8"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#ae30d94c5b67c13529ba2df9c2444a2d8">Kale::operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="class_kale_1_1_matrix.html">Kale::Matrix</a>&lt; w, h, T &gt; &amp;mat)</td></tr>
 <tr class="separator:ae30d94c5b67c13529ba2df9c2444a2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac47f02fa2d752df33eb3abd7bb8ced0"><td class="memTemplParams" colspan="2">template&lt;size_t w, size_t h, typename T &gt; </td></tr>
+<tr class="memitem:aac47f02fa2d752df33eb3abd7bb8ced0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#aac47f02fa2d752df33eb3abd7bb8ced0">Kale::from_json</a> (const JSON &amp;j, Matrix&lt; w, h, T &gt; &amp;p)</td></tr>
+<tr class="separator:aac47f02fa2d752df33eb3abd7bb8ced0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c6562f6e7f742590ffe1fd922e71d9b"><td class="memTemplParams" colspan="2">template&lt;size_t w, size_t h, typename T &gt; </td></tr>
+<tr class="memitem:a5c6562f6e7f742590ffe1fd922e71d9b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#a5c6562f6e7f742590ffe1fd922e71d9b">Kale::to_json</a> (JSON &amp;j, const Matrix&lt; w, h, T &gt; &amp;p)</td></tr>
+<tr class="separator:a5c6562f6e7f742590ffe1fd922e71d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 26 2022 19:37:27 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Nov 29 2022 22:01:36 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

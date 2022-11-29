@@ -77,10 +77,12 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="class_kale_1_1_scene-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Kale::Scene Class Reference</div></div>
@@ -104,6 +106,8 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad10176d75a9cc0da56626f682d083507"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#ad10176d75a9cc0da56626f682d083507">Scene</a> ()</td></tr>
 <tr class="separator:ad10176d75a9cc0da56626f682d083507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fcc7f1f0fe2029ae741187ab88ca4ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#a9fcc7f1f0fe2029ae741187ab88ca4ce">Scene</a> (const std::string &amp;filename)</td></tr>
+<tr class="separator:a9fcc7f1f0fe2029ae741187ab88ca4ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a661070e9780d0bf23f85f6dd918b525c"><td class="memItemLeft" align="right" valign="top">const std::list&lt; std::shared_ptr&lt; <a class="el" href="class_kale_1_1_node.html">Node</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#a661070e9780d0bf23f85f6dd918b525c">getNodes</a> () const</td></tr>
 <tr class="separator:a661070e9780d0bf23f85f6dd918b525c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86c99b890804afb2b1ceee674eae32cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_kale.html#ab2d143268322153b8af831fe7e72bd05">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#a86c99b890804afb2b1ceee674eae32cc">getBgColor</a> () const</td></tr>
@@ -159,6 +163,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a77f19a62c82d6a834ac59e6d250ba5c3 inherit pub_methods_class_kale_1_1_event_handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a148330218a363ef69478dde64974d379 inherit pub_methods_class_kale_1_1_event_handler"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_event_handler.html#a148330218a363ef69478dde64974d379">onTouchEnd</a> (unsigned int touch)</td></tr>
 <tr class="separator:a148330218a363ef69478dde64974d379 inherit pub_methods_class_kale_1_1_event_handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac379797ce121810dd56adfb9e7d8750a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#ac379797ce121810dd56adfb9e7d8750a">addNodeSaveStateConstructor</a> (const std::string &amp;key, std::function&lt; std::shared_ptr&lt; <a class="el" href="class_kale_1_1_node.html">Node</a> &gt;(<a class="el" href="namespace_kale.html#ac3f47c7078f97c017cdb97341a392b8e">JSON</a>)&gt; constructor)</td></tr>
+<tr class="separator:ac379797ce121810dd56adfb9e7d8750a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -228,6 +237,11 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a9054b96b400a8ec9dfc3c4999fea89e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_kale_1_1_transform.html">Transform</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#a9054b96b400a8ec9dfc3c4999fea89e1">worldToScreen</a></td></tr>
 <tr class="separator:a9054b96b400a8ec9dfc3c4999fea89e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:ad59810774a60b3bf41f4ff9e6e519ead"><td class="memItemLeft" align="right" valign="top">static std::unordered_map&lt; std::string, std::function&lt; std::shared_ptr&lt; <a class="el" href="class_kale_1_1_node.html">Node</a> &gt;(<a class="el" href="namespace_kale.html#ac3f47c7078f97c017cdb97341a392b8e">JSON</a>)&gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#ad59810774a60b3bf41f4ff9e6e519ead">nodeMap</a></td></tr>
+<tr class="separator:ad59810774a60b3bf41f4ff9e6e519ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:a1fd123efa2221c6aedb1526364c57be7"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_scene.html#a1fd123efa2221c6aedb1526364c57be7">Application</a></td></tr>
@@ -238,10 +252,10 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The main scene class for the game This class handles rendering and nodes management </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00037">37</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00045">45</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad10176d75a9cc0da56626f682d083507" name="ad10176d75a9cc0da56626f682d083507"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad10176d75a9cc0da56626f682d083507">&#9670;&#160;</a></span>Scene()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad10176d75a9cc0da56626f682d083507">&#9670;&#160;</a></span>Scene() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,6 +271,32 @@ Friends</h2></td></tr>
 <p >Constructs a new scene </p>
 
 <p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00041">41</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a9fcc7f1f0fe2029ae741187ab88ca4ce" name="a9fcc7f1f0fe2029ae741187ab88ca4ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fcc7f1f0fe2029ae741187ab88ca4ce">&#9670;&#160;</a></span>Scene() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Scene::Scene </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Constructs a new scene from a scene save file </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The filename of the scene JSON file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00060">60</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -293,7 +333,52 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00153">153</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00168">168</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ac379797ce121810dd56adfb9e7d8750a" name="ac379797ce121810dd56adfb9e7d8750a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac379797ce121810dd56adfb9e7d8750a">&#9670;&#160;</a></span>addNodeSaveStateConstructor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void Kale::Scene::addNodeSaveStateConstructor </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; std::shared_ptr&lt; <a class="el" href="class_kale_1_1_node.html">Node</a> &gt;(<a class="el" href="namespace_kale.html#ac3f47c7078f97c017cdb97341a392b8e">JSON</a>)&gt;&#160;</td>
+          <td class="paramname"><em>constructor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Adds a node save state constructor to the map of nodes used for scene loading. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>The key used to identify this type of node </td></tr>
+    <tr><td class="paramname">constructor</td><td>The constructor used to create nodes </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00274">274</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -313,7 +398,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Gets the background color of the scene </p><dl class="section return"><dt>Returns</dt><dd>The background color </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00261">261</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00305">305</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -333,7 +418,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Gets the camera used to render this scene </p><dl class="section return"><dt>Returns</dt><dd>The camera </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00269">269</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00313">313</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -353,7 +438,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Gets the ndoes within the scene </p><dl class="section return"><dt>Returns</dt><dd>The nodes </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00253">253</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00297">297</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -373,7 +458,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number or an unusually large number. This function returns the scene bounds (the x coordinates of the left and right points on the scene display) </p><dl class="section return"><dt>Returns</dt><dd>The window bounds in world coordinates </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00286">286</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00330">330</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -393,7 +478,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Gets the current viewport of the scene </p><dl class="section return"><dt>Returns</dt><dd>The viewport </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00277">277</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00321">321</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -421,7 +506,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Called when the current scene is presented </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00238">238</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00282">282</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -466,7 +551,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00231">231</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00275">275</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -494,7 +579,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Called when the scene is about to be changed </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00245">245</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00289">289</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -539,7 +624,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00220">220</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00264">264</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -580,7 +665,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 
 <p>Reimplemented from <a class="el" href="class_kale_1_1_event_handler.html#a068a1ce78a787bc6a2229f20860e2892">Kale::EventHandler</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00059">59</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00103">103</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -648,7 +733,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00169">169</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00184">184</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -682,7 +767,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00159">159</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00203">203</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -727,7 +812,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00184">184</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00228">228</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -755,7 +840,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Updates the data structures holding nodes based off of the queues, MUST be called on the main thread after the completion of all updates in the frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00073">73</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8cpp_source.html#l00117">117</a> of file <a class="el" href="_scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>
@@ -780,7 +865,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00120">120</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00135">135</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -804,7 +889,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00121">121</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00136">136</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -830,7 +915,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >The background color of the scene to use for clearing the screen </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00128">128</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00143">143</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -855,7 +940,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >The scene's camera for viewing </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00133">133</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00148">148</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -880,7 +965,32 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >The count of frames used for thread synchronization </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00093">93</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00108">108</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad59810774a60b3bf41f4ff9e6e519ead" name="ad59810774a60b3bf41f4ff9e6e519ead"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad59810774a60b3bf41f4ff9e6e519ead">&#9670;&#160;</a></span>nodeMap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;std::string, std::function&lt;std::shared_ptr&lt;<a class="el" href="class_kale_1_1_node.html">Node</a>&gt;(<a class="el" href="namespace_kale.html#ac3f47c7078f97c017cdb97341a392b8e">JSON</a>)&gt; &gt; Kale::Scene::nodeMap</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >A map of strings to a constructor taking a JSON to initialize a node. All nodes capable of save states must be present in this map prior to the first scene's presentation. The best way to do this is via a node setup function, which can be added from application's onBegin to <a class="el" href="class_kale_1_1_application.html">Application</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00053">53</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -905,7 +1015,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Condition variable to check if threads have completed pre updating </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00083">83</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00098">98</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -930,7 +1040,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Mutex used for syncrhonizing pre updates </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00078">78</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00093">93</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -955,7 +1065,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >The mutex used for adding/removing nodes safety </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00073">73</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00088">88</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -980,7 +1090,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >A list of all the nodes to be presented in the current scene </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00043">43</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00058">58</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1005,7 +1115,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >The count of nodes which have pre updated </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00088">88</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00103">103</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1030,7 +1140,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >A queue of nodes to add </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00063">63</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00078">78</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1165,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >A queue of nodes to remove </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00068">68</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00083">83</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1080,7 +1190,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Stores the nodes to be pre updated by their pre update thread </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00053">53</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00068">68</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1105,7 +1215,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Due to the engine being scaled from 1080p, when dealing with wide or tall windows the screen space may start from a negative number or an unusually large number. This variable holds the scene bounds, (the x position of the left &amp; right points on the window) </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00147">147</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00162">162</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1130,7 +1240,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Holds the sum of the update times and pre update times of each set per thread </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00058">58</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00073">73</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1155,7 +1265,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >Stores the nodes to be updated by their update thread </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00048">48</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00063">63</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1180,7 +1290,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >The viewport of the world (the width and height of the screen in the world's coordinates) This always has a height of 1080p and the width is dependant on the screen's aspect ratio. It is recommended to code all nodes based off of the 1080p height and let the engine do the scaling </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00141">141</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00156">156</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1205,7 +1315,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><div class="memdoc">
 <p >The world to screen transformation matrix. Used internally for rendering and converting vertices from world points to screen points. </p>
 
-<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00099">99</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scene_8hpp_source.html#l00114">114</a> of file <a class="el" href="_scene_8hpp_source.html">Scene.hpp</a>.</p>
 
 </div>
 </div>
@@ -1216,7 +1326,7 @@ template&lt;typename <a class="el" href="namespace_kale.html#a02de55a0f503908e04
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 26 2022 19:37:28 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Nov 29 2022 22:01:37 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

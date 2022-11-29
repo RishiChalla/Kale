@@ -89,6 +89,7 @@ $(function() {
 <code>#include &lt;ostream&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
+<code>#include &lt;nlohmann/json.hpp&gt;</code><br />
 </div>
 <p><a href="_vector_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -206,11 +207,29 @@ Functions</h2></td></tr>
 <tr class="memitem:a6a6c3a12d478a8675bbc6917018e2553"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a6a6c3a12d478a8675bbc6917018e2553"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#a6a6c3a12d478a8675bbc6917018e2553">Kale::operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="class_kale_1_1_vector4.html">Kale::Vector4</a>&lt; T &gt; &amp;vec)</td></tr>
 <tr class="separator:a6a6c3a12d478a8675bbc6917018e2553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac058bf6174ba99d0c251812b809a166a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ac058bf6174ba99d0c251812b809a166a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#ac058bf6174ba99d0c251812b809a166a">Kale::from_json</a> (const JSON &amp;j, Vector2&lt; T &gt; &amp;p)</td></tr>
+<tr class="separator:ac058bf6174ba99d0c251812b809a166a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9d651539a0fb6daa78b048f49ebbc73"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:af9d651539a0fb6daa78b048f49ebbc73"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#af9d651539a0fb6daa78b048f49ebbc73">Kale::to_json</a> (JSON &amp;j, const Vector2&lt; T &gt; &amp;p)</td></tr>
+<tr class="separator:af9d651539a0fb6daa78b048f49ebbc73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0886dfc23c499de2d3d925f6cd255a29"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a0886dfc23c499de2d3d925f6cd255a29"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#a0886dfc23c499de2d3d925f6cd255a29">Kale::from_json</a> (const JSON &amp;j, Vector3&lt; T &gt; &amp;p)</td></tr>
+<tr class="separator:a0886dfc23c499de2d3d925f6cd255a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec3f1453673570017046ca219c509a4b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aec3f1453673570017046ca219c509a4b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#aec3f1453673570017046ca219c509a4b">Kale::to_json</a> (JSON &amp;j, const Vector3&lt; T &gt; &amp;p)</td></tr>
+<tr class="separator:aec3f1453673570017046ca219c509a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79fed5bae18c5bb548c016eb340bc859"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a79fed5bae18c5bb548c016eb340bc859"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#a79fed5bae18c5bb548c016eb340bc859">Kale::from_json</a> (const JSON &amp;j, Vector4&lt; T &gt; &amp;p)</td></tr>
+<tr class="separator:a79fed5bae18c5bb548c016eb340bc859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a635e6e271ed93f516c8b9411192b5391"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a635e6e271ed93f516c8b9411192b5391"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_kale.html#a635e6e271ed93f516c8b9411192b5391">Kale::to_json</a> (JSON &amp;j, const Vector4&lt; T &gt; &amp;p)</td></tr>
+<tr class="separator:a635e6e271ed93f516c8b9411192b5391"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 26 2022 19:37:27 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Nov 29 2022 22:01:36 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

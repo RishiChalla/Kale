@@ -1,19 +1,4 @@
 var searchData=
 [
-  ['matrix2d_0',['Matrix2d',['../namespace_kale.html#a900b643aa950b8f931e7c8e2ee6a379a',1,'Kale']]],
-  ['matrix2f_1',['Matrix2f',['../namespace_kale.html#a3d9ca52260def1baf28306c1efcd5ff4',1,'Kale']]],
-  ['matrix2i_2',['Matrix2i',['../namespace_kale.html#a9e5c178f959f572452f01be497b08f6f',1,'Kale']]],
-  ['matrix2l_3',['Matrix2l',['../namespace_kale.html#ad53107343f06123718bed73543f06765',1,'Kale']]],
-  ['matrix3d_4',['Matrix3d',['../namespace_kale.html#a2dbc6005528aa3437a320d3fea7c6364',1,'Kale']]],
-  ['matrix3f_5',['Matrix3f',['../namespace_kale.html#ac5e2ff4444b59fb472e8b76dfa2d9ace',1,'Kale']]],
-  ['matrix3i_6',['Matrix3i',['../namespace_kale.html#a63fbd2ba563891e0736b6d6572869869',1,'Kale']]],
-  ['matrix3l_7',['Matrix3l',['../namespace_kale.html#a7c3cdaf4513186020b7a4de8754c387f',1,'Kale']]],
-  ['matrix4d_8',['Matrix4d',['../namespace_kale.html#ad544e83267effac758d1effea3771844',1,'Kale']]],
-  ['matrix4f_9',['Matrix4f',['../namespace_kale.html#ae91e9a4d03e1edf8b8df102a7ed68335',1,'Kale']]],
-  ['matrix4i_10',['Matrix4i',['../namespace_kale.html#a9449b9a57d8301d20efadb340afe2218',1,'Kale']]],
-  ['matrix4l_11',['Matrix4l',['../namespace_kale.html#ac04975947a954ad714cd89d46fd5683e',1,'Kale']]],
-  ['matrixd_12',['MatrixD',['../namespace_kale.html#ab9fe369e6b0eaae748ffe79d2be9a38f',1,'Kale']]],
-  ['matrixf_13',['MatrixF',['../namespace_kale.html#a05b92f09a6a869a3bd3eefed9a6e699f',1,'Kale']]],
-  ['matrixi_14',['MatrixI',['../namespace_kale.html#a258bdfa613ef182b5905ee075f9f4aaa',1,'Kale']]],
-  ['matrixl_15',['MatrixL',['../namespace_kale.html#a51f63cdc62d80469f08d343f22608d96',1,'Kale']]]
+  ['json_0',['JSON',['../namespace_kale.html#ac3f47c7078f97c017cdb97341a392b8e',1,'Kale']]]
 ];

@@ -101,6 +101,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a903b671676583972af010ce7de07c93a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_node.html#a903b671676583972af010ce7de07c93a">name</a></td></tr>
+<tr class="separator:a903b671676583972af010ce7de07c93a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1428bedee3e0dcf9f2eb2c92129d29ce"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_node.html#a1428bedee3e0dcf9f2eb2c92129d29ce">updateTime</a> = 100.0f</td></tr>
 <tr class="separator:a1428bedee3e0dcf9f2eb2c92129d29ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc9bfb90371aa88d21ddea6cb6a52006"><td class="memItemLeft" align="right" valign="top">const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_node.html#adc9bfb90371aa88d21ddea6cb6a52006">preUpdateTime</a> = 100.0f</td></tr>
@@ -120,8 +122,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:ae26ecd36aad86bdf5fcc7738449415c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7a34779cad45d997bfd6d3d8043c75f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_node.html#ad7a34779cad45d997bfd6d3d8043c75f">Node</a> ()</td></tr>
 <tr class="separator:ad7a34779cad45d997bfd6d3d8043c75f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8feb974a5e0ac8a1706285a7ab48a15"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_node.html#ac8feb974a5e0ac8a1706285a7ab48a15">Node</a> (float <a class="el" href="class_kale_1_1_node.html#a1428bedee3e0dcf9f2eb2c92129d29ce">updateTime</a>)</td></tr>
-<tr class="separator:ac8feb974a5e0ac8a1706285a7ab48a15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2967dfc39937e85e764ca9e2a4abca62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_kale_1_1_node.html#a2967dfc39937e85e764ca9e2a4abca62">Node</a> (float <a class="el" href="class_kale_1_1_node.html#adc9bfb90371aa88d21ddea6cb6a52006">preUpdateTime</a>, float <a class="el" href="class_kale_1_1_node.html#a1428bedee3e0dcf9f2eb2c92129d29ce">updateTime</a>)</td></tr>
+<tr class="separator:a2967dfc39937e85e764ca9e2a4abca62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -166,8 +168,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="ac8feb974a5e0ac8a1706285a7ab48a15" name="ac8feb974a5e0ac8a1706285a7ab48a15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8feb974a5e0ac8a1706285a7ab48a15">&#9670;&#160;</a></span>Node() <span class="overload">[2/2]</span></h2>
+<a id="a2967dfc39937e85e764ca9e2a4abca62" name="a2967dfc39937e85e764ca9e2a4abca62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2967dfc39937e85e764ca9e2a4abca62">&#9670;&#160;</a></span>Node() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,8 +181,18 @@ Friends</h2></td></tr>
           <td class="memname">Node::Node </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>updateTime</em></td><td>)</td>
+          <td class="paramname"><em>preUpdateTime</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>updateTime</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -191,12 +203,13 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 <p >Creates the node parent </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">preUpdateTime</td><td>The average pre update time, please see <a class="el" href="class_kale_1_1_node.html#adc9bfb90371aa88d21ddea6cb6a52006">Node::preUpdateTime</a> for documentation </td></tr>
     <tr><td class="paramname">updateTime</td><td>The average update time, please see <a class="el" href="class_kale_1_1_node.html#a1428bedee3e0dcf9f2eb2c92129d29ce">Node::updateTime</a> for documentation </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00032">32</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00033">33</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
 
 </div>
 </div>
@@ -233,7 +246,7 @@ Friends</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_kale_1_1_path_node.html#acda6d7bfcfdb29f1b14f9fb9e4d3728a">Kale::PathNode&lt; T &gt;</a>, and <a class="el" href="class_kale_1_1_path_node.html#a16822247a3d5e13542e749c29fef5eb3">Kale::PathNode&lt; T &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00041">41</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00042">42</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
 
 </div>
 </div>
@@ -264,7 +277,7 @@ Friends</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_kale_1_1_path_node.html#ac831e6fce4eca23061c8d3e5de286a4b">Kale::PathNode&lt; T &gt;</a>, and <a class="el" href="class_kale_1_1_path_node.html#aaea3139de3477a55de00588643bb07cb">Kale::PathNode&lt; T &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00076">76</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00077">77</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
 
 </div>
 </div>
@@ -318,7 +331,7 @@ Friends</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_kale_1_1_path_node.html#a3ecb7ed01b7c66f8565d371279b0b659">Kale::PathNode&lt; T &gt;</a>, and <a class="el" href="class_kale_1_1_skeletal_animatable.html#ad57d4f010ffc38ba7263443a86572a15">Kale::SkeletalAnimatable</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00069">69</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00070">70</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
 
 </div>
 </div>
@@ -364,7 +377,7 @@ Friends</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_kale_1_1_path_node.html#a451ea83e568d517f1abb593a567af937">Kale::PathNode&lt; T &gt;</a>, and <a class="el" href="class_kale_1_1_path_node.html#ad8ddf5f815ac0e3139fce998bacf5a2f">Kale::PathNode&lt; T &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00049">49</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00050">50</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
 
 </div>
 </div>
@@ -418,7 +431,7 @@ Friends</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_kale_1_1_skeletal_animatable.html#a31e513be8d9598bbed021b634506918c">Kale::SkeletalAnimatable</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00059">59</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8cpp_source.html#l00060">60</a> of file <a class="el" href="_node_8cpp_source.html">Node.cpp</a>.</p>
 
 </div>
 </div>
@@ -443,7 +456,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_node_8hpp_source.html#l00090">90</a> of file <a class="el" href="_node_8hpp_source.html">Node.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8hpp_source.html#l00091">91</a> of file <a class="el" href="_node_8hpp_source.html">Node.hpp</a>.</p>
 
 </div>
 </div>
@@ -473,6 +486,23 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a903b671676583972af010ce7de07c93a" name="a903b671676583972af010ce7de07c93a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a903b671676583972af010ce7de07c93a">&#9670;&#160;</a></span>name</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Kale::Node::name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The name of this node, optional and does not have to be unique. Making it unique allows for easy access to nodes however. </p>
+
+<p class="definition">Definition at line <a class="el" href="_node_8hpp_source.html#l00098">98</a> of file <a class="el" href="_node_8hpp_source.html">Node.hpp</a>.</p>
+
+</div>
+</div>
 <a id="adc9bfb90371aa88d21ddea6cb6a52006" name="adc9bfb90371aa88d21ddea6cb6a52006"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adc9bfb90371aa88d21ddea6cb6a52006">&#9670;&#160;</a></span>preUpdateTime</h2>
 
@@ -486,7 +516,7 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 <p >The amount of time this node takes to pre-update on average, measured and used similarly to updateTime. </p>
 
-<p class="definition">Definition at line <a class="el" href="_node_8hpp_source.html#l00107">107</a> of file <a class="el" href="_node_8hpp_source.html">Node.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8hpp_source.html#l00113">113</a> of file <a class="el" href="_node_8hpp_source.html">Node.hpp</a>.</p>
 
 </div>
 </div>
@@ -504,7 +534,7 @@ Friends</h2></td></tr>
 <p >The amount of time (in microseconds) this node takes to update on average</p>
 <p >You can gain this statistic using the <a class="el" href="namespace_kale.html">Kale</a> Editor calibration tools. This measure is device specific, when developing on multiple devices it is recommended that you use a low powered device for calibration, the same device must be used for calibrating all nodes to avoid potential bias </p>
 
-<p class="definition">Definition at line <a class="el" href="_node_8hpp_source.html#l00102">102</a> of file <a class="el" href="_node_8hpp_source.html">Node.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_node_8hpp_source.html#l00108">108</a> of file <a class="el" href="_node_8hpp_source.html">Node.hpp</a>.</p>
 
 </div>
 </div>
@@ -515,7 +545,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 26 2022 19:37:27 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Nov 29 2022 22:01:37 for Kale by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>
