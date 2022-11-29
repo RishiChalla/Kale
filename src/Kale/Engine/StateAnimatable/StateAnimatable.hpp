@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include <Kale/Core/Logger/Logger.hpp>
 #include <Kale/Engine/Node/Node.hpp>
 
 #include <unordered_map>
@@ -21,7 +22,15 @@
 #include <mutex>
 #include <memory>
 
+#include <nlohmann/json.hpp>
+
 namespace Kale {
+
+	/**
+	 * Javascript Standard Object Notation allows for saving and using permanent configuration files, via the nlohmann/json C++
+	 * library.
+	 */
+	using JSON = nlohmann::json;
 
 	/**
 	 * This class allows for nodes to have animation states and to lerp between them.
@@ -76,6 +85,43 @@ namespace Kale {
 		bool animationLoop;
 		
 	public:
+
+		/**
+		 * Default constructor
+		 */
+		StateAnimatable() {}
+
+		/**
+		 * Creates a state animatable from a JSON config
+		 * @param json The json
+		 */
+		StateAnimatable(JSON json) {
+			// Loop through the structures & set them
+			for (const std::pair<std::string, S>& pair : json["structures"].get<std::unordered_map<std::string, S>>())
+				structures[std::stoi(pair.first)] = pair.second;
+			
+			// Set the first state if applicable
+			if (json.contains("state")) setState<int>(json["state"].get<int>());
+
+			// Start animating if applicable
+			if (json.contains("animation")) {
+				// Get the animation subset of the json
+				JSON animationInfo = json["animation"];
+
+				// Get the type of animation and convert it to lowercase (loop or once)
+				std::string type = animationInfo["type"].get<std::string>();
+				std::transform(type.begin(), type.end(), type.begin(), [](char c) -> char { return std::tolower(c); });
+				
+				// Get the stages data
+				std::vector<std::pair<int, float>> stages;
+				std::vector<JSON> stagesJson = animationInfo["stages"].get<std::vector<JSON>>();
+				for (const JSON& json : stagesJson) stages.push_back(std::make_pair(json["state"].get<int>(), json["duration"].get<float>()));
+
+				// Animate based on the type
+				if (type == "loop") animateLoop(stages);
+				if (type == "once") animateOnce(stages);
+			}
+		}
 
 		/**
 		 * Updates the state of the node

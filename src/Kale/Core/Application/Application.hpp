@@ -41,8 +41,17 @@ namespace Kale {
 	 * The main Application class
 	 */
 	class Application {
-
 	private:
+
+		/**
+		 * A vector of setup functions required for individual nodes
+		 */
+		static std::vector<std::function<void()>> nodeSetupFuncs;
+		
+		/**
+		 * A vector of cleanup functions required for individual nodes
+		 */
+		static std::vector<std::function<void()>> nodeCleanupFuncs;
 		
 		/**
 		 * A list of the update threads
@@ -95,12 +104,6 @@ namespace Kale {
 		float deltaTime;
 
 		/**
-		 * Handles updating the application in a separate thread
-		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
-		 */
-		void update(size_t threadNum) noexcept;
-
-		/**
 		 * A pointer to the current scene to render
 		 */
 		std::shared_ptr<Scene> presentedScene;
@@ -109,6 +112,12 @@ namespace Kale {
 		 * A pointer to the scene to be presented
 		 */
 		std::shared_ptr<Scene> sceneToPresent;
+
+		/**
+		 * Handles updating the application in a separate thread
+		 * @param threadNum the index of this thread, ranged 0 - numUpdateThreads
+		 */
+		void update(size_t threadNum) noexcept;
 
 		/**
 		 * Synchronizes udpates
@@ -206,6 +215,24 @@ namespace Kale {
 		 * @returns The path to the assets folder
 		 */
 		std::string getAssetFolderPath() const;
+
+		/**
+		 * Adds a node setup function to the list of methods to be called when setting up nodes
+		 * Node setups are a one time process, called before any scene is loaded and after application's on begin
+		 * @param func The function to be called
+		 */
+		static void addNodeSetupFunction(std::function<void()> func) {
+			nodeSetupFuncs.push_back(func);
+		}
+
+		/**
+		 * Adds a node cleanup function to the list of methods to be called when cleaning up nodes
+		 * Node cleanups are a one time process called prior to the application closing. It is done after application's onEnd
+		 * @param func The function to be called
+		 */
+		static void addNodeCleanupFunction(std::function<void()> func) {
+			nodeCleanupFuncs.push_back(func);
+		}
 	};
 
 	/**

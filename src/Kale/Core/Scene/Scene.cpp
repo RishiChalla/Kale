@@ -54,6 +54,50 @@ Scene::Scene() {
 }
 
 /**
+ * Constructs a new scene from a scene save file
+ * @param filename The filename of the scene JSON file
+ */
+Scene::Scene(const std::string& filename) {
+
+	// Default Setup
+	updateNodes.resize(std::thread::hardware_concurrency());
+	preUpdateNodes.resize(std::thread::hardware_concurrency());
+	threadedNodePerformanceTimes.resize(std::thread::hardware_concurrency());
+	nodesPreUpdated = std::thread::hardware_concurrency();
+	generation = 0;
+
+	Vector2f size = mainApp->getWindow().getFramebufferSize().cast<float>();
+	viewport = {size.x * 1080.0f / size.y, 1080.0f};
+
+	worldToScreen.scale(2.0f / viewport);
+	worldToScreen.translate(Vector2f(1920.0f, 1080.0f) / -2.0f);
+	sceneBounds = Rect{{(1920.0f - viewport.x) / 2.0f, 1080.0f}, {(1920.0f + viewport.x) / 2.0f, 0.0f}};
+
+	// Run the loading on the main thread, this way it is done after the node map is populated and is done without concern for where
+	// the constructor is called from
+	mainApp->runTaskOnMainThread([&, filename]() {
+		try {
+			// Load json from file
+			std::ifstream jsonFile(mainApp->getAssetFolderPath() + filename);
+			JSON sceneConfig = JSON::parse(jsonFile, nullptr, true, true);
+			bgColor = sceneConfig["bgColor"].get<Color>();
+			camera = sceneConfig["camera"].get<Camera>();
+
+			// Get the nodes in JSON form then loop through them and parse them/add them
+			std::vector<JSON> nodes = sceneConfig["nodes"].get<std::vector<JSON>>();
+			for (const JSON& json : nodes) {
+				std::shared_ptr<Node> node = nodeMap[json["node"].get<std::string>()](json);
+				addNode(node);
+			}
+		}
+		catch (const std::exception& e) {
+			using namespace std::string_literals;
+			console.warn("Scene Loading Failed - "s + e.what());
+		}
+	});
+}
+
+/**
  * Called when the event is fired
  */
 void Scene::onWindowResize(Vector2ui oldSize, Vector2ui newSize) {

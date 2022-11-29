@@ -18,6 +18,7 @@
 
 #ifdef KALE_OPENGL
 
+#include <Kale/Core/Scene/Scene.hpp>
 #include <Kale/Engine/Node/Node.hpp>
 #include <Kale/Engine/StateAnimatable/StateAnimatable.hpp>
 #include <Kale/Engine/SkeletalAnimatable/SkeletalAnimatable.hpp>
@@ -33,7 +34,15 @@
 #include <array>
 #include <utility>
 
+#include <nlohmann/json.hpp>
+
 namespace Kale {
+
+	/**
+	 * Javascript Standard Object Notation allows for saving and using permanent configuration files, via the nlohmann/json C++
+	 * library.
+	 */
+	using JSON = nlohmann::json;
 
 	/**
 	 * Used for rendering filled bezier paths
@@ -208,6 +217,12 @@ namespace Kale {
 		 * Creates a blank pathnode with nothing to render
 		 */
 		PathNode();
+
+		/**
+		 * Creates a path node based on the json saved values
+		 * @param json The json saved values
+		 */
+		PathNode(const JSON& json);
 
 		/**
 		 * Creates a path node given the path to use

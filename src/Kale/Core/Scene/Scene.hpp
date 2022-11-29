@@ -28,7 +28,15 @@
 #include <mutex>
 #include <condition_variable>
 
+#include <nlohmann/json.hpp>
+
 namespace Kale {
+
+	/**
+	 * Javascript Standard Object Notation allows for saving and using permanent configuration files, via the nlohmann/json C++
+	 * library.
+	 */
+	using JSON = nlohmann::json;
 	
 	/**
 	 * The main scene class for the game
@@ -36,6 +44,13 @@ namespace Kale {
 	 */
 	class Scene : public EventHandler {
 	private:
+
+		/**
+		 * A map of strings to a constructor taking a JSON to initialize a node. All nodes capable of save states must be present in this
+		 * map prior to the first scene's presentation. The best way to do this is via a node setup function, which can be added from
+		 * application's onBegin to Application.
+		 */
+		inline static std::unordered_map<std::string, std::function<std::shared_ptr<Node>(JSON)>> nodeMap;
 
 		/**
 		 * A list of all the nodes to be presented in the current scene
@@ -215,6 +230,12 @@ namespace Kale {
 		Scene();
 
 		/**
+		 * Constructs a new scene from a scene save file
+		 * @param filename The filename of the scene JSON file
+		 */
+		Scene(const std::string& filename);
+
+		/**
 		 * Gets the ndoes within the scene
 		 * @returns The nodes
 		 */
@@ -244,6 +265,15 @@ namespace Kale {
 		 * @returns The window bounds in world coordinates
 		 */
 		Rect getSceneBounds() const;
+
+		/**
+		 * Adds a node save state constructor to the map of nodes used for scene loading.
+		 * @param key The key used to identify this type of node
+		 * @param constructor The constructor used to create nodes
+		 */
+		static void addNodeSaveStateConstructor(const std::string& key, std::function<std::shared_ptr<Node>(JSON)> constructor) {
+			nodeMap[key] = constructor;
+		}
 
 	};
 }

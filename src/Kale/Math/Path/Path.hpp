@@ -24,7 +24,15 @@
 #include <ostream>
 #include <utility>
 
+#include <nlohmann/json.hpp>
+
 namespace Kale {
+
+	/**
+	 * Javascript Standard Object Notation allows for saving and using permanent configuration files, via the nlohmann/json C++
+	 * library.
+	 */
+	using JSON = nlohmann::json;
 
 	/**
 	 * Represents a single cubic bezier
@@ -152,5 +160,36 @@ namespace Kale {
 	 * Prints a path to an output stream
 	 */
 	std::ostream& operator<<(std::ostream& os, const Path& path);
-}
 
+	/**
+	 * Creates a bezier from a json
+	 */
+	inline void from_json(const JSON& j, CubicBezier& p) {
+		p.start = j["P0"].get<Vector2f>();
+		p.controlPoint1 = j["P1"].get<Vector2f>();
+		p.controlPoint2 = j["P2"].get<Vector2f>();
+		p.end = j["P3"].get<Vector2f>();
+	}
+
+	/**
+	 * Populates a json from a bezier
+	 */
+	inline void to_json(JSON& j, const CubicBezier& p) {
+		j = {{"P0", p.start}, {"P1", p.controlPoint1}, {"P2", p.controlPoint2}, {"P3", p.end}};
+	}
+
+	/**
+	 * Creates a path from a json
+	 */
+	inline void from_json(const JSON& j, Path& p) {
+		p.beziers = j.get<std::vector<CubicBezier>>();
+	}
+
+	/**
+	 * Populates a json from a path
+	 */
+	inline void to_json(JSON& j, const Path& p) {
+		j = JSON(p.beziers);
+	}
+
+}

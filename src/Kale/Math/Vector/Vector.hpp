@@ -24,7 +24,15 @@
 #include <type_traits>
 #include <limits>
 
+#include <nlohmann/json.hpp>
+
 namespace Kale {
+
+	/**
+	 * Javascript Standard Object Notation allows for saving and using permanent configuration files, via the nlohmann/json C++
+	 * library.
+	 */
+	using JSON = nlohmann::json;
 
 	/**
 	 * Represents a vector in a 2 dimensional space
@@ -638,6 +646,68 @@ namespace Kale {
 	std::ostream& operator<<(std::ostream& os, const Kale::Vector4<T>& vec) {
 		os << "Vec4(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")";
 		return os;
+	}
+
+	/**
+	 * Creates a vector from a json
+	 */
+	template <typename T>
+	void from_json(const JSON& j, Vector2<T>& p) {
+		p.x = j["x"].get<T>();
+		p.y = j["y"].get<T>();
+	}
+
+	/**
+	 * Populates a json from a vector
+	 */
+	template <typename T>
+	void to_json(JSON& j, const Vector2<T>& p) {
+		j = JSON{{"x", p.x}, {"y", p.y}};
+	}
+
+	/**
+	 * Creates a vector from a json
+	 */
+	template <typename T>
+	void from_json(const JSON& j, Vector3<T>& p) {
+		p.x = j["x"].get<T>();
+		p.y = j["y"].get<T>();
+		p.z = j["z"].get<T>();
+	}
+
+	/**
+	 * Populates a json from a vector
+	 */
+	template <typename T>
+	void to_json(JSON& j, const Vector3<T>& p) {
+		j = JSON{{"x", p.x}, {"y", p.y}, {"z", p.z}};
+	}
+
+	/**
+	 * Creates a vector from a json
+	 */
+	template <typename T>
+	void from_json(const JSON& j, Vector4<T>& p) {
+		if (j.contains("x")) {
+			p.x = j["x"].get<T>();
+			p.y = j["y"].get<T>();
+			p.z = j["z"].get<T>();
+			p.w = j["w"].get<T>();
+		}
+		else {
+			p.x = j["r"].get<T>();
+			p.y = j["g"].get<T>();
+			p.z = j["b"].get<T>();
+			p.w = j["a"].get<T>();
+		}
+	}
+
+	/**
+	 * Populates a json from a vector
+	 */
+	template <typename T>
+	void to_json(JSON& j, const Vector4<T>& p) {
+		j = JSON{{"x", p.x}, {"y", p.y}, {"z", p.z}, {"w", p.w}};
 	}
 
 }

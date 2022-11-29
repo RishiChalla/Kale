@@ -27,10 +27,11 @@ Node::Node() {
 
 /**
  * Creates the node parent
+ * @param preUpdateTime The average pre update time, please see Node::preUpdateTime for documentation
  * @param updateTime The average update time, please see Node::updateTime for documentation
  */
-Node::Node(float updateTime) : updateTime(updateTime) {
-	// Empty Body
+Node::Node(float preUpdateTime, float updateTime) : preUpdateTime(preUpdateTime), updateTime(updateTime) {
+   // Empty Body
 }
 
 /**

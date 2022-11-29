@@ -26,7 +26,15 @@
 
 #include <type_traits>
 
+#include <nlohmann/json.hpp>
+
 namespace Kale {
+
+	/**
+	 * Javascript Standard Object Notation allows for saving and using permanent configuration files, via the nlohmann/json C++
+	 * library.
+	 */
+	using JSON = nlohmann::json;
 
 	/**
 	 * Represents a single transformation matrix.
@@ -322,5 +330,19 @@ namespace Kale {
 	 * Represents a camera for viewing scenes (This is just a typedef of Transform)
 	 */
 	typedef Transform Camera;
+
+	/**
+	 * Creates a matrix from a json
+	 */
+	inline void from_json(const JSON& j, Transform& p) {
+		from_json(j, dynamic_cast<Matrix3f&>(p));
+	}
+
+	/**
+	 * Populates a json from a matrix
+	 */
+	inline void to_json(JSON& j, const Transform& p) {
+		to_json(j, dynamic_cast<const Matrix3f&>(p));
+	}
 
 }

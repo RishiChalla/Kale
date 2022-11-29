@@ -29,7 +29,15 @@
 #include <stdexcept>
 #endif
 
+#include <nlohmann/json.hpp>
+
 namespace Kale {
+
+	/**
+	 * Javascript Standard Object Notation allows for saving and using permanent configuration files, via the nlohmann/json C++
+	 * library.
+	 */
+	using JSON = nlohmann::json;
 	
 	/**
 	 * Represents a single matrix
@@ -522,6 +530,22 @@ namespace Kale {
 			}
 		}
 		return os;
+	}
+
+	/**
+	 * Creates a matrix from a json
+	 */
+	template <size_t w, size_t h, typename T>
+	void from_json(const JSON& j, Matrix<w, h, T>& p) {
+		p = j.get<std::array<T, w*h>>();
+	}
+
+	/**
+	 * Populates a json from a matrix
+	 */
+	template <size_t w, size_t h, typename T>
+	void to_json(JSON& j, const Matrix<w, h, T>& p) {
+		j = JSON(p.data);
 	}
 
 }

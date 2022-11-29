@@ -29,8 +29,12 @@ using namespace Kale;
  * Creates and compiles shaders if not already compiled/created
  */
 void PathNode::setup() {
-	if (shader != nullptr) return;
 
+	// Add PathNodes to the scene node loading map
+	Scene::addNodeSaveStateConstructor("PathNode", [](JSON json) -> std::shared_ptr<Node> {
+		return std::make_shared<PathNode>(json);
+	});
+	
 	// Get shader paths
 	const std::string vertShaderPath = mainApp->getAssetFolderPath() + "shaders/PathNode.vert";
 	const std::string fragShaderPath = mainApp->getAssetFolderPath() + "shaders/PathNode.frag";
@@ -198,6 +202,30 @@ void PathNode::end(const Scene& scene) {
  */
 PathNode::PathNode() {
 	// Empty Body
+}
+
+/**
+ * Creates a path node based on the json saved values
+ * @param json The json saved values
+ */
+PathNode::PathNode(const JSON& json) : Node(json.value("preUpdateTime", 100.0f), json.value("updateTime", 100.0f)) {
+	// Load Basic Properties
+	if (json.contains("name")) name = json["name"].get<std::string>();
+	if (json.contains("transform")) Transformable::transform = json["transform"].get<Transform>();
+	if (json.contains("zPosition")) zPosition = json["zPosition"].get<float>();
+	if (json.contains("fill")) fill = json["fill"].get<bool>();
+	if (json.contains("stroke")) stroke = static_cast<StrokeStyle>(json["stroke"].get<int>());
+	if (json.contains("strokeRadius")) strokeRadius = json["strokeRadius"].get<float>();
+	if (json.contains("color")) color = json["color"].get<Color>();
+	if (json.contains("strokeColor")) strokeColor = json["strokeColor"].get<Color>();
+	if (json.contains("path")) path = json["path"].get<Path>();
+
+	// Load FSMs 
+	if (json.contains("transformFSM")) transformFSM = StateAnimatable<Transform>(json["transformFSM"]);
+	if (json.contains("pathFSM")) {
+		pathFSM = StateAnimatable<Path>(json["pathFSM"]);
+		path.beziers.resize(pathFSM->getStructure(pathFSM->getStateComposition<int>()[0].first).beziers.size());
+	}
 }
 
 /**

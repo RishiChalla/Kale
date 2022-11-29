@@ -83,13 +83,19 @@ namespace Kale {
 
 		/**
 		 * Creates the node parent
+		 * @param preUpdateTime The average pre update time, please see Node::preUpdateTime for documentation
 		 * @param updateTime The average update time, please see Node::updateTime for documentation
 		 */
-		Node(float updateTime);
+		Node(float preUpdateTime, float updateTime);
 
 		friend class Scene;
 	
 	public:
+
+		/**
+		 * The name of this node, optional and does not have to be unique. Making it unique allows for easy access to nodes however.
+		 */
+		std::string name;
 
 		/**
 		 * The amount of time (in microseconds) this node takes to update on average

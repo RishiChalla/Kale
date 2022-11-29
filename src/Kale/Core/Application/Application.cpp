@@ -33,6 +33,16 @@
 using namespace Kale;
 
 /**
+ * A vector of setup functions required for individual nodes
+ */
+std::vector<std::function<void()>> Application::nodeSetupFuncs = { PathNode::setup };
+
+/**
+ * A vector of cleanup functions required for individual nodes
+ */
+std::vector<std::function<void()>> Application::nodeCleanupFuncs = { PathNode::cleanup };
+
+/**
  * Creates a new application instance
  * @param applicationName The name of your application
  */
@@ -183,7 +193,7 @@ void Application::run() noexcept {
 
 	// Setup nodes
 	try {
-		PathNode::setup();
+		for (std::function<void()> setupFunc : nodeSetupFuncs) setupFunc();
 	}
 	catch (const std::exception& e) {
 		console.error("Terminating application due to failure to setup nodes - "s + e.what());
@@ -258,7 +268,7 @@ void Application::run() noexcept {
 
 	// Cleanup nodes
 	try {
-		PathNode::cleanup();
+		for (std::function<void()> cleanupFunc : nodeCleanupFuncs) cleanupFunc();
 	}
 	catch (const std::exception& e) {
 		console.error("Terminating application due to failure to cleanup nodes - "s + e.what());
