@@ -148,6 +148,9 @@ namespace Kale {
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector2<T>>::type unit() const {
 			return *this / magnitude();
 		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, float>::type dist(Vector2<T> o) const {
+			return (*this - o).magnitude();
+		}
 
 		Vector2<T> perpendicular(Vector2<T> o) const {
 			return {x + o.y - y, y - o.x + x};
@@ -276,6 +279,9 @@ namespace Kale {
 		T dot(Vector3<T> o) const { return o.x * x + o.y * y + o.z * z; }
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, T>::type magnitude() const {
 			return sqrt(x * x + y * y + z * z);
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, float>::type dist(Vector3<T> o) const {
+			return (*this - o).magnitude();
 		}
 
 		Vector3<T> clamp(T minX, T maxX, T minY, T maxY, T minZ, T maxZ) const {
@@ -493,6 +499,9 @@ namespace Kale {
 
 		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, Vector4<T>>::type unit() const {
 			return *this / magnitude();
+		}
+		template <typename A = T> typename std::enable_if<std::is_floating_point<A>::value, float>::type dist(Vector4<T> o) const {
+			return (*this - o).magnitude();
 		}
 
 		Vector2<T> xy() const { return {x, y}; }
