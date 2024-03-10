@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['addchild_0',['addChild',['../struct_kale_1_1_tree_1_1_child.html#ad5875b3f6a262be5d64afe10ca7cab31',1,'Kale::Tree::Child::addChild(const T &amp;value)'],['../struct_kale_1_1_tree_1_1_child.html#a6e02b6edbfe51375e0e3ee4c6da3b53c',1,'Kale::Tree::Child::addChild()']]],
+  ['addchild_0',['addChild',['../struct_kale_1_1_tree_1_1_child.html#a6e02b6edbfe51375e0e3ee4c6da3b53c',1,'Kale::Tree::Child::addChild()'],['../struct_kale_1_1_tree_1_1_child.html#ad5875b3f6a262be5d64afe10ca7cab31',1,'Kale::Tree::Child::addChild(const T &amp;value)']]],
   ['addnode_1',['addNode',['../class_kale_1_1_scene.html#a7b574c53033a942d2502bfcd84a797f3',1,'Kale::Scene']]],
   ['addnodecleanupfunction_2',['addNodeCleanupFunction',['../class_kale_1_1_application.html#aa76217128db4dd9a14b725063b659f0e',1,'Kale::Application']]],
   ['addnodesavestateconstructor_3',['addNodeSaveStateConstructor',['../class_kale_1_1_scene.html#ac379797ce121810dd56adfb9e7d8750a',1,'Kale::Scene']]],

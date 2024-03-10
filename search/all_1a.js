@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['z_0',['z',['../class_kale_1_1_vector4.html#ad6f05dbe1bc0d089b0f93943aff16dfb',1,'Kale::Vector4::z()'],['../class_kale_1_1_vector3.html#ae52312467cb5bc943eafb1c2cf44647f',1,'Kale::Vector3::z()']]],
+  ['z_0',['z',['../class_kale_1_1_vector3.html#ae52312467cb5bc943eafb1c2cf44647f',1,'Kale::Vector3::z'],['../class_kale_1_1_vector4.html#ad6f05dbe1bc0d089b0f93943aff16dfb',1,'Kale::Vector4::z']]],
   ['z_1',['Z',['../namespace_kale.html#a02de55a0f503908e04653511e666e796a21c2e59531c8710156d34a3c30ac81d5',1,'Kale']]],
-  ['zero_2',['Zero',['../namespace_kale.html#a02de55a0f503908e04653511e666e796ad7ed4ee1df437474d005188535f74875',1,'Kale']]],
-  ['zero_3',['zero',['../class_kale_1_1_vector4.html#a4ed38432c0235e009534719e15fefed7',1,'Kale::Vector4::zero()'],['../class_kale_1_1_vector2.html#a701970b5ae92ba48a885eaea3ed40be1',1,'Kale::Vector2::zero()'],['../class_kale_1_1_vector3.html#a3ac6fc204e8ca1bdf51b8bd787654418',1,'Kale::Vector3::zero()']]],
+  ['zero_2',['zero',['../class_kale_1_1_vector2.html#a701970b5ae92ba48a885eaea3ed40be1',1,'Kale::Vector2::zero()'],['../class_kale_1_1_vector3.html#a3ac6fc204e8ca1bdf51b8bd787654418',1,'Kale::Vector3::zero()'],['../class_kale_1_1_vector4.html#a4ed38432c0235e009534719e15fefed7',1,'Kale::Vector4::zero()']]],
+  ['zero_3',['Zero',['../namespace_kale.html#a02de55a0f503908e04653511e666e796ad7ed4ee1df437474d005188535f74875',1,'Kale']]],
   ['zposition_4',['zPosition',['../class_kale_1_1_path_node.html#ad46cc45b1f1064bac981ecfce4aa819a',1,'Kale::PathNode']]],
   ['zpositionuniform_5',['zPositionUniform',['../class_kale_1_1_path_node.html#a4e53b1cba0d98ae680d8256e3b464bad',1,'Kale::PathNode']]],
   ['zw_6',['zw',['../class_kale_1_1_vector4.html#a2371045562005ba5810e876e1cbacb18',1,'Kale::Vector4']]],

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['creating_20_26_20setting_20up_20a_20scene_0',['Creating &amp; Setting up a Scene',['../md_src__kale__docs__scene_setup.html',1,'']]],
-  ['cubic_20beziers_20_26_20bezier_20paths_1',['Cubic Beziers &amp; Bezier Paths',['../md_src__kale__docs__bezier.html',1,'']]]
+  ['a_20scene_0',['Creating &amp; Setting up a Scene',['../scene_setup.html',1,'']]],
+  ['and_20the_20math_20library_1',['Using Vectors, Matrices, Transforms, and the Math Library',['../math.html',1,'']]],
+  ['and_20vulkan_20directly_2',['Using OpenGL and Vulkan directly',['../openglvk.html',1,'']]],
+  ['animation_20system_3',['Animation System',['../skeletal_animation.html',1,'Using the Skeletal Animation System'],['../state_animation.html',1,'Using the State Animation System']]]
 ];

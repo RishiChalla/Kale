@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['warn_0',['warn',['../class_kale_1_1_logger.html#abb4acb30f57030f1cdf3869604bb61c7',1,'Kale::Logger::warn(unsigned int line, const char *file, T msg)'],['../class_kale_1_1_logger.html#a1fa0bb73cf9ea7392988d132b5ec2517',1,'Kale::Logger::warn(T msg)']]],
+  ['warn_0',['warn',['../class_kale_1_1_logger.html#a1fa0bb73cf9ea7392988d132b5ec2517',1,'Kale::Logger::warn(T msg)'],['../class_kale_1_1_logger.html#abb4acb30f57030f1cdf3869604bb61c7',1,'Kale::Logger::warn(unsigned int line, const char *file, T msg)']]],
   ['width_1',['width',['../class_kale_1_1_matrix.html#a12fab60703759082f7197f60518a5ed7',1,'Kale::Matrix']]],
   ['window_2',['Window',['../class_kale_1_1_window.html#ad2a28223618e06048a5b674c28491ed3',1,'Kale::Window']]],
   ['wx_3',['wx',['../class_kale_1_1_vector4.html#a10d00161002ce89b732c3e4c818c2b53',1,'Kale::Vector4']]],

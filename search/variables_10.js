@@ -2,7 +2,7 @@ var searchData=
 [
   ['scenebounds_0',['sceneBounds',['../class_kale_1_1_scene.html#a0660e8b42c5dfe9b4a76b7020259cdf3',1,'Kale::Scene']]],
   ['scenetopresent_1',['sceneToPresent',['../class_kale_1_1_application.html#a7b73a79c00f8cb1ec02ff268abc503aa',1,'Kale::Application']]],
-  ['shader_2',['shader',['../class_kale_1_1_path_node.html#aa178fd3fc94beefda0a26658711ee4e2',1,'Kale::PathNode::shader()'],['../class_kale_1_1_vulkan_1_1_shader.html#a347d819709bece563cd850e071028171',1,'Kale::Vulkan::Shader::shader()']]],
+  ['shader_2',['shader',['../class_kale_1_1_path_node.html#aa178fd3fc94beefda0a26658711ee4e2',1,'Kale::PathNode::shader'],['../class_kale_1_1_vulkan_1_1_shader.html#a347d819709bece563cd850e071028171',1,'Kale::Vulkan::Shader::shader']]],
   ['skeletalanimatable_3',['skeletalAnimatable',['../class_kale_1_1_path_node.html#a2e80f7506d0e6a549e3525161192349c',1,'Kale::PathNode']]],
   ['skeletalweights_4',['skeletalWeights',['../class_kale_1_1_path_node.html#a8b7067e340ca587d39cf308dd06a0698',1,'Kale::PathNode']]],
   ['skeleton_5',['skeleton',['../class_kale_1_1_skeletal_animatable.html#a687d524792830c5f5eca99adafbf7a34',1,'Kale::SkeletalAnimatable']]],
@@ -20,5 +20,5 @@ var searchData=
   ['structures_17',['structures',['../class_kale_1_1_state_animatable.html#abd2c85455e9f05a696893e038a47e951',1,'Kale::StateAnimatable']]],
   ['support_18',['support',['../class_kale_1_1_vulkan_1_1_swap_chain.html#a43fa7e308822669d958fd14b86ec4863',1,'Kale::Vulkan::SwapChain']]],
   ['surface_19',['surface',['../class_kale_1_1_vulkan_1_1_core.html#a42c34a832851ed4ae63f9a4fab2f60e6',1,'Kale::Vulkan::Core']]],
-  ['swapchain_20',['swapchain',['../class_kale_1_1_vulkan_1_1_core.html#ac3d319d4aa38b9cb4651e7a87ccc6e87',1,'Kale::Vulkan::Core::swapchain()'],['../class_kale_1_1_vulkan_1_1_swap_chain.html#a29b5c3b713ecdfa942ff70ce1b6b4a1b',1,'Kale::Vulkan::SwapChain::swapchain()']]]
+  ['swapchain_20',['swapchain',['../class_kale_1_1_vulkan_1_1_core.html#ac3d319d4aa38b9cb4651e7a87ccc6e87',1,'Kale::Vulkan::Core::swapchain'],['../class_kale_1_1_vulkan_1_1_swap_chain.html#a29b5c3b713ecdfa942ff70ce1b6b4a1b',1,'Kale::Vulkan::SwapChain::swapchain']]]
 ];

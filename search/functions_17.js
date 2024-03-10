@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['zero_0',['zero',['../class_kale_1_1_vector3.html#a3ac6fc204e8ca1bdf51b8bd787654418',1,'Kale::Vector3::zero()'],['../class_kale_1_1_vector4.html#a4ed38432c0235e009534719e15fefed7',1,'Kale::Vector4::zero()'],['../class_kale_1_1_vector2.html#a701970b5ae92ba48a885eaea3ed40be1',1,'Kale::Vector2::zero()']]],
+  ['zero_0',['zero',['../class_kale_1_1_vector2.html#a701970b5ae92ba48a885eaea3ed40be1',1,'Kale::Vector2::zero()'],['../class_kale_1_1_vector3.html#a3ac6fc204e8ca1bdf51b8bd787654418',1,'Kale::Vector3::zero()'],['../class_kale_1_1_vector4.html#a4ed38432c0235e009534719e15fefed7',1,'Kale::Vector4::zero()']]],
   ['zw_1',['zw',['../class_kale_1_1_vector4.html#a2371045562005ba5810e876e1cbacb18',1,'Kale::Vector4']]],
   ['zwx_2',['zwx',['../class_kale_1_1_vector4.html#af87f586a987b8ecc5d34f71acc95b9fb',1,'Kale::Vector4']]],
   ['zwxy_3',['zwxy',['../class_kale_1_1_vector4.html#a05359a12712e6f500bb99ee2ed8fad7b',1,'Kale::Vector4']]],

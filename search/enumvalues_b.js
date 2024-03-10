@@ -2,7 +2,7 @@ var searchData=
 [
   ['l_0',['L',['../namespace_kale.html#a02de55a0f503908e04653511e666e796ad20caec3b48a1eef164cb4ca81ba2587',1,'Kale']]],
   ['l1_1',['L1',['../namespace_kale.html#a2a299f8cb2553555e148f2e10f6e5436a9ec4c0afd450ceac7adb81c3bcfc9732',1,'Kale']]],
-  ['left_2',['Left',['../namespace_kale.html#a93e7a8c3681e5d023f9dc9107f95dc36a945d5e233cf7d6240f6b783b36a374ff',1,'Kale::Left()'],['../namespace_kale.html#a02de55a0f503908e04653511e666e796a945d5e233cf7d6240f6b783b36a374ff',1,'Kale::Left()']]],
+  ['left_2',['Left',['../namespace_kale.html#a93e7a8c3681e5d023f9dc9107f95dc36a945d5e233cf7d6240f6b783b36a374ff',1,'Kale::Left'],['../namespace_kale.html#a02de55a0f503908e04653511e666e796a945d5e233cf7d6240f6b783b36a374ff',1,'Kale::Left']]],
   ['leftbracket_3',['LeftBracket',['../namespace_kale.html#a02de55a0f503908e04653511e666e796a481c09f513474b2d31ba5c2992947b17',1,'Kale']]],
   ['leftjoystick_4',['LeftJoystick',['../namespace_kale.html#a2a299f8cb2553555e148f2e10f6e5436acffb4678bfceb78fff11578d2b77ca3e',1,'Kale']]],
   ['leftmenu_5',['LeftMenu',['../namespace_kale.html#a2a299f8cb2553555e148f2e10f6e5436aa8e5045b794f04990c89550912db96a1',1,'Kale']]],
