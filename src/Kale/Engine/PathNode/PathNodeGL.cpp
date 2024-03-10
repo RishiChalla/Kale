@@ -83,7 +83,7 @@ void PathNode::updateBoundingBox() {
 		Collidable::boundingBox.topRight()
 	};
 
-	std::copy(reinterpret_cast<const float*>(verts.cbegin()), reinterpret_cast<const float*>(verts.end()), vertexArray->vertices.data.begin());
+	std::copy(reinterpret_cast<const float*>(&verts.front()), reinterpret_cast<const float*>(&verts.back()), vertexArray->vertices.data.begin());
 	
 	// OpenGL commands must be run on the main thread - add a task for it. 
 	mainApp->runTaskOnMainThread([&]() { vertexArray->vertices.updateBuffer(); });
@@ -178,7 +178,7 @@ void PathNode::render(const Camera& camera, float deltaTime) const {
 	shader->uniform(localUniform, getFullTransform()); 
 	shader->uniform(vertexColorUniform, color);
 	shader->uniform(strokeColorUniform, strokeColor);
-	shader->uniform(zPosition, zPosition);
+	shader->uniform(zPositionUniform, zPosition);
 	shader->uniform(fillUniform, fill ? 1 : 0);
 	shader->uniform(strokeUniform, static_cast<int>(stroke));
 	shader->uniform(strokeRadiusUniform, strokeRadius);

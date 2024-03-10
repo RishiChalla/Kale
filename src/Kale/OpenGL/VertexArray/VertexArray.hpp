@@ -197,46 +197,37 @@ namespace Kale::OpenGL {
 		
 		/**
 		 * Creates a vertex array given the vertices and elements/indices
+		 * @tparam N1 Size of vertices array
+		 * @tparam N2 Size of indices array
+		 * @tparam index_type Type of indices (should be numeric)
 		 * @param verts The vertices
 		 * @param indices The indices
 		 * @param usage The usage of the vertex array
 		 */
-		template <size_t N1, size_t N2>
-		VertexArray(const std::array<T, N1>& verts, const std::array<unsigned int, N2>& indices, BufferUsage usage) :
-			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
-
-			createVerticesAndElements(verts, [&]() -> void {
-				elements.data.insert(elements.data.begin(), indices.begin(), indices.end());
-			}, usage);
-		}
-		
-		/**
-		 * Creates a vertex array given the vertices and elements/indices
-		 * @param verts The vertices
-		 * @param indices The indices
-		 * @param usage The usage of the vertex array
-		 */
-		template <size_t N1, size_t N2>
-		VertexArray(const std::array<T, N1>& verts, const std::array<size_t, N2>& indices, BufferUsage usage) :
+		template <size_t N1, size_t N2, typename index_type = unsigned int>
+		VertexArray(const std::array<T, N1>& verts, const std::array<index_type, N2>& indices, BufferUsage usage) :
 			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
 				elements.data.reserve(indices.size());
-				for (const size_t& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
+				for (const index_type& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
 			}, usage);
 		}
 		
 		/**
 		 * Creates a vertex array given the vertices and elements/indices
+		 * @tparam index_type The type of indices, should be numeric
 		 * @param verts The vertices
 		 * @param indices The indices
 		 * @param usage The usage of the vertex array
 		 */
-		VertexArray(const std::vector<T>& verts, const std::vector<unsigned int>& indices, BufferUsage usage) :
+		template <typename index_type = unsigned int>
+		VertexArray(const std::vector<T>& verts, const std::vector<index_type>& indices, BufferUsage usage) :
 			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
 
 			createVerticesAndElements(verts, [&]() -> void {
-				elements.data.insert(elements.data.begin(), indices.begin(), indices.end());
+				elements.data.reserve(indices.size());
+				for (const index_type& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
 			}, usage);
 		}
 		
@@ -251,21 +242,6 @@ namespace Kale::OpenGL {
 
 			createVerticesAndElements(verts, [&]() -> void {
 				elements.data = std::move(indices);
-			}, usage);
-		}
-		
-		/**
-		 * Creates a vertex array given the vertices and elements/indices
-		 * @param verts The vertices
-		 * @param indices The indices
-		 * @param usage The usage of the vertex array
-		 */
-		VertexArray(const std::vector<T>& verts, const std::vector<size_t>& indices, BufferUsage usage) :
-			vertices(BufferType::VertexBuffer), elements(BufferType::ElementBuffer) {
-
-			createVerticesAndElements(verts, [&]() -> void {
-				elements.data.reserve(indices.size());
-				for (const size_t& i : indices) elements.data.push_back(static_cast<unsigned int>(i));
 			}, usage);
 		}
 

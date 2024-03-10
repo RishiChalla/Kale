@@ -42,6 +42,18 @@ void TestScene::onPresent() {
 }
 ```
 
+Then in your App class, you need to present the scene:
+
+```cpp
+// Called when the application begins
+void App::onBegin() {
+    klPrint("Hello world!");
+    presentScene(std::make_shared<TestScene>());
+}
+```
+
+Ensure this is done on `onBegin`, and not in the App constructor. Internal initialization is not completed by the time the constructor has been called.
+
 @section scenesetup_s2 Scene Events
 
 The @ref Kale::Scene "Scene" class inherits from the @ref Kale::EventHandler "EventHandler" class and listens to events when presented. You can override any EventHandler events directly in your scene class.

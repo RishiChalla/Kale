@@ -246,7 +246,7 @@ void Path::arcTo(Vector2f end, Vector2f center, bool clockwise) {
 	float bezierArcApprox = (4.0f / 3.0f) * tan(PI / (2.0f * (static_cast<float>(numsegments) * 2.0f * PI / angle)));
 
 	// Loop through the segments
-	for (size_t i = 0; i < numsegments; i++) {
+	for (size_t i = 0; i < static_cast<size_t>(numsegments); i++) {
 
 		// Rotate the end of the last segment about the center
 		CubicBezier& last = beziers.back();
