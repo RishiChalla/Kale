@@ -185,7 +185,7 @@ namespace Kale {
 		/**
 		 * The z position of this node, setting this allows for rendering in front of or behind other nodes.
 		 */
-		float zPosition;
+		float zPosition = 1.0f;
 
 		/**
 		 * Whether or not to fill the path when rendering

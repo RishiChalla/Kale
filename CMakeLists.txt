@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(Kale VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.cpp src/*.hpp)
@@ -58,11 +58,13 @@ if (KALE_VERBOSE)
 endif()
 
 # Date
-set(USE_SYSTEM_TZ_DB ON)
-set(BUILD_TZ_LIB ON)
-add_subdirectory(dependencies/date)
-target_link_libraries(Kale date)
-target_link_libraries(Kale date-tz)
+if(APPLE)
+	set(USE_SYSTEM_TZ_DB ON)
+	set(BUILD_TZ_LIB ON)
+	add_subdirectory(dependencies/date)
+	target_link_libraries(Kale date)
+	target_link_libraries(Kale date-tz)
+endif()
 
 # Stb Image
 target_include_directories(Kale PUBLIC dependencies/stb_image/)

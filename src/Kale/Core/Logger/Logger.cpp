@@ -19,11 +19,18 @@
 #include <Kale/Core/Application/Application.hpp>
 
 #include <filesystem>
+
+// Apple-clang doesn't support C++20's std::format properly
+#if defined(KALE_OSX) || defined(KALE_IOS)
+
 #include <date/date.h>
 #include <date/tz.h>
 
-#ifdef KALE_WINDOWS
-#include <Windows.h>
+#else
+
+#include <format>
+#include <chrono>
+
 #endif
 
 using namespace Kale;
@@ -51,7 +58,12 @@ void Logger::load(const std::string& applicationName) {
 		std::filesystem::create_directory("." + applicationName + "/logs");
 
 	// Create/open the log file in the correct folder
+	#ifdef KALE_OSX
 	logFile.open("." + applicationName + "/logs/" + date::format("%F--%H-%M", std::chrono::system_clock::now()) + ".log");
+	#else
+	auto timestamp = std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now());
+	logFile.open("." + applicationName + "/logs/" + std::format("{:%F--%H-%M}", std::chrono::zoned_time{std::chrono::current_zone(), timestamp}) + ".log");
+	#endif
 
 	#ifdef KALE_WINDOWS
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -76,10 +88,11 @@ void Logger::load(const std::string& applicationName) {
  * @returns the time prefix
  */
 std::string Logger::getTimePrefix() {
-	#ifndef KALE_WINDOWS
+	#ifdef KALE_OSX
+	// OSX Doesn't support C++ 20's std::format and std::chrono::zoned_time
 	return date::format("%I:%M %p", date::make_zoned(date::current_zone(), std::chrono::system_clock::now()));
-	#else 
-	// Windows doesn't support current timezone so instead we'll need to use UTC
-	return date::format("%I:%M %p", std::chrono::system_clock::now());
+	#else
+	auto timestamp = std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now());
+	return std::format("{:%I:%M %p}", std::chrono::zoned_time{std::chrono::current_zone(), timestamp});
 	#endif
 }
