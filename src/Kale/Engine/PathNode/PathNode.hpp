@@ -24,8 +24,7 @@
 #include <Kale/Engine/AnimatableNode/AnimatableNode.hpp>
 #include <Kale/Core/Application/Application.hpp>
 
-#include <include/core/SkPath.h>
-#include <effects/SkRuntimeEffect.h>
+#include <core/SkPath.h>
 
 #include <stdexcept>
 #include <limits>
@@ -83,7 +82,7 @@ namespace Kale {
 					if (!light->getBoundingBox().rectCollision(Node::boundingBox)) continue;
 					canvas.save();
 					canvas.clipPath(light->getShadingMask());
-					borderPaint.setColor(borderColor * light->color);
+					borderPaint.setColor(borderColor * 0.8f + light->color * 0.2f);
 					canvas.drawPath(path, borderPaint);
 					canvas.restore();
 				}

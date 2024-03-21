@@ -62,7 +62,7 @@ void Window::recreateSkiaSurface() {
 	framebufferInfo.fFBOID = 0;
 	framebufferInfo.fFormat = GL_RGBA8;
 
-	SkColorType colorType = kRGBA_8888_SkColorType;
+	SkColorType colorType = SkColorType::kRGBA_8888_SkColorType;
 	GrBackendRenderTarget backendRenderTarget(size.x, size.y, 0, 0, framebufferInfo);
 
 	skiaSurface = SkSurface::MakeFromBackendRenderTarget(skiaContext, backendRenderTarget, GrSurfaceOrigin::kBottomLeft_GrSurfaceOrigin,

@@ -331,7 +331,7 @@ namespace Kale {
 		static Vector3<T> front() { return {0, 0, 1}; }
 		static Vector3<T> max() { return {std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max()}; }
 		static Vector3<T> min() { return {std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min()}; }
-};
+	};
 
 	/**
 	 * Represents a vector in a 3 dimensional space
@@ -503,12 +503,6 @@ namespace Kale {
 			color.fB = z;
 			color.fA = w;
 			return color;
-		}
-
-		template <typename A = T> typename std::enable_if<std::is_same<A, float>::value, Vector4<T>>::type
-		blend(Vector4<T> fg) {
-			float alpha = 1.0f - (1.0f - fg.w) * (1.0f - w);
-			return Vector4f(fg.xyz() * fg.w / alpha + xyz() * w * (1.0f - fg.w) / alpha, alpha);
 		}
 
 		Vector2<T> xy() const { return {x, y}; }

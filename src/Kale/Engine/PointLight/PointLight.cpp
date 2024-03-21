@@ -18,10 +18,10 @@
 
 #include <Kale/Core/Application/Application.hpp>
 
-#include <include/core/SkCanvas.h>
-#include <include/core/SkPath.h>
-#include <include/core/SkPaint.h>
-#include <include/core/SkMaskFilter.h>
+#include <core/SkCanvas.h>
+#include <core/SkPath.h>
+#include <core/SkPaint.h>
+#include <core/SkMaskFilter.h>
 
 using namespace Kale;
 

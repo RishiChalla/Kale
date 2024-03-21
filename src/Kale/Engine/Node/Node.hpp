@@ -23,7 +23,7 @@ namespace Kale {
 	/**
 	 * Forward declaration of classes
 	 */
-	class Scene; class Light;
+	class Scene;
 	
 	/**
 	 * The main class for nodes, all nodes must inherit from this class

@@ -19,10 +19,10 @@
 #include <Kale/Core/Application/Application.hpp>
 #include <Kale/Math/DrawingContext/DrawingContext.hpp>
 
-#include <include/core/SkCanvas.h>
-#include <include/core/SkPath.h>
-#include <include/core/SkPaint.h>
-#include <include/core/SkMaskFilter.h>
+#include <core/SkCanvas.h>
+#include <core/SkPath.h>
+#include <core/SkPaint.h>
+#include <core/SkMaskFilter.h>
 
 using namespace Kale;
 
@@ -124,8 +124,8 @@ SpotLight::SpotLight(Vector2f position, float radius, float intensity, float sta
 SkPath SpotLight::getShadingMask() const {
 	SkPath mask;
 	mask.moveTo(transform.getTranslation());
-	mask.lineTo(transform.transform(start * intensity));
-	mask.lineTo(transform.transform(end * intensity));
+	mask.lineTo(transform.transform(start * radius));
+	mask.lineTo(transform.transform(end * radius));
 	mask.close();
 	return mask;
 }
@@ -140,7 +140,7 @@ void SpotLight::render(const Scene& scene) const {
 	paint.setMaskFilter(SkMaskFilter::MakeBlur(SkBlurStyle::kNormal_SkBlurStyle, intensity));
 	
 	SkPath path;
-	path.moveTo(0.0f, 0.0f);;
+	path.moveTo(0.0f, 0.0f);
 	path.lineTo(start * radius);
 	path.lineTo(end * radius);
 	path.close();

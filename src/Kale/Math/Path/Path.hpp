@@ -20,7 +20,7 @@
 #include <Kale/Math/Rect/Rect.hpp>
 #include <Kale/Math/Transform/Transform.hpp>
 
-#include <include/core/SkPath.h>
+#include <core/SkPath.h>
 
 #include <vector>
 
