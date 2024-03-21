@@ -137,7 +137,6 @@ SkPath SpotLight::getShadingMask() const {
 void SpotLight::render(const Scene& scene) const {
 	SkCanvas& canvas = mainApp->getWindow().getCanvas();
 	SkPaint paint(Light::color);
-	paint.setBlendMode(SkBlendMode::kMultiply);
 	paint.setMaskFilter(SkMaskFilter::MakeBlur(SkBlurStyle::kNormal_SkBlurStyle, intensity));
 	
 	SkPath path;
